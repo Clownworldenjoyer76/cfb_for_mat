@@ -29,7 +29,7 @@ jobs:
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: |
-          python generate_picks.py
+          python scripts/generate_picks.py
 
       - name: Commit and push if changed
         run: |
