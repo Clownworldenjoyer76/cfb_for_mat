@@ -1,0 +1,5 @@
+body{margin:0;font-family:sans-serif;background:#0b0f14;color:#e8eef5}
+header{padding:12px;background:#111;border-bottom:1px solid #333;position:sticky;top:0}
+h1{margin:0;font-size:20px}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{padding:8px;border-bottom:1px solid #333;text-align:left}
