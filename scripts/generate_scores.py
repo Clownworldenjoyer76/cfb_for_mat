@@ -7,8 +7,8 @@ generate_scores.py
 Requirements:
   Env:
     CFBD_API_KEY   -> CollegeFootballData.com API key (Actions secret)
-    CFB_YEAR       -> optional (defaults to current UTC year)
-    CFB_WEEK       -> optional (if absent, autodetects)
+    CFB_YEAR       -> optional (defaults to current UTC year if unset or blank)
+    CFB_WEEK       -> optional (if absent or blank, autodetects)
     CFB_SCAN_WEEKS -> optional scan range if initial week has no usable lines (default "1-20")
 
   Dependencies: requests (already added to requirements.txt)
@@ -29,8 +29,17 @@ API_KEY = os.getenv("CFBD_API_KEY")
 if not API_KEY:
     die("CFBD_API_KEY is not set (Actions Secret).")
 
-YEAR = int(os.getenv("CFB_YEAR", dt.datetime.utcnow().year))
-WEEK_ENV = os.getenv("CFB_WEEK")
+year_str = os.getenv("CFB_YEAR")
+if year_str and year_str.strip():
+    try:
+        YEAR = int(year_str.strip())
+    except Exception:
+        YEAR = dt.datetime.utcnow().year
+else:
+    YEAR = dt.datetime.utcnow().year
+
+week_str = os.getenv("CFB_WEEK")
+WEEK_ENV = week_str.strip() if week_str else None
 SCAN_ENV = os.getenv("CFB_SCAN_WEEKS", "1-20").strip()
 
 # ---- HTTP ----
@@ -100,14 +109,12 @@ def extract_total_and_home_spread(lines_payload: List[Dict[str, Any]]) -> Dict[i
         home_spread = None
         books = obj.get("lines", []) or []
         for book in books:
-            # total could be 'overUnder' or 'total'
             t = book.get("overUnder", None)
             if t is None:
                 t = book.get("total", None)
             sp = book.get("spread", None)
             if isinstance(sp, dict):
                 sp = sp.get("spread", None)
-            # Accept if either total or spread appears; we require BOTH to estimate scores.
             if t is not None and sp is not None:
                 total = float(t)
                 home_spread = float(sp)
@@ -138,13 +145,9 @@ def build_scores(year: int, week: int) -> List[Dict[str, Any]]:
         total = totals.get("total")
         home_spread = totals.get("home_spread")
 
-        # Need BOTH total and home_spread to derive scores; otherwise skip (no assumptions).
         if total is None or home_spread is None:
             continue
 
-        # Convention: home_spread negative => home favored by |home_spread|.
-        # Let margin m = home_points - away_points.
-        # If home_spread = -7, margin should be +7 => m = -(home_spread).
         m = -float(home_spread)
         T = float(total)
 
@@ -176,7 +179,6 @@ def main() -> None:
 
     rows = build_scores(YEAR, week)
 
-    # If none, scan other weeks to avoid empty file (no assumptions; still requires both total and spread).
     if not rows:
         for wk in parse_scan_range(SCAN_ENV):
             if wk == week:
