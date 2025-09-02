@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 generate_picks.py
-- Pulls this week's CFB games & betting lines using sportsdataverse-py (CFBD).
+- Pulls this week's CFB games & betting lines using CollegeFootballData HTTP API.
 - Chooses a conservative pick per game (favorite ML if available, else favorite spread).
 - Writes picks.json for your static HTML site.
 
 Env:
   CFBD_API_KEY   -> your CollegeFootballData.com API key (GitHub Actions secret)
-  CFB_YEAR       -> optional override (defaults to current year)
-  CFB_WEEK       -> optional override (defaults to 1 if autodetect not available)
+  CFB_YEAR       -> optional override (defaults to current UTC year)
+  CFB_WEEK       -> optional override (if absent, script auto-detects the nearest valid week)
 
 Output:
   picks.json     -> array of picks with fields your site expects
@@ -17,16 +17,29 @@ Output:
 import os
 import json
 import datetime as dt
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
+
+BASE = "https://api.collegefootballdata.com"
+
+def die(msg: str) -> None:
+    raise SystemExit(msg)
 
 # ---------- Config ----------
 API_KEY = os.getenv("CFBD_API_KEY")
 if not API_KEY:
-    raise SystemExit("CFBD_API_KEY is not set (Actions Secret).")
+    die("CFBD_API_KEY is not set (Actions Secret).")
 
 YEAR = int(os.getenv("CFB_YEAR", dt.datetime.utcnow().year))
-# Week autodetection via sportsdataverse is inconsistent; default to 1 unless you override:
-WEEK = int(os.getenv("CFB_WEEK", "1"))
+WEEK_ENV = os.getenv("CFB_WEEK")
+
+# ---------- HTTP ----------
+import requests  # requires 'requests' in requirements.txt
+
+def http_get(path: str, params: Dict[str, Any]) -> Any:
+    headers = {"Authorization": f"Bearer {API_KEY}"}
+    r = requests.get(f"{BASE}{path}", headers=headers, params=params, timeout=60)
+    r.raise_for_status()
+    return r.json()
 
 # ---------- Helpers ----------
 def implied_prob_from_moneyline(ml: Optional[float]) -> Optional[float]:
@@ -50,12 +63,11 @@ def pick_from_lines(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     away_ml = row.get("away_ml")
     spread = row.get("spread")
 
-    # Prefer ML favorite if available
     hp = implied_prob_from_moneyline(home_ml) if home_ml is not None else None
     ap = implied_prob_from_moneyline(away_ml) if away_ml is not None else None
 
+    # Prefer ML favorite if available
     if hp is not None or ap is not None:
-        # choose higher implied probability
         if hp is not None and (ap is None or hp >= ap):
             return {
                 "market": "ML",
@@ -87,7 +99,6 @@ def pick_from_lines(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
             else:
                 selection = row["away_team"]
                 fav_line = -sp
-            # conservative prob mapping from spread magnitude
             model_prob = max(min(0.50 + (abs(fav_line) / 50.0), 0.90), 0.55)
             return {
                 "market": "SPREAD",
@@ -99,41 +110,80 @@ def pick_from_lines(row: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 
     return None
 
-def normalize_sv_lines(lines: List[Dict[str, Any]]) -> Dict[int, Dict[str, Any]]:
+def autodetect_week(year: int) -> int:
     """
-    sportsdataverse-py returns a list of books per game.
-    Normalize to {game_id: {home_team, away_team, home_ml, away_ml, spread}}
-    by taking the first book that has usable data.
+    Auto-detect the nearest valid week using the year's games.
+    Strategy:
+      - Fetch all regular-season games for the year.
+      - If any games are today or in the future (UTC), pick the smallest week among them.
+      - Otherwise pick the largest week present (season completed / late in season).
+    """
+    games = http_get("/games", {"year": year, "seasonType": "regular"})
+    now = dt.datetime.utcnow()
+    future_weeks = []
+    all_weeks = set()
+
+    for g in games or []:
+        wk = g.get("week")
+        if isinstance(wk, int):
+            all_weeks.add(wk)
+        # Start dates can be 'startDate' ISO strings; guard defensively.
+        start_iso = g.get("startDate") or g.get("start_date")
+        try:
+            if isinstance(start_iso, str):
+                # CFBD uses ISO8601; parse minimal (YYYY-MM-DD or full).
+                # Only compare date portion; treat same-day as future/ongoing.
+                dt_part = start_iso[:19]
+                try:
+                    gd = dt.datetime.fromisoformat(dt_part)
+                except Exception:
+                    # Fallback: just compare strings lexicographically for YYYY-MM-DD
+                    gd = None
+                if gd is not None and gd >= now:
+                    if isinstance(wk, int):
+                        future_weeks.append(wk)
+        except Exception:
+            pass
+
+    if future_weeks:
+        return min(future_weeks)
+    if all_weeks:
+        return max(all_weeks)
+    # Fallback if no week info at all
+    return 1
+
+def normalize_http_lines(lines_payload: List[Dict[str, Any]]) -> Dict[int, Dict[str, Any]]:
+    """
+    CFBD /lines: each item is a game with 'lines' (books).
+    Normalize to {game_id: {home_team, away_team, home_ml, away_ml, spread}}.
     """
     result: Dict[int, Dict[str, Any]] = {}
-    for obj in lines or []:
-        # Expected keys (varies by SDV version). We defensively access.
-        game_id = obj.get("id") or obj.get("game_id")
-        if game_id is None:
+    for obj in lines_payload or []:
+        gid = obj.get("id")
+        if gid is None:
             continue
-        home = obj.get("home_team")
-        away = obj.get("away_team")
+        home = obj.get("homeTeam")
+        away = obj.get("awayTeam")
 
         home_ml = None
         away_ml = None
         spread = None
 
         for book in obj.get("lines", []) or []:
-            # moneyline
             ml = book.get("moneyline")
             if isinstance(ml, dict):
-                home_ml = ml.get("home_price", home_ml)
-                away_ml = ml.get("away_price", away_ml)
-            # spread
+                # keys commonly: homePrice, awayPrice
+                home_ml = ml.get("homePrice", home_ml)
+                away_ml = ml.get("awayPrice", away_ml)
             sp = book.get("spread")
             if isinstance(sp, dict):
-                # sp['spread'] is home spread (negative if home favored)
+                # key commonly: spread (home spread; negative if home favored)
                 spread = sp.get("spread", spread)
 
             if home_ml is not None or away_ml is not None or spread is not None:
                 break
 
-        result[int(game_id)] = {
+        result[int(gid)] = {
             "home_team": home,
             "away_team": away,
             "home_ml": home_ml,
@@ -142,92 +192,37 @@ def normalize_sv_lines(lines: List[Dict[str, Any]]) -> Dict[int, Dict[str, Any]]
         }
     return result
 
-# ---------- Data fetch (sportsdataverse-py first, HTTP fallback) ----------
-def fetch_with_sdv(year: int, week: int):
-    from sportsdataverse import cfbd as sdv_cfbd
-    games = sdv_cfbd.get_games(year=year, week=week, season_type="regular", authorization=API_KEY)
-    lines = sdv_cfbd.get_lines(year=year, week=week, season_type="regular", authorization=API_KEY)
-    # Ensure lists of dicts
-    if hasattr(games, "to_dict"):
-        games = games.to_dict("records")
-    if hasattr(lines, "to_dict"):
-        lines = lines.to_dict("records")
-    return games, lines
+def main() -> None:
+    # Resolve target week
+    if WEEK_ENV:
+        try:
+            week = int(WEEK_ENV)
+        except Exception:
+            die("CFB_WEEK is not an integer.")
+    else:
+        week = autodetect_week(YEAR)
 
-def fetch_with_http(year: int, week: int):
-    import requests
-    base = "https://api.collegefootballdata.com"
-    headers = {"Authorization": f"Bearer {API_KEY}"}
-    params = {"year": year, "week": week, "seasonType": "regular"}
+    # Fetch games and lines for the chosen week
+    params = {"year": YEAR, "week": week, "seasonType": "regular"}
+    games = http_get("/games", params)
+    lines = http_get("/lines", params)
 
-    g = requests.get(f"{base}/games", headers=headers, params=params, timeout=60)
-    g.raise_for_status()
-    games = g.json()
+    line_map = normalize_http_lines(lines)
 
-    l = requests.get(f"{base}/lines", headers=headers, params=params, timeout=60)
-    l.raise_for_status()
-    lines = l.json()
-    return games, lines
-
-def main():
-    # Try SDV first; if anything goes wrong, fall back to HTTP
-    try:
-        games, lines = fetch_with_sdv(YEAR, WEEK)
-        using = "sportsdataverse"
-    except Exception as e:
-        print(f"[warn] sportsdataverse failed, falling back to HTTP: {e}")
-        games, lines = fetch_with_http(YEAR, WEEK)
-        using = "http"
-
-    # Normalize line objects
-    line_map = normalize_sv_lines(lines) if using == "sportsdataverse" else {}
-    if using == "http":
-        # HTTP shape: each item is a game with a list of books; normalize similarly
-        tmp = []
-        for obj in lines or []:
-            # http payload uses 'id' consistently
-            gid = obj.get("id")
-            if gid is None:
-                continue
-            home = obj.get("homeTeam")
-            away = obj.get("awayTeam")
-            home_ml = away_ml = spread = None
-            for book in obj.get("lines", []) or []:
-                ml = book.get("moneyline")
-                if isinstance(ml, dict):
-                    home_ml = ml.get("homePrice", home_ml)
-                    away_ml = ml.get("awayPrice", away_ml)
-                sp = book.get("spread")
-                if isinstance(sp, dict):
-                    spread = sp.get("spread", spread)
-                if home_ml is not None or away_ml is not None or spread is not None:
-                    break
-            tmp.append({
-                "id": gid,
-                "home_team": home,
-                "away_team": away,
-                "home_ml": home_ml,
-                "away_ml": away_ml,
-                "spread": spread
-            })
-        line_map = {int(x["id"]): x for x in tmp}
-
-    # Build picks
     rows: List[Dict[str, Any]] = []
     for g in games or []:
-        gid = g.get("id") or g.get("game_id")
+        # Only include games from the chosen week (guard if API returns more)
+        if g.get("week") != week:
+            continue
+
+        gid = g.get("id")
         if gid is None:
             continue
         gid = int(gid)
-        home = g.get("home_team") or g.get("homeTeam")
-        away = g.get("away_team") or g.get("awayTeam")
-        start_iso = g.get("start_date") or g.get("startDate") or g.get("start_time_tbd")
 
-        kickoff_utc = None
-        if isinstance(start_iso, str):
-            kickoff_utc = start_iso
-        else:
-            kickoff_utc = ""
+        home = g.get("homeTeam")
+        away = g.get("awayTeam")
+        start_iso = g.get("startDate") or g.get("start_date") or ""
 
         lm = line_map.get(gid, {
             "home_team": home,
@@ -251,7 +246,7 @@ def main():
 
         rows.append({
             "game_id": str(gid),
-            "kickoff_utc": kickoff_utc,
+            "kickoff_utc": start_iso,
             "home": home,
             "away": away,
             "market": pick["market"],
@@ -267,7 +262,8 @@ def main():
     rows.sort(key=lambda r: r["kickoff_utc"] or "")
     with open("picks.json", "w") as f:
         json.dump(rows, f, indent=2)
-    print(f"Wrote {len(rows)} picks to picks.json (year={YEAR}, week={WEEK})")
+
+    print(f"Wrote {len(rows)} picks to picks.json (year={YEAR}, week={week})")
 
 if __name__ == "__main__":
     main()
