@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
 get_team_stats.py
+
 Purpose:
   - Fetch season-level college football team stats from the CFBD HTTP API.
-  - Extract core metrics for modeling: scoring offense (PPG), scoring defense (PPG allowed),
+  - Extract core metrics: scoring offense (PPG), scoring defense (PPG allowed),
     yards per play (YPP), and pace (seconds per play).
   - Output a normalized CSV for downstream use.
 
@@ -14,7 +15,6 @@ Env (safe handling of blanks):
   CFB_OUTPUT_CSV  -> OPTIONAL: output path; defaults to 'team_stats.csv' in repo root
 
 Dependencies: requests, pandas
-  (Ensure 'requests' and 'pandas' are in requirements.txt)
 """
 
 import os
@@ -47,9 +47,8 @@ def _get_year() -> int:
     return dt.datetime.utcnow().year
 
 YEAR = _get_year()
-
-SEASON_TYPE = os.getenv("CFB_SEASON_TYPE", "regular").strip().lower() or "regular"
-OUTPUT_CSV = os.getenv("CFB_OUTPUT_CSV", "team_stats.csv").strip() or "team_stats.csv"
+SEASON_TYPE = (os.getenv("CFB_SEASON_TYPE", "regular") or "regular").strip().lower()
+OUTPUT_CSV = (os.getenv("CFB_OUTPUT_CSV", "team_stats.csv") or "team_stats.csv").strip()
 
 # ------------------ HTTP helper ------------------
 def http_get(path: str, params: Dict[str, Any]) -> Any:
@@ -58,44 +57,50 @@ def http_get(path: str, params: Dict[str, Any]) -> Any:
     r.raise_for_status()
     return r.json()
 
-# ------------------ Normalization logic ------------------
-# We match by common stat names in CFBD payloads. Matching is case-insensitive and tolerant.
-MATCH_MAP = {
+# ------------------ Matching config ------------------
+# Exact labels observed in CFBD plus tolerant aliases (all compared lowercase/contains)
+EXACT_LABELS = {
     "scoring_offense_ppg": [
-        "points per game", "ppg", "scoring offense", "offense points per game",
-        "offensive points per game"
+        "points per game",            # CFBD display label
+        "offense points per game",
+        "offensive points per game",
+        "ppg",                        # alias
+        "scoring offense"
     ],
     "scoring_defense_ppg": [
-        "opponent points per game", "points allowed per game", "opp ppg",
-        "scoring defense", "defense points per game", "defensive points per game"
+        "opponent points per game",   # CFBD display label
+        "opp points per game",
+        "points allowed per game",
+        "scoring defense",
+        "defensive points per game"
     ],
     "yards_per_play": [
-        "yards per play", "ypp", "net yards per play", "offense yards per play"
+        "yards per play",             # CFBD display label (offense)
+        "net yards per play",
+        "offense yards per play",
+        "ypp"
     ],
     "seconds_per_play": [
-        "seconds per play", "sec/play", "pace"
+        "seconds per play",           # CFBD display label (pace)
+        "sec/play",
+        "pace"
     ],
 }
 
-def _lower(s: Optional[str]) -> str:
+VALUE_KEYS = ("value", "statValue", "stat", "avg", "average")  # try in order
+
+def _lc(s: Optional[str]) -> str:
     return (s or "").strip().lower()
 
 def _extract_value(stat_obj: Dict[str, Any]) -> Optional[float]:
-    """
-    CFBD season stats often use one of:
-      {"name": "Points Per Game", "value": "35.1"} OR
-      {"statName": "Points Per Game", "statValue": "35.1"} OR
-      {"stat": "35.1", "name": "Points Per Game"}
-    We attempt several keys and return float if possible.
-    """
-    # try common value keys
-    for k in ("value", "statValue", "stat"):
+    # Try common numeric keys first
+    for k in VALUE_KEYS:
         if k in stat_obj and stat_obj[k] is not None:
             try:
                 return float(stat_obj[k])
             except Exception:
                 pass
-    # sometimes numeric already under unexpected key
+    # Fallback: first numeric in values
     for v in stat_obj.values():
         if isinstance(v, (int, float)):
             try:
@@ -105,62 +110,73 @@ def _extract_value(stat_obj: Dict[str, Any]) -> Optional[float]:
     return None
 
 def _extract_name(stat_obj: Dict[str, Any]) -> str:
-    for k in ("name", "statName", "metric", "title"):
+    # Common name keys in CFBD payloads
+    for k in ("name", "statName", "metric", "title", "displayName"):
         if k in stat_obj and stat_obj[k]:
-            return _lower(str(stat_obj[k]))
-    # fallback: stringified keys
-    return _lower(json.dumps(stat_obj, separators=(",", ":"))[:64])
+            return _lc(str(stat_obj[k]))
+    # As a last resort, stringify object
+    return _lc(json.dumps(stat_obj, separators=(",", ":")))
+
+def _match_field(stat_name_lc: str) -> Optional[str]:
+    for field, labels in EXACT_LABELS.items():
+        for label in labels:
+            if label in stat_name_lc:
+                return field
+    return None
+
+def _flatten_stats_container(team_obj: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """
+    CFBD /stats/season can return either:
+      - {"team": "...", "stats": [ { "name": "Points Per Game", "value": ... }, ... ]}
+      - {"team": "...", "categories": [ { "name": "...", "stats": [ ... ] }, ... ]}
+    Return a flat list of stat dicts.
+    """
+    stats = []
+    # Primary flat list
+    if isinstance(team_obj.get("stats"), list):
+        stats.extend([x for x in team_obj["stats"] if isinstance(x, dict)])
+    # Nested categories
+    if isinstance(team_obj.get("categories"), list):
+        for cat in team_obj["categories"]:
+            if isinstance(cat, dict) and isinstance(cat.get("stats"), list):
+                stats.extend([x for x in cat["stats"] if isinstance(x, dict)])
+    return stats
 
 def _pick_core_metrics(stats_list: List[Dict[str, Any]]) -> Dict[str, Optional[float]]:
-    """
-    Iterate through the team's stat objects and map them into our core fields
-    using fuzzy name matching from MATCH_MAP.
-    """
     out: Dict[str, Optional[float]] = {
         "scoring_offense_ppg": None,
         "scoring_defense_ppg": None,
         "yards_per_play": None,
         "seconds_per_play": None,
     }
-    # track which original names mapped to which fields (for transparency)
     trace: Dict[str, str] = {}
 
-    for st in stats_list or []:
-        name = _extract_name(st)  # lowercased
+    for st in stats_list:
+        name_lc = _extract_name(st)
         val = _extract_value(st)
         if val is None:
             continue
-        for field, candidates in MATCH_MAP.items():
-            for c in candidates:
-                if c in name:
-                    # first match wins; avoid overwriting
-                    if out[field] is None:
-                        out[field] = val
-                        trace[field] = name
-                    break
+        field = _match_field(name_lc)
+        if field and out[field] is None:
+            out[field] = val
+            trace[field] = name_lc
 
     out["_trace"] = trace
     return out
 
+# ------------------ Build ------------------
 def fetch_season_stats(year: int, season_type: str) -> List[Dict[str, Any]]:
-    """
-    Calls CFBD /stats/season which returns a list of teams with nested 'stats'.
-    """
     payload = http_get("/stats/season", {"year": year, "seasonType": season_type})
-    # payload commonly looks like:
-    # [{"team": "Alabama", "conference": "SEC", "stats": [ {...}, {...} ]}, ...]
-    if not isinstance(payload, list):
-        return []
-    return payload
+    return payload if isinstance(payload, list) else []
 
 def build_dataframe(year: int, season_type: str) -> pd.DataFrame:
     teams = fetch_season_stats(year, season_type)
-
     rows: List[Dict[str, Any]] = []
+
     for item in teams:
         team = item.get("team") or item.get("school") or item.get("team_name")
         conf = item.get("conference") or item.get("conf") or ""
-        stats_list = item.get("stats") or item.get("statistics") or []
+        stats_list = _flatten_stats_container(item)
 
         core = _pick_core_metrics(stats_list)
         row = {
@@ -182,16 +198,13 @@ def build_dataframe(year: int, season_type: str) -> pd.DataFrame:
         "yards_per_play", "seconds_per_play",
         "source_stat_map"
     ])
-    # Deduplicate by (year, season_type, team)
     df = df.drop_duplicates(subset=["year", "season_type", "team"]).reset_index(drop=True)
     return df
 
 def main() -> None:
     df = build_dataframe(YEAR, SEASON_TYPE)
-    # Write CSV in repo root (or overridden by env)
-    out_path = OUTPUT_CSV
-    df.to_csv(out_path, index=False)
-    print(f"Wrote {len(df)} rows to {out_path} (year={YEAR}, season_type={SEASON_TYPE})")
+    df.to_csv(OUTPUT_CSV, index=False)
+    print(f"Wrote {len(df)} rows to {OUTPUT_CSV} (year={YEAR}, season_type={SEASON_TYPE})")
 
 if __name__ == "__main__":
     main()
