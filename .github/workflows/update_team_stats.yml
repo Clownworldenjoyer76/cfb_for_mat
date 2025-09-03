@@ -1,0 +1,68 @@
+name: Update Team Stats (CFB)
+
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "CFB Year (optional; defaults to current UTC year)"
+        required: false
+        type: string
+      season_type:
+        description: "Season type (regular or postseason; default: regular)"
+        required: false
+        type: string
+      output_csv:
+        description: "Output CSV path (default: team_stats.csv)"
+        required: false
+        type: string
+  schedule:
+    - cron: "35 12 * * *"  # Runs daily at 12:35 UTC
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate team_stats.csv
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          CFB_YEAR: ${{ inputs.year }}
+          CFB_SEASON_TYPE: ${{ inputs.season_type }}
+          CFB_OUTPUT_CSV: ${{ inputs.output_csv }}
+        run: |
+          python scripts/get_team_stats.py
+          OUT="${{ inputs.output_csv }}"
+          if [ -z "$OUT" ]; then OUT="team_stats.csv"; fi
+          echo "--- file size ---"
+          wc -c "$OUT" || true
+          echo "--- first 20 lines ---"
+          head -n 20 "$OUT" || true
+
+      - name: Commit and push if changed
+        run: |
+          OUT="${{ inputs.output_csv }}"
+          if [ -z "$OUT" ]; then OUT="team_stats.csv"; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain "$OUT")" ]]; then
+            git add "$OUT"
+            git commit -m "Update $OUT [skip ci]"
+            git push
+          else
+            echo "No changes in $OUT"
+          fi
