@@ -12,11 +12,15 @@ on:
         required: false
         type: string
       output_csv:
-        description: "Output CSV path (default: team_stats.csv)"
+        description: "Wide CSV path (default: team_stats.csv)"
+        required: false
+        type: string
+      output_raw:
+        description: "Raw CSV path (default: team_stats_raw.csv)"
         required: false
         type: string
   schedule:
-    - cron: "35 12 * * *"  # Runs daily at 12:35 UTC
+    - cron: "35 12 * * *"
 
 permissions:
   contents: write
@@ -38,31 +42,32 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate team_stats.csv
+      - name: Generate team stats CSVs
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           CFB_YEAR: ${{ inputs.year }}
           CFB_SEASON_TYPE: ${{ inputs.season_type }}
           CFB_OUTPUT_CSV: ${{ inputs.output_csv }}
+          CFB_OUTPUT_RAW: ${{ inputs.output_raw }}
         run: |
           python scripts/get_team_stats.py
-          OUT="${{ inputs.output_csv }}"
-          if [ -z "$OUT" ]; then OUT="team_stats.csv"; fi
-          echo "--- file size ---"
-          wc -c "$OUT" || true
-          echo "--- first 20 lines ---"
-          head -n 20 "$OUT" || true
+          OUT="${{ inputs.output_csv }}"; if [ -z "$OUT" ]; then OUT="team_stats.csv"; fi
+          RAW="${{ inputs.output_raw }}"; if [ -z "$RAW" ]; then RAW="team_stats_raw.csv"; fi
+          echo "--- wide size ---"; wc -c "$OUT" || true
+          echo "--- raw size ---"; wc -c "$RAW" || true
+          echo "--- sample wide ---"; head -n 10 "$OUT" || true
+          echo "--- sample raw ---"; head -n 10 "$RAW" || true
 
       - name: Commit and push if changed
         run: |
-          OUT="${{ inputs.output_csv }}"
-          if [ -z "$OUT" ]; then OUT="team_stats.csv"; fi
+          OUT="${{ inputs.output_csv }}"; if [ -z "$OUT" ]; then OUT="team_stats.csv"; fi
+          RAW="${{ inputs.output_raw }}"; if [ -z "$RAW" ]; then RAW="team_stats_raw.csv"; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain "$OUT")" ]]; then
-            git add "$OUT"
-            git commit -m "Update $OUT [skip ci]"
+          if [[ -n "$(git status --porcelain "$OUT" "$RAW")" ]]; then
+            git add "$OUT" "$RAW"
+            git commit -m "Update $OUT and $RAW [skip ci]"
             git push
           else
-            echo "No changes in $OUT"
+            echo "No changes in $OUT or $RAW"
           fi
