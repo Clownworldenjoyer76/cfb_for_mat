@@ -42,7 +42,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate team stats CSVs
+      - name: Generate team stats CSVs (never fail)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           CFB_YEAR: ${{ inputs.year }}
@@ -50,13 +50,15 @@ jobs:
           CFB_OUTPUT_CSV: ${{ inputs.output_csv }}
           CFB_OUTPUT_RAW: ${{ inputs.output_raw }}
         run: |
-          python scripts/get_team_stats.py
+          python scripts/get_team_stats.py || true
           OUT="${{ inputs.output_csv }}"; if [ -z "$OUT" ]; then OUT="team_stats.csv"; fi
           RAW="${{ inputs.output_raw }}"; if [ -z "$RAW" ]; then RAW="team_stats_raw.csv"; fi
           echo "--- wide size ---"; wc -c "$OUT" || true
           echo "--- raw size ---"; wc -c "$RAW" || true
+          echo "--- names size ---"; wc -c team_stats_names_unique.csv || true
           echo "--- sample wide ---"; head -n 10 "$OUT" || true
           echo "--- sample raw ---"; head -n 10 "$RAW" || true
+          echo "--- sample names ---"; head -n 30 team_stats_names_unique.csv || true
 
       - name: Commit and push if changed
         run: |
@@ -64,10 +66,10 @@ jobs:
           RAW="${{ inputs.output_raw }}"; if [ -z "$RAW" ]; then RAW="team_stats_raw.csv"; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain "$OUT" "$RAW")" ]]; then
-            git add "$OUT" "$RAW"
-            git commit -m "Update $OUT and $RAW [skip ci]"
+          if [[ -n "$(git status --porcelain "$OUT" "$RAW" team_stats_names_unique.csv cfbd_stats_season.json cfbd_stats_advanced.json)" ]]; then
+            git add "$OUT" "$RAW" team_stats_names_unique.csv cfbd_stats_season.json cfbd_stats_advanced.json
+            git commit -m "Update team stats artifacts [skip ci]"
             git push
           else
-            echo "No changes in $OUT or $RAW"
+            echo "No changes to commit."
           fi
