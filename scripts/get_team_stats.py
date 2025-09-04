@@ -8,12 +8,12 @@ Purpose:
        - cfbd_stats_season.json
        - cfbd_stats_advanced.json
   3) Write RAW audit CSV with every (team, stat_name, value_text, value_num, source).
-  4) Write WIDE CSV with target columns populated ONLY when exact label matches (case-insensitive)
-     and numeric value exists:
-       - Points Per Game              -> scoring_offense_ppg
-       - Opponent Points Per Game     -> scoring_defense_ppg
-       - Yards Per Play               -> yards_per_play
-       - Seconds Per Play             -> seconds_per_play
+  4) Write WIDE CSV with target columns populated when a stat name matches (case-insensitive),
+     accepting both display labels and camelCase keys via normalization:
+       - pointsPerGame / Points Per Game              -> scoring_offense_ppg
+       - oppPointsPerGame / Opponent Points Per Game  -> scoring_defense_ppg
+       - yardsPerPlay / Yards Per Play                -> yards_per_play
+       - secondsPerPlay / Seconds Per Play            -> seconds_per_play
 
 Env (blank-safe):
   CFBD_API_KEY    -> REQUIRED
@@ -66,18 +66,25 @@ def http_get(path: str, params: Dict[str, Any]) -> Any:
     r.raise_for_status()
     return r.json()
 
-# ------------------ Targets (strict, exact label match; case-insensitive) ------------------
-TARGET_LABELS = {
-    "points per game": "scoring_offense_ppg",
-    "opponent points per game": "scoring_defense_ppg",
-    "yards per play": "yards_per_play",
-    "seconds per play": "seconds_per_play",
+# ------------------ Normalization & targets ------------------
+def norm(s: str) -> str:
+    """Normalize label for matching: remove non-alphanum, lowercase."""
+    return "".join(ch.lower() for ch in (s or "") if ch.isalnum())
+
+# Accept both human labels and camelCase keys (normalized).
+TARGET_KEYS = {
+    # offense PPG
+    "pointspergame": "scoring_offense_ppg",
+    # defense PPG allowed (multiple common variants)
+    "opponentpointspergame": "scoring_defense_ppg",
+    "opppointspergame": "scoring_defense_ppg",
+    # offense YPP
+    "yardsperplay": "yards_per_play",
+    # pace
+    "secondsperplay": "seconds_per_play",
 }
 
 VALUE_KEYS = ("value", "statValue", "stat", "avg", "average")
-
-def _lc(s: Optional[str]) -> str:
-    return (s or "").strip().lower()
 
 def _extract_name(stat_obj: Dict[str, Any]) -> Optional[str]:
     for k in ("name", "statName", "metric", "title", "displayName", "label"):
@@ -89,7 +96,6 @@ def _extract_value_text(stat_obj: Dict[str, Any]) -> Optional[str]:
     for k in VALUE_KEYS:
         if k in stat_obj and stat_obj[k] is not None:
             return str(stat_obj[k]).strip()
-    # else first primitive as text
     for v in stat_obj.values():
         if isinstance(v, (str, int, float, bool)):
             return str(v).strip()
@@ -109,9 +115,7 @@ def _to_float(s: Optional[str]) -> Optional[float]:
 
 def _flatten_any_stats(container: Union[Dict[str, Any], List[Any]]) -> List[Dict[str, Any]]:
     """
-    Recursively traverse dict/list and collect dict nodes that look like stat entries:
-      - have a name-like key (name/statName/metric/title/displayName/label)
-      - and carry any primitive value in known value keys or elsewhere
+    Recursively traverse dict/list and collect dict nodes that look like stat entries.
     Returns a list of { "name": <label>, "value_text": <text or ''>, "value_num": <float or None> }.
     """
     out: List[Dict[str, Any]] = []
@@ -148,7 +152,6 @@ def fetch_and_dump(year: int, season_type: str) -> Tuple[List[Dict[str, Any]], L
     basic = http_get("/stats/season", {"year": year, "seasonType": season_type})
     adv   = http_get("/stats/season/advanced", {"year": year, "seasonType": season_type})
 
-    # Save unmodified payloads for audit
     with open("cfbd_stats_season.json", "w") as f:
         json.dump(basic, f, indent=2)
     with open("cfbd_stats_advanced.json", "w") as f:
@@ -185,30 +188,22 @@ def build_and_write(year: int, season_type: str) -> Tuple[pd.DataFrame, pd.DataF
     df_raw = df_raw.drop_duplicates()
     df_raw.to_csv(OUTPUT_RAW, index=False)
 
-    # -------- WIDE (exact label match, case-insensitive; vectorized masks) --------
+    # -------- WIDE (normalized exact match) --------
     teams = sorted(set(list(ibasic.keys()) + list(iadv.keys())))
 
-    # Precompute normalized stat_name and numeric mask to avoid Series truth errors
-    if not df_raw.empty:
-        stat_ci = df_raw["stat_name"].astype(str).str.strip().str.lower()
-        has_num = df_raw["value_num"].astype(str) != ""
-    else:
-        stat_ci = pd.Series([], dtype=str)
-        has_num = pd.Series([], dtype=bool)
-
-    def pick(team: str, label_ci: str) -> Optional[float]:
+    def pick(team: str, key_norm: str) -> Optional[float]:
         # prefer basic
         sub = df_raw[(df_raw.team == team) & (df_raw.source == "basic")]
         if not sub.empty:
-            mask = (sub["stat_name"].astype(str).str.strip().str.lower() == label_ci) & (sub["value_num"].astype(str) != "")
-            sub2 = sub[mask]
+            mask = sub["stat_name"].astype(str).apply(lambda s: norm(s)) == key_norm
+            sub2 = sub[mask & (sub["value_num"].astype(str) != "")]
             if not sub2.empty:
                 return float(sub2.iloc[0]["value_num"])
         # advanced fallback
         sub = df_raw[(df_raw.team == team) & (df_raw.source == "advanced")]
         if not sub.empty:
-            mask = (sub["stat_name"].astype(str).str.strip().str.lower() == label_ci) & (sub["value_num"].astype(str) != "")
-            sub2 = sub[mask]
+            mask = sub["stat_name"].astype(str).apply(lambda s: norm(s)) == key_norm
+            sub2 = sub[mask & (sub["value_num"].astype(str) != "")]
             if not sub2.empty:
                 return float(sub2.iloc[0]["value_num"])
         return None
@@ -224,11 +219,15 @@ def build_and_write(year: int, season_type: str) -> Tuple[pd.DataFrame, pd.DataF
             "season_type": season_type,
             "team": team,
             "conference": conf,
-            "scoring_offense_ppg": pick(team, "points per game"),
-            "scoring_defense_ppg": pick(team, "opponent points per game"),
-            "yards_per_play":       pick(team, "yards per play"),
-            "seconds_per_play":     pick(team, "seconds per play"),
+            "scoring_offense_ppg": pick(team, "pointspergame"),
+            "scoring_defense_ppg": pick(team, "opponentpointspergame"),
+            "yards_per_play":       pick(team, "yardsperplay"),
+            "seconds_per_play":     pick(team, "secondsperplay"),
         }
+        # If CFBD uses oppPointsPerGame instead of opponentPointsPerGame
+        if row["scoring_defense_ppg"] is None:
+            row["scoring_defense_ppg"] = pick(team, "opppointspergame")
+
         wide_rows.append(row)
 
     df_wide = pd.DataFrame(wide_rows, columns=[
