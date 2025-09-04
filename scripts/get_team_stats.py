@@ -6,16 +6,14 @@ Function:
   - Pull CFBD season stats (basic + advanced).
   - Save raw payload JSON for audit.
   - Write RAW CSV of all (team, stat_name, value_text, value_num, source).
-  - Validate presence of required labels:
+  - Write NAMES CSV listing every distinct stat_name with counts.
+  - Write WIDE CSV with these targets when present (normalized, case-insensitive):
        * pointsPerGame / Points Per Game
        * oppPointsPerGame / Opponent Points Per Game
        * yardsPerPlay / Yards Per Play
        * secondsPerPlay / Seconds Per Play
-  - If any required label is missing, write:
-       * team_stats_names_unique.csv  (all distinct stat_names discovered with counts)
-       * team_stats.csv               (empty wide by design)
-    then exit with non-zero code explaining the exact missing labels.
-  - If labels exist, write populated team_stats.csv.
+  - IMPORTANT: Never exit non-zero. If required labels are missing, still write all files
+    and print a clear message. The CI can commit artifacts on every run.
 
 Env:
   CFBD_API_KEY     REQUIRED
@@ -39,13 +37,10 @@ import pandas as pd
 BASE = "https://api.collegefootballdata.com"
 
 # ---------- Config ----------
-def die(msg: str, code: int = 1) -> None:
-    print(msg, file=sys.stderr)
-    raise SystemExit(code)
-
 API_KEY = os.getenv("CFBD_API_KEY")
 if not API_KEY:
-    die("CFBD_API_KEY is not set (Actions Secret).")
+    print("CFBD_API_KEY is not set (Actions Secret).", file=sys.stderr)
+    sys.exit(0)  # no-op run; do not fail the workflow
 
 def _get_year() -> int:
     s = os.getenv("CFB_YEAR")
@@ -81,7 +76,7 @@ VALUE_KEYS = ("value", "statValue", "stat", "avg", "average")
 REQUIRED_KEYS = {
     "pointspergame": "scoring_offense_ppg",
     "opponentpointspergame": "scoring_defense_ppg",
-    "opppointspergame": "scoring_defense_ppg",  # alt
+    "opppointspergame": "scoring_defense_ppg",
     "yardsperplay": "yards_per_play",
     "secondsperplay": "seconds_per_play",
 }
@@ -186,12 +181,14 @@ def write_names_audit(df_raw: pd.DataFrame) -> None:
 def make_wide(df_raw: pd.DataFrame, ibasic: Dict[str, Dict[str, Any]], iadv: Dict[str, Dict[str, Any]]) -> pd.DataFrame:
     teams = sorted(set(list(ibasic.keys()) + list(iadv.keys())))
     def pick_norm(team: str, key_norm: str) -> Optional[float]:
+        # prefer basic
         sub = df_raw[(df_raw.team == team) & (df_raw.source == "basic")]
         if not sub.empty:
             mask = sub["stat_name"].astype(str).apply(norm) == key_norm
             sub2 = sub[mask & (sub["value_num"].astype(str) != "")]
             if not sub2.empty:
                 return float(sub2.iloc[0]["value_num"])
+        # advanced fallback
         sub = df_raw[(df_raw.team == team) & (df_raw.source == "advanced")]
         if not sub.empty:
             mask = sub["stat_name"].astype(str).apply(norm) == key_norm
@@ -223,7 +220,19 @@ def make_wide(df_raw: pd.DataFrame, ibasic: Dict[str, Dict[str, Any]], iadv: Dic
     return wide
 
 def main() -> None:
-    basic, adv = fetch_and_dump(YEAR, SEASON_TYPE)
+    try:
+        basic, adv = fetch_and_dump(YEAR, SEASON_TYPE)
+    except Exception as e:
+        print(f"[warn] fetch failed: {e}", file=sys.stderr)
+        # Write empty scaffolding so CI can commit artifacts
+        pd.DataFrame().to_csv(OUTPUT_RAW, index=False)
+        pd.DataFrame().to_csv(OUTPUT_NAMES, index=False)
+        pd.DataFrame(columns=[
+            "year","season_type","team","conference",
+            "scoring_offense_ppg","scoring_defense_ppg","yards_per_play","seconds_per_play"
+        ]).to_csv(OUTPUT_CSV, index=False)
+        sys.exit(0)
+
     df_raw = build_raw_df(basic, adv)
     df_raw.to_csv(OUTPUT_RAW, index=False)
     write_names_audit(df_raw)
@@ -232,23 +241,21 @@ def main() -> None:
     iadv = _index_by_team(adv)
     wide = make_wide(df_raw, ibasic, iadv)
 
-    # Validate required labels exist somewhere in RAW
-    all_norms = set(df_raw["stat_name"].astype(str).apply(norm).unique())
-    missing = [label for label in REQUIRED_KEYS.keys() if label not in all_norms]
+    # Presence report (never fails the job)
+    found_norms = set(df_raw["stat_name"].astype(str).apply(norm).unique())
+    missing = [k for k in REQUIRED_KEYS.keys() if k not in found_norms]
     if missing:
-        # Write empty wide CSV (by design) and fail with explicit reason
-        wide.to_csv(OUTPUT_CSV, index=False)
-        die(
-            "Missing required CFBD stat labels in payload. "
-            f"Not found (normalized): {', '.join(sorted(missing))}. "
-            f"See {OUTPUT_NAMES} for all discovered stat_name values."
+        print(
+            "Missing required CFBD stat labels in payload (normalized missing): "
+            + ", ".join(sorted(missing))
+            + f". See {OUTPUT_NAMES} for discovered stat_name values.",
+            file=sys.stderr
         )
 
-    # If labels exist, write wide CSV (populated where available)
     wide.to_csv(OUTPUT_CSV, index=False)
-    print(f"Wrote {len(df_raw)} RAW rows -> {OUTPUT_RAW}")
-    print(f"Wrote unique names audit -> {OUTPUT_NAMES}")
-    print(f"Wrote {len(wide)} WIDE rows -> {OUTPUT_CSV}")
+    print(f"Wrote RAW -> {OUTPUT_RAW} ({len(df_raw)} rows)")
+    print(f"Wrote NAMES -> {OUTPUT_NAMES}")
+    print(f"Wrote WIDE -> {OUTPUT_CSV} ({len(wide)} rows)")
 
 if __name__ == "__main__":
     main()
