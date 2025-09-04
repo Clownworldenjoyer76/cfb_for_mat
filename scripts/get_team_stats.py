@@ -4,19 +4,20 @@ get_team_stats.py
 
 Purpose:
   - Fetch season-level college football team stats from CFBD HTTP API.
-  - Extract core metrics:
-      * scoring_offense_ppg
-      * scoring_defense_ppg
-      * yards_per_play
-      * seconds_per_play  (pace)
-  - Pulls from BOTH /stats/season and /stats/season/advanced and merges.
-  - Writes a normalized CSV.
+  - Write:
+      1) team_stats_raw.csv  -> long format (team, stat_name, value, source)
+      2) team_stats.csv      -> wide format with target columns populated ONLY by exact label matches:
+           * Points Per Game                -> scoring_offense_ppg
+           * Opponent Points Per Game       -> scoring_defense_ppg
+           * Yards Per Play                 -> yards_per_play
+           * Seconds Per Play               -> seconds_per_play
 
-Env (safe handling of blanks):
-  CFBD_API_KEY    -> REQUIRED: CollegeFootballData.com API key (Actions secret)
-  CFB_YEAR        -> OPTIONAL: season year; defaults to current UTC year if unset/blank/invalid
-  CFB_SEASON_TYPE -> OPTIONAL: 'regular' (default) or 'postseason'
-  CFB_OUTPUT_CSV  -> OPTIONAL: output path; defaults to 'team_stats.csv' in repo root
+Env (blank-safe):
+  CFBD_API_KEY    -> REQUIRED (CollegeFootballData.com API key)
+  CFB_YEAR        -> OPTIONAL (defaults to current UTC year if unset/blank/invalid)
+  CFB_SEASON_TYPE -> OPTIONAL ('regular' default, or 'postseason')
+  CFB_OUTPUT_CSV  -> OPTIONAL (wide output path; default 'team_stats.csv')
+  CFB_OUTPUT_RAW  -> OPTIONAL (raw output path;  default 'team_stats_raw.csv')
 
 Dependencies: requests, pandas
 """
@@ -25,7 +26,7 @@ import os
 import sys
 import json
 import datetime as dt
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 import pandas as pd
@@ -53,6 +54,7 @@ def _get_year() -> int:
 YEAR = _get_year()
 SEASON_TYPE = (os.getenv("CFB_SEASON_TYPE", "regular") or "regular").strip().lower()
 OUTPUT_CSV = (os.getenv("CFB_OUTPUT_CSV", "team_stats.csv") or "team_stats.csv").strip()
+OUTPUT_RAW = (os.getenv("CFB_OUTPUT_RAW", "team_stats_raw.csv") or "team_stats_raw.csv").strip()
 
 # ------------------ HTTP helper ------------------
 def http_get(path: str, params: Dict[str, Any]) -> Any:
@@ -61,36 +63,7 @@ def http_get(path: str, params: Dict[str, Any]) -> Any:
     r.raise_for_status()
     return r.json()
 
-# ------------------ Matching config ------------------
-# Labels observed from CFBD payloads (lowercased contains).
-LABELS = {
-    "scoring_offense_ppg": [
-        "points per game",            # offense PPG
-        "offense points per game",
-        "offensive points per game",
-        "scoring offense",
-        "ppg"
-    ],
-    "scoring_defense_ppg": [
-        "opponent points per game",   # defense PPG allowed
-        "opp points per game",
-        "points allowed per game",
-        "scoring defense",
-        "defensive points per game"
-    ],
-    "yards_per_play": [
-        "yards per play",             # offense YPP
-        "offense yards per play",
-        "net yards per play",
-        "ypp"
-    ],
-    "seconds_per_play": [
-        "seconds per play",           # pace
-        "sec/play",
-        "pace"
-    ],
-}
-
+# ------------------ Flatten helpers ------------------
 VALUE_KEYS = ("value", "statValue", "stat", "avg", "average")
 
 def _lc(s: Optional[str]) -> str:
@@ -114,52 +87,26 @@ def _extract_value(stat_obj: Dict[str, Any]) -> Optional[float]:
 def _extract_name(stat_obj: Dict[str, Any]) -> str:
     for k in ("name", "statName", "metric", "title", "displayName"):
         if k in stat_obj and stat_obj[k]:
-            return _lc(str(stat_obj[k]))
-    return _lc(json.dumps(stat_obj, separators=(",", ":")))
-
-def _match_field(stat_name_lc: str) -> Optional[str]:
-    for field, labels in LABELS.items():
-        for label in labels:
-            if label in stat_name_lc:
-                return field
-    return None
+            return str(stat_obj[k]).strip()
+    # last resort: compact JSON slice
+    return json.dumps(stat_obj, separators=(",", ":"))[:64]
 
 def _flatten_stats_container(team_obj: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """
-    Accepts a single team object from CFBD /stats/season or /stats/season/advanced.
-    Returns a flat list of stat dicts.
-    """
     stats: List[Dict[str, Any]] = []
-    # Primary flat shape
     if isinstance(team_obj.get("stats"), list):
         stats.extend([x for x in team_obj["stats"] if isinstance(x, dict)])
-    # Nested categories shape
     if isinstance(team_obj.get("categories"), list):
         for cat in team_obj["categories"]:
             if isinstance(cat, dict) and isinstance(cat.get("stats"), list):
                 stats.extend([x for x in cat["stats"] if isinstance(x, dict)])
     return stats
 
-def _pick_core_metrics(stats_list: List[Dict[str, Any]]) -> Dict[str, Optional[float]]:
-    out: Dict[str, Optional[float]] = {
-        "scoring_offense_ppg": None,
-        "scoring_defense_ppg": None,
-        "yards_per_play": None,
-        "seconds_per_play": None,
-    }
-    trace: Dict[str, str] = {}
-
-    for st in stats_list:
-        name_lc = _extract_name(st)
-        val = _extract_value(st)
-        if val is None:
-            continue
-        field = _match_field(name_lc)
-        if field and out[field] is None:
-            out[field] = val
-            trace[field] = name_lc
-
-    out["_trace"] = trace
+def _index_by_team(items: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    out: Dict[str, Dict[str, Any]] = {}
+    for it in items or []:
+        team = it.get("team") or it.get("school") or it.get("team_name")
+        if team:
+            out[str(team)] = it
     return out
 
 # ------------------ Builders ------------------
@@ -171,75 +118,104 @@ def fetch_season_advanced(year: int, season_type: str) -> List[Dict[str, Any]]:
     payload = http_get("/stats/season/advanced", {"year": year, "seasonType": season_type})
     return payload if isinstance(payload, list) else []
 
-def index_by_team(items: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
-    out: Dict[str, Dict[str, Any]] = {}
-    for it in items:
-        team = it.get("team") or it.get("school") or it.get("team_name")
-        if team:
-            out[str(team)] = it
-    return out
+TARGET_LABELS = {
+    "Points Per Game": "scoring_offense_ppg",
+    "Opponent Points Per Game": "scoring_defense_ppg",
+    "Yards Per Play": "yards_per_play",
+    "Seconds Per Play": "seconds_per_play",
+}
 
-def build_dataframe(year: int, season_type: str) -> pd.DataFrame:
+def build_and_write(year: int, season_type: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
     basic = fetch_season_basic(year, season_type)
-    adv = fetch_season_advanced(year, season_type)
+    adv   = fetch_season_advanced(year, season_type)
 
-    ibasic = index_by_team(basic)
-    iadv = index_by_team(adv)
+    ibasic = _index_by_team(basic)
+    iadv   = _index_by_team(adv)
 
-    rows: List[Dict[str, Any]] = []
+    # -------- RAW LONG FORMAT --------
+    raw_rows: List[Dict[str, Any]] = []
+    for source_name, index_map in (("basic", ibasic), ("advanced", iadv)):
+        for team, obj in index_map.items():
+            conf = obj.get("conference") or ""
+            for st in _flatten_stats_container(obj):
+                nm = _extract_name(st)        # keep original case for audit
+                val = _extract_value(st)
+                if val is None:
+                    continue
+                raw_rows.append({
+                    "year": year,
+                    "season_type": season_type,
+                    "team": team,
+                    "conference": conf,
+                    "stat_name": nm,
+                    "value": val,
+                    "source": source_name
+                })
+    df_raw = pd.DataFrame(raw_rows, columns=[
+        "year","season_type","team","conference","stat_name","value","source"
+    ])
+    df_raw.to_csv(OUTPUT_RAW, index=False)
 
-    # iterate by union of teams across both payloads
-    all_teams = set(list(ibasic.keys()) + list(iadv.keys()))
-    for team in sorted(all_teams):
+    # -------- WIDE TARGET FORMAT (exact label matches only) --------
+    # Start with unique team rows
+    teams = sorted(set(list(ibasic.keys()) + list(iadv.keys())))
+    wide_rows: List[Dict[str, Any]] = []
+
+    # Create a lookup: (team -> {label -> value}) using EXACT label keys
+    def collect_exact(team_obj: Dict[str, Any]) -> Dict[str, float]:
+        found: Dict[str, float] = {}
+        for st in _flatten_stats_container(team_obj):
+            nm = _extract_name(st)       # original label
+            val = _extract_value(st)
+            if val is None:
+                continue
+            if nm in TARGET_LABELS and TARGET_LABELS[nm] not in found:
+                found[TARGET_LABELS[nm]] = val
+        return found
+
+    for team in teams:
         b = ibasic.get(team, {})
         a = iadv.get(team, {})
-
         conf = b.get("conference") or a.get("conference") or ""
 
-        b_stats = _flatten_stats_container(b)
-        a_stats = _flatten_stats_container(a)
+        found_b = collect_exact(b)
+        found_a = collect_exact(a)
 
-        # pick from basic first, then advanced fills missing
-        core_b = _pick_core_metrics(b_stats)
-        core_a = _pick_core_metrics(a_stats)
+        # prefer basic; fill gaps from advanced
+        vals: Dict[str, Optional[float]] = {
+            "scoring_offense_ppg": None,
+            "scoring_defense_ppg": None,
+            "yards_per_play": None,
+            "seconds_per_play": None,
+        }
+        for k in list(vals.keys()):
+            vals[k] = found_b.get(k, None)
+            if vals[k] is None:
+                vals[k] = found_a.get(k, None)
 
-        scoring_offense_ppg = core_b.get("scoring_offense_ppg") or core_a.get("scoring_offense_ppg")
-        scoring_defense_ppg = core_b.get("scoring_defense_ppg") or core_a.get("scoring_defense_ppg")
-        yards_per_play       = core_b.get("yards_per_play")       or core_a.get("yards_per_play")
-        seconds_per_play     = core_b.get("seconds_per_play")     or core_a.get("seconds_per_play")
-
-        # merge traces for audit
-        trace = {}
-        trace.update(core_b.get("_trace", {}))
-        for k, v in core_a.get("_trace", {}).items():
-            trace.setdefault(k, v)
-
-        row = {
+        wide_rows.append({
             "year": year,
             "season_type": season_type,
             "team": team,
             "conference": conf,
-            "scoring_offense_ppg": scoring_offense_ppg,
-            "scoring_defense_ppg": scoring_defense_ppg,
-            "yards_per_play": yards_per_play,
-            "seconds_per_play": seconds_per_play,
-            "source_stat_map": json.dumps(trace, separators=(",", ":")),
-        }
-        rows.append(row)
+            "scoring_offense_ppg": vals["scoring_offense_ppg"],
+            "scoring_defense_ppg": vals["scoring_defense_ppg"],
+            "yards_per_play": vals["yards_per_play"],
+            "seconds_per_play": vals["seconds_per_play"],
+        })
 
-    df = pd.DataFrame(rows, columns=[
-        "year", "season_type", "team", "conference",
-        "scoring_offense_ppg", "scoring_defense_ppg",
-        "yards_per_play", "seconds_per_play",
-        "source_stat_map"
+    df_wide = pd.DataFrame(wide_rows, columns=[
+        "year","season_type","team","conference",
+        "scoring_offense_ppg","scoring_defense_ppg","yards_per_play","seconds_per_play"
     ])
-    df = df.drop_duplicates(subset=["year", "season_type", "team"]).reset_index(drop=True)
-    return df
+    df_wide = df_wide.drop_duplicates(subset=["year","season_type","team"]).reset_index(drop=True)
+    df_wide.to_csv(OUTPUT_CSV, index=False)
+
+    print(f"Wrote {len(df_wide)} rows to {OUTPUT_CSV} and {len(df_raw)} raw rows to {OUTPUT_RAW} (year={year}, season_type={season_type})")
+    return df_wide, df_raw
 
 def main() -> None:
-    df = build_dataframe(YEAR, SEASON_TYPE)
-    df.to_csv(OUTPUT_CSV, index=False)
-    print(f"Wrote {len(df)} rows to {OUTPUT_CSV} (year={YEAR}, season_type={SEASON_TYPE})")
+    build_and_write(YEAR, SEASON_TYPE)
 
 if __name__ == "__main__":
     main()
