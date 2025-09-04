@@ -2,25 +2,27 @@
 """
 get_team_stats.py
 
-Purpose:
-  1) Pull season-level CFB team stats from CFBD HTTP API (basic + advanced).
-  2) Save unmodified payloads for audit:
-       - cfbd_stats_season.json
-       - cfbd_stats_advanced.json
-  3) Write RAW audit CSV with every (team, stat_name, value_text, value_num, source).
-  4) Write WIDE CSV with target columns populated when a stat name matches (case-insensitive),
-     accepting both display labels and camelCase keys via normalization:
-       - pointsPerGame / Points Per Game              -> scoring_offense_ppg
-       - oppPointsPerGame / Opponent Points Per Game  -> scoring_defense_ppg
-       - yardsPerPlay / Yards Per Play                -> yards_per_play
-       - secondsPerPlay / Seconds Per Play            -> seconds_per_play
+Function:
+  - Pull CFBD season stats (basic + advanced).
+  - Save raw payload JSON for audit.
+  - Write RAW CSV of all (team, stat_name, value_text, value_num, source).
+  - Validate presence of required labels:
+       * pointsPerGame / Points Per Game
+       * oppPointsPerGame / Opponent Points Per Game
+       * yardsPerPlay / Yards Per Play
+       * secondsPerPlay / Seconds Per Play
+  - If any required label is missing, write:
+       * team_stats_names_unique.csv  (all distinct stat_names discovered with counts)
+       * team_stats.csv               (empty wide by design)
+    then exit with non-zero code explaining the exact missing labels.
+  - If labels exist, write populated team_stats.csv.
 
-Env (blank-safe):
-  CFBD_API_KEY    -> REQUIRED
-  CFB_YEAR        -> OPTIONAL (defaults to current UTC year)
-  CFB_SEASON_TYPE -> OPTIONAL ('regular' default, or 'postseason')
-  CFB_OUTPUT_CSV  -> OPTIONAL (wide output path; default 'team_stats.csv')
-  CFB_OUTPUT_RAW  -> OPTIONAL (raw output path;  default 'team_stats_raw.csv')
+Env:
+  CFBD_API_KEY     REQUIRED
+  CFB_YEAR         OPTIONAL (defaults to current UTC year)
+  CFB_SEASON_TYPE  OPTIONAL ('regular' default)
+  CFB_OUTPUT_CSV   OPTIONAL (default 'team_stats.csv')
+  CFB_OUTPUT_RAW   OPTIONAL (default 'team_stats_raw.csv')
 
 Dependencies: requests, pandas
 """
@@ -36,11 +38,11 @@ import pandas as pd
 
 BASE = "https://api.collegefootballdata.com"
 
-def die(msg: str) -> None:
+# ---------- Config ----------
+def die(msg: str, code: int = 1) -> None:
     print(msg, file=sys.stderr)
-    raise SystemExit(1)
+    raise SystemExit(code)
 
-# ------------------ Config ------------------
 API_KEY = os.getenv("CFBD_API_KEY")
 if not API_KEY:
     die("CFBD_API_KEY is not set (Actions Secret).")
@@ -58,38 +60,37 @@ YEAR = _get_year()
 SEASON_TYPE = (os.getenv("CFB_SEASON_TYPE", "regular") or "regular").strip().lower()
 OUTPUT_CSV = (os.getenv("CFB_OUTPUT_CSV", "team_stats.csv") or "team_stats.csv").strip()
 OUTPUT_RAW = (os.getenv("CFB_OUTPUT_RAW", "team_stats_raw.csv") or "team_stats_raw.csv").strip()
+OUTPUT_NAMES = "team_stats_names_unique.csv"
+PAYLOAD_BASIC = "cfbd_stats_season.json"
+PAYLOAD_ADV = "cfbd_stats_advanced.json"
 
-# ------------------ HTTP ------------------
+# ---------- HTTP ----------
 def http_get(path: str, params: Dict[str, Any]) -> Any:
     headers = {"Authorization": f"Bearer {API_KEY}"}
     r = requests.get(f"{BASE}{path}", headers=headers, params=params, timeout=60)
     r.raise_for_status()
     return r.json()
 
-# ------------------ Normalization & targets ------------------
+# ---------- Normalization ----------
 def norm(s: str) -> str:
-    """Normalize label for matching: remove non-alphanum, lowercase."""
     return "".join(ch.lower() for ch in (s or "") if ch.isalnum())
-
-# Accept both human labels and camelCase keys (normalized).
-TARGET_KEYS = {
-    # offense PPG
-    "pointspergame": "scoring_offense_ppg",
-    # defense PPG allowed (multiple common variants)
-    "opponentpointspergame": "scoring_defense_ppg",
-    "opppointspergame": "scoring_defense_ppg",
-    # offense YPP
-    "yardsperplay": "yards_per_play",
-    # pace
-    "secondsperplay": "seconds_per_play",
-}
 
 VALUE_KEYS = ("value", "statValue", "stat", "avg", "average")
 
+# Accept both human labels and camelCase keys after normalization
+REQUIRED_KEYS = {
+    "pointspergame": "scoring_offense_ppg",
+    "opponentpointspergame": "scoring_defense_ppg",
+    "opppointspergame": "scoring_defense_ppg",  # alt
+    "yardsperplay": "yards_per_play",
+    "secondsperplay": "seconds_per_play",
+}
+
+# ---------- Extractors ----------
 def _extract_name(stat_obj: Dict[str, Any]) -> Optional[str]:
-    for k in ("name", "statName", "metric", "title", "displayName", "label"):
-        if k in stat_obj and stat_obj[k]:
-            return str(stat_obj[k]).strip()
+    for k in ("name", "statName", "metric", "title", "displayName", "label", "stat"):
+        if k in stat_obj and isinstance(stat_obj[k], str) and stat_obj[k].strip():
+            return stat_obj[k].strip()
     return None
 
 def _extract_value_text(stat_obj: Dict[str, Any]) -> Optional[str]:
@@ -114,12 +115,7 @@ def _to_float(s: Optional[str]) -> Optional[float]:
             return None
 
 def _flatten_any_stats(container: Union[Dict[str, Any], List[Any]]) -> List[Dict[str, Any]]:
-    """
-    Recursively traverse dict/list and collect dict nodes that look like stat entries.
-    Returns a list of { "name": <label>, "value_text": <text or ''>, "value_num": <float or None> }.
-    """
     out: List[Dict[str, Any]] = []
-
     def walk(node: Any):
         if isinstance(node, dict):
             nm = _extract_name(node)
@@ -135,7 +131,6 @@ def _flatten_any_stats(container: Union[Dict[str, Any], List[Any]]) -> List[Dict
         elif isinstance(node, list):
             for x in node:
                 walk(x)
-
     walk(container)
     return out
 
@@ -147,33 +142,27 @@ def _index_by_team(items: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
             out[str(team)] = it
     return out
 
-# ------------------ Builders ------------------
+# ---------- Build ----------
 def fetch_and_dump(year: int, season_type: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     basic = http_get("/stats/season", {"year": year, "seasonType": season_type})
     adv   = http_get("/stats/season/advanced", {"year": year, "seasonType": season_type})
-
-    with open("cfbd_stats_season.json", "w") as f:
+    with open(PAYLOAD_BASIC, "w") as f:
         json.dump(basic, f, indent=2)
-    with open("cfbd_stats_advanced.json", "w") as f:
+    with open(PAYLOAD_ADV, "w") as f:
         json.dump(adv, f, indent=2)
-
     return (basic if isinstance(basic, list) else []), (adv if isinstance(adv, list) else [])
 
-def build_and_write(year: int, season_type: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    basic, adv = fetch_and_dump(year, season_type)
+def build_raw_df(basic: List[Dict[str, Any]], adv: List[Dict[str, Any]]) -> pd.DataFrame:
     ibasic = _index_by_team(basic)
-    iadv   = _index_by_team(adv)
-
-    # -------- RAW (always write rows) --------
-    raw_rows: List[Dict[str, Any]] = []
+    iadv = _index_by_team(adv)
+    rows: List[Dict[str, Any]] = []
     for source_name, idx in (("basic", ibasic), ("advanced", iadv)):
         for team, obj in idx.items():
             conf = obj.get("conference") or ""
-            stats = _flatten_any_stats(obj)
-            for st in stats:
-                raw_rows.append({
-                    "year": year,
-                    "season_type": season_type,
+            for st in _flatten_any_stats(obj):
+                rows.append({
+                    "year": YEAR,
+                    "season_type": SEASON_TYPE,
                     "team": team,
                     "conference": conf,
                     "stat_name": st["name"],
@@ -181,67 +170,85 @@ def build_and_write(year: int, season_type: str) -> Tuple[pd.DataFrame, pd.DataF
                     "value_num": st["value_num"] if st["value_num"] is not None else "",
                     "source": source_name
                 })
-
-    df_raw = pd.DataFrame(raw_rows, columns=[
+    df = pd.DataFrame(rows, columns=[
         "year","season_type","team","conference","stat_name","value_text","value_num","source"
     ])
-    df_raw = df_raw.drop_duplicates()
-    df_raw.to_csv(OUTPUT_RAW, index=False)
+    df = df.drop_duplicates()
+    return df
 
-    # -------- WIDE (normalized exact match) --------
+def write_names_audit(df_raw: pd.DataFrame) -> None:
+    if df_raw.empty:
+        pd.DataFrame(columns=["stat_name","count"]).to_csv(OUTPUT_NAMES, index=False)
+        return
+    tmp = df_raw.groupby("stat_name", as_index=False).size().rename(columns={"size":"count"})
+    tmp.sort_values(["count","stat_name"], ascending=[False, True]).to_csv(OUTPUT_NAMES, index=False)
+
+def make_wide(df_raw: pd.DataFrame, ibasic: Dict[str, Dict[str, Any]], iadv: Dict[str, Dict[str, Any]]) -> pd.DataFrame:
     teams = sorted(set(list(ibasic.keys()) + list(iadv.keys())))
-
-    def pick(team: str, key_norm: str) -> Optional[float]:
-        # prefer basic
+    def pick_norm(team: str, key_norm: str) -> Optional[float]:
         sub = df_raw[(df_raw.team == team) & (df_raw.source == "basic")]
         if not sub.empty:
-            mask = sub["stat_name"].astype(str).apply(lambda s: norm(s)) == key_norm
+            mask = sub["stat_name"].astype(str).apply(norm) == key_norm
             sub2 = sub[mask & (sub["value_num"].astype(str) != "")]
             if not sub2.empty:
                 return float(sub2.iloc[0]["value_num"])
-        # advanced fallback
         sub = df_raw[(df_raw.team == team) & (df_raw.source == "advanced")]
         if not sub.empty:
-            mask = sub["stat_name"].astype(str).apply(lambda s: norm(s)) == key_norm
+            mask = sub["stat_name"].astype(str).apply(norm) == key_norm
             sub2 = sub[mask & (sub["value_num"].astype(str) != "")]
             if not sub2.empty:
                 return float(sub2.iloc[0]["value_num"])
         return None
 
-    wide_rows: List[Dict[str, Any]] = []
+    rows: List[Dict[str, Any]] = []
     for team in teams:
         b = ibasic.get(team, {})
         a = iadv.get(team, {})
         conf = b.get("conference") or a.get("conference") or ""
-
-        row = {
-            "year": year,
-            "season_type": season_type,
+        rows.append({
+            "year": YEAR,
+            "season_type": SEASON_TYPE,
             "team": team,
             "conference": conf,
-            "scoring_offense_ppg": pick(team, "pointspergame"),
-            "scoring_defense_ppg": pick(team, "opponentpointspergame"),
-            "yards_per_play":       pick(team, "yardsperplay"),
-            "seconds_per_play":     pick(team, "secondsperplay"),
-        }
-        # If CFBD uses oppPointsPerGame instead of opponentPointsPerGame
-        if row["scoring_defense_ppg"] is None:
-            row["scoring_defense_ppg"] = pick(team, "opppointspergame")
-
-        wide_rows.append(row)
-
-    df_wide = pd.DataFrame(wide_rows, columns=[
+            "scoring_offense_ppg": pick_norm(team, "pointspergame"),
+            "scoring_defense_ppg": (pick_norm(team, "opponentpointspergame") or pick_norm(team, "opppointspergame")),
+            "yards_per_play": pick_norm(team, "yardsperplay"),
+            "seconds_per_play": pick_norm(team, "secondsperplay"),
+        })
+    wide = pd.DataFrame(rows, columns=[
         "year","season_type","team","conference",
         "scoring_offense_ppg","scoring_defense_ppg","yards_per_play","seconds_per_play"
     ])
-    df_wide = df_wide.drop_duplicates(subset=["year","season_type","team"]).reset_index(drop=True)
-    df_wide.to_csv(OUTPUT_CSV, index=False)
-
-    print(f"Wrote {len(df_wide)} rows to {OUTPUT_CSV} and {len(df_raw)} rows to {OUTPUT_RAW} (year={year}, season_type={season_type})")
-    return df_wide, df_raw
+    wide = wide.drop_duplicates(subset=["year","season_type","team"]).reset_index(drop=True)
+    return wide
 
 def main() -> None:
-    build_and_write(YEAR, SEASON_TYPE)
+    basic, adv = fetch_and_dump(YEAR, SEASON_TYPE)
+    df_raw = build_raw_df(basic, adv)
+    df_raw.to_csv(OUTPUT_RAW, index=False)
+    write_names_audit(df_raw)
+
+    ibasic = _index_by_team(basic)
+    iadv = _index_by_team(adv)
+    wide = make_wide(df_raw, ibasic, iadv)
+
+    # Validate required labels exist somewhere in RAW
+    all_norms = set(df_raw["stat_name"].astype(str).apply(norm).unique())
+    missing = [label for label in REQUIRED_KEYS.keys() if label not in all_norms]
+    if missing:
+        # Write empty wide CSV (by design) and fail with explicit reason
+        wide.to_csv(OUTPUT_CSV, index=False)
+        die(
+            "Missing required CFBD stat labels in payload. "
+            f"Not found (normalized): {', '.join(sorted(missing))}. "
+            f"See {OUTPUT_NAMES} for all discovered stat_name values."
+        )
+
+    # If labels exist, write wide CSV (populated where available)
+    wide.to_csv(OUTPUT_CSV, index=False)
+    print(f"Wrote {len(df_raw)} RAW rows -> {OUTPUT_RAW}")
+    print(f"Wrote unique names audit -> {OUTPUT_NAMES}")
+    print(f"Wrote {len(wide)} WIDE rows -> {OUTPUT_CSV}")
 
 if __name__ == "__main__":
     main()
