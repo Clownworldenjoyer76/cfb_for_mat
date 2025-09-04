@@ -3,10 +3,14 @@
 get_team_stats.py
 
 Purpose:
-  - Fetch season-level college football team stats from the CFBD HTTP API.
-  - Extract core metrics: scoring offense (PPG), scoring defense (PPG allowed),
-    yards per play (YPP), and pace (seconds per play).
-  - Output a normalized CSV for downstream use.
+  - Fetch season-level college football team stats from CFBD HTTP API.
+  - Extract core metrics:
+      * scoring_offense_ppg
+      * scoring_defense_ppg
+      * yards_per_play
+      * seconds_per_play  (pace)
+  - Pulls from BOTH /stats/season and /stats/season/advanced and merges.
+  - Writes a normalized CSV.
 
 Env (safe handling of blanks):
   CFBD_API_KEY    -> REQUIRED: CollegeFootballData.com API key (Actions secret)
@@ -58,49 +62,47 @@ def http_get(path: str, params: Dict[str, Any]) -> Any:
     return r.json()
 
 # ------------------ Matching config ------------------
-# Exact labels observed in CFBD plus tolerant aliases (all compared lowercase/contains)
-EXACT_LABELS = {
+# Labels observed from CFBD payloads (lowercased contains).
+LABELS = {
     "scoring_offense_ppg": [
-        "points per game",            # CFBD display label
+        "points per game",            # offense PPG
         "offense points per game",
         "offensive points per game",
-        "ppg",                        # alias
-        "scoring offense"
+        "scoring offense",
+        "ppg"
     ],
     "scoring_defense_ppg": [
-        "opponent points per game",   # CFBD display label
+        "opponent points per game",   # defense PPG allowed
         "opp points per game",
         "points allowed per game",
         "scoring defense",
         "defensive points per game"
     ],
     "yards_per_play": [
-        "yards per play",             # CFBD display label (offense)
-        "net yards per play",
+        "yards per play",             # offense YPP
         "offense yards per play",
+        "net yards per play",
         "ypp"
     ],
     "seconds_per_play": [
-        "seconds per play",           # CFBD display label (pace)
+        "seconds per play",           # pace
         "sec/play",
         "pace"
     ],
 }
 
-VALUE_KEYS = ("value", "statValue", "stat", "avg", "average")  # try in order
+VALUE_KEYS = ("value", "statValue", "stat", "avg", "average")
 
 def _lc(s: Optional[str]) -> str:
     return (s or "").strip().lower()
 
 def _extract_value(stat_obj: Dict[str, Any]) -> Optional[float]:
-    # Try common numeric keys first
     for k in VALUE_KEYS:
         if k in stat_obj and stat_obj[k] is not None:
             try:
                 return float(stat_obj[k])
             except Exception:
                 pass
-    # Fallback: first numeric in values
     for v in stat_obj.values():
         if isinstance(v, (int, float)):
             try:
@@ -110,15 +112,13 @@ def _extract_value(stat_obj: Dict[str, Any]) -> Optional[float]:
     return None
 
 def _extract_name(stat_obj: Dict[str, Any]) -> str:
-    # Common name keys in CFBD payloads
     for k in ("name", "statName", "metric", "title", "displayName"):
         if k in stat_obj and stat_obj[k]:
             return _lc(str(stat_obj[k]))
-    # As a last resort, stringify object
     return _lc(json.dumps(stat_obj, separators=(",", ":")))
 
 def _match_field(stat_name_lc: str) -> Optional[str]:
-    for field, labels in EXACT_LABELS.items():
+    for field, labels in LABELS.items():
         for label in labels:
             if label in stat_name_lc:
                 return field
@@ -126,16 +126,14 @@ def _match_field(stat_name_lc: str) -> Optional[str]:
 
 def _flatten_stats_container(team_obj: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
-    CFBD /stats/season can return either:
-      - {"team": "...", "stats": [ { "name": "Points Per Game", "value": ... }, ... ]}
-      - {"team": "...", "categories": [ { "name": "...", "stats": [ ... ] }, ... ]}
-    Return a flat list of stat dicts.
+    Accepts a single team object from CFBD /stats/season or /stats/season/advanced.
+    Returns a flat list of stat dicts.
     """
-    stats = []
-    # Primary flat list
+    stats: List[Dict[str, Any]] = []
+    # Primary flat shape
     if isinstance(team_obj.get("stats"), list):
         stats.extend([x for x in team_obj["stats"] if isinstance(x, dict)])
-    # Nested categories
+    # Nested categories shape
     if isinstance(team_obj.get("categories"), list):
         for cat in team_obj["categories"]:
             if isinstance(cat, dict) and isinstance(cat.get("stats"), list):
@@ -164,31 +162,68 @@ def _pick_core_metrics(stats_list: List[Dict[str, Any]]) -> Dict[str, Optional[f
     out["_trace"] = trace
     return out
 
-# ------------------ Build ------------------
-def fetch_season_stats(year: int, season_type: str) -> List[Dict[str, Any]]:
+# ------------------ Builders ------------------
+def fetch_season_basic(year: int, season_type: str) -> List[Dict[str, Any]]:
     payload = http_get("/stats/season", {"year": year, "seasonType": season_type})
     return payload if isinstance(payload, list) else []
 
+def fetch_season_advanced(year: int, season_type: str) -> List[Dict[str, Any]]:
+    payload = http_get("/stats/season/advanced", {"year": year, "seasonType": season_type})
+    return payload if isinstance(payload, list) else []
+
+def index_by_team(items: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    out: Dict[str, Dict[str, Any]] = {}
+    for it in items:
+        team = it.get("team") or it.get("school") or it.get("team_name")
+        if team:
+            out[str(team)] = it
+    return out
+
 def build_dataframe(year: int, season_type: str) -> pd.DataFrame:
-    teams = fetch_season_stats(year, season_type)
+    basic = fetch_season_basic(year, season_type)
+    adv = fetch_season_advanced(year, season_type)
+
+    ibasic = index_by_team(basic)
+    iadv = index_by_team(adv)
+
     rows: List[Dict[str, Any]] = []
 
-    for item in teams:
-        team = item.get("team") or item.get("school") or item.get("team_name")
-        conf = item.get("conference") or item.get("conf") or ""
-        stats_list = _flatten_stats_container(item)
+    # iterate by union of teams across both payloads
+    all_teams = set(list(ibasic.keys()) + list(iadv.keys()))
+    for team in sorted(all_teams):
+        b = ibasic.get(team, {})
+        a = iadv.get(team, {})
 
-        core = _pick_core_metrics(stats_list)
+        conf = b.get("conference") or a.get("conference") or ""
+
+        b_stats = _flatten_stats_container(b)
+        a_stats = _flatten_stats_container(a)
+
+        # pick from basic first, then advanced fills missing
+        core_b = _pick_core_metrics(b_stats)
+        core_a = _pick_core_metrics(a_stats)
+
+        scoring_offense_ppg = core_b.get("scoring_offense_ppg") or core_a.get("scoring_offense_ppg")
+        scoring_defense_ppg = core_b.get("scoring_defense_ppg") or core_a.get("scoring_defense_ppg")
+        yards_per_play       = core_b.get("yards_per_play")       or core_a.get("yards_per_play")
+        seconds_per_play     = core_b.get("seconds_per_play")     or core_a.get("seconds_per_play")
+
+        # merge traces for audit
+        trace = {}
+        trace.update(core_b.get("_trace", {}))
+        for k, v in core_a.get("_trace", {}).items():
+            trace.setdefault(k, v)
+
         row = {
             "year": year,
             "season_type": season_type,
             "team": team,
             "conference": conf,
-            "scoring_offense_ppg": core.get("scoring_offense_ppg"),
-            "scoring_defense_ppg": core.get("scoring_defense_ppg"),
-            "yards_per_play": core.get("yards_per_play"),
-            "seconds_per_play": core.get("seconds_per_play"),
-            "source_stat_map": json.dumps(core.get("_trace", {}), separators=(",", ":")),
+            "scoring_offense_ppg": scoring_offense_ppg,
+            "scoring_defense_ppg": scoring_defense_ppg,
+            "yards_per_play": yards_per_play,
+            "seconds_per_play": seconds_per_play,
+            "source_stat_map": json.dumps(trace, separators=(",", ":")),
         }
         rows.append(row)
 
