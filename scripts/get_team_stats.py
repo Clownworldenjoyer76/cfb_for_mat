@@ -4,15 +4,16 @@ get_team_stats.py
 
 Purpose:
   1) Pull season-level CFB team stats from CFBD HTTP API (basic + advanced).
-  2) Write RAW audit CSV with every (team, stat_name, value_text, value_num, source).
-  3) Write WIDE CSV with target columns populated ONLY when exact label matches (case-insensitive) and numeric value exists:
+  2) Save unmodified payloads for audit:
+       - cfbd_stats_season.json
+       - cfbd_stats_advanced.json
+  3) Write RAW audit CSV with every (team, stat_name, value_text, value_num, source).
+  4) Write WIDE CSV with target columns populated ONLY when exact label matches (case-insensitive)
+     and numeric value exists:
        - Points Per Game              -> scoring_offense_ppg
        - Opponent Points Per Game     -> scoring_defense_ppg
        - Yards Per Play               -> yards_per_play
        - Seconds Per Play             -> seconds_per_play
-  4) Save unmodified payloads to JSON files for schema audit:
-       - cfbd_stats_season.json
-       - cfbd_stats_advanced.json
 
 Env (blank-safe):
   CFBD_API_KEY    -> REQUIRED
@@ -109,9 +110,9 @@ def _to_float(s: Optional[str]) -> Optional[float]:
 def _flatten_any_stats(container: Union[Dict[str, Any], List[Any]]) -> List[Dict[str, Any]]:
     """
     Recursively traverse dict/list and collect dict nodes that look like stat entries:
-      - have a 'name-like' key (name/statName/metric/title/displayName/label)
+      - have a name-like key (name/statName/metric/title/displayName/label)
       - and carry any primitive value in known value keys or elsewhere
-    Returns a list of { "name": <label>, "value_text": <text or ''>, "value_num": <float or None> }
+    Returns a list of { "name": <label>, "value_text": <text or ''>, "value_num": <float or None> }.
     """
     out: List[Dict[str, Any]] = []
 
@@ -184,22 +185,32 @@ def build_and_write(year: int, season_type: str) -> Tuple[pd.DataFrame, pd.DataF
     df_raw = df_raw.drop_duplicates()
     df_raw.to_csv(OUTPUT_RAW, index=False)
 
-    # -------- WIDE (exact label match, case-insensitive) --------
+    # -------- WIDE (exact label match, case-insensitive; vectorized masks) --------
     teams = sorted(set(list(ibasic.keys()) + list(iadv.keys())))
 
+    # Precompute normalized stat_name and numeric mask to avoid Series truth errors
+    if not df_raw.empty:
+        stat_ci = df_raw["stat_name"].astype(str).str.strip().str.lower()
+        has_num = df_raw["value_num"].astype(str) != ""
+    else:
+        stat_ci = pd.Series([], dtype=str)
+        has_num = pd.Series([], dtype=bool)
+
     def pick(team: str, label_ci: str) -> Optional[float]:
-        # prefer basic exact-label (case-insensitive)
+        # prefer basic
         sub = df_raw[(df_raw.team == team) & (df_raw.source == "basic")]
-        sub = sub[_lc(sub.stat_name) == label_ci] if len(sub) else sub
-        sub = sub[sub.value_num != ""] if len(sub) else sub
-        if len(sub):
-            return float(sub.iloc[0]["value_num"])
+        if not sub.empty:
+            mask = (sub["stat_name"].astype(str).str.strip().str.lower() == label_ci) & (sub["value_num"].astype(str) != "")
+            sub2 = sub[mask]
+            if not sub2.empty:
+                return float(sub2.iloc[0]["value_num"])
         # advanced fallback
         sub = df_raw[(df_raw.team == team) & (df_raw.source == "advanced")]
-        sub = sub[_lc(sub.stat_name) == label_ci] if len(sub) else sub
-        sub = sub[sub.value_num != ""] if len(sub) else sub
-        if len(sub):
-            return float(sub.iloc[0]["value_num"])
+        if not sub.empty:
+            mask = (sub["stat_name"].astype(str).str.strip().str.lower() == label_ci) & (sub["value_num"].astype(str) != "")
+            sub2 = sub[mask]
+            if not sub2.empty:
+                return float(sub2.iloc[0]["value_num"])
         return None
 
     wide_rows: List[Dict[str, Any]] = []
