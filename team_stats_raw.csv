@@ -11,7 +11,7 @@ year,season_type,team,conference,stat_name,value_text,value_num,source
 2025,regular,Auburn,SEC,turnoversOpponent,0,0.0,basic
 2025,regular,Ball State,Mid-American,turnoversOpponent,0,0.0,basic
 2025,regular,Baylor,Big 12,turnoversOpponent,0,0.0,basic
-2025,regular,Boise State,Mountain West,turnoversOpponent,0,0.0,basic
+2025,regular,Boise State,Mountain West,turnoversOpponent,2,2.0,basic
 2025,regular,Boston College,ACC,turnoversOpponent,1,1.0,basic
 2025,regular,Bowling Green,Mid-American,turnoversOpponent,0,0.0,basic
 2025,regular,Buffalo,Mid-American,turnoversOpponent,1,1.0,basic
@@ -44,7 +44,7 @@ year,season_type,team,conference,stat_name,value_text,value_num,source
 2025,regular,Iowa,Big Ten,turnoversOpponent,0,0.0,basic
 2025,regular,Iowa State,Big 12,turnoversOpponent,4,4.0,basic
 2025,regular,Jacksonville State,Conference USA,turnoversOpponent,1,1.0,basic
-2025,regular,James Madison,Sun Belt,turnoversOpponent,3,3.0,basic
+2025,regular,James Madison,Sun Belt,turnoversOpponent,4,4.0,basic
 2025,regular,Kansas,Big 12,turnoversOpponent,3,3.0,basic
 2025,regular,Kansas State,Big 12,turnoversOpponent,3,3.0,basic
 2025,regular,Kennesaw State,Conference USA,turnoversOpponent,0,0.0,basic
@@ -53,7 +53,7 @@ year,season_type,team,conference,stat_name,value_text,value_num,source
 2025,regular,Liberty,Conference USA,turnoversOpponent,2,2.0,basic
 2025,regular,Louisiana,Sun Belt,turnoversOpponent,0,0.0,basic
 2025,regular,Louisiana Tech,Conference USA,turnoversOpponent,3,3.0,basic
-2025,regular,Louisville,ACC,turnoversOpponent,0,0.0,basic
+2025,regular,Louisville,ACC,turnoversOpponent,2,2.0,basic
 2025,regular,LSU,SEC,turnoversOpponent,1,1.0,basic
 2025,regular,Marshall,Sun Belt,turnoversOpponent,0,0.0,basic
 2025,regular,Maryland,Big Ten,turnoversOpponent,6,6.0,basic
@@ -75,9 +75,9 @@ year,season_type,team,conference,stat_name,value_text,value_num,source
 2025,regular,New Mexico,Mountain West,turnoversOpponent,1,1.0,basic
 2025,regular,New Mexico State,Conference USA,turnoversOpponent,1,1.0,basic
 2025,regular,North Carolina,ACC,turnoversOpponent,1,1.0,basic
-2025,regular,Northern Illinois,Mid-American,turnoversOpponent,1,1.0,basic
+2025,regular,Northern Illinois,Mid-American,turnoversOpponent,2,2.0,basic
 2025,regular,North Texas,American Athletic,turnoversOpponent,2,2.0,basic
-2025,regular,Northwestern,Big Ten,turnoversOpponent,0,0.0,basic
+2025,regular,Northwestern,Big Ten,turnoversOpponent,1,1.0,basic
 2025,regular,Notre Dame,FBS Independents,turnoversOpponent,0,0.0,basic
 2025,regular,Ohio,Mid-American,turnoversOpponent,0,0.0,basic
 2025,regular,Ohio State,Big Ten,turnoversOpponent,1,1.0,basic
