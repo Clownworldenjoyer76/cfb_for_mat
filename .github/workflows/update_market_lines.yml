@@ -8,11 +8,11 @@ on:
         required: false
         type: string
       week:
-        description: "CFB Week (optional; omit to fetch all weeks returned)"
+        description: "CFB Week (optional)"
         required: false
         type: string
       season_type:
-        description: "Season type (regular|postseason; default: regular)"
+        description: "Season type (regular|postseason)"
         required: false
         type: string
       output_lines:
@@ -20,8 +20,7 @@ on:
         required: false
         type: string
   schedule:
-    # 13:07 UTC daily (09:07 ET)
-    - cron: "7 13 * * *"
+    - cron: "7 13 * * *"   # 13:07 UTC daily
 
 permissions:
   contents: write
@@ -75,3 +74,4 @@ jobs:
             git push
           else
             echo "No changes to commit."
+          fi
