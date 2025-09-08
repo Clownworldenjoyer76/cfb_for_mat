@@ -36,22 +36,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt || true
-          # Ensure runtime deps
-          python - << 'PY'
-import sys, subprocess
-pkgs = ["pandas","requests"]
-for p in pkgs:
-    try:
-        __import__(p)
-    except Exception:
-        subprocess.check_call([sys.executable,"-m","pip","install",p])
-# sportsdataverse is optional; install if possible
-try:
-    __import__("sportsdataverse")
-except Exception:
-    subprocess.call([sys.executable,"-m","pip","install","sportsdataverse>=0.6"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-PY
+          pip install pandas requests sportsdataverse
 
       - name: Generate team efficiency CSV
         env:
@@ -61,13 +46,15 @@ PY
           CFB_OUTPUT_EFF: ${{ inputs.output_eff }}
         run: |
           python scripts/get_team_efficiency.py
-          OUT="${{ inputs.output_eff }}"; if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
+          OUT="${{ inputs.output_eff }}"
+          if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
           echo "--- file size ---"; wc -c "$OUT" || true
           echo "--- preview ---"; head -n 20 "$OUT" || true
 
       - name: Commit and push if changed
         run: |
-          OUT="${{ inputs.output_eff }}"; if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
+          OUT="${{ inputs.output_eff }}"
+          if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [[ -n "$(git status --porcelain "$OUT")" ]]; then
