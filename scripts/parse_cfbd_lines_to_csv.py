@@ -4,8 +4,14 @@
 parse_cfbd_lines_to_csv.py
 
 Purpose:
-  Convert the raw CFBD audit JSON (cfbd_lines.json or cfbd_lines.json.txt)
-  into a normalized CSV: market_lines.csv
+  Convert raw CFBD audit JSON (cfbd_lines.json or cfbd_lines.json.txt) into
+  a normalized CSV (market_lines.csv) using preferred book order with fallbacks.
+
+Behavior:
+  - Preferred book order: ["ESPN Bet", "Bovada"] then any others as final fallback.
+  - Each field (spread, home_ml, away_ml, total) is filled independently:
+      try preferred book #1, else preferred #2, else first other book with a number.
+  - Spread is written as HOME spread (positive = home underdog), consistent with CFBD.
 
 Input (repo root):
   - cfbd_lines.json        (preferred)
@@ -15,34 +21,37 @@ Output (repo root):
   - market_lines.csv with columns:
       year,season_type,week,game_id,kickoff_utc,
       home_team,away_team,
-      spread,total,home_ml,away_ml,book
+      spread,total,home_ml,away_ml,book_spread,book_total,book_ml
 
 Notes:
-  - Picks the first provider ("book") that supplies any usable number.
-  - Handles both shapes:
-      { "data": [ ... game objects ... ] } or plain [ ... game objects ... ]
-  - Numbers are parsed safely; blanks remain empty in CSV.
+  - Supports JSON shaped as { "data": [ ... ] } or plain [ ... ].
+  - Ignores clearly invalid ML sentinels (e.g., -100000).
 """
 
 import os
 import sys
 import json
 import csv
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 PREFERRED_JSON = os.path.join(REPO_ROOT, "cfbd_lines.json")
 FALLBACK_JSON = os.path.join(REPO_ROOT, "cfbd_lines.json.txt")
 OUTPUT_CSV = os.path.join(REPO_ROOT, "market_lines.csv")
 
+PREFERRED_BOOKS = ["ESPN Bet", "Bovada"]  # ordered preference
+
 
 def _num(x: Any) -> Optional[float]:
-    """Parse numeric with common cleanup; return None if not parseable."""
+    """Parse numeric safely; return None if not parseable."""
     if x is None:
         return None
-    try:
-        if isinstance(x, (int, float)):
+    if isinstance(x, (int, float)):
+        try:
             return float(x)
+        except Exception:
+            return None
+    try:
         s = str(x).strip()
         if not s:
             return None
@@ -53,146 +62,194 @@ def _num(x: Any) -> Optional[float]:
         return None
 
 
-def _load_raw() -> List[Dict[str, Any]]:
-    """Load the raw JSON and return the list of game objects."""
+def _valid_ml(v: Optional[float]) -> bool:
+    """Filter out absurd/sentinel moneylines seen in feeds."""
+    if v is None:
+        return False
+    # Typical ML range [-10000, +10000]; reject extreme sentinel values
+    return -10000.0 <= v <= 10000.0
+
+
+def _load_games() -> List[Dict[str, Any]]:
+    """Load raw JSON and return the list of game objects."""
     path = PREFERRED_JSON if os.path.exists(PREFERRED_JSON) else FALLBACK_JSON
     if not os.path.exists(path):
-        print(f"[error] Missing cfbd_lines.json and cfbd_lines.json.txt in repo root.", file=sys.stderr)
+        print("[error] Missing cfbd_lines.json and cfbd_lines.json.txt in repo root.", file=sys.stderr)
         return []
     with open(path, "r", encoding="utf-8") as f:
         root = json.load(f)
 
-    # Accept either {"data":[...]} or plain list
-    if isinstance(root, dict) and "data" in root and isinstance(root["data"], list):
-        return root["data"]
+    if isinstance(root, dict):
+        if isinstance(root.get("data"), list):
+            return root["data"]
+        # conservative unwraps if present
+        for key in ("items", "results", "payload"):
+            if isinstance(root.get(key), list):
+                return root[key]
     if isinstance(root, list):
         return root
 
-    # Some audit files may nest deeper; try a conservative unwrap
-    for key in ("items", "results", "payload"):
-        if isinstance(root, dict) and key in root and isinstance(root[key], list):
-            return root[key]
-
-    print(f"[warn] Unrecognized JSON shape; proceeding with empty list.", file=sys.stderr)
+    print("[warn] Unrecognized JSON shape; returning empty list.", file=sys.stderr)
     return []
 
 
-def _first_book_values(game: Dict[str, Any]) -> Dict[str, Optional[float]]:
-    """
-    From game['lines'] list, capture the FIRST provider that gives any usable:
-      spread, total (overUnder|total), moneyline home/away.
-    Return dict with spread,total,home_ml,away_ml,book (name string).
-    """
-    spread = total = home_ml = away_ml = None
-    book = ""
-
+def _collect_books(game: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Return a clean list of book dicts from game['lines']."""
     lines = game.get("lines") or []
-    if not isinstance(lines, list):
-        return {"spread": None, "total": None, "home_ml": None, "away_ml": None, "book": ""}
+    return [b for b in lines if isinstance(b, dict)]
 
-    for b in lines:
-        if not isinstance(b, dict):
+
+def _extract_fields_from_book(book: Dict[str, Any]) -> Tuple[Optional[float], Optional[float], Optional[float], Optional[float]]:
+    """
+    Return (spread_home, total, home_ml, away_ml) from a single book entry.
+    - spread_home is CFBD home spread number (positive = home underdog).
+    """
+    spread_home = None
+    total = None
+    home_ml = None
+    away_ml = None
+
+    sp = book.get("spread")
+    if isinstance(sp, dict):
+        spread_home = _num(sp.get("spread"))
+
+    # totals sometimes appear as 'overUnder' or 'total'
+    total = _num(book.get("overUnder"))
+    if total is None:
+        total = _num(book.get("total"))
+
+    ml = book.get("moneyline")
+    if isinstance(ml, dict):
+        home_ml = _num(ml.get("homePrice"))
+        away_ml = _num(ml.get("awayPrice"))
+        if not _valid_ml(home_ml):
+            home_ml = None
+        if not _valid_ml(away_ml):
+            away_ml = None
+
+    return spread_home, total, home_ml, away_ml
+
+
+def _choose_by_preference(books: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Fill each field by preferred order, falling back as needed.
+    Returns dict: {spread, total, home_ml, away_ml, book_spread, book_total, book_ml}
+    """
+    # Prepare lookup by provider
+    by_provider: Dict[str, Dict[str, Any]] = {}
+    for b in books:
+        provider = (b.get("provider") or b.get("book") or "").strip()
+        by_provider.setdefault(provider, b)
+
+    # Build search order: preferred then all others (stable)
+    others = [p for p in by_provider.keys() if p not in PREFERRED_BOOKS]
+    search_order = PREFERRED_BOOKS + others
+
+    result = {
+        "spread": None, "total": None, "home_ml": None, "away_ml": None,
+        "book_spread": "", "book_total": "", "book_ml": ""
+    }
+
+    # spread
+    for prov in search_order:
+        b = by_provider.get(prov)
+        if not b:
             continue
-        provider = b.get("provider") or b.get("book") or ""
-        # spread
-        sp = b.get("spread")
-        if isinstance(sp, dict):
-            if spread is None:
-                spread = _num(sp.get("spread"))
-                if spread is not None and not book:
-                    book = provider
-        # moneyline
-        ml = b.get("moneyline")
-        if isinstance(ml, dict):
-            if home_ml is None or away_ml is None:
-                hm = _num(ml.get("homePrice"))
-                am = _num(ml.get("awayPrice"))
-                # only set if at least one is numeric
-                if hm is not None or am is not None:
-                    home_ml = hm
-                    away_ml = am
-                    if not book:
-                        book = provider
-        # total / overUnder (field name may vary)
-        ou = b.get("overUnder")
-        if ou is None:
-            ou = b.get("total")
-        if total is None:
-            val = _num(ou)
-            if val is not None:
-                total = val
-                if not book:
-                    book = provider
-
-        if spread is not None or total is not None or home_ml is not None or away_ml is not None:
-            # We still continue to prefer the first provider encountered; break now.
+        spread_home, _, _, _ = _extract_fields_from_book(b)
+        if spread_home is not None:
+            result["spread"] = spread_home
+            result["book_spread"] = prov
             break
 
-    return {"spread": spread, "total": total, "home_ml": home_ml, "away_ml": away_ml, "book": book}
+    # total
+    for prov in search_order:
+        b = by_provider.get(prov)
+        if not b:
+            continue
+        _, total, _, _ = _extract_fields_from_book(b)
+        if total is not None:
+            result["total"] = total
+            result["book_total"] = prov
+            break
+
+    # moneyline (prefer to take both from same provider if available)
+    for prov in search_order:
+        b = by_provider.get(prov)
+        if not b:
+            continue
+        _, _, hm, am = _extract_fields_from_book(b)
+        if hm is not None or am is not None:
+            result["home_ml"] = hm
+            result["away_ml"] = am
+            result["book_ml"] = prov
+            break
+
+    return result
 
 
 def _row_from_game(g: Dict[str, Any]) -> Dict[str, Any]:
-    """Map a single game object to the CSV row schema."""
     gid = g.get("id") or g.get("game_id") or g.get("gameId")
     week = g.get("week")
-    # Prefer API-provided season fields if present
     season = g.get("season")
     season_type = g.get("seasonType") or g.get("season_type")
-
     start_iso = g.get("startDate") or g.get("start_time_tbd") or g.get("start_date") or ""
     home = g.get("homeTeam") or g.get("home_team")
     away = g.get("awayTeam") or g.get("away_team")
 
-    v = _first_book_values(g)
+    books = _collect_books(g)
+    values = _choose_by_preference(books)
+
     return {
-        "year": season,  # may be None if not present in the raw
+        "year": season,
         "season_type": season_type,
         "week": week,
         "game_id": str(gid) if gid is not None else "",
         "kickoff_utc": start_iso if isinstance(start_iso, str) else "",
         "home_team": home,
         "away_team": away,
-        "spread": v["spread"],
-        "total": v["total"],
-        "home_ml": v["home_ml"],
-        "away_ml": v["away_ml"],
-        "book": v["book"],
+        "spread": values["spread"],
+        "total": values["total"],
+        "home_ml": values["home_ml"],
+        "away_ml": values["away_ml"],
+        "book_spread": values["book_spread"],
+        "book_total": values["book_total"],
+        "book_ml": values["book_ml"],
     }
 
 
 def main() -> None:
-    games = _load_raw()
+    games = _load_games()
     rows: List[Dict[str, Any]] = []
     for g in games:
         if isinstance(g, dict):
             rows.append(_row_from_game(g))
 
-    # Sort by kickoff then game_id; drop duplicate game_id (keep first)
+    # Sort by kickoff time then game_id; keep first per game_id
     rows.sort(key=lambda r: (r.get("kickoff_utc") or "", r.get("game_id") or ""))
-
     seen = set()
-    deduped: List[Dict[str, Any]] = []
+    final: List[Dict[str, Any]] = []
     for r in rows:
         gid = r.get("game_id")
         if gid and gid in seen:
             continue
         if gid:
             seen.add(gid)
-        deduped.append(r)
+        final.append(r)
 
     # Write CSV
     fieldnames = [
         "year","season_type","week","game_id","kickoff_utc",
         "home_team","away_team",
-        "spread","total","home_ml","away_ml","book"
+        "spread","total","home_ml","away_ml",
+        "book_spread","book_total","book_ml"
     ]
     with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
-        for r in deduped:
+        for r in final:
             w.writerow(r)
 
-    print(f"Wrote {len(deduped)} rows to {OUTPUT_CSV}")
+    print(f"Wrote {len(final)} rows to {OUTPUT_CSV}")
 
 
 if __name__ == "__main__":
