@@ -20,7 +20,7 @@ on:
         required: false
         type: string
   schedule:
-    # 13:07 UTC daily (09:07 ET) — adjust as needed
+    # 13:07 UTC daily (09:07 ET)
     - cron: "7 13 * * *"
 
 permissions:
@@ -52,23 +52,26 @@ jobs:
           CFB_OUTPUT_LINES: ${{ inputs.output_lines }}
         run: |
           python scripts/get_market_lines.py
-          OUT="${{ inputs.output_lines }}"; if [ -z "$OUT" ]; then OUT="market_lines.csv"; fi
+
+      - name: Parse raw JSON to normalized CSV
+        run: |
+          python scripts/parse_cfbd_lines_to_csv.py
+
+      - name: Show artifacts
+        run: |
           echo "--- file sizes ---"
-          wc -c "$OUT" cfbd_lines.json || true
+          test -f market_lines.csv && wc -c market_lines.csv || true
+          test -f cfbd_lines.json && wc -c cfbd_lines.json || true
           echo "--- preview CSV ---"
-          head -n 20 "$OUT" || true
-          echo "--- preview JSON ---"
-          head -n 40 cfbd_lines.json || true
+          test -f market_lines.csv && head -n 20 market_lines.csv || true
 
       - name: Commit and push if changed
         run: |
-          OUT="${{ inputs.output_lines }}"; if [ -z "$OUT" ]; then OUT="market_lines.csv"; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain "$OUT" cfbd_lines.json)" ]]; then
-            git add "$OUT" cfbd_lines.json
+          if [[ -n "$(git status --porcelain market_lines.csv cfbd_lines.json)" ]]; then
+            git add market_lines.csv cfbd_lines.json
             git commit -m "Update market lines baseline [skip ci]"
             git push
           else
             echo "No changes to commit."
-          fi
