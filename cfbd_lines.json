@@ -2458,7 +2458,7 @@
           "spreadOpen": 6.5,
           "overUnder": 50.5,
           "overUnderOpen": 50.5,
-          "homeMoneyline": 145,
+          "homeMoneyline": 135,
           "awayMoneyline": -210
         }
       ]
@@ -2589,8 +2589,8 @@
           "spreadOpen": -7,
           "overUnder": 49.5,
           "overUnderOpen": 49.5,
-          "homeMoneyline": -275,
-          "awayMoneyline": 225
+          "homeMoneyline": -270,
+          "awayMoneyline": 220
         },
         {
           "provider": "Bovada",
@@ -10734,8 +10734,8 @@
           "spreadOpen": 21.5,
           "overUnder": 55.5,
           "overUnderOpen": 54.5,
-          "homeMoneyline": 1000,
-          "awayMoneyline": -2000
+          "homeMoneyline": 900,
+          "awayMoneyline": -1800
         }
       ]
     },
@@ -10845,8 +10845,8 @@
           "spreadOpen": -9.5,
           "overUnder": 46.5,
           "overUnderOpen": 44.5,
-          "homeMoneyline": -400,
-          "awayMoneyline": 300
+          "homeMoneyline": -340,
+          "awayMoneyline": 270
         }
       ]
     },
@@ -10993,8 +10993,8 @@
           "spreadOpen": -15.5,
           "overUnder": 55.5,
           "overUnderOpen": 54.5,
-          "homeMoneyline": -900,
-          "awayMoneyline": 550
+          "homeMoneyline": -1000,
+          "awayMoneyline": 600
         }
       ]
     },
@@ -11178,8 +11178,8 @@
           "spreadOpen": -11.5,
           "overUnder": 53.5,
           "overUnderOpen": 53.5,
-          "homeMoneyline": -550,
-          "awayMoneyline": 380
+          "homeMoneyline": -450,
+          "awayMoneyline": 340
         }
       ]
     },
@@ -11363,8 +11363,8 @@
           "spreadOpen": 10.5,
           "overUnder": 44.5,
           "overUnderOpen": 43.5,
-          "homeMoneyline": 320,
-          "awayMoneyline": -425
+          "homeMoneyline": 340,
+          "awayMoneyline": -450
         }
       ]
     },
@@ -11437,8 +11437,8 @@
           "spreadOpen": -6.5,
           "overUnder": 51.5,
           "overUnderOpen": 51.5,
-          "homeMoneyline": -290,
-          "awayMoneyline": 240
+          "homeMoneyline": -300,
+          "awayMoneyline": 250
         }
       ]
     },
@@ -11474,8 +11474,8 @@
           "spreadOpen": -14.5,
           "overUnder": 58.5,
           "overUnderOpen": 58.5,
-          "homeMoneyline": -750,
-          "awayMoneyline": 475
+          "homeMoneyline": -800,
+          "awayMoneyline": 500
         }
       ]
     },
@@ -12664,22 +12664,6 @@
       ]
     },
     {
-      "id": 401760398,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 9,
-      "startDate": "2025-10-25T23:30:00.000Z",
-      "homeTeam": "Wyoming",
-      "homeConference": "Mountain West",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Colorado State",
-      "awayConference": "Mountain West",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401761609,
       "season": 2025,
       "seasonType": "regular",
@@ -12692,6 +12676,22 @@
       "awayTeam": "Maine",
       "awayConference": "CAA",
       "awayClassification": "fcs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401760398,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 9,
+      "startDate": "2025-10-25T23:30:00.000Z",
+      "homeTeam": "Wyoming",
+      "homeConference": "Mountain West",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Colorado State",
+      "awayConference": "Mountain West",
+      "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
     },
@@ -13016,22 +13016,6 @@
       "lines": []
     },
     {
-      "id": 401752771,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 12,
-      "startDate": "2025-11-15T21:15:00.000Z",
-      "homeTeam": "Tennessee",
-      "homeConference": "SEC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "New Mexico State",
-      "awayConference": "Conference USA",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401752861,
       "season": 2025,
       "seasonType": "regular",
@@ -13043,6 +13027,22 @@
       "homeScore": null,
       "awayTeam": "Illinois",
       "awayConference": "Big Ten",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401752771,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 12,
+      "startDate": "2025-11-15T21:15:00.000Z",
+      "homeTeam": "Tennessee",
+      "homeConference": "SEC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "New Mexico State",
+      "awayConference": "Conference USA",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -14568,22 +14568,6 @@
       "lines": []
     },
     {
-      "id": 401761660,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 13,
-      "startDate": "2025-11-22T05:00:00.000Z",
-      "homeTeam": "Troy",
-      "homeConference": "Sun Belt",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Georgia State",
-      "awayConference": "Sun Belt",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401754549,
       "season": 2025,
       "seasonType": "regular",
@@ -14595,6 +14579,22 @@
       "homeScore": null,
       "awayTeam": "San Jos\u00e9 State",
       "awayConference": "Mountain West",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401761660,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 13,
+      "startDate": "2025-11-22T05:00:00.000Z",
+      "homeTeam": "Troy",
+      "homeConference": "Sun Belt",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Georgia State",
+      "awayConference": "Sun Belt",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -14952,22 +14952,6 @@
       "lines": []
     },
     {
-      "id": 401757296,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 11,
-      "startDate": "2025-11-08T20:00:00.000Z",
-      "homeTeam": "Middle Tennessee",
-      "homeConference": "Conference USA",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Florida International",
-      "awayConference": "Conference USA",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401761650,
       "season": 2025,
       "seasonType": "regular",
@@ -14979,6 +14963,22 @@
       "homeScore": null,
       "awayTeam": "Coastal Carolina",
       "awayConference": "Sun Belt",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401757296,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 11,
+      "startDate": "2025-11-08T20:00:00.000Z",
+      "homeTeam": "Middle Tennessee",
+      "homeConference": "Conference USA",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Florida International",
+      "awayConference": "Conference USA",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -15256,22 +15256,6 @@
       "lines": []
     },
     {
-      "id": 401752885,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 9,
-      "startDate": "2025-10-25T04:00:00.000Z",
-      "homeTeam": "Indiana",
-      "homeConference": "Big Ten",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "UCLA",
-      "awayConference": "Big Ten",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401761657,
       "season": 2025,
       "seasonType": "regular",
@@ -15283,6 +15267,22 @@
       "homeScore": null,
       "awayTeam": "Old Dominion",
       "awayConference": "Sun Belt",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401752885,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 9,
+      "startDate": "2025-10-25T04:00:00.000Z",
+      "homeTeam": "Indiana",
+      "homeConference": "Big Ten",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "UCLA",
+      "awayConference": "Big Ten",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -15896,22 +15896,6 @@
       "lines": []
     },
     {
-      "id": 401752918,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 14,
-      "startDate": "2025-11-29T05:00:00.000Z",
-      "homeTeam": "Minnesota",
-      "homeConference": "Big Ten",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Wisconsin",
-      "awayConference": "Big Ten",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401762838,
       "season": 2025,
       "seasonType": "regular",
@@ -15923,6 +15907,22 @@
       "homeScore": null,
       "awayTeam": "Akron",
       "awayConference": "Mid-American",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401752918,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 14,
+      "startDate": "2025-11-29T05:00:00.000Z",
+      "homeTeam": "Minnesota",
+      "homeConference": "Big Ten",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Wisconsin",
+      "awayConference": "Big Ten",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -18504,22 +18504,6 @@
       "lines": []
     },
     {
-      "id": 401754574,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 9,
-      "startDate": "2025-10-25T04:00:00.000Z",
-      "homeTeam": "Pittsburgh",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "NC State",
-      "awayConference": "ACC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401754571,
       "season": 2025,
       "seasonType": "regular",
@@ -18530,6 +18514,22 @@
       "homeClassification": "fbs",
       "homeScore": null,
       "awayTeam": "Syracuse",
+      "awayConference": "ACC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401754574,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 9,
+      "startDate": "2025-10-25T04:00:00.000Z",
+      "homeTeam": "Pittsburgh",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "NC State",
       "awayConference": "ACC",
       "awayClassification": "fbs",
       "awayScore": null,
@@ -20136,22 +20136,6 @@
       "lines": []
     },
     {
-      "id": 401762492,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 9,
-      "startDate": "2025-10-24T23:00:00.000Z",
-      "homeTeam": "Charlotte",
-      "homeConference": "American Athletic",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "North Texas",
-      "awayConference": "American Athletic",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401754572,
       "season": 2025,
       "seasonType": "regular",
@@ -20163,6 +20147,22 @@
       "homeScore": null,
       "awayTeam": "Stanford",
       "awayConference": "ACC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401762492,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 9,
+      "startDate": "2025-10-24T23:00:00.000Z",
+      "homeTeam": "Charlotte",
+      "homeConference": "American Athletic",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "North Texas",
+      "awayConference": "American Athletic",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
