@@ -1,0 +1,74 @@
+name: Update Market Lines (CFB)
+
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "CFB Year (default: current UTC year)"
+        required: false
+        type: string
+      week:
+        description: "CFB Week (optional; omit to fetch all weeks returned)"
+        required: false
+        type: string
+      season_type:
+        description: "Season type (regular|postseason; default: regular)"
+        required: false
+        type: string
+      output_lines:
+        description: "Output CSV path (default: market_lines.csv)"
+        required: false
+        type: string
+  schedule:
+    # 13:07 UTC daily (09:07 ET) — adjust as needed
+    - cron: "7 13 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  pull-lines:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests sportsdataverse
+
+      - name: Generate market lines CSV + raw JSON
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          CFB_YEAR: ${{ inputs.year }}
+          CFB_WEEK: ${{ inputs.week }}
+          CFB_SEASON_TYPE: ${{ inputs.season_type }}
+          CFB_OUTPUT_LINES: ${{ inputs.output_lines }}
+        run: |
+          python scripts/get_market_lines.py
+          OUT="${{ inputs.output_lines }}"; if [ -z "$OUT" ]; then OUT="market_lines.csv"; fi
+          echo "--- file sizes ---"
+          wc -c "$OUT" cfbd_lines.json || true
+          echo "--- preview CSV ---"
+          head -n 20 "$OUT" || true
+          echo "--- preview JSON ---"
+          head -n 40 cfbd_lines.json || true
+
+      - name: Commit and push if changed
+        run: |
+          OUT="${{ inputs.output_lines }}"; if [ -z "$OUT" ]; then OUT="market_lines.csv"; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain "$OUT" cfbd_lines.json)" ]]; then
+            git add "$OUT" cfbd_lines.json
+            git commit -m "Update market lines baseline [skip ci]"
+            git push
+          else
+            echo "No changes to commit."
+          fi
