@@ -1,0 +1,79 @@
+name: Update Team Efficiency (CFB)
+
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "CFB Year (default: current UTC year)"
+        required: false
+        type: string
+      season_type:
+        description: "Season type (regular|postseason; default: regular)"
+        required: false
+        type: string
+      output_eff:
+        description: "Output CSV path (default: team_efficiency.csv)"
+        required: false
+        type: string
+  schedule:
+    - cron: "12 13 * * *"  # daily @ 13:12 UTC
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+          # Ensure runtime deps
+          python - << 'PY'
+import sys, subprocess
+pkgs = ["pandas","requests"]
+for p in pkgs:
+    try:
+        __import__(p)
+    except Exception:
+        subprocess.check_call([sys.executable,"-m","pip","install",p])
+# sportsdataverse is optional; install if possible
+try:
+    __import__("sportsdataverse")
+except Exception:
+    subprocess.call([sys.executable,"-m","pip","install","sportsdataverse>=0.6"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+PY
+
+      - name: Generate team efficiency CSV
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          CFB_YEAR: ${{ inputs.year }}
+          CFB_SEASON_TYPE: ${{ inputs.season_type }}
+          CFB_OUTPUT_EFF: ${{ inputs.output_eff }}
+        run: |
+          python scripts/get_team_efficiency.py
+          OUT="${{ inputs.output_eff }}"; if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
+          echo "--- file size ---"; wc -c "$OUT" || true
+          echo "--- preview ---"; head -n 20 "$OUT" || true
+
+      - name: Commit and push if changed
+        run: |
+          OUT="${{ inputs.output_eff }}"; if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain "$OUT")" ]]; then
+            git add "$OUT"
+            git commit -m "Update $OUT [skip ci]"
+            git push
+          else
+            echo "No changes in $OUT"
+          fi
