@@ -2495,8 +2495,8 @@
           "spreadOpen": 2.5,
           "overUnder": 57.5,
           "overUnderOpen": 57.5,
-          "homeMoneyline": 220,
-          "awayMoneyline": -270
+          "homeMoneyline": 200,
+          "awayMoneyline": -240
         },
         {
           "provider": "Bovada",
@@ -10666,43 +10666,6 @@
       ]
     },
     {
-      "id": 401752938,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 3,
-      "startDate": "2025-09-13T19:30:00.000Z",
-      "homeTeam": "Texas Tech",
-      "homeConference": "Big 12",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Oregon State",
-      "awayConference": "Pac-12",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "Bovada",
-          "spread": -24,
-          "formattedSpread": "Texas Tech -24.0",
-          "spreadOpen": -24,
-          "overUnder": 60.5,
-          "overUnderOpen": 60.5,
-          "homeMoneyline": -2800,
-          "awayMoneyline": 1100
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": -23.5,
-          "formattedSpread": "Texas Tech -23.5",
-          "spreadOpen": -24.5,
-          "overUnder": 60.5,
-          "overUnderOpen": 60.5,
-          "homeMoneyline": -2000,
-          "awayMoneyline": 1000
-        }
-      ]
-    },
-    {
       "id": 401756890,
       "season": 2025,
       "seasonType": "regular",
@@ -10921,6 +10884,43 @@
           "overUnderOpen": 54.5,
           "homeMoneyline": -165,
           "awayMoneyline": 140
+        }
+      ]
+    },
+    {
+      "id": 401752938,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 3,
+      "startDate": "2025-09-13T19:30:00.000Z",
+      "homeTeam": "Texas Tech",
+      "homeConference": "Big 12",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Oregon State",
+      "awayConference": "Pac-12",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "Bovada",
+          "spread": -23,
+          "formattedSpread": "Texas Tech -23.0",
+          "spreadOpen": -24,
+          "overUnder": 60,
+          "overUnderOpen": 60.5,
+          "homeMoneyline": -2800,
+          "awayMoneyline": 1100
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": -23.5,
+          "formattedSpread": "Texas Tech -23.5",
+          "spreadOpen": -24.5,
+          "overUnder": 60.5,
+          "overUnderOpen": 60.5,
+          "homeMoneyline": -2000,
+          "awayMoneyline": 1000
         }
       ]
     },
@@ -11178,8 +11178,8 @@
           "spreadOpen": -11.5,
           "overUnder": 53.5,
           "overUnderOpen": 53.5,
-          "homeMoneyline": -450,
-          "awayMoneyline": 340
+          "homeMoneyline": -550,
+          "awayMoneyline": 380
         }
       ]
     },
@@ -11617,8 +11617,8 @@
         },
         {
           "provider": "ESPN Bet",
-          "spread": -34.5,
-          "formattedSpread": "Iowa -34.5",
+          "spread": -35.5,
+          "formattedSpread": "Iowa -35.5",
           "spreadOpen": -33.5,
           "overUnder": 43.5,
           "overUnderOpen": 44.5,
@@ -12664,22 +12664,6 @@
       ]
     },
     {
-      "id": 401761609,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 4,
-      "startDate": "2025-09-20T23:00:00.000Z",
-      "homeTeam": "Georgia Southern",
-      "homeConference": "Sun Belt",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Maine",
-      "awayConference": "CAA",
-      "awayClassification": "fcs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401760398,
       "season": 2025,
       "seasonType": "regular",
@@ -12692,6 +12676,22 @@
       "awayTeam": "Colorado State",
       "awayConference": "Mountain West",
       "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401761609,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 4,
+      "startDate": "2025-09-20T23:00:00.000Z",
+      "homeTeam": "Georgia Southern",
+      "homeConference": "Sun Belt",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Maine",
+      "awayConference": "CAA",
+      "awayClassification": "fcs",
       "awayScore": null,
       "lines": []
     },
@@ -13016,22 +13016,6 @@
       "lines": []
     },
     {
-      "id": 401752861,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T04:00:00.000Z",
-      "homeTeam": "Purdue",
-      "homeConference": "Big Ten",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Illinois",
-      "awayConference": "Big Ten",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401752771,
       "season": 2025,
       "seasonType": "regular",
@@ -13043,6 +13027,22 @@
       "homeScore": null,
       "awayTeam": "New Mexico State",
       "awayConference": "Conference USA",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401752861,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T04:00:00.000Z",
+      "homeTeam": "Purdue",
+      "homeConference": "Big Ten",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Illinois",
+      "awayConference": "Big Ten",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -14264,22 +14264,6 @@
       "lines": []
     },
     {
-      "id": 401761641,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 10,
-      "startDate": "2025-11-01T04:00:00.000Z",
-      "homeTeam": "UL Monroe",
-      "homeConference": "Sun Belt",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Old Dominion",
-      "awayConference": "Sun Belt",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401756916,
       "season": 2025,
       "seasonType": "regular",
@@ -14291,6 +14275,22 @@
       "homeScore": null,
       "awayTeam": "BYU",
       "awayConference": "Big 12",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401761641,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 10,
+      "startDate": "2025-11-01T04:00:00.000Z",
+      "homeTeam": "UL Monroe",
+      "homeConference": "Sun Belt",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Old Dominion",
+      "awayConference": "Sun Belt",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -14568,22 +14568,6 @@
       "lines": []
     },
     {
-      "id": 401754549,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 5,
-      "startDate": "2025-09-27T04:00:00.000Z",
-      "homeTeam": "Stanford",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "San Jos\u00e9 State",
-      "awayConference": "Mountain West",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401761660,
       "season": 2025,
       "seasonType": "regular",
@@ -14595,6 +14579,22 @@
       "homeScore": null,
       "awayTeam": "Georgia State",
       "awayConference": "Sun Belt",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401754549,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 5,
+      "startDate": "2025-09-27T04:00:00.000Z",
+      "homeTeam": "Stanford",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "San Jos\u00e9 State",
+      "awayConference": "Mountain West",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -17192,22 +17192,6 @@
       "lines": []
     },
     {
-      "id": 401760385,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T23:00:00.000Z",
-      "homeTeam": "Wyoming",
-      "homeConference": "Mountain West",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "UNLV",
-      "awayConference": "Mountain West",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401760382,
       "season": 2025,
       "seasonType": "regular",
@@ -17218,6 +17202,22 @@
       "homeClassification": "fbs",
       "homeScore": null,
       "awayTeam": "Colorado State",
+      "awayConference": "Mountain West",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401760385,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T23:00:00.000Z",
+      "homeTeam": "Wyoming",
+      "homeConference": "Mountain West",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "UNLV",
       "awayConference": "Mountain West",
       "awayClassification": "fbs",
       "awayScore": null,
@@ -18504,22 +18504,6 @@
       "lines": []
     },
     {
-      "id": 401754571,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 9,
-      "startDate": "2025-10-25T04:00:00.000Z",
-      "homeTeam": "Georgia Tech",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Syracuse",
-      "awayConference": "ACC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401754574,
       "season": 2025,
       "seasonType": "regular",
@@ -18530,6 +18514,22 @@
       "homeClassification": "fbs",
       "homeScore": null,
       "awayTeam": "NC State",
+      "awayConference": "ACC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401754571,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 9,
+      "startDate": "2025-10-25T04:00:00.000Z",
+      "homeTeam": "Georgia Tech",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Syracuse",
       "awayConference": "ACC",
       "awayClassification": "fbs",
       "awayScore": null,
@@ -20136,22 +20136,6 @@
       "lines": []
     },
     {
-      "id": 401754572,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 9,
-      "startDate": "2025-10-25T04:00:00.000Z",
-      "homeTeam": "Miami",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeam": "Stanford",
-      "awayConference": "ACC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401762492,
       "season": 2025,
       "seasonType": "regular",
@@ -20163,6 +20147,22 @@
       "homeScore": null,
       "awayTeam": "North Texas",
       "awayConference": "American Athletic",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401754572,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 9,
+      "startDate": "2025-10-25T04:00:00.000Z",
+      "homeTeam": "Miami",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeam": "Stanford",
+      "awayConference": "ACC",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
