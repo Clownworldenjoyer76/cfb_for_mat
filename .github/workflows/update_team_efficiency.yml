@@ -16,7 +16,7 @@ on:
         required: false
         type: string
   schedule:
-    - cron: "12 13 * * *"  # daily @ 13:12 UTC
+    - cron: "12 13 * * *"
 
 permissions:
   contents: write
@@ -38,7 +38,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas requests sportsdataverse
 
-      - name: Generate team efficiency CSV
+      - name: Generate team efficiency CSV + raw JSON
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           CFB_YEAR: ${{ inputs.year }}
@@ -46,21 +46,20 @@ jobs:
           CFB_OUTPUT_EFF: ${{ inputs.output_eff }}
         run: |
           python scripts/get_team_efficiency.py
-          OUT="${{ inputs.output_eff }}"
-          if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
-          echo "--- file size ---"; wc -c "$OUT" || true
-          echo "--- preview ---"; head -n 20 "$OUT" || true
+          OUT="${{ inputs.output_eff }}"; if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
+          echo "--- file sizes ---"; wc -c "$OUT" cfbd_ppa_teams.json || true
+          echo "--- preview CSV ---"; head -n 20 "$OUT" || true
+          echo "--- preview JSON ---"; head -n 40 cfbd_ppa_teams.json || true
 
       - name: Commit and push if changed
         run: |
-          OUT="${{ inputs.output_eff }}"
-          if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
+          OUT="${{ inputs.output_eff }}"; if [ -z "$OUT" ]; then OUT="team_efficiency.csv"; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain "$OUT")" ]]; then
-            git add "$OUT"
-            git commit -m "Update $OUT [skip ci]"
+          if [[ -n "$(git status --porcelain "$OUT" cfbd_ppa_teams.json)" ]]; then
+            git add "$OUT" cfbd_ppa_teams.json
+            git commit -m "Update team efficiency + raw PPA payload [skip ci]"
             git push
           else
-            echo "No changes in $OUT"
+            echo "No changes to commit."
           fi
