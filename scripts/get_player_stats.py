@@ -1,129 +1,82 @@
 #!/usr/bin/env python3
-# Pull CollegeFootballData player stats (season + game) and injuries,
-# normalize per configs/player_stats_fields.yaml, write artifacts, and log.
+# Minimal CFBD player data pull (season/game stats + injuries)
+# Writes three CSVs in repo root. No external config required.
 
-import os, sys, json, time, shutil, argparse, datetime as dt
-from typing import Dict, Any, List, Optional
+import os
+import sys
+import datetime as dt
+import time
 import requests
 import pandas as pd
-import yaml
 
-CFBD_BASE = "https://api.collegefootballdata.com"
+API_BASE = "https://api.collegefootballdata.com"
 
-def env_or_default(name: str, default: Optional[str]) -> Optional[str]:
+def env(name, default=None):
     v = os.getenv(name)
     return v if v not in (None, "", "None") else default
 
-def now_utc_iso() -> str:
+def now_utc_iso():
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ")
 
-def http_get(endpoint: str, params: Dict[str, Any], api_key: str,
-             retries: int = 3, backoff: float = 1.5):
-    url = f"{CFBD_BASE}{endpoint}"
-    headers = {"Authorization": f"Bearer {api_key}"}
+def fetch_df(endpoint, params, api_key, retries=3, backoff=1.5):
+    url = f"{API_BASE}{endpoint}"
+    headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
     for attempt in range(1, retries + 1):
         try:
-            resp = requests.get(url, headers=headers, params=params, timeout=60)
-            if resp.status_code == 200:
-                return resp.json()
-            if resp.status_code in (429, 500, 502, 503, 504):
+            r = requests.get(url, headers=headers, params=params, timeout=60)
+            if r.status_code == 200:
+                try:
+                    data = r.json()
+                except Exception:
+                    return pd.DataFrame()
+                if isinstance(data, list):
+                    return pd.DataFrame(data)
+                elif isinstance(data, dict):
+                    return pd.json_normalize(data)
+                else:
+                    return pd.DataFrame()
+            # retry on transient errors
+            if r.status_code in (429, 500, 502, 503, 504):
                 time.sleep(backoff ** attempt)
                 continue
-            return None
+            # non-retryable error → empty
+            return pd.DataFrame()
         except requests.RequestException:
             time.sleep(backoff ** attempt)
-    return None
-
-def to_dataframe(records: Any) -> pd.DataFrame:
-    if records is None:
-        return pd.DataFrame()
-    if isinstance(records, list):
-        return pd.DataFrame(records)
-    if isinstance(records, dict):
-        return pd.json_normalize(records)
     return pd.DataFrame()
 
-def atomic_write_csv(df: pd.DataFrame, out_path: str) -> None:
-    tmp = out_path + ".tmp"
-    os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-    df.to_csv(tmp, index=False)
-    shutil.move(tmp, out_path)
-
-def atomic_write_text(text: str, out_path: str) -> None:
-    tmp = out_path + ".tmp"
-    os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-    with open(tmp, "w", encoding="utf-8") as f:
-        f.write(text)
-    shutil.move(tmp, out_path)
-
-def apply_config_map(df: pd.DataFrame, cfg: Dict[str, Any]) -> pd.DataFrame:
-    keep_map = cfg.get("keep_and_rename", {})
-    out = pd.DataFrame()
-    for src, dst in keep_map.items():
-        if src in df.columns:
-            out[dst] = df[src]
-        else:
-            out[dst] = None
-    return out
-
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--year", default=env_or_default("CFB_YEAR", None))
-    parser.add_argument("--season-type", default=env_or_default("CFB_SEASON_TYPE", "regular"))
-    parser.add_argument("--out-season-raw", default=env_or_default("CFB_OUT_SEASON_RAW", "player_stats_season_raw.csv"))
-    parser.add_argument("--out-game-raw", default=env_or_default("CFB_OUT_GAME_RAW", "player_stats_game_raw.csv"))
-    parser.add_argument("--out-wide", default=env_or_default("CFB_OUT_WIDE", "player_stats_wide.csv"))
-    parser.add_argument("--out-injuries-raw", default=env_or_default("CFB_OUT_INJURIES_RAW", "player_injuries_raw.csv"))
-    parser.add_argument("--log-path", default=env_or_default("CFB_LOG_PATH", "logs/player_stats_run.log"))
-    parser.add_argument("--config", default="configs/player_stats_fields.yaml")
-    args = parser.parse_args()
+    api_key = env("CFBD_API_KEY", "")
+    year = env("CFB_YEAR", str(dt.datetime.now(dt.timezone.utc).year))
+    season_type = env("CFB_SEASON_TYPE", "regular").lower()
+    if season_type not in ("regular", "postseason"):
+        season_type = "regular"
 
-    api_key = os.getenv("CFBD_API_KEY", "").strip()
-    year = args.year or str(dt.datetime.now(dt.timezone.utc).year)
-    season_type = (args.season_type or "regular").strip().lower()
+    season_params = {"year": year, "seasonType": season_type}
+    game_params = {"year": year, "seasonType": season_type}
+    injuries_params = {"year": year}
 
-    log_msgs = []
-    log_msgs.append(f"[{now_utc_iso()}] Start player stats pull year={year} season_type={season_type}")
+    df_season = fetch_df("/stats/player/season", season_params, api_key)
+    df_game = fetch_df("/stats/player/game", game_params, api_key)
+    df_inj = fetch_df("/injuries", injuries_params, api_key)
 
-    try:
-        with open(args.config, "r", encoding="utf-8") as f:
-            cfg = yaml.safe_load(f) or {}
-    except Exception as e:
-        cfg = {}
-        log_msgs.append(f"[{now_utc_iso()}] WARNING: Failed to load config {args.config}: {e}")
+    df_season.to_csv("player_stats_season_raw.csv", index=False)
+    df_game.to_csv("player_stats_game_raw.csv", index=False)
+    df_inj.to_csv("player_injuries_raw.csv", index=False)
 
-    # Season-level stats
-    df_season_raw = to_dataframe(http_get("/stats/player/season",
-                                          {"year": year, "seasonType": season_type}, api_key))
-    atomic_write_csv(df_season_raw, args.out_season_raw)
-
-    # Game-level stats
-    df_game_raw = to_dataframe(http_get("/stats/player/game",
-                                        {"year": year, "seasonType": season_type}, api_key))
-    atomic_write_csv(df_game_raw, args.out_game_raw)
-
-    # Injuries
-    df_inj_raw = to_dataframe(http_get("/injuries", {"year": year}, api_key))
-    atomic_write_csv(df_inj_raw, args.out_injuries_raw)
-
-    # Wide normalized
-    if not df_season_raw.empty:
-        df_norm = apply_config_map(df_season_raw, cfg)
-        atomic_write_csv(df_norm, args.out_wide)
-    else:
-        atomic_write_csv(pd.DataFrame(), args.out_wide)
-
-    # Names and schema
-    if not df_season_raw.empty:
-        cols = [c for c in ["player_id","player","team","position"] if c in df_season_raw.columns]
-        if cols:
-            df_names = df_season_raw[cols].drop_duplicates()
-            atomic_write_csv(df_names, "player_names_unique.csv")
-    schema = {"season_raw_columns": list(df_season_raw.columns),
-              "game_raw_columns": list(df_game_raw.columns)}
-    atomic_write_text(json.dumps(schema, indent=2), "player_stats_schema.json")
-
-    atomic_write_text("\n".join(log_msgs), args.log_path)
+    # Simple run log to help CI output
+    with open("logs_player_stats_run.txt", "w", encoding="utf-8") as f:
+        f.write(f"[{now_utc_iso()}] year={year} season_type={season_type}\n")
+        f.write(f"season_rows={len(df_season)}\n")
+        f.write(f"game_rows={len(df_game)}\n")
+        f.write(f"injury_rows={len(df_inj)}\n")
 
 if __name__ == "__main__":
-    main()
+    # Ensure log file can be written even if no logs/ directory exists
+    try:
+        main()
+    except Exception as e:
+        # Fail soft: write a minimal error file so the workflow can commit it for debugging
+        with open("logs_player_stats_error.txt", "w", encoding="utf-8") as f:
+            f.write(f"[{now_utc_iso()}] ERROR: {repr(e)}\n")
+        sys.exit(0)
