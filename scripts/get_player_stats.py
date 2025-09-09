@@ -6,18 +6,21 @@ import pandas as pd
 
 API_BASE = "https://api.collegefootballdata.com"
 
-def env(name, default=None):
+def _env(name, default=None):
     v = os.getenv(name)
     return v if v not in (None, "", "None") else default
 
-def fetch_df(endpoint, params, api_key, retries=3, backoff=1.5):
+def _fetch(endpoint, params, api_key, retries=3, backoff=1.5):
     url = API_BASE + endpoint
     headers = {"Authorization": "Bearer " + api_key} if api_key else {}
     for i in range(retries):
         try:
             r = requests.get(url, headers=headers, params=params, timeout=60)
             if r.status_code == 200:
-                data = r.json()
+                try:
+                    data = r.json()
+                except Exception:
+                    return pd.DataFrame()
                 if isinstance(data, list):
                     return pd.DataFrame(data)
                 if isinstance(data, dict):
@@ -32,9 +35,9 @@ def fetch_df(endpoint, params, api_key, retries=3, backoff=1.5):
     return pd.DataFrame()
 
 def main():
-    api_key = env("CFBD_API_KEY", "")
-    year = env("CFB_YEAR", str(dt.datetime.now(dt.timezone.utc).year))
-    season_type = env("CFB_SEASON_TYPE", "regular").lower()
+    api_key = _env("CFBD_API_KEY", "")
+    year = _env("CFB_YEAR", str(dt.datetime.now(dt.timezone.utc).year))
+    season_type = _env("CFB_SEASON_TYPE", "regular").lower()
     if season_type not in ("regular", "postseason"):
         season_type = "regular"
 
@@ -42,9 +45,9 @@ def main():
     game_params = {"year": year, "seasonType": season_type}
     injuries_params = {"year": year}
 
-    df_season = fetch_df("/stats/player/season", season_params, api_key)
-    df_game = fetch_df("/stats/player/game", game_params, api_key)
-    df_inj = fetch_df("/injuries", injuries_params, api_key)
+    df_season = _fetch("/stats/player/season", season_params, api_key)
+    df_game = _fetch("/stats/player/game", game_params, api_key)
+    df_inj = _fetch("/injuries", injuries_params, api_key)
 
     df_season.to_csv("player_stats_season_raw.csv", index=False)
     df_game.to_csv("player_stats_game_raw.csv", index=False)
