@@ -1,6 +1,8 @@
 name: Update Player Stats (CFB)
 
 on:
+  schedule:
+    - cron: "45 12 * * *"  # daily at 12:45 UTC
   workflow_dispatch:
     inputs:
       year:
@@ -8,27 +10,9 @@ on:
         required: false
         type: string
       season_type:
-        description: "Season type (regular or postseason; default: regular)"
+        description: "regular or postseason (default: regular)"
         required: false
         type: string
-      out_season_raw:
-        description: "Season raw CSV path (default: player_stats_season_raw.csv)"
-        required: false
-        type: string
-      out_game_raw:
-        description: "Game raw CSV path (default: player_stats_game_raw.csv)"
-        required: false
-        type: string
-      out_wide:
-        description: "Wide CSV path (default: player_stats_wide.csv)"
-        required: false
-        type: string
-      out_injuries_raw:
-        description: "Injuries raw CSV path (default: player_injuries_raw.csv)"
-        required: false
-        type: string
-  schedule:
-    - cron: "45 12 * * *"
 
 permissions:
   contents: write
@@ -48,47 +32,32 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install requests pandas
 
-      - name: Generate player stats (never fail)
+      - name: Run pull
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           CFB_YEAR: ${{ inputs.year }}
           CFB_SEASON_TYPE: ${{ inputs.season_type }}
-          CFB_OUT_SEASON_RAW: ${{ inputs.out_season_raw }}
-          CFB_OUT_GAME_RAW: ${{ inputs.out_game_raw }}
-          CFB_OUT_WIDE: ${{ inputs.out_wide }}
-          CFB_OUT_INJURIES_RAW: ${{ inputs.out_injuries_raw }}
-          CFB_LOG_PATH: logs/player_stats_run.log
         run: |
-          python scripts/get_player_stats.py || true
-          SEASON_RAW="${{ inputs.out_season_raw }}"; if [ -z "$SEASON_RAW" ]; then SEASON_RAW="player_stats_season_raw.csv"; fi
-          GAME_RAW="${{ inputs.out_game_raw }}"; if [ -z "$GAME_RAW" ]; then GAME_RAW="player_stats_game_raw.csv"; fi
-          WIDE="${{ inputs.out_wide }}"; if [ -z "$WIDE" ]; then WIDE="player_stats_wide.csv"; fi
-          INJ="${{ inputs.out_injuries_raw }}"; if [ -z "$INJ" ]; then INJ="player_injuries_raw.csv"; fi
+          python scripts/get_player_stats.py
           echo "--- sizes ---"
-          wc -c "$SEASON_RAW" || true
-          wc -c "$GAME_RAW" || true
-          wc -c "$WIDE" || true
-          wc -c "$INJ" || true
-          echo "--- sample season ---"; head -n 10 "$SEASON_RAW" || true
-          echo "--- sample game ---"; head -n 10 "$GAME_RAW" || true
-          echo "--- sample wide ---"; head -n 10 "$WIDE" || true
-          echo "--- sample injuries ---"; head -n 10 "$INJ" || true
-          echo "--- names ---"; wc -c player_names_unique.csv || true; head -n 20 player_names_unique.csv || true
-          echo "--- schema ---"; wc -c player_stats_schema.json || true; head -n 40 player_stats_schema.json || true
-          echo "--- log ---"; wc -c logs/player_stats_run.log || true; tail -n 60 logs/player_stats_run.log || true
+          wc -c player_stats_season_raw.csv || true
+          wc -c player_stats_game_raw.csv || true
+          wc -c player_injuries_raw.csv || true
+          wc -c logs_player_stats_run.txt || true
+          wc -c logs_player_stats_error.txt || true
+          echo "--- samples ---"
+          head -n 5 player_stats_season_raw.csv || true
+          head -n 5 player_stats_game_raw.csv || true
+          head -n 5 player_injuries_raw.csv || true
 
-      - name: Commit and push if changed
+      - name: Commit and push changes (if any)
         run: |
-          SEASON_RAW="${{ inputs.out_season_raw }}"; if [ -z "$SEASON_RAW" ]; then SEASON_RAW="player_stats_season_raw.csv"; fi
-          GAME_RAW="${{ inputs.out_game_raw }}"; if [ -z "$GAME_RAW" ]; then GAME_RAW="player_stats_game_raw.csv"; fi
-          WIDE="${{ inputs.out_wide }}"; if [ -z "$WIDE" ]; then WIDE="player_stats_wide.csv"; fi
-          INJ="${{ inputs.out_injuries_raw }}"; if [ -z "$INJ" ]; then INJ="player_injuries_raw.csv"; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain "$SEASON_RAW" "$GAME_RAW" "$WIDE" "$INJ" player_names_unique.csv player_stats_schema.json logs/player_stats_run.log requirements.txt)" ]]; then
-            git add "$SEASON_RAW" "$GAME_RAW" "$WIDE" "$INJ" player_names_unique.csv player_stats_schema.json logs/player_stats_run.log requirements.txt
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add -A
             git commit -m "Update player stats artifacts [skip ci]"
             git push
           else
