@@ -87,8 +87,8 @@ jobs:
           INJ="${{ inputs.out_injuries_raw }}"; if [ -z "$INJ" ]; then INJ="player_injuries_raw.csv"; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain "$SEASON_RAW" "$GAME_RAW" "$WIDE" "$INJ" player_names_unique.csv player_stats_schema.json logs/player_stats_run.log)" ]]; then
-            git add "$SEASON_RAW" "$GAME_RAW" "$WIDE" "$INJ" player_names_unique.csv player_stats_schema.json logs/player_stats_run.log
+          if [[ -n "$(git status --porcelain "$SEASON_RAW" "$GAME_RAW" "$WIDE" "$INJ" player_names_unique.csv player_stats_schema.json logs/player_stats_run.log requirements.txt)" ]]; then
+            git add "$SEASON_RAW" "$GAME_RAW" "$WIDE" "$INJ" player_names_unique.csv player_stats_schema.json logs/player_stats_run.log requirements.txt
             git commit -m "Update player stats artifacts [skip ci]"
             git push
           else
