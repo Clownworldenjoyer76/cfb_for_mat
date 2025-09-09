@@ -1,16 +1,14 @@
-name: Update Player Stats (CFB)
+name: Update Player Stats
 
 on:
   schedule:
-    - cron: "45 12 * * *"  # daily at 12:45 UTC
+    - cron: "45 12 * * *"   # every day at 12:45 UTC
   workflow_dispatch:
     inputs:
       year:
-        description: "CFB Year (optional; defaults to current UTC year)"
         required: false
         type: string
       season_type:
-        description: "regular or postseason (default: regular)"
         required: false
         type: string
 
@@ -21,11 +19,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -34,31 +30,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests pandas
 
-      - name: Run pull
+      - name: Run script
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           CFB_YEAR: ${{ inputs.year }}
           CFB_SEASON_TYPE: ${{ inputs.season_type }}
-        run: |
-          python scripts/get_player_stats.py
-          echo "--- sizes ---"
-          wc -c player_stats_season_raw.csv || true
-          wc -c player_stats_game_raw.csv || true
-          wc -c player_injuries_raw.csv || true
-          wc -c logs_player_stats_run.txt || true
-          wc -c logs_player_stats_error.txt || true
-          echo "--- samples ---"
-          head -n 5 player_stats_season_raw.csv || true
-          head -n 5 player_stats_game_raw.csv || true
-          head -n 5 player_injuries_raw.csv || true
+        run: python scripts/get_player_stats.py
 
-      - name: Commit and push changes (if any)
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
-            git commit -m "Update player stats artifacts [skip ci]"
+            git commit -m "Update player stats [skip ci]"
             git push
           else
             echo "No changes to commit."
