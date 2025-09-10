@@ -57,7 +57,6 @@ def _haversine_km(lat1, lon1, lat2, lon2) -> float:
         return float("nan")
 
 def build_situational(year: str, season_type: str, api_key: str) -> pd.DataFrame:
-    # Pull games
     games_json = _get("/games", {"year": year, "seasonType": season_type}, api_key)
     df_games = _to_df(games_json)
 
@@ -66,7 +65,6 @@ def build_situational(year: str, season_type: str, api_key: str) -> pd.DataFrame
     if "startDate" in df_games.columns and "start_date" not in df_games.columns:
         df_games = df_games.rename(columns={"startDate": "start_date"})
 
-    # Normalize team fields
     if "home_team" not in df_games.columns:
         for c in ["homeTeam", "homeTeam.school", "homeTeam.name"]:
             if c in df_games.columns:
@@ -78,7 +76,6 @@ def build_situational(year: str, season_type: str, api_key: str) -> pd.DataFrame
                 df_games["away_team"] = df_games[c]
                 break
 
-    # Build team-game rows
     keep_cols = [c for c in ["game_id","season","week","start_date","home_team","away_team"] if c in df_games.columns]
     base = df_games[keep_cols].copy()
     if "start_date" in base.columns:
@@ -96,7 +93,6 @@ def build_situational(year: str, season_type: str, api_key: str) -> pd.DataFrame
 
     team_games = pd.concat([home_rows, away_rows], ignore_index=True)
 
-    # Add venue coordinates if present
     if "venue.latitude" in df_games.columns and "venue.longitude" in df_games.columns:
         vg = df_games[["game_id","venue.latitude","venue.longitude"]].drop_duplicates("game_id")
         vg = vg.rename(columns={"venue.latitude":"venue_lat","venue.longitude":"venue_lon"})
@@ -105,7 +101,6 @@ def build_situational(year: str, season_type: str, api_key: str) -> pd.DataFrame
         team_games["venue_lat"] = float("nan")
         team_games["venue_lon"] = float("nan")
 
-    # Pull team info
     teams_json = _get("/teams/fbs", {"year": year}, api_key)
     df_teams = _to_df(teams_json)
     if "school" in df_teams.columns and "team" not in df_teams.columns:
@@ -116,42 +111,38 @@ def build_situational(year: str, season_type: str, api_key: str) -> pd.DataFrame
         df_teams = df_teams.rename(columns={"location.longitude":"team_lon"})
     team_loc = df_teams[["team","team_lat","team_lon"]].dropna().drop_duplicates() if {"team","team_lat","team_lon"}.issubset(df_teams.columns) else pd.DataFrame()
 
-    # Merge CFBD team coordinates
     if not team_loc.empty:
         team_games = team_games.merge(team_loc, on="team", how="left")
     else:
         team_games["team_lat"] = float("nan")
         team_games["team_lon"] = float("nan")
 
-    # Merge static CSV fallback
     try:
         static_path = os.path.join("data","fbs_fcs_stadium_coordinates.csv")
         if os.path.exists(static_path):
             df_static = pd.read_csv(static_path)
-            df_static = df_static.rename(columns={
-                "team":"team_name",
-                "latitude":"static_lat",
-                "longitude":"static_lon"
-            })
-            # Normalize for join
-            df_static["team_name"] = df_static["team_name"].str.strip()
+            df_static = df_static.rename(columns={"team":"team_name","latitude":"static_lat","longitude":"static_lon"})
+            df_static["team_name"] = df_static["team_name"].astype(str).str.strip()
             team_games["team_norm"] = team_games["team"].astype(str).str.strip()
             team_games = team_games.merge(df_static[["team_name","static_lat","static_lon"]],
                                           left_on="team_norm", right_on="team_name", how="left")
-            # Fill missing coords from static
             team_games["team_lat"] = team_games["team_lat"].fillna(team_games["static_lat"])
             team_games["team_lon"] = team_games["team_lon"].fillna(team_games["static_lon"])
             team_games = team_games.drop(columns=["team_name","team_norm","static_lat","static_lon"])
-    except Exception as e:
+    except Exception:
         pass
 
-    # Travel distance
+    home_coords = team_games.loc[team_games["is_home"]==1, ["game_id","team_lat","team_lon"]].drop_duplicates("game_id")
+    home_coords = home_coords.rename(columns={"team_lat":"home_lat","team_lon":"home_lon"})
+    team_games = team_games.merge(home_coords, on="game_id", how="left")
+    team_games["venue_lat"] = team_games["venue_lat"].fillna(team_games["home_lat"])
+    team_games["venue_lon"] = team_games["venue_lon"].fillna(team_games["home_lon"])
+
     team_games["travel_distance_km"] = team_games.apply(
         lambda r: 0.0 if r.get("is_home", 0)==1 else _haversine_km(r.get("team_lat"), r.get("team_lon"), r.get("venue_lat"), r.get("venue_lon")),
         axis=1
     )
 
-    # Rest days
     if "start_date" in team_games.columns:
         team_games = team_games.sort_values(["team","start_date","game_id"])
         team_games["prev_date"] = team_games.groupby("team")["start_date"].shift(1)
