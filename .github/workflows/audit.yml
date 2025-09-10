@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   audit:
@@ -12,18 +12,27 @@ jobs:
     env:
       TZ: America/New_York
     steps:
-      - name: Checkout
+      - name: Checkout (current branch)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # default token has push permission unless branch protection blocks it
+          persist-credentials: true
+
+      - name: Ensure /summaries exists
+        run: |
+          set -euo pipefail
+          mkdir -p summaries/archive
+          # keep directory tracked even if empty
+          touch summaries/.gitkeep
+          touch summaries/archive/.gitkeep
 
       - name: Find /scripts files not referenced by workflows
         run: |
           set -euo pipefail
-          mkdir -p summaries/archive
 
           python - <<'PY'
-          import pathlib, re, os, csv
+          import pathlib, re, csv
 
           ROOT = pathlib.Path(".")
           SCRIPTS_DIR = ROOT / "scripts"
@@ -33,7 +42,7 @@ jobs:
           OUT_TXT = OUT_DIR / "unused_scripts_in_workflows.txt"
           OUT_CSV = OUT_DIR / "unused_scripts_in_workflows.csv"
 
-          # Collect all workflow file contents (yml/yaml)
+          # Collect workflow file contents (yml/yaml)
           workflow_texts = []
           if WF_DIR.exists():
               for wf in list(WF_DIR.glob("*.yml")) + list(WF_DIR.glob("*.yaml")):
@@ -43,37 +52,32 @@ jobs:
                       pass
           joined = "\n".join(workflow_texts)
 
-          # Extract python -m module usages to map to script paths
-          # e.g., "python -m scripts.foo.bar" -> scripts/foo/bar.py
+          # Modules referenced via: python -m scripts.foo.bar  -> scripts/foo/bar.py
           mod_paths = set()
           for m in re.finditer(r"(?:^|\s)-m\s+([A-Za-z0-9_\.]+)", joined):
               mod = m.group(1).strip()
-              # only consider modules that start with "scripts."
               if mod == "scripts" or mod.startswith("scripts."):
-                  mod_paths.add(pathlib.Path(mod.replace(".", "/") + ".py").as_posix())
+                  mod_paths.add((mod.replace(".", "/") + ".py").replace("//", "/"))
 
-          # Also check for direct path references like "scripts/foo.py" or "bash scripts/foo.sh"
-          # We'll search via substring on posix paths relative to repo root.
-          direct_refs_text = joined
-
-          # Gather candidate scripts in /scripts (recursive), typical script types
+          # Gather candidate scripts under /scripts (recursive)
           exts = {".py", ".sh", ".bash", ".zsh", ".ps1"}
           scripts = []
           if SCRIPTS_DIR.exists():
               for p in SCRIPTS_DIR.rglob("*"):
-                  if p.is_file() and (p.suffix in exts or p.stat().st_mode & 0o111):
+                  if p.is_file() and (p.suffix in exts or (p.stat().st_mode & 0o111)):
                       scripts.append(p)
 
+          direct_refs_text = joined
           unused = []
           rows = [("path","referenced_in_workflows")]
-          for p in sorted(scripts):
-              rel = p.as_posix()
-              rel_from_root = str(p.relative_to(ROOT).as_posix())
 
-              # check direct path mention
+          for p in sorted(scripts):
+              rel_from_root = p.as_posix()
+
+              # direct path mention like "scripts/foo.py" or "bash scripts/bar.sh"
               direct_hit = (rel_from_root in direct_refs_text)
 
-              # check module mapping (for .py only)
+              # module mapping for .py
               mod_hit = False
               if p.suffix == ".py":
                   if rel_from_root in mod_paths:
@@ -92,7 +96,7 @@ jobs:
               csv.writer(f).writerows(rows)
           PY
 
-      - name: Upload results
+      - name: Upload results (artifact)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -100,6 +104,35 @@ jobs:
           path: |
             summaries/archive/unused_scripts_in_workflows.txt
             summaries/archive/unused_scripts_in_workflows.csv
+
+      - name: Commit summaries to repo
+        if: always()
+        run: |
+          set -euo pipefail
+
+          # Determine current branch name (works for manual runs on protected branches too)
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-$(git rev-parse --abbrev-ref HEAD)}}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Make sure we’re on that branch and up to date
+          git checkout "$BRANCH"
+          git pull --ff-only origin "$BRANCH" || true
+
+          # Ensure the directory is tracked
+          touch summaries/.gitkeep summaries/archive/.gitkeep
+
+          # Stage only the summaries output
+          git add summaries/.gitkeep summaries/archive/.gitkeep \
+                  summaries/archive/unused_scripts_in_workflows.txt \
+                  summaries/archive/unused_scripts_in_workflows.csv
+
+          # Commit if there are changes; otherwise do nothing
+          git diff --cached --quiet || git commit -m "chore: update unused scripts report"
+
+          # Push (will no-op if nothing to push; will warn if protections block)
+          git push origin "$BRANCH" || echo "::warning::Push blocked by branch protections; artifacts still uploaded."
 
       - name: Job Summary
         if: always()
