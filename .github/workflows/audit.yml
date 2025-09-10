@@ -1,0 +1,120 @@
+name: Audit Unused Files
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      TZ: America/New_York
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Find /scripts files not referenced by workflows
+        run: |
+          set -euo pipefail
+          mkdir -p summaries/archive
+
+          python - <<'PY'
+          import pathlib, re, os, csv
+
+          ROOT = pathlib.Path(".")
+          SCRIPTS_DIR = ROOT / "scripts"
+          WF_DIR = ROOT / ".github" / "workflows"
+          OUT_DIR = ROOT / "summaries" / "archive"
+          OUT_DIR.mkdir(parents=True, exist_ok=True)
+          OUT_TXT = OUT_DIR / "unused_scripts_in_workflows.txt"
+          OUT_CSV = OUT_DIR / "unused_scripts_in_workflows.csv"
+
+          # Collect all workflow file contents (yml/yaml)
+          workflow_texts = []
+          if WF_DIR.exists():
+              for wf in list(WF_DIR.glob("*.yml")) + list(WF_DIR.glob("*.yaml")):
+                  try:
+                      workflow_texts.append(wf.read_text(errors="ignore"))
+                  except Exception:
+                      pass
+          joined = "\n".join(workflow_texts)
+
+          # Extract python -m module usages to map to script paths
+          # e.g., "python -m scripts.foo.bar" -> scripts/foo/bar.py
+          mod_paths = set()
+          for m in re.finditer(r"(?:^|\s)-m\s+([A-Za-z0-9_\.]+)", joined):
+              mod = m.group(1).strip()
+              # only consider modules that start with "scripts."
+              if mod == "scripts" or mod.startswith("scripts."):
+                  mod_paths.add(pathlib.Path(mod.replace(".", "/") + ".py").as_posix())
+
+          # Also check for direct path references like "scripts/foo.py" or "bash scripts/foo.sh"
+          # We'll search via substring on posix paths relative to repo root.
+          direct_refs_text = joined
+
+          # Gather candidate scripts in /scripts (recursive), typical script types
+          exts = {".py", ".sh", ".bash", ".zsh", ".ps1"}
+          scripts = []
+          if SCRIPTS_DIR.exists():
+              for p in SCRIPTS_DIR.rglob("*"):
+                  if p.is_file() and (p.suffix in exts or p.stat().st_mode & 0o111):
+                      scripts.append(p)
+
+          unused = []
+          rows = [("path","referenced_in_workflows")]
+          for p in sorted(scripts):
+              rel = p.as_posix()
+              rel_from_root = str(p.relative_to(ROOT).as_posix())
+
+              # check direct path mention
+              direct_hit = (rel_from_root in direct_refs_text)
+
+              # check module mapping (for .py only)
+              mod_hit = False
+              if p.suffix == ".py":
+                  if rel_from_root in mod_paths:
+                      mod_hit = True
+
+              used = direct_hit or mod_hit
+              rows.append((rel_from_root, "YES" if used else "NO"))
+              if not used:
+                  unused.append(rel_from_root)
+
+          with OUT_TXT.open("w") as f:
+              for u in unused:
+                  f.write(u + "\n")
+
+          with OUT_CSV.open("w", newline="") as f:
+              csv.writer(f).writerows(rows)
+          PY
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unused-scripts-report
+          path: |
+            summaries/archive/unused_scripts_in_workflows.txt
+            summaries/archive/unused_scripts_in_workflows.csv
+
+      - name: Job Summary
+        if: always()
+        run: |
+          echo "## Scripts in /scripts not referenced by any workflow" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -s summaries/archive/unused_scripts_in_workflows.txt ]; then
+            COUNT=$(wc -l < summaries/archive/unused_scripts_in_workflows.txt | tr -d ' ')
+            echo "**Count:** $COUNT" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            while read -r line; do
+              echo "- \`$line\`" >> $GITHUB_STEP_SUMMARY
+            done < summaries/archive/unused_scripts_in_workflows.txt
+          else
+            echo "No unused scripts found." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**CSV:** \`summaries/archive/unused_scripts_in_workflows.csv\`" >> $GITHUB_STEP_SUMMARY
