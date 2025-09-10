@@ -1,0 +1,9 @@
+path,referenced_in_workflows
+scripts/generate_picks.py,YES
+scripts/generate_scores.py,YES
+scripts/get_market_lines.py,YES
+scripts/get_player_stats.py,YES
+scripts/get_situational_factors.py,YES
+scripts/get_team_efficiency.py,YES
+scripts/get_team_stats.py,YES
+scripts/parse_cfbd_lines_to_csv.py,YES
