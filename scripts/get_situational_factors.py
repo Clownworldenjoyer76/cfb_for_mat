@@ -56,113 +56,98 @@ def _haversine_km(lat1, lon1, lat2, lon2) -> float:
     except Exception:
         return float("nan")
 
-def _first_present(df: pd.DataFrame, candidates) -> Optional[str]:
-    for c in candidates:
-        if c in df.columns:
-            return c
-    return None
-
 def build_situational(year: str, season_type: str, api_key: str) -> pd.DataFrame:
+    # Pull games
     games_json = _get("/games", {"year": year, "seasonType": season_type}, api_key)
     df_games = _to_df(games_json)
 
-    # Normalize common field names
-    rename_pairs = {
-        "id": "game_id",
-        "startDate": "start_date",
-        "seasonType": "season_type",
-        "homeTeam": "homeTeam",   # may be object; keep as-is for dot columns
-        "awayTeam": "awayTeam",
-    }
-    for src, dst in rename_pairs.items():
-        if src in df_games.columns and dst not in df_games.columns:
-            df_games = df_games.rename(columns={src: dst})
-
-    # Derive home_team / away_team text from possible locations
-    if "home_team" not in df_games.columns:
-        home_name_col = _first_present(df_games, ["home_team", "homeTeam", "homeTeam.school", "homeTeam.name", "homeTeam.team"])
-        if home_name_col is not None:
-            df_games["home_team"] = df_games[home_name_col]
-    if "away_team" not in df_games.columns:
-        away_name_col = _first_present(df_games, ["away_team", "awayTeam", "awayTeam.school", "awayTeam.name", "awayTeam.team"])
-        if away_name_col is not None:
-            df_games["away_team"] = df_games[away_name_col]
-
-    # Ensure game_id exists
-    if "game_id" not in df_games.columns and "id" in df_games.columns:
+    if "id" in df_games.columns and "game_id" not in df_games.columns:
         df_games = df_games.rename(columns={"id": "game_id"})
+    if "startDate" in df_games.columns and "start_date" not in df_games.columns:
+        df_games = df_games.rename(columns={"startDate": "start_date"})
 
-    # Venues and teams for coordinates
-    venues_json = _get("/venues", {}, api_key)
-    df_venues = _to_df(venues_json)
-    if "id" in df_venues.columns and "venue_id" not in df_venues.columns:
-        df_venues = df_venues.rename(columns={"id": "venue_id"})
-    if "latitude" in df_venues.columns and "venue_lat" not in df_venues.columns:
-        df_venues = df_venues.rename(columns={"latitude": "venue_lat"})
-    if "longitude" in df_venues.columns and "venue_lon" not in df_venues.columns:
-        df_venues = df_venues.rename(columns={"longitude": "venue_lon"})
+    # Normalize team fields
+    if "home_team" not in df_games.columns:
+        for c in ["homeTeam", "homeTeam.school", "homeTeam.name"]:
+            if c in df_games.columns:
+                df_games["home_team"] = df_games[c]
+                break
+    if "away_team" not in df_games.columns:
+        for c in ["awayTeam", "awayTeam.school", "awayTeam.name"]:
+            if c in df_games.columns:
+                df_games["away_team"] = df_games[c]
+                break
 
-    teams_json = _get("/teams/fbs", {"year": year}, api_key)
-    df_teams = _to_df(teams_json)
-    if "school" in df_teams.columns and "team" not in df_teams.columns:
-        df_teams = df_teams.rename(columns={"school": "team"})
-    if "location.latitude" in df_teams.columns and "team_lat" not in df_teams.columns:
-        df_teams = df_teams.rename(columns={"location.latitude": "team_lat"})
-    if "location.longitude" in df_teams.columns and "team_lon" not in df_teams.columns:
-        df_teams = df_teams.rename(columns={"location.longitude": "team_lon"})
-    if "latitude" in df_teams.columns and "team_lat" not in df_teams.columns:
-        df_teams = df_teams.rename(columns={"latitude": "team_lat"})
-    if "longitude" in df_teams.columns and "team_lon" not in df_teams.columns:
-        df_teams = df_teams.rename(columns={"longitude": "team_lon"})
-    team_loc = df_teams[["team","team_lat","team_lon"]].dropna(subset=["team_lat","team_lon"]).drop_duplicates() if {"team","team_lat","team_lon"}.issubset(df_teams.columns) else pd.DataFrame(columns=["team","team_lat","team_lon"])
-
-    # Pick venue id/coords from games
-    venue_id_col = _first_present(df_games, ["venue_id","venue.id","venueId"])
-    venue_lat_col = _first_present(df_games, ["venue.latitude","venue_lat","latitude"])
-    venue_lon_col = _first_present(df_games, ["venue.longitude","venue_lon","longitude"])
-
-    # Base columns
+    # Build team-game rows
     keep_cols = [c for c in ["game_id","season","week","start_date","home_team","away_team"] if c in df_games.columns]
     base = df_games[keep_cols].copy()
-
     if "start_date" in base.columns:
         base["start_date"] = pd.to_datetime(base["start_date"], errors="coerce", utc=True)
 
     home_rows = base.copy()
-    home_rows["team"] = home_rows["home_team"] if "home_team" in home_rows.columns else None
-    home_rows["opponent"] = home_rows["away_team"] if "away_team" in home_rows.columns else None
+    home_rows["team"] = home_rows["home_team"]
+    home_rows["opponent"] = home_rows["away_team"]
     home_rows["is_home"] = 1
 
     away_rows = base.copy()
-    away_rows["team"] = away_rows["away_team"] if "away_team" in away_rows.columns else None
-    away_rows["opponent"] = away_rows["home_team"] if "home_team" in away_rows.columns else None
+    away_rows["team"] = away_rows["away_team"]
+    away_rows["opponent"] = away_rows["home_team"]
     away_rows["is_home"] = 0
 
     team_games = pd.concat([home_rows, away_rows], ignore_index=True)
 
-    # Venue coordinates
-    if venue_lat_col and venue_lon_col:
-        vg = df_games[["game_id", venue_lat_col, venue_lon_col]].drop_duplicates("game_id")
-        vg = vg.rename(columns={venue_lat_col: "venue_lat", venue_lon_col: "venue_lon"})
+    # Add venue coordinates if present
+    if "venue.latitude" in df_games.columns and "venue.longitude" in df_games.columns:
+        vg = df_games[["game_id","venue.latitude","venue.longitude"]].drop_duplicates("game_id")
+        vg = vg.rename(columns={"venue.latitude":"venue_lat","venue.longitude":"venue_lon"})
         team_games = team_games.merge(vg, on="game_id", how="left")
-    elif venue_id_col and not df_venues.empty:
-        vid = df_games[["game_id", venue_id_col]].drop_duplicates("game_id").rename(columns={venue_id_col: "venue_id"})
-        team_games = team_games.merge(vid, on="game_id", how="left")
-        team_games = team_games.merge(df_venues[["venue_id","venue_lat","venue_lon"]].drop_duplicates("venue_id"), on="venue_id", how="left")
     else:
         team_games["venue_lat"] = float("nan")
         team_games["venue_lon"] = float("nan")
 
-    # Team home coordinates
+    # Pull team info
+    teams_json = _get("/teams/fbs", {"year": year}, api_key)
+    df_teams = _to_df(teams_json)
+    if "school" in df_teams.columns and "team" not in df_teams.columns:
+        df_teams = df_teams.rename(columns={"school":"team"})
+    if "location.latitude" in df_teams.columns and "team_lat" not in df_teams.columns:
+        df_teams = df_teams.rename(columns={"location.latitude":"team_lat"})
+    if "location.longitude" in df_teams.columns and "team_lon" not in df_teams.columns:
+        df_teams = df_teams.rename(columns={"location.longitude":"team_lon"})
+    team_loc = df_teams[["team","team_lat","team_lon"]].dropna().drop_duplicates() if {"team","team_lat","team_lon"}.issubset(df_teams.columns) else pd.DataFrame()
+
+    # Merge CFBD team coordinates
     if not team_loc.empty:
         team_games = team_games.merge(team_loc, on="team", how="left")
     else:
         team_games["team_lat"] = float("nan")
         team_games["team_lon"] = float("nan")
 
+    # Merge static CSV fallback
+    try:
+        static_path = os.path.join("data","fbs_fcs_stadium_coordinates.csv")
+        if os.path.exists(static_path):
+            df_static = pd.read_csv(static_path)
+            df_static = df_static.rename(columns={
+                "team":"team_name",
+                "latitude":"static_lat",
+                "longitude":"static_lon"
+            })
+            # Normalize for join
+            df_static["team_name"] = df_static["team_name"].str.strip()
+            team_games["team_norm"] = team_games["team"].astype(str).str.strip()
+            team_games = team_games.merge(df_static[["team_name","static_lat","static_lon"]],
+                                          left_on="team_norm", right_on="team_name", how="left")
+            # Fill missing coords from static
+            team_games["team_lat"] = team_games["team_lat"].fillna(team_games["static_lat"])
+            team_games["team_lon"] = team_games["team_lon"].fillna(team_games["static_lon"])
+            team_games = team_games.drop(columns=["team_name","team_norm","static_lat","static_lon"])
+    except Exception as e:
+        pass
+
     # Travel distance
     team_games["travel_distance_km"] = team_games.apply(
-        lambda r: 0.0 if r.get("is_home", 0) == 1 else _haversine_km(r.get("team_lat"), r.get("team_lon"), r.get("venue_lat"), r.get("venue_lon")),
+        lambda r: 0.0 if r.get("is_home", 0)==1 else _haversine_km(r.get("team_lat"), r.get("team_lon"), r.get("venue_lat"), r.get("venue_lon")),
         axis=1
     )
 
@@ -170,12 +155,11 @@ def build_situational(year: str, season_type: str, api_key: str) -> pd.DataFrame
     if "start_date" in team_games.columns:
         team_games = team_games.sort_values(["team","start_date","game_id"])
         team_games["prev_date"] = team_games.groupby("team")["start_date"].shift(1)
-        team_games["rest_days"] = (team_games["start_date"] - team_games["prev_date"]).dt.total_seconds() / 86400.0
+        team_games["rest_days"] = (team_games["start_date"] - team_games["prev_date"]).dt.total_seconds()/86400.0
     else:
         team_games["rest_days"] = float("nan")
 
-    out_cols = [c for c in ["game_id","season","week","start_date","team","opponent","is_home","travel_distance_km","rest_days"] if c in team_games.columns]
-    return team_games[out_cols].copy()
+    return team_games[["game_id","season","week","start_date","team","opponent","is_home","travel_distance_km","rest_days"]]
 
 def main():
     api_key = _env("CFBD_API_KEY", "")
@@ -187,15 +171,12 @@ def main():
     df = build_situational(year, season_type, api_key)
     df.to_csv("situational_factors.csv", index=False)
 
-    with open("logs_situational_factors_run.txt", "w", encoding="utf-8") as f:
-        f.write("year=" + str(year) + "\n")
-        f.write("season_type=" + season_type + "\n")
-        f.write("rows=" + str(len(df)) + "\n")
-        try:
-            f.write("pct_missing_distance=" + str(round(float(df["travel_distance_km"].isna().mean()), 6)) + "\n")
-            f.write("pct_missing_rest=" + str(round(float(df["rest_days"].isna().mean()), 6)) + "\n")
-        except Exception:
-            pass
+    with open("logs_situational_factors_run.txt","w",encoding="utf-8") as f:
+        f.write("year="+str(year)+"\n")
+        f.write("season_type="+season_type+"\n")
+        f.write("rows="+str(len(df))+"\n")
+        f.write("pct_missing_distance="+str(round(float(df["travel_distance_km"].isna().mean()),6))+"\n")
+        f.write("pct_missing_rest="+str(round(float(df["rest_days"].isna().mean()),6))+"\n")
 
-if __name__ == "__main__":
+if __name__=="__main__":
     main()
