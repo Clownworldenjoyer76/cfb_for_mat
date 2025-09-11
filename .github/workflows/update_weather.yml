@@ -12,9 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -23,21 +27,29 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests pandas
 
-      - name: Run script
+      - name: Run weather script
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
-          CFB_YEAR: ${{ inputs.year }}
-          CFB_SEASON_TYPE: ${{ inputs.season_type }}
-        run: python scripts/get_weather.py
+          CFB_YEAR: ${{ env.CFB_YEAR }}
+          CFB_SEASON_TYPE: ${{ env.CFB_SEASON_TYPE }}
+        run: |
+          python scripts/get_weather.py
+          echo "--- weather_raw sample ---"; head -n 10 weather_raw.csv || true
+          echo "--- weather_latest sample ---"; head -n 10 weather_latest.csv || true
+          echo "--- log ---"; cat logs_weather_run.txt || true
 
       - name: Commit and push artifacts
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain weather_raw.csv weather_latest.csv logs_weather_run.txt)" ]]; then
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git fetch origin main
+          git pull --rebase origin main
+          CHANGED="$(git status --porcelain weather_raw.csv weather_latest.csv logs_weather_run.txt || true)"
+          if [ -n "$CHANGED" ]; then
             git add weather_raw.csv weather_latest.csv logs_weather_run.txt
             git commit -m "Update weather artifacts [skip ci]"
-            git push
+            git push origin main
           else
             echo "No changes to commit."
           fi
