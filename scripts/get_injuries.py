@@ -1,7 +1,7 @@
 import os
 import time
 import datetime as dt
-from typing import Any, Dict, Optional, List, Tuple
+from typing import Any, Dict, Optional, List
 
 import requests
 import pandas as pd
@@ -19,24 +19,27 @@ def _env(name: str, default: Optional[str] = None) -> Optional[str]:
 def _now_utc_iso() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-def _get(endpoint: str, params: Dict[str, Any], api_key: str, retries: int = 3, backoff: float = 1.6) -> Any:
+def _req(endpoint: str, params: Dict[str, Any], api_key: str, retries: int = 3, backoff: float = 1.6):
+    """Return (status_code, json_or_none). Never raises."""
     url = API_BASE + endpoint
     headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
+    last_status = None
     for i in range(retries):
         try:
             r = requests.get(url, headers=headers, params=params, timeout=60)
+            last_status = r.status_code
             if r.status_code == 200:
                 try:
-                    return r.json()
+                    return r.status_code, r.json()
                 except Exception:
-                    return None
+                    return r.status_code, None
             if r.status_code in (429, 500, 502, 503, 504):
                 time.sleep(backoff ** (i + 1))
                 continue
-            return None
+            return r.status_code, None
         except requests.RequestException:
             time.sleep(backoff ** (i + 1))
-    return None
+    return last_status or 0, None
 
 def _to_df(obj: Any) -> pd.DataFrame:
     if obj is None:
@@ -115,64 +118,69 @@ def _normalize_injuries(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 # -------------------------
-# Aggregation strategy
+# Aggregation with diagnostics
 # -------------------------
 
-def _season_weeks(year: int, api_key: str, season_type: str) -> List[int]:
-    # derive weeks that actually exist from /games to minimize empty calls
-    games = _to_df(_get("/games", {"year": year, "seasonType": season_type}, api_key))
-    if "week" in games.columns:
-        w = sorted(pd.to_numeric(games["week"], errors="coerce").dropna().astype(int).unique().tolist())
+def _season_weeks(year: int, api_key: str, season_type: str, dbg: List[str]) -> List[int]:
+    sc, j = _req("/games", {"year": year, "seasonType": season_type}, api_key)
+    df = _to_df(j)
+    dbg.append(f"/games year={year} seasonType={season_type} status={sc} rows={len(df)}")
+    if "week" in df.columns:
+        w = sorted(pd.to_numeric(df["week"], errors="coerce").dropna().astype(int).unique().tolist())
         return w or list(range(1, 21))
     return list(range(1, 21))
 
-def _season_teams(year: int, api_key: str) -> List[str]:
-    teams = _to_df(_get("/teams/fbs", {"year": year}, api_key))
-    name_col = _first(teams, ["school","team","name"])
+def _season_teams(year: int, api_key: str, dbg: List[str]) -> List[str]:
+    sc, j = _req("/teams/fbs", {"year": year}, api_key)
+    df = _to_df(j)
+    dbg.append(f"/teams/fbs year={year} status={sc} rows={len(df)}")
+    name_col = _first(df, ["school","team","name"])
     if name_col:
-        vals = teams[name_col].dropna().astype(str).str.strip().unique().tolist()
+        vals = df[name_col].dropna().astype(str).str.strip().unique().tolist()
         return sorted(vals)
     return []
 
-def _pull_injuries_exhaustive(year: int, api_key: str, season_type: str) -> pd.DataFrame:
-    # Strategy:
-    # 1) year only
-    # 2) year + week (for all observed weeks)
-    # 3) year + team (for all FBS teams)
-    # 4) year + team + week (only if still empty after 1–3, but capped)
+def _pull_injuries_exhaustive(year: int, api_key: str, season_type: str, dbg: List[str]) -> pd.DataFrame:
     frames: List[pd.DataFrame] = []
 
-    # pass 1
-    base = _to_df(_get("/injuries", {"year": year}, api_key))
-    if not base.empty:
-        frames.append(base)
+    # pass 1: year only
+    sc, j = _req("/injuries", {"year": year}, api_key)
+    d = _to_df(j)
+    dbg.append(f"/injuries year={year} status={sc} rows={len(d)}")
+    if not d.empty:
+        frames.append(d)
 
-    weeks = _season_weeks(year, api_key, season_type)
-    teams = _season_teams(year, api_key)
+    weeks = _season_weeks(year, api_key, season_type, dbg)
+    teams = _season_teams(year, api_key, dbg)
 
-    # pass 2
+    # pass 2: year+week
     for wk in weeks:
-        j = _to_df(_get("/injuries", {"year": year, "week": wk}, api_key))
-        if not j.empty:
-            frames.append(j)
+        sc, j = _req("/injuries", {"year": year, "week": wk}, api_key)
+        d = _to_df(j)
+        dbg.append(f"/injuries year={year} week={wk} status={sc} rows={len(d)}")
+        if not d.empty:
+            frames.append(d)
 
-    # pass 3
+    # pass 3: year+team (FBS only)
     for t in teams:
-        j = _to_df(_get("/injuries", {"year": year, "team": t}, api_key))
-        if not j.empty:
-            frames.append(j)
+        sc, j = _req("/injuries", {"year": year, "team": t}, api_key)
+        d = _to_df(j)
+        dbg.append(f"/injuries year={year} team={t} status={sc} rows={len(d)}")
+        if not d.empty:
+            frames.append(d)
 
-    # early exit if we have data
     if frames:
         return pd.concat(frames, ignore_index=True, sort=False)
 
-    # pass 4 (cap to avoid hitting rate limits; try weeks x subset of teams)
-    cap_teams = teams[:40]  # safety cap
+    # pass 4: cap week×team subset
+    cap = teams[:40]
     for wk in weeks:
-        for t in cap_teams:
-            j = _to_df(_get("/injuries", {"year": year, "week": wk, "team": t}, api_key))
-            if not j.empty:
-                frames.append(j)
+        for t in cap:
+            sc, j = _req("/injuries", {"year": year, "week": wk, "team": t}, api_key)
+            d = _to_df(j)
+            dbg.append(f"/injuries year={year} week={wk} team={t} status={sc} rows={len(d)}")
+            if not d.empty:
+                frames.append(d)
         if frames:
             break
 
@@ -247,21 +255,16 @@ def main():
     if season_type not in ("regular","postseason"):
         season_type = "regular"
 
-    # Exhaustive pulls (weeks/teams) to avoid empty season
-    raw_all = _pull_injuries_exhaustive(year, api_key, season_type)
+    debug_lines: List[str] = []
+    raw_all = _pull_injuries_exhaustive(year, api_key, season_type, debug_lines)
     df_norm = _normalize_injuries(raw_all)
 
-    # Write raw
     df_norm.to_csv("injuries_raw.csv", index=False)
 
-    # Append daily snapshot
     snapshot_iso = _now_utc_iso()
     appended = _append_daily_snapshot(df_norm, "injuries_daily.csv", snapshot_iso)
-
-    # Build latest
     latest_rows = _latest_per_player("injuries_daily.csv", "injuries_latest.csv")
 
-    # Log
     with open("logs_injuries_run.txt", "w", encoding="utf-8") as f:
         f.write(f"year={year}\n")
         f.write(f"season_type={season_type}\n")
@@ -271,6 +274,11 @@ def main():
         f.write(f"latest_rows={latest_rows}\n")
         f.write(f"distinct_teams={df_norm['team'].nunique(dropna=True) if 'team' in df_norm.columns else 0}\n")
         f.write(f"distinct_players={df_norm['player'].nunique(dropna=True) if 'player' in df_norm.columns else 0}\n")
+
+    # request-level diagnostics
+    with open("logs_injuries_debug.txt", "w", encoding="utf-8") as fdbg:
+        for line in debug_lines:
+            fdbg.write(line + "\n")
 
 if __name__ == "__main__":
     main()
