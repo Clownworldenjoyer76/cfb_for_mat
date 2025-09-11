@@ -1,8 +1,6 @@
 name: Update Weather (Open-Meteo)
 
 on:
-  schedule:
-    - cron: "30 13 * * *"
   workflow_dispatch:
 
 permissions:
@@ -28,13 +26,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests pandas python-dateutil
 
-      - name: Run Open-Meteo weather enrichment
+      - name: Run Open-Meteo weather enrichment (next 14 days)
         env:
           CFB_YEAR: ${{ env.CFB_YEAR }}
           CFB_SEASON_TYPE: ${{ env.CFB_SEASON_TYPE }}
+          CFB_WEATHER_WINDOW_DAYS: "14"
+          CFB_WEATHER_MAX_CALLS: "150"
+          CFB_WEATHER_PAST_HOURS: "2"
         run: |
           python scripts/get_weather_openmeteo.py
-          echo "--- weather_enriched sample ---"; head -n 10 weather_enriched.csv || true
+          echo "--- weather_enriched head ---"; head -n 10 weather_enriched.csv || true
           echo "--- log ---"; cat logs_weather_openmeteo.txt || true
 
       - name: Commit and push artifacts
@@ -44,11 +45,10 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git fetch origin main
           git reset --hard origin/main
-          CHANGED="$(git status --porcelain weather_enriched.csv logs_weather_openmeteo.txt || true)"
-          if [ -n "$CHANGED" ]; then
-            git add weather_enriched.csv logs_weather_openmeteo.txt
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
             git commit -m "Update weather_enriched via Open-Meteo [skip ci]"
             git push origin main
-          else
-            echo "No changes to commit."
           fi
