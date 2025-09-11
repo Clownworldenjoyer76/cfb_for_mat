@@ -1,0 +1,43 @@
+name: Update Weather
+
+on:
+  schedule:
+    - cron: "25 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas
+
+      - name: Run script
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          CFB_YEAR: ${{ inputs.year }}
+          CFB_SEASON_TYPE: ${{ inputs.season_type }}
+        run: python scripts/get_weather.py
+
+      - name: Commit and push artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain weather_raw.csv weather_latest.csv logs_weather_run.txt)" ]]; then
+            git add weather_raw.csv weather_latest.csv logs_weather_run.txt
+            git commit -m "Update weather artifacts [skip ci]"
+            git push
+          else
+            echo "No changes to commit."
+          fi
