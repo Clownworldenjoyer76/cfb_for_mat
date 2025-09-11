@@ -1,6 +1,8 @@
 name: Update Weather (Open-Meteo)
 
 on:
+  schedule:
+    - cron: "30 13 * * *"
   workflow_dispatch:
 
 permissions:
@@ -41,7 +43,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git fetch origin main
-          git pull --rebase origin main
+          git reset --hard origin/main
           CHANGED="$(git status --porcelain weather_enriched.csv logs_weather_openmeteo.txt || true)"
           if [ -n "$CHANGED" ]; then
             git add weather_enriched.csv logs_weather_openmeteo.txt
