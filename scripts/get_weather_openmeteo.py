@@ -23,6 +23,9 @@ def _env(name: str, default: Optional[str] = None) -> Optional[str]:
 def _now_utc() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
+def _iso_now() -> str:
+    return _now_utc().strftime("%Y-%m-%dT%H:%M:%SZ")
+
 def _to_utc(ts: Any) -> Optional[dt.datetime]:
     try:
         return pd.to_datetime(ts, errors="coerce", utc=True).to_pydatetime()
@@ -115,11 +118,11 @@ def _coalesce_latlon(row: pd.Series) -> Tuple[Optional[float], Optional[float]]:
         return (None, None)
 
 def _load_games() -> pd.DataFrame:
-    path = "situational_factors.csv"
-    if not os.path.exists(path):
+    p = "situational_factors.csv"
+    if not os.path.exists(p):
         cols = ["game_id","season","week","start_date","team","opponent","is_home","venue_lat","venue_lon","team_lat","team_lon"]
         return pd.DataFrame(columns=cols)
-    df = pd.read_csv(path)
+    df = pd.read_csv(p)
     if "start_date" in df.columns:
         df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce", utc=True)
     if "is_home" in df.columns:
@@ -129,22 +132,24 @@ def _load_games() -> pd.DataFrame:
             df[c] = pd.NA
     return df
 
-def build(year: str, season_type: str, window_days: int, max_calls: int) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+def build(year: str, season_type: str, window_days: int, max_calls: int, include_past_hours: int) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     games = _load_games()
     if "season" in games.columns:
         games = games.loc[games["season"].astype(str) == str(year)].copy()
 
     now = _now_utc()
-    horizon = now + dt.timedelta(days=window_days)
+    start_window = now - dt.timedelta(hours=include_past_hours)
+    end_window = now + dt.timedelta(days=window_days)
 
     games["kickoff_ok"] = ~games["start_date"].isna()
-    games["in_window"] = games["kickoff_ok"] & (games["start_date"] >= now) & (games["start_date"] <= horizon)
+    games["in_window"] = games["kickoff_ok"] & (games["start_date"] >= start_window) & (games["start_date"] <= end_window)
     games["latlon_ok"] = ~(games["venue_lat"].isna() | games["venue_lon"].isna())
 
     work = games.loc[games["in_window"] & games["latlon_ok"]].copy()
 
     out_rows = []
     dbg = {
+        "snapshot_utc": _iso_now(),
         "total_games": int(len(games)),
         "workable_games": int(len(work)),
         "skipped_no_kickoff": int(len(games) - games["kickoff_ok"].sum()),
@@ -233,16 +238,21 @@ def main():
 
     window_days = int(_env("CFB_WEATHER_WINDOW_DAYS", "14"))
     max_calls = int(_env("CFB_WEATHER_MAX_CALLS", "150"))
+    include_past_hours = int(_env("CFB_WEATHER_PAST_HOURS", "2"))  # include recent past window
 
-    df, info = build(year, season_type, window_days, max_calls)
+    df, info = build(year, season_type, window_days, max_calls, include_past_hours)
 
     df.to_csv("weather_enriched.csv", index=False)
     with open("logs_weather_openmeteo.txt", "w", encoding="utf-8") as f:
+        f.write("snapshot_utc=" + info.get("snapshot_utc","") + "\n")
         f.write("year=" + str(year) + "\n")
         f.write("season_type=" + season_type + "\n")
         f.write("window_days=" + str(window_days) + "\n")
         f.write("max_calls=" + str(max_calls) + "\n")
+        f.write("include_past_hours=" + str(include_past_hours) + "\n")
         for k, v in info.items():
+            if k == "snapshot_utc":
+                continue
             f.write(f"{k}={v}\n")
 
 if __name__ == "__main__":
