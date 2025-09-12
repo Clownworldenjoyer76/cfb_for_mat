@@ -1,0 +1,58 @@
+name: Build Modeling Dataset
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync to remote main (before generating artifacts)
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          git status --porcelain
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+
+      - name: Build modeling dataset
+        run: |
+          set -e
+          python scripts/build_modeling_dataset.py
+          echo "--- data/modeling_dataset.csv (head) ---"; head -n 10 data/modeling_dataset.csv || true
+          echo "--- logs_build_modeling_dataset.txt ---"; cat logs_build_modeling_dataset.txt || true
+          echo "--- counts ---"
+          [ -f data/modeling_dataset.csv ] && wc -l data/modeling_dataset.csv || echo "data/modeling_dataset.csv missing"
+          [ -f logs_build_modeling_dataset.txt ] && wc -l logs_build_modeling_dataset.txt || echo "logs_build_modeling_dataset.txt missing"
+
+      - name: Commit and push artifacts
+        run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git add -f data/modeling_dataset.csv logs_build_modeling_dataset.txt
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            git status --porcelain
+          else
+            git commit -m "Build modeling_dataset artifacts [skip ci]"
+            git push origin main
+          fi
