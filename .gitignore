@@ -1,0 +1,84 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# VS Code
+.vscode/
+
+# OS / misc
+.DS_Store
+Thumbs.db
+
+# Project data outputs (ignored by default)
+*.csv
+*.log
+*.txt
+
+# Explicitly keep pipeline artifacts
+!weather_enriched.csv
+!logs_weather_openmeteo.txt
+!situational_factors.csv
+!logs_situational_factors_run.txt
+!special_teams_metrics.csv
+!special_teams_season_raw.csv
+!logs_special_teams_run.txt
+!player_stats_game_raw.csv
+!player_stats_season_raw.csv
+!player_injuries_raw.csv
+!logs_player_stats_run.txt
