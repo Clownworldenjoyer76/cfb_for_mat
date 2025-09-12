@@ -29362,42 +29362,42 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "firstDowns",
-    "statValue": 43
+    "statValue": 68
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "firstDownsOpponent",
-    "statValue": 42
+    "statValue": 54
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "fourthDownConversions",
-    "statValue": 2
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "fourthDowns",
-    "statValue": 2
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "fourthDownsOpponent",
-    "statValue": 6
+    "statValue": 8
   },
   {
     "season": 2025,
@@ -29418,7 +29418,7 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "games",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -29432,14 +29432,14 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "interceptionsOpponent",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "interceptionTDs",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -29453,7 +29453,7 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "interceptionYards",
-    "statValue": 0
+    "statValue": 45
   },
   {
     "season": 2025,
@@ -29466,71 +29466,92 @@
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
-    "statName": "kickReturnsOpponent",
-    "statValue": 3
+    "statName": "kickReturns",
+    "statValue": 1
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
-    "statName": "kickReturnTDsOpponent",
+    "statName": "kickReturnsOpponent",
+    "statValue": 5
+  },
+  {
+    "season": 2025,
+    "team": "NC State",
+    "conference": "ACC",
+    "statName": "kickReturnTDs",
     "statValue": 0
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
+    "statName": "kickReturnTDsOpponent",
+    "statValue": 1
+  },
+  {
+    "season": 2025,
+    "team": "NC State",
+    "conference": "ACC",
+    "statName": "kickReturnYards",
+    "statValue": 19
+  },
+  {
+    "season": 2025,
+    "team": "NC State",
+    "conference": "ACC",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 67
+    "statValue": 176
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "netPassingYards",
-    "statValue": 518
+    "statValue": 719
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "netPassingYardsOpponent",
-    "statValue": 640
+    "statValue": 892
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "passAttempts",
-    "statValue": 57
+    "statValue": 89
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "passAttemptsOpponent",
-    "statValue": 88
+    "statValue": 123
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "passCompletions",
-    "statValue": 40
+    "statValue": 63
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "passCompletionsOpponent",
-    "statValue": 61
+    "statValue": 82
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "passesIntercepted",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -29544,7 +29565,7 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "passingTDs",
-    "statValue": 2
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -29558,56 +29579,56 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "penalties",
-    "statValue": 8
+    "statValue": 18
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "penaltiesOpponent",
-    "statValue": 13
+    "statValue": 21
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "penaltyYards",
-    "statValue": 78
+    "statValue": 172
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "penaltyYardsOpponent",
-    "statValue": 106
+    "statValue": 188
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "possessionTime",
-    "statValue": 3582
+    "statValue": 5867
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "possessionTimeOpponent",
-    "statValue": 3618
+    "statValue": 4933
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "puntReturns",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "puntReturnsOpponent",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -29628,28 +29649,28 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "puntReturnYards",
-    "statValue": 8
+    "statValue": 22
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "puntReturnYardsOpponent",
-    "statValue": 81
+    "statValue": 82
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "rushingAttempts",
-    "statValue": 69
+    "statValue": 113
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 61
+    "statValue": 83
   },
   {
     "season": 2025,
@@ -29663,91 +29684,91 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "rushingTDsOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "rushingYards",
-    "statValue": 325
+    "statValue": 530
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "rushingYardsOpponent",
-    "statValue": 287
+    "statValue": 346
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "sacks",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "sacksOpponent",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "tacklesForLoss",
-    "statValue": 14
-  },
-  {
-    "season": 2025,
-    "team": "NC State",
-    "conference": "ACC",
-    "statName": "tacklesForLossOpponent",
     "statValue": 15
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
+    "statName": "tacklesForLossOpponent",
+    "statValue": 16
+  },
+  {
+    "season": 2025,
+    "team": "NC State",
+    "conference": "ACC",
     "statName": "thirdDownConversions",
-    "statValue": 8
+    "statValue": 15
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 19
+    "statValue": 25
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "thirdDowns",
-    "statValue": 22
+    "statValue": 40
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "thirdDownsOpponent",
-    "statValue": 35
+    "statValue": 50
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "totalYards",
-    "statValue": 843
+    "statValue": 1249
   },
   {
     "season": 2025,
     "team": "NC State",
     "conference": "ACC",
     "statName": "totalYardsOpponent",
-    "statValue": 927
+    "statValue": 1238
   },
   {
     "season": 2025,
@@ -29761,7 +29782,7 @@
     "team": "NC State",
     "conference": "ACC",
     "statName": "turnoversOpponent",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -53666,42 +53687,42 @@
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "firstDowns",
-    "statValue": 41
+    "statValue": 53
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "firstDownsOpponent",
-    "statValue": 35
+    "statValue": 60
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "fourthDownConversions",
-    "statValue": 1
-  },
-  {
-    "season": 2025,
-    "team": "Wake Forest",
-    "conference": "ACC",
-    "statName": "fourthDownConversionsOpponent",
     "statValue": 2
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
+    "statName": "fourthDownConversionsOpponent",
+    "statValue": 4
+  },
+  {
+    "season": 2025,
+    "team": "Wake Forest",
+    "conference": "ACC",
     "statName": "fourthDowns",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "fourthDownsOpponent",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
@@ -53736,14 +53757,14 @@
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "games",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "interceptions",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -53764,7 +53785,7 @@
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "interceptionTDsOpponent",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -53778,28 +53799,28 @@
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "interceptionYardsOpponent",
-    "statValue": 0
+    "statValue": 45
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "kickReturns",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "kickReturnsOpponent",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "kickReturnTDs",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -53813,56 +53834,56 @@
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "kickReturnYards",
-    "statValue": 73
+    "statValue": 182
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 11
+    "statValue": 30
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "netPassingYards",
-    "statValue": 487
+    "statValue": 739
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "netPassingYardsOpponent",
-    "statValue": 353
+    "statValue": 554
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "passAttempts",
-    "statValue": 54
+    "statValue": 89
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "passAttemptsOpponent",
-    "statValue": 76
+    "statValue": 108
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "passCompletions",
-    "statValue": 36
+    "statValue": 57
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "passCompletionsOpponent",
-    "statValue": 38
+    "statValue": 61
   },
   {
     "season": 2025,
@@ -53876,7 +53897,7 @@
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "passesInterceptedOpponent",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -53890,56 +53911,63 @@
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "passingTDsOpponent",
-    "statValue": 0
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "penalties",
-    "statValue": 11
+    "statValue": 19
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "penaltiesOpponent",
-    "statValue": 14
+    "statValue": 24
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "penaltyYards",
-    "statValue": 97
+    "statValue": 179
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "penaltyYardsOpponent",
-    "statValue": 116
+    "statValue": 210
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "possessionTime",
-    "statValue": 3543
+    "statValue": 4858
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "possessionTimeOpponent",
-    "statValue": 3657
+    "statValue": 5942
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "puntReturns",
-    "statValue": 5
+    "statValue": 6
+  },
+  {
+    "season": 2025,
+    "team": "Wake Forest",
+    "conference": "ACC",
+    "statName": "puntReturnsOpponent",
+    "statValue": 2
   },
   {
     "season": 2025,
@@ -53952,29 +53980,43 @@
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
+    "statName": "puntReturnTDsOpponent",
+    "statValue": 0
+  },
+  {
+    "season": 2025,
+    "team": "Wake Forest",
+    "conference": "ACC",
     "statName": "puntReturnYards",
-    "statValue": 53
+    "statValue": 54
+  },
+  {
+    "season": 2025,
+    "team": "Wake Forest",
+    "conference": "ACC",
+    "statName": "puntReturnYardsOpponent",
+    "statValue": 14
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "rushingAttempts",
-    "statValue": 78
+    "statValue": 100
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 76
+    "statValue": 120
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "rushingTDs",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
@@ -53988,91 +54030,91 @@
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "rushingYards",
-    "statValue": 403
+    "statValue": 462
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "rushingYardsOpponent",
-    "statValue": 192
+    "statValue": 397
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "sacks",
-    "statValue": 7
+    "statValue": 8
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "sacksOpponent",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "tacklesForLoss",
-    "statValue": 18
+    "statValue": 19
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "tacklesForLossOpponent",
-    "statValue": 15
+    "statValue": 16
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "thirdDownConversions",
-    "statValue": 10
+    "statValue": 16
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 13
+    "statValue": 20
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "thirdDowns",
-    "statValue": 27
+    "statValue": 42
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "thirdDownsOpponent",
-    "statValue": 36
+    "statValue": 54
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "totalYards",
-    "statValue": 890
+    "statValue": 1201
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "totalYardsOpponent",
-    "statValue": 545
+    "statValue": 951
   },
   {
     "season": 2025,
     "team": "Wake Forest",
     "conference": "ACC",
     "statName": "turnovers",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
