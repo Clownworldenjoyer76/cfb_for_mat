@@ -474,29 +474,29 @@
       "conference": "Mid-American",
       "team": "Buffalo",
       "offense": {
-        "overall": 0.19,
-        "passing": 0.24,
-        "rushing": 0.2,
-        "firstDown": 0.11,
-        "secondDown": 0.15,
-        "thirdDown": 0.5,
+        "overall": 0.23,
+        "passing": 0.25,
+        "rushing": 0.25,
+        "firstDown": 0.16,
+        "secondDown": 0.18,
+        "thirdDown": 0.41,
         "cumulative": {
-          "total": 35.3,
-          "passing": 14.33,
-          "rushing": 24.7
+          "total": 29.8,
+          "passing": 10.45,
+          "rushing": 21.2
         }
       },
       "defense": {
-        "overall": 0.07,
-        "passing": 0.3,
-        "rushing": -0.16,
-        "firstDown": -0.05,
-        "secondDown": -0.1,
-        "thirdDown": 0.55,
+        "overall": 0.13,
+        "passing": 0.34,
+        "rushing": -0.12,
+        "firstDown": -0.02,
+        "secondDown": -0.07,
+        "thirdDown": 0.77,
         "cumulative": {
-          "total": 11.9,
-          "passing": 270,
-          "rushing": -11.4
+          "total": 16.2,
+          "passing": 231.7,
+          "rushing": -6.9
         }
       }
     },
@@ -2179,29 +2179,29 @@
       "conference": "ACC",
       "team": "NC State",
       "offense": {
-        "overall": 0.3,
-        "passing": 0.41,
-        "rushing": 0.21,
-        "firstDown": 0.14,
-        "secondDown": 0.41,
+        "overall": 0.23,
+        "passing": 0.42,
+        "rushing": 0.08,
+        "firstDown": 0.09,
+        "secondDown": 0.21,
         "thirdDown": 0.42,
         "cumulative": {
-          "total": 38.2,
-          "passing": 23.95,
-          "rushing": 14.2
+          "total": 47.1,
+          "passing": 38.61,
+          "rushing": 8.5
         }
       },
       "defense": {
-        "overall": 0.24,
-        "passing": 0.36,
+        "overall": 0.19,
+        "passing": 0.25,
         "rushing": 0.15,
-        "firstDown": -0.08,
-        "secondDown": 0.1,
-        "thirdDown": 1.21,
+        "firstDown": -0.06,
+        "secondDown": -0.03,
+        "thirdDown": 1,
         "cumulative": {
-          "total": 36.1,
-          "passing": 316.3,
-          "rushing": 9
+          "total": 38.4,
+          "passing": 305.5,
+          "rushing": 12.3
         }
       }
     },
@@ -3977,29 +3977,29 @@
       "conference": "ACC",
       "team": "Wake Forest",
       "offense": {
-        "overall": 0.14,
-        "passing": 0.33,
-        "rushing": 0.05,
-        "firstDown": 0.17,
-        "secondDown": 0.14,
-        "thirdDown": 0.46,
+        "overall": 0.11,
+        "passing": 0.19,
+        "rushing": 0.07,
+        "firstDown": 0.12,
+        "secondDown": -0.02,
+        "thirdDown": 0.48,
         "cumulative": {
-          "total": 18.5,
-          "passing": 18.64,
-          "rushing": 3.6
+          "total": 20.8,
+          "passing": 17.56,
+          "rushing": 7
         }
       },
       "defense": {
-        "overall": -0.01,
-        "passing": -0.04,
-        "rushing": 0.06,
-        "firstDown": -0.12,
-        "secondDown": -0.22,
-        "thirdDown": 0.43,
+        "overall": 0.04,
+        "passing": 0.1,
+        "rushing": -0.02,
+        "firstDown": -0.07,
+        "secondDown": -0.21,
+        "thirdDown": 0.42,
         "cumulative": {
-          "total": -1,
-          "passing": -32.2,
-          "rushing": 3.9
+          "total": 7.9,
+          "passing": 114.4,
+          "rushing": -1.8
         }
       }
     },
