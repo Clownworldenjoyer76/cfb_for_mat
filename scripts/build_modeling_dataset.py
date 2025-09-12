@@ -91,10 +91,20 @@ def _load_aliases(path: str) -> Dict[str, str]:
             d[src] = tgt
     return d
 
-def _safe_left_merge(left: pd.DataFrame, right: pd.DataFrame, on: List[Tuple[str,str]]) -> pd.DataFrame:
+def _safe_left_merge(left: pd.DataFrame, right: pd.DataFrame, on: List[Tuple[str,str]], suffix_tag: str) -> pd.DataFrame:
+    """
+    Left-merge with controlled suffixing so LEFT columns keep their names.
+    Any conflicting RIGHT column gets suffix `suffix_tag` (e.g., '__rts_').
+    """
     left_keys  = [lk for lk, _ in on]
     right_keys = [rk for _, rk in on]
-    return left.merge(right, left_on=left_keys, right_on=right_keys, how="left")
+    return left.merge(
+        right,
+        left_on=left_keys,
+        right_on=right_keys,
+        how="left",
+        suffixes=("", suffix_tag)
+    )
 
 def _prefix_new_columns(df_before: pd.DataFrame, df_after: pd.DataFrame, prefix: str, protect: List[str]) -> pd.DataFrame:
     new_cols = [c for c in df_after.columns if c not in df_before.columns and c not in protect]
@@ -105,37 +115,27 @@ def _coerce_season_int(df: pd.DataFrame, col: str) -> pd.DataFrame:
         df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
     return df
 
-def _dedupe_by_team_season(df: pd.DataFrame, s_col: str, t_col: str, key_col: str = "_t_key") -> pd.DataFrame:
+def _dedupe_by_team_season(df: pd.DataFrame, s_col: str, t_key_col: str) -> pd.DataFrame:
     """
-    Ensure exactly one row per (season, team). If duplicates exist:
-      - numeric columns: mean
-      - non-numeric: first
+    Ensure exactly one row per (season, _t_key).
+    Numeric columns averaged; non-numeric take first.
     """
     if df.empty:
         return df
-
-    # Build group keys
-    group_cols = [s_col, key_col]
-    # Separate numeric vs non-numeric
+    group_cols = [s_col, t_key_col]
     num_cols = df.select_dtypes(include=["number", "float", "int", "Int64"]).columns.tolist()
-    # Exclude key columns from aggregation lists
     num_cols = [c for c in num_cols if c not in group_cols]
 
     def _first(s: pd.Series):
         return s.iloc[0]
 
-    agg_dict = {}
+    agg = {}
     for c in df.columns:
         if c in group_cols:
             continue
-        if c in num_cols:
-            agg_dict[c] = "mean"
-        else:
-            agg_dict[c] = _first
+        agg[c] = ("mean" if c in num_cols else _first)
 
-    g = df.groupby(group_cols, dropna=False).agg(agg_dict).reset_index()
-
-    # After aggregation, keep only one row per (season, _t_key)
+    g = df.groupby(group_cols, dropna=False).agg(agg).reset_index()
     g = g.drop_duplicates(subset=group_cols, keep="first")
     return g
 
@@ -143,7 +143,7 @@ def _dedupe_by_team_season(df: pd.DataFrame, s_col: str, t_col: str, key_col: st
 # =========================
 # Build pipeline
 # =========================
-def build() -> Tuple[pd.DataFrame, Dict[str,int]]:
+def build():
     log: Dict[str,int] = {}
 
     alias_map = _load_aliases(OPT_TEAM_ALIASES)
@@ -184,16 +184,21 @@ def build() -> Tuple[pd.DataFrame, Dict[str,int]]:
         base["team"] = _apply_alias(base["team"], alias_map)
         base["opponent"] = _apply_alias(base["opponent"], alias_map)
 
+    # Preserve base keys to guarantee they survive merges
+    base["_base_season"] = base["season"]
+    base["_base_team"]   = base["team"]
+
+    # Normalized join keys
     base["_team_key"] = _std_team(base["team"])
     base["_opp_key"]  = _std_team(base["opponent"])
 
-    # Ensure we never lose these base keys
-    required_keys = ["game_id","season","week","team","opponent","is_home","_team_key"]
+    # Ensure base key columns are first and protected
+    required_keys = ["game_id","season","week","team","opponent","is_home","_team_key","_base_season","_base_team"]
     base = base[required_keys + [c for c in base.columns if c not in required_keys]]
     base = base.drop_duplicates(subset=["game_id","team","is_home"], keep="first").reset_index(drop=True)
     log["rows_base_start"] = int(len(base))
 
-    # 2) Weather (game_id + team via home/away; alias-normalized)
+    # 2) Weather (game_id + team via home/away; alias-normalized), with controlled suffixing
     wx = _read(OPT_WEATHER, parse_dates=["start_date"])
     if not wx.empty:
         w_gid  = _find_col(wx, ["game_id","id"])
@@ -209,8 +214,8 @@ def build() -> Tuple[pd.DataFrame, Dict[str,int]]:
                     wx[w_away] = _apply_alias(wx[w_away], alias_map)
                 wx["_w_away_key"] = _std_team(wx[w_away])
 
-            m_home = _safe_left_merge(base, wx, on=[("game_id", w_gid), ("_team_key", "_w_home_key")]) if w_home else base.copy()
-            m_away = _safe_left_merge(base, wx, on=[("game_id", w_gid), ("_team_key", "_w_away_key")]) if w_away else base.copy()
+            m_home = _safe_left_merge(base, wx, on=[("game_id", w_gid), ("_team_key", "_w_home_key")], suffix_tag="__rwx") if w_home else base.copy()
+            m_away = _safe_left_merge(base, wx, on=[("game_id", w_gid), ("_team_key", "_w_away_key")], suffix_tag="__rwx") if w_away else base.copy()
 
             out = base.copy()
             exclude = {w_gid, w_home, w_away, "_w_home_key", "_w_away_key"}
@@ -220,12 +225,15 @@ def build() -> Tuple[pd.DataFrame, Dict[str,int]]:
                 if c in m_away.columns:
                     s = s.where(~s.isna(), m_away[c])
                 out[f"wx_{c}"] = s
+            # drop any suffixed right-dup cols
+            cols_drop = [c for c in out.columns if c.endswith("__rwx")]
+            out = out.drop(columns=cols_drop, errors="ignore")
             base = out
 
     log["rows_after_weather"] = int(len(base))
 
     # 3) Season-team merges (team_stats, efficiency, special teams) — enforce one row per (season, team)
-    def merge_season_team(path: str, prefix: str):
+    def merge_season_team(path: str, prefix: str, suf: str):
         nonlocal base
         df = _read(path)
         if df.empty:
@@ -241,43 +249,38 @@ def build() -> Tuple[pd.DataFrame, Dict[str,int]]:
             df[t_col] = _apply_alias(df[t_col], alias_map)
         df["_t_key"] = _std_team(df[t_col])
 
-        # FORCE ONE ROW PER (season, _t_key)
-        df = _dedupe_by_team_season(df, s_col, t_col, key_col="_t_key")
+        df = _dedupe_by_team_season(df, s_col, "_t_key")
 
         before_rows = len(base)
         before = base.copy()
-        merged = _safe_left_merge(base, df, on=[("season", s_col), ("_team_key", "_t_key")])
+        merged = _safe_left_merge(base, df, on=[("season", s_col), ("_team_key", "_t_key")], suffix_tag=suf)
 
-        # Protect base keys from being overwritten/dropped
+        # Prefix only truly new columns (left columns keep names due to suffixing strategy)
         protect = list(before.columns) + [s_col, t_col, "_t_key"]
         merged = _prefix_new_columns(before, merged, prefix, protect=protect)
 
-        # Drop helper cols coming from right
+        # Drop helper and right-dup columns
         merged = merged.drop(columns=[s_col, t_col, "_t_key"], errors="ignore")
+        drop_suff = [c for c in merged.columns if c.endswith(suf)]
+        merged = merged.drop(columns=drop_suff, errors="ignore")
 
-        # HARD CHECK: row count must not change
+        # Enforce row count invariant
         if len(merged) != before_rows:
-            # If still changed (shouldn't), fallback: align by re-aggregating df and re-merge
-            df_fallback = _dedupe_by_team_season(df, s_col, t_col, key_col="_t_key")
-            merged = _safe_left_merge(before, df_fallback, on=[("season", s_col), ("_team_key", "_t_key")])
-            merged = _prefix_new_columns(before, merged, prefix, protect=list(before.columns) + [s_col, t_col, "_t_key"])
-            merged = merged.drop(columns=[s_col, t_col, "_t_key"], errors="ignore")
-            # force same row order/length as base
-            merged = merged.loc[:, before.columns + [c for c in merged.columns if c not in before.columns]]
+            merged = before  # revert on anomaly
 
         base = merged
 
-    merge_season_team(OPT_TEAM_STATS,  "ts_")
+    merge_season_team(OPT_TEAM_STATS,  "ts_",  "__rts_")
     log["rows_after_team_stats"] = int(len(base))
 
-    merge_season_team(OPT_EFFICIENCY,  "eff_")
+    merge_season_team(OPT_EFFICIENCY,  "eff_", "__reff_")
     log["rows_after_efficiency"] = int(len(base))
 
-    merge_season_team(OPT_SPECIAL,     "st_")
+    merge_season_team(OPT_SPECIAL,     "st_",  "__rst_")
     log["rows_after_special"] = int(len(base))
 
     # 4) Injuries: aggregate counts per (season, team), enforce uniqueness
-    def merge_inj(path: str, prefix: str):
+    def merge_inj(path: str, prefix: str, suf: str):
         nonlocal base
         df = _read(path, parse_dates=["start_date","return_date","last_updated"])
         if df.empty:
@@ -292,37 +295,35 @@ def build() -> Tuple[pd.DataFrame, Dict[str,int]]:
             df[t_col] = _apply_alias(df[t_col], alias_map)
         df["_t_key"] = _std_team(df[t_col])
 
-        # Simple count aggregate per (season, team)
         agg = df.groupby([s_col, "_t_key"], dropna=False).size().reset_index(name=f"{prefix}_count")
-        # enforce uniqueness
         agg = agg.drop_duplicates(subset=[s_col, "_t_key"], keep="first")
 
         before_rows = len(base)
         before = base.copy()
-        merged = _safe_left_merge(base, agg, on=[("season", s_col), ("_team_key", "_t_key")])
+        merged = _safe_left_merge(base, agg, on=[("season", s_col), ("_team_key", "_t_key")], suffix_tag=suf)
         protect = list(before.columns) + [s_col, "_t_key"]
         merged = _prefix_new_columns(before, merged, f"inj_{prefix}_", protect=protect)
         merged = merged.drop(columns=[s_col, "_t_key"], errors="ignore")
+        drop_suff = [c for c in merged.columns if c.endswith(suf)]
+        merged = merged.drop(columns=drop_suff, errors="ignore")
 
-        # HARD CHECK: row count must not change
         if len(merged) != before_rows:
-            merged = before.copy()  # revert if something went wrong
+            merged = before
 
         base = merged
 
-    merge_inj(OPT_INJ_DAILY,  "daily")
-    merge_inj(OPT_INJ_LATEST, "latest")
+    merge_inj(OPT_INJ_DAILY,  "daily",  "__rind_")
+    merge_inj(OPT_INJ_LATEST, "latest", "__rind_")
     log["rows_after_injuries"] = int(len(base))
 
-    # 5) Cleanup — ensure mandatory keys exist and are not dropped
-    for c in ["game_id","season","week","team","opponent","is_home"]:
-        if c not in base.columns:
-            base[c] = pd.NA
+    # 5) Restore guaranteed base keys (season, team) in case merges created suffixed variants
+    base["season"] = base["_base_season"]
+    base["team"]   = base["_base_team"]
 
-    # Drop helper keys
-    base = base.drop(columns=["_team_key","_opp_key"], errors="ignore").reset_index(drop=True)
+    # 6) Cleanup helpers
+    base = base.drop(columns=["_team_key","_opp_key","_base_season","_base_team"], errors="ignore").reset_index(drop=True)
 
-    # 6) Write outputs
+    # 7) Write outputs
     os.makedirs(os.path.dirname(OUT_DATASET_CSV), exist_ok=True)
     base.to_csv(OUT_DATASET_CSV, index=False)
 
@@ -335,13 +336,10 @@ def build() -> Tuple[pd.DataFrame, Dict[str,int]]:
             miss = float(base[c].isna().mean()) if len(base) else 1.0
             f.write(f"pct_missing_{c}={round(miss,6)}\n")
 
-    return base, log
-
 
 def main():
-    df, _ = build()
-    print("--- modeling_dataset sample ---")
-    print(df.head(10).to_string(index=False))
+    df = build()  # return value not used; file artifacts are the deliverable
+    print("--- modeling_dataset written ---")
 
 
 if __name__ == "__main__":
