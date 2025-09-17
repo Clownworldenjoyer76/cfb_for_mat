@@ -23,25 +23,47 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas scikit-learn joblib
+          pip install numpy pandas scikit-learn joblib
 
       - name: Execute regression script
+        env:
+          # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+          # Set this to your actual numeric target column in modeling_dataset.csv
+          TARGET_COL: points_scored
+          # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         run: |
+          set -e
           python scripts/run_regression_models.py
+
           echo '--- logs_model_regression.txt ---'
-          cat logs_model_regression.txt || true
-          echo '--- data/model_regression_metrics.csv (head) ---'
-          head -n 10 data/model_regression_metrics.csv || true
+          if [ -f logs_model_regression.txt ]; then
+            cat logs_model_regression.txt
+          else
+            echo "logs_model_regression.txt not found."
+          fi
+
+          echo '--- data/model_regression_metrics.csv ---'
+          if [ -f data/model_regression_metrics.csv ]; then
+            cat data/model_regression_metrics.csv
+          else
+            echo "data/model_regression_metrics.csv not found."
+          fi
+
           echo '--- model artifacts ---'
-          ls -lh models || true
+          if [ -d models ]; then
+            ls -lh models || true
+          else
+            echo "models/ directory not found."
+          fi
 
       - name: Commit and push artifacts
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f logs_model_regression.txt data/model_regression_metrics.csv models/*.pkl
+          git add -f logs_model_regression.txt data/model_regression_metrics.csv models/*.pkl || true
+
           if git diff --cached --quiet; then
-            echo "No changes to commit."
+            echo "No changes to commit (artifacts unchanged)."
           else
             git commit -m "Add regression metrics and model artifacts [skip ci]"
             git push
