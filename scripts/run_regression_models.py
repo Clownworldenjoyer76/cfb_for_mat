@@ -12,41 +12,36 @@ from sklearn.preprocessing import StandardScaler
 import joblib
 
 
+# I/O
 INPUT_CSV   = "data/modeling_dataset.csv"
 OUT_METRICS = "data/model_regression_metrics.csv"
 OUT_LOG     = "logs_model_regression.txt"
 MODEL_DIR   = "models"
 
-# Columns that must not be fed to the model directly
+# Columns never sent to model
 ID_COLUMNS = [
     "game_id", "team", "opponent", "home_team", "away_team",
     "venue", "venue_name"
 ]
 
-# Datetime-like columns to encode if present
+# Datetime columns to encode if present
 DATETIME_COLUMNS = ["start_date", "kickoff", "game_datetime"]
 
 
 def encode_datetime(df: pd.DataFrame) -> pd.DataFrame:
-    """Add numeric components from any present datetime columns and drop originals."""
     for col in DATETIME_COLUMNS:
         if col in df.columns:
-            # Try parse; keep NaT if parsing fails
-            dt_series = pd.to_datetime(df[col], errors="coerce", utc=True)
-            df[f"{col}_year"]  = dt_series.dt.year
-            df[f"{col}_month"] = dt_series.dt.month
-            df[f"{col}_day"]   = dt_series.dt.day
-            df[f"{col}_hour"]  = dt_series.dt.hour
-            df[f"{col}_dow"]   = dt_series.dt.weekday
+            s = pd.to_datetime(df[col], errors="coerce", utc=True)
+            df[f"{col}_year"]  = s.dt.year
+            df[f"{col}_month"] = s.dt.month
+            df[f"{col}_day"]   = s.dt.day
+            df[f"{col}_hour"]  = s.dt.hour
+            df[f"{col}_dow"]   = s.dt.weekday
             df.drop(columns=[col], inplace=True)
     return df
 
 
 def select_target(df: pd.DataFrame) -> str:
-    """
-    Choose a target with minimal assumptions:
-    prefer team scoring columns if present; otherwise keep prior fallback to 'week'.
-    """
     candidates = [
         "ts_points", "ts_points_per_game", "eff_points",
         "points_scored", "points_for"
@@ -54,35 +49,30 @@ def select_target(df: pd.DataFrame) -> str:
     for c in candidates:
         if c in df.columns and pd.api.types.is_numeric_dtype(df[c]):
             return c
-    # Fallback used earlier; retained to avoid breaking existing use
     return "week"
 
 
 def build_features(df: pd.DataFrame, target_col: str):
-    """Return X, y with only numeric features after safe preprocessing."""
-    # Drop known identifier/text columns if present
     drop_cols = [c for c in ID_COLUMNS if c in df.columns]
     if drop_cols:
         df = df.drop(columns=drop_cols)
 
-    # Encode datetime columns
     df = encode_datetime(df)
 
-    # Ensure target present and numeric
     if target_col not in df.columns:
         raise ValueError(f"Target column not found: {target_col}")
     if not pd.api.types.is_numeric_dtype(df[target_col]):
         raise ValueError(f"Target column is not numeric: {target_col}")
 
     y = df[target_col]
-    # Remove target from features
     X = df.drop(columns=[target_col])
 
-    # Keep only numeric columns for modeling
-    numeric_cols = [c for c in X.columns if pd.api.types.is_numeric_dtype(X[c])]
-    X = X[numeric_cols].copy()
+    # Keep only numeric features
+    X = X.select_dtypes(include=["number"])
 
-    # If no features left, fail explicitly
+    # DROP columns that are entirely NaN to avoid SimpleImputer "no observed values" error
+    X = X.loc[:, X.notna().any(axis=0)]
+
     if X.shape[1] == 0:
         raise ValueError("No numeric features available after preprocessing.")
 
@@ -94,7 +84,6 @@ def train_and_eval(X, y):
         X, y, test_size=0.2, random_state=42
     )
 
-    # Pipelines: impute -> (scale) -> model
     linear = Pipeline(steps=[
         ("impute", SimpleImputer(strategy="median")),
         ("model", LinearRegression())
@@ -125,7 +114,8 @@ def train_and_eval(X, y):
         pipe.fit(X_train, y_train)
         y_pred = pipe.predict(X_test)
 
-        rmse = mean_squared_error(y_test, y_pred, squared=False)
+        # RMSE compatible with older sklearn (no 'squared' kwarg)
+        rmse = mean_squared_error(y_test, y_pred) ** 0.5
         mae  = mean_absolute_error(y_test, y_pred)
         r2   = r2_score(y_test, y_pred)
 
@@ -136,8 +126,8 @@ def train_and_eval(X, y):
             "r2": float(r2),
             "n_train": int(len(y_train)),
             "n_test": int(len(y_test)),
-            "n_features": int(X.shape[1])
-        })
+            "n_features": int(X.shape[1]))
+        )
 
         joblib.dump(pipe, os.path.join(MODEL_DIR, f"{name}.pkl"))
 
@@ -152,10 +142,8 @@ def main():
 
     metrics, n_feats, n_rows = train_and_eval(X, y)
 
-    # Save metrics table
     pd.DataFrame(metrics).to_csv(OUT_METRICS, index=False)
 
-    # Log
     with open(OUT_LOG, "w", encoding="utf-8") as f:
         f.write(f"snapshot_utc={dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}\n")
         f.write(f"input_rows={n_rows}\n")
@@ -167,7 +155,6 @@ def main():
                 f"r2={m['r2']:.6f}, n_train={m['n_train']}, n_test={m['n_test']}, "
                 f"n_features={m['n_features']}\n"
             )
-
     print("Regression models complete.")
 
 
