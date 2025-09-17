@@ -29,7 +29,7 @@ jobs:
         env:
           # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
           # Set this to your actual numeric target column in modeling_dataset.csv
-          TARGET_COL: points_scored
+          TARGET_COL: eff_off_overall_ppa
           # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         run: |
           set -e
