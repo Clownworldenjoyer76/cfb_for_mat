@@ -40,7 +40,7 @@ DATETIME_COLUMNS = ["start_date", "kickoff", "game_datetime"]
 # Candidate targets (first present & numeric wins if no override provided)
 TARGET_CANDIDATES = [
     "ts_points", "ts_points_per_game", "eff_points",
-    "points_scored", "points_for"
+    "points_scored", "points_for", "eff_off_overall_ppa"
 ]
 
 RANDOM_STATE = 42
@@ -240,6 +240,14 @@ def main():
     # Resolve target
     target_col = select_target(df_raw)
 
+    # ---- NEW: drop rows with NaN in target (fixes 'Input y contains NaN') ----
+    if df_raw[target_col].isna().any():
+        n_missing = int(df_raw[target_col].isna().sum())
+        print(f"[WARN] Dropping {n_missing} rows with NaN target values in '{target_col}'")
+        df_raw = df_raw.dropna(subset=[target_col])
+        if df_raw.shape[0] == 0:
+            raise ValueError(f"All rows dropped due to NaN target '{target_col}'.")
+
     # Build features
     X, y = build_features(df_raw, target_col)
 
@@ -277,6 +285,5 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        # Print a compact error to stdout for GH Actions, then re-raise
         print(f"[REGRESSION_ERROR] {type(e).__name__}: {e}", file=sys.stderr)
         raise
