@@ -1,3 +1,5 @@
+# scripts/run_regression_models.py
+
 import os
 import datetime as dt
 import pandas as pd
@@ -126,8 +128,8 @@ def train_and_eval(X, y):
             "r2": float(r2),
             "n_train": int(len(y_train)),
             "n_test": int(len(y_test)),
-            "n_features": int(X.shape[1]))
-        )
+            "n_features": int(X.shape[1])  # <-- fixed: close dict with '}' later
+        })
 
         joblib.dump(pipe, os.path.join(MODEL_DIR, f"{name}.pkl"))
 
