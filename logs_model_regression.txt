@@ -1,0 +1,7 @@
+snapshot_utc=2025-09-17T10:43:28Z
+input_rows=7298
+features=42
+target=week
+linear: rmse=0.000000, mae=0.000000, r2=1.000000, n_train=5838, n_test=1460, n_features=42
+ridge: rmse=0.012745, mae=0.008662, r2=0.999988, n_train=5838, n_test=1460, n_features=42
+lasso: rmse=0.010176, mae=0.008797, r2=0.999992, n_train=5838, n_test=1460, n_features=42
