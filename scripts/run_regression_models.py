@@ -1,422 +1,377 @@
-# scripts/run_regression_models.py
+#!/usr/bin/env python3
+"""
+CFB Regression Runner (complete)
 
-import os
-import sys
-import re
-import datetime as dt
-import pandas as pd
+- Loads data/modeling_dataset.csv
+- Attaches outcome targets (points_scored, points_allowed, margin) from a scores file
+- Builds features with numeric + safe one-hot categoricals
+- Excludes leaky columns via EXCLUDE_TARGET_REGEX (keeps the actual target)
+- Temporal split by (season, week)
+- Trains LinearRegression, RidgeCV, LassoCV
+- Writes:
+    logs_model_regression.txt
+    data/model_regression_metrics.csv
+    data/model_regression_coeffs.csv
+    models/<model>_model.pkl
+Env vars honored:
+    TARGET_COL            (default: eff_off_overall_ppa; set to points_scored per Checklist 2.5)
+    EXCLUDE_TARGET_REGEX  (default auto-leak-guard when target is points/score/margin)
+    SCORES_GLOB           (optional) glob to locate scores file, e.g., 'data/raw/*games*.csv'
+"""
+
+from pathlib import Path
+import os, sys, re, glob, math
 import numpy as np
+import pandas as pd
 
-from typing import Tuple, Optional, Sequence, List, Dict
-
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.linear_model import LinearRegression, RidgeCV, LassoCV
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 import joblib
 
+# ---- Paths & constants ----
+SCRIPT_DIR = Path.cwd()
+DATA_DIR = Path("data")
+MODELS_DIR = Path("models")
+LOG_FILE = Path("logs_model_regression.txt")
+METRICS_CSV = Path("data/model_regression_metrics.csv")
+COEFFS_CSV = Path("data/model_regression_coeffs.csv")
+INPUT_CSV = Path("data/modeling_dataset.csv")  # exact per your repo
 
-# ======================
-# I/O & Config
-# ======================
-INPUT_CSV    = "data/modeling_dataset.csv"
-OUT_METRICS  = "data/model_regression_metrics.csv"
-OUT_LOG      = "logs_model_regression.txt"
-OUT_COEFFS   = "data/model_regression_coeffs.csv"
-MODEL_DIR    = "models"
+# ---- Environment ----
+SCORES_GLOB = os.environ.get("SCORES_GLOB")  # optional override for locating scores
+TARGET_COL = os.environ.get("TARGET_COL", "eff_off_overall_ppa")
+EXCLUDE_TARGET_REGEX = os.environ.get("EXCLUDE_TARGET_REGEX", None)
 
-# Allow explicit override, e.g. TARGET_COL=points_scored
-TARGET_OVERRIDE = os.environ.get("TARGET_COL", "").strip() or None
+# ---- Logging helpers ----
+def log(msg: str):
+    with LOG_FILE.open("a", encoding="utf-8") as f:
+        f.write(f"{msg}\n")
+    print(msg)
 
-# Optional: additional regex patterns to exclude (comma-separated), e.g.:
-# EXTRA_EXCLUDE_REGEX="^eff_def_.*_ppa$,^wx_.*$"
-EXTRA_EXCLUDE_REGEX = os.environ.get("EXTRA_EXCLUDE_REGEX", "").strip()
+def reset_logs():
+    if LOG_FILE.exists():
+        LOG_FILE.unlink()
 
-# Columns never sent to model
-ID_COLUMNS = [
-    "game_id", "team", "opponent", "home_team", "away_team",
-    "venue", "venue_name"
-]
-
-# Datetime columns to encode if present
-DATETIME_COLUMNS = ["start_date", "kickoff", "game_datetime"]
-
-# Candidate targets (first present & numeric wins if no override provided)
-TARGET_CANDIDATES = [
-    "ts_points", "ts_points_per_game", "eff_points",
-    "points_scored", "points_for", "eff_off_overall_ppa"
-]
-
-RANDOM_STATE = 42
-
-
-# ======================
-# Preprocessing helpers
-# ======================
-def encode_datetime(df: pd.DataFrame) -> pd.DataFrame:
-    """Expand known datetime columns into numeric components and drop originals."""
-    for col in DATETIME_COLUMNS:
-        if col in df.columns:
-            s = pd.to_datetime(df[col], errors="coerce", utc=True)
-            df[f"{col}_year"]  = s.dt.year
-            df[f"{col}_month"] = s.dt.month
-            df[f"{col}_day"]   = s.dt.day
-            df[f"{col}_hour"]  = s.dt.hour
-            df[f"{col}_dow"]   = s.dt.weekday
-            df.drop(columns=[col], inplace=True)
-    return df
-
-
-def select_target(df: pd.DataFrame) -> str:
-    """Pick a valid numeric target. Fail fast if none."""
-    if TARGET_OVERRIDE:
-        if TARGET_OVERRIDE not in df.columns:
-            raise ValueError(f"TARGET_COL override '{TARGET_OVERRIDE}' not found in columns.")
-        if not pd.api.types.is_numeric_dtype(df[TARGET_OVERRIDE]):
-            raise ValueError(f"TARGET_COL '{TARGET_OVERRIDE}' is not numeric.")
-        return TARGET_OVERRIDE
-
-    for c in TARGET_CANDIDATES:
-        if c in df.columns and pd.api.types.is_numeric_dtype(df[c]):
-            return c
-
-    raise ValueError(
-        "No valid target found. Expected one of: "
-        + ", ".join(TARGET_CANDIDATES)
-        + " or set TARGET_COL env var to a numeric column."
-    )
-
-
-# --------- NEW: dynamic exclusion rules ---------
-def _patterns_from_env() -> List[re.Pattern]:
-    if not EXTRA_EXCLUDE_REGEX:
-        return []
-    parts = [p.strip() for p in EXTRA_EXCLUDE_REGEX.split(",") if p.strip()]
-    return [re.compile(p) for p in parts]
-
-
-def _exclusion_patterns_for_target(target_col: str) -> List[re.Pattern]:
-    """
-    Rules to drop feature families likely to leak the target.
-    These are name-based heuristics; tighten/expand as needed.
-    """
-    pats: List[str] = []
-
-    t = target_col.lower()
-
-    # Offensive PPA family (what we used earlier)
-    if re.fullmatch(r"eff_off_.*_ppa", t) or t == "eff_off_overall_ppa":
-        # Drop all offensive PPA siblings (includes cumulative & per-down)
-        pats.append(r"^eff_off_.*_ppa$")
-
-    # Points-based targets
-    if "points" in t:
-        # Drop any points/score/total/margin flavored columns
-        pats += [
-            r"(^|_)points(_|$)",            # any ...points... column
-            r"(home|away)_(points|score)$",
-            r"(team|opp|opponent)_(points|score)$",
-            r"(total_points|game_total)$",
-            r"(score|scored)$",
-        ]
-
-    # Margin targets
-    if "margin" in t:
-        pats += [
-            r"margin",                      # any margin column
-            r"spread_result|cover|won_by|result",
-        ]
-
-    # Total targets
-    if "total" in t:
-        pats += [
-            r"(total_points|game_total)$",
-            r"(^|_)points(_|$)",            # individual points imply total
-        ]
-
-    # Residual vs market (e.g., resid_margin, resid_total)
-    if "resid" in t or "residual" in t or "error" in t:
-        pats += [
-            r"(closing|open)_(spread|total)",
-            r"(line|handicap|total)(_)?$",  # conservative market filter
-        ]
-        # Also drop outcome components depending on flavor
-        if "margin" in t:
-            pats.append(r"margin")
-        if "total" in t:
-            pats += [r"(total_points|game_total)$", r"(^|_)points(_|$)"]
-
-    # Always avoid echoing the target back in inputs (some datasets have duplicates)
-    pats.append(rf"^{re.escape(t)}$")
-
-    # Deduplicate and compile
-    compiled = [re.compile(p) for p in sorted(set(pats))]
-    # Append user-provided extras
-    compiled += _patterns_from_env()
-    return compiled
-
-
-def _apply_feature_exclusions(X: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, List[str]]:
-    """Drop columns in X that match exclusion patterns for the given target."""
-    pats = _exclusion_patterns_for_target(target_col)
-    if not pats:
-        return X, []
-
-    drop_cols: List[str] = []
-    for c in X.columns:
-        cl = c.lower()
-        for p in pats:
-            if p.search(cl):
-                drop_cols.append(c)
-                break
-
-    drop_cols = sorted(set(drop_cols))
-    if drop_cols:
-        X = X.drop(columns=drop_cols, errors="ignore")
-
-    return X, drop_cols
-# -----------------------------------------------
-
-
-def build_features(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.Series, List[str]]:
-    """Drop IDs, expand datetimes, keep numerics, drop all-NaN cols, split X/y, apply exclusions."""
-    df = df.copy()
-
-    # Drop identifier-ish columns if present
-    drop_cols = [c for c in ID_COLUMNS if c in df.columns]
-    if drop_cols:
-        df.drop(columns=drop_cols, inplace=True)
-
-    # Encode datetimes into numeric parts
-    df = encode_datetime(df)
-
-    # Target validations
-    if target_col not in df.columns:
-        raise ValueError(f"Target column not found: {target_col}")
-    if not pd.api.types.is_numeric_dtype(df[target_col]):
-        raise ValueError(f"Target column is not numeric: {target_col}")
-
-    y = df[target_col]
-    X = df.drop(columns=[target_col])
-
-    # Keep only numeric features
-    X = X.select_dtypes(include=["number"])
-
-    # Drop columns that are entirely NaN to avoid imputer errors
-    if X.shape[1] > 0:
-        X = X.loc[:, X.notna().any(axis=0)]
-
-    # Apply dynamic exclusion rules based on the chosen target
-    X, excluded = _apply_feature_exclusions(X, target_col)
-
-    if X.shape[0] == 0:
-        raise ValueError("Dataset has zero rows after preprocessing.")
-    if X.shape[1] == 0:
-        raise ValueError("No numeric features available after preprocessing (all excluded?).")
-
-    return X, y, excluded
-
-
-# ======================
-# Splitting logic
-# ======================
-def temporal_split_indices(df_raw: pd.DataFrame, test_frac: float = 0.2) -> Optional[Tuple[Sequence[int], Sequence[int]]]:
-    """
-    If both 'season' and 'week' exist, perform a temporal split:
-      - sort by season, week, (stable original index)
-      - take the last portion as test set
-    Returns (train_label_index, test_label_index) as **label indices** that match df_raw.index.
-    """
-    if {"season", "week"}.issubset(df_raw.columns):
-        tmp = df_raw.reset_index(drop=False).rename(columns={"index": "__row"})
-        tmp.sort_values(["season", "week", "__row"], inplace=True)
-        n = len(tmp)
-        if n == 0:
-            return [], []
-        split = int(n * (1 - test_frac))
-        # Return original index labels (not positions)
-        train_labels = tmp.iloc[:split]["__row"].tolist()
-        test_labels  = tmp.iloc[split:]["__row"].tolist()
-        return train_labels, test_labels
+# ---- Scores discovery & normalization ----
+def find_scores_file():
+    if SCORES_GLOB:
+        cands = sorted(glob.glob(SCORES_GLOB))
+    else:
+        # Broad but deterministic search
+        cands = []
+        roots = ["data/raw", "data", "docs/data", "docs/data/final"]
+        pats  = ["*games*.csv", "*scores*.csv", "*results*.csv", "*team_points*.csv"]
+        for r in roots:
+            for p in pats:
+                cands.extend(sorted(glob.glob(str(Path(r) / p))))
+    # De-duplicate preserving order
+    seen, ordered = set(), []
+    for c in cands:
+        if c not in seen:
+            ordered.append(c); seen.add(c)
+    for path in ordered:
+        try:
+            df = pd.read_csv(path, nrows=5)
+        except Exception:
+            continue
+        cols = {c.lower() for c in df.columns}
+        has_game_id = "game_id" in cols
+        has_teams   = {"home_team","away_team"}.issubset(cols) or {"team_home","team_away"}.issubset(cols)
+        has_points  = ({"home_points","away_points"}.issubset(cols)
+                       or {"home_score","away_score"}.issubset(cols)
+                       or {"points_home","points_away"}.issubset(cols)
+                       or {"score_home","score_away"}.issubset(cols))
+        has_season_week = {"season","week"}.issubset(cols)
+        if has_points and (has_game_id or (has_teams and has_season_week)):
+            return path
     return None
 
+def normalize_points_cols(df_scores: pd.DataFrame) -> pd.DataFrame:
+    cols = {c.lower(): c for c in df_scores.columns}
+    def col(*names):
+        for n in names:
+            if n in cols: return cols[n]
+        return None
+    game_id   = col("game_id")
+    season    = col("season")
+    week      = col("week")
+    home_team = col("home_team","team_home","home")
+    away_team = col("away_team","team_away","away")
+    hp        = col("home_points","home_score","points_home","score_home")
+    ap        = col("away_points","away_score","points_away","score_away")
 
-# ======================
-# Modeling
-# ======================
-def make_pipelines() -> Dict[str, Pipeline]:
-    linear = Pipeline(steps=[
-        ("impute", SimpleImputer(strategy="median")),
-        ("model", LinearRegression())
-    ])
+    if any(x is None for x in [home_team, away_team, hp, ap]):
+        raise ValueError("Scores file missing required team/points columns. Need home/away team and points/score.")
 
-    ridge = Pipeline(steps=[
-        ("impute", SimpleImputer(strategy="median")),
-        ("scale", StandardScaler(with_mean=True, with_std=True)),
-        ("model", Ridge(alpha=1.0, random_state=RANDOM_STATE))
-    ])
+    out = pd.DataFrame({
+        "home_team": df_scores[home_team].astype(str),
+        "away_team": df_scores[away_team].astype(str),
+        "home_points": pd.to_numeric(df_scores[hp], errors="coerce"),
+        "away_points": pd.to_numeric(df_scores[ap], errors="coerce"),
+    })
+    if game_id is not None: out["game_id"] = df_scores[game_id]
+    if season is not None:  out["season"]  = df_scores[season]
+    if week is not None:    out["week"]    = df_scores[week]
+    return out
 
-    lasso = Pipeline(steps=[
-        ("impute", SimpleImputer(strategy="median")),
-        ("scale", StandardScaler(with_mean=True, with_std=True)),
-        ("model", Lasso(alpha=0.01, random_state=RANDOM_STATE, max_iter=10000))
-    ])
+def to_bool_home(v):
+    if isinstance(v, (int, float)):
+        if np.isnan(v): return None
+        return int(v) == 1
+    s = str(v).strip().lower()
+    if s in ("1","true","t","yes","y","home","h"): return True
+    if s in ("0","false","f","no","n","away","a"): return False
+    return None
 
-    return {
-        "linear": linear,
-        "ridge": ridge,
-        "lasso": lasso
+def attach_outcome_targets(df_raw: pd.DataFrame) -> pd.DataFrame:
+    # Already present?
+    cl = {c.lower() for c in df_raw.columns}
+    if {"points_scored","points_allowed","margin"}.issubset(cl):
+        return df_raw
+
+    scores_path = find_scores_file()
+    if not scores_path:
+        raise FileNotFoundError(
+            "Could not locate a scores file with home/away points. "
+            "Set SCORES_GLOB to a path like 'data/raw/*games*.csv'."
+        )
+    df_scores_raw = pd.read_csv(scores_path)
+    df_scores = normalize_points_cols(df_scores_raw)
+
+    # Merge by game_id if available
+    if "game_id" in df_raw.columns and "game_id" in df_scores.columns:
+        merged = df_raw.merge(df_scores, on="game_id", how="left", validate="m:1")
+        join_mode = "game_id"
+    else:
+        # Fallback by keys
+        for req in ("season","week","team","opponent","is_home"):
+            if req not in df_raw.columns:
+                raise KeyError(f"Expected column '{req}' in modeling_dataset for outcome join (fallback mode).")
+        is_home_bool = df_raw["is_home"].map(to_bool_home)
+        if is_home_bool.isna().any():
+            raise ValueError("Could not interpret some 'is_home' values; expected 1/0, True/False, or H/A text.")
+
+        dfj = df_raw.copy()
+        dfj["_home_side"] = is_home_bool
+        dfj["join_home_team"] = np.where(dfj["_home_side"], dfj["team"], dfj["opponent"]).astype(str)
+        dfj["join_away_team"] = np.where(dfj["_home_side"], dfj["opponent"], dfj["team"]).astype(str)
+
+        if "season" not in df_scores.columns or "week" not in df_scores.columns:
+            raise KeyError("Scores file lacked season/week; cannot fallback-join without game_id.")
+        df_scores2 = df_scores.rename(columns={"home_team":"join_home_team","away_team":"join_away_team"})
+        key_cols = ["season","week","join_home_team","join_away_team"]
+        merged = dfj.merge(df_scores2, on=key_cols, how="left", validate="m:1")
+        join_mode = "season,week,home/away teams"
+
+    # Compute targets
+    is_home_bool2 = merged["is_home"].map(to_bool_home)
+    merged["points_scored"]  = merged["home_points"].where(is_home_bool2, merged["away_points"])
+    merged["points_allowed"] = merged["away_points"].where(is_home_bool2, merged["home_points"])
+    merged["margin"] = merged["points_scored"] - merged["points_allowed"]
+
+    # Log info
+    log(f"outcome_join_mode={join_mode}")
+    miss = merged["points_scored"].isna().sum()
+    log(f"outcome_merge_missing_rows={miss}")
+
+    # Persist enriched dataset in place for future runs
+    try:
+        INPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
+        merged.to_csv(INPUT_CSV, index=False)
+    except Exception as e:
+        log(f"WARNING: failed to persist enriched dataset: {e}")
+
+    return merged
+
+# ---- Feature building / exclusions ----
+def select_target_column(df: pd.DataFrame, target_override: str) -> str:
+    # Exact or case-insensitive match
+    if target_override in df.columns:
+        return target_override
+    for c in df.columns:
+        if c.lower() == target_override.lower():
+            return c
+    # Try common aliases (mainly to smooth outcome adoption)
+    common = ["points_scored","points","pts","score","team_points","points_for","pf","home_points","away_points","margin"]
+    for cand in common:
+        if cand in df.columns: return cand
+        for c in df.columns:
+            if c.lower() == cand.lower(): return c
+    raise ValueError(f"TARGET_COL '{target_override}' not found. Available columns (first 80): {list(df.columns)[:80]}")
+
+def exclude_leaky_features(X: pd.DataFrame, target_col: str, pattern: str | None):
+    dropped = []
+    if pattern:
+        rx = re.compile(pattern)
+        for col in list(X.columns):
+            if col == target_col:
+                continue
+            if rx.search(col):
+                dropped.append(col)
+        X = X.drop(columns=dropped, errors="ignore")
+    return X, dropped
+
+def build_features(df: pd.DataFrame, target_col: str):
+    # Identify target y
+    y = pd.to_numeric(df[target_col], errors="coerce")
+
+    # Drop obvious non-features and target/derived
+    drop_cols = {target_col, "home_points","away_points","points_allowed","margin"}
+    meta_like = {"game_id","start_date","wx_start_date"}
+    drop_cols |= {c for c in df.columns if c in meta_like}
+
+    # Separate numeric and categorical
+    num_df = df.drop(columns=list(drop_cols), errors="ignore").select_dtypes(include=[np.number])
+    cat_df = df.drop(columns=list(drop_cols), errors="ignore").select_dtypes(include=["object","category","bool"])
+
+    # Keep a limited set of categoricals
+    keep_cats = [c for c in cat_df.columns if c in ("team","opponent","conference","st_conference")]
+    cat_df = cat_df[keep_cats].fillna("NA")
+    if not cat_df.empty:
+        cat_oh = pd.get_dummies(cat_df, prefix=[c for c in cat_df.columns], drop_first=True)
+        X = pd.concat([num_df, cat_oh], axis=1)
+    else:
+        X = num_df.copy()
+
+    # Final NA handling
+    X = X.replace([np.inf, -np.inf], np.nan).fillna(0.0)
+    return X, y
+
+# ---- Train/test split ----
+def temporal_train_test_split(df: pd.DataFrame, test_frac: float = 0.2):
+    if not {"season","week"}.issubset(df.columns):
+        n = len(df)
+        cut = int(n * (1 - test_frac))
+        return df.iloc[:cut].copy(), df.iloc[cut:].copy(), "index"
+    sdf = df.sort_values(["season","week"], kind="mergesort").reset_index(drop=True)
+    n = len(sdf)
+    cut = int(n * (1 - test_frac))
+    return sdf.iloc[:cut].copy(), sdf.iloc[cut:].copy(), "temporal(season,week)"
+
+# ---- Fit/eval ----
+def fit_and_eval(X_train, y_train, X_test, y_test, model_name, model):
+    model.fit(X_train, y_train)
+    pred = model.predict(X_test)
+    rmse = math.sqrt(mean_squared_error(y_test, pred))
+    mae  = mean_absolute_error(y_test, pred)
+    r2   = r2_score(y_test, pred)
+    return rmse, mae, r2, pred, model
+
+def main():
+    # Reset logs
+    if LOG_FILE.exists():
+        LOG_FILE.unlink()
+
+    MODELS_DIR.mkdir(exist_ok=True, parents=True)
+    DATA_DIR.mkdir(exist_ok=True, parents=True)
+
+    # Load base dataset
+    if not INPUT_CSV.exists():
+        raise FileNotFoundError(f"Input dataset not found: {INPUT_CSV}")
+    df_raw = pd.read_csv(INPUT_CSV)
+
+    # Attach outcome targets if missing
+    df_raw = attach_outcome_targets(df_raw)
+
+    # Select target
+    target = select_target_column(df_raw, TARGET_COL)
+
+    # Build features
+    X_all, y_all = build_features(df_raw, target)
+
+    # Exclude leaky features
+    X_all, dropped = exclude_leaky_features(X_all, target, EXCLUDE_TARGET_REGEX)
+
+    # Ensure alignment and sort temporally
+    df_all = df_raw.loc[X_all.index]  # align
+    df_all = df_all.assign(__row_id=np.arange(len(df_all)))
+    df_all_sorted = df_all.sort_values(["season","week","__row_id"], kind="mergesort")
+    X_all = X_all.loc[df_all_sorted.index]
+    y_all = y_all.loc[df_all_sorted.index]
+
+    n_total = len(df_all_sorted)
+    cut = int(n_total * 0.8)
+    train_idx = df_all_sorted.index[:cut]
+    test_idx  = df_all_sorted.index[cut:]
+
+    X_train, y_train = X_all.loc[train_idx], y_all.loc[train_idx]
+    X_test,  y_test  = X_all.loc[test_idx],  y_all.loc[test_idx]
+    split_mode = "temporal(season,week)" if {"season","week"}.issubset(df_raw.columns) else "index"
+
+    # Pipelines
+    ridge_alphas = np.logspace(-3, 3, 13)
+    lasso_alphas = np.logspace(-3, 1, 9)
+
+    models = {
+        "linear": Pipeline([("scaler", StandardScaler(with_mean=False)), ("lin", LinearRegression())]),
+        "ridge":  Pipeline([("scaler", StandardScaler(with_mean=False)), ("rid", RidgeCV(alphas=ridge_alphas, store_cv_values=False))]),
+        "lasso":  Pipeline([("scaler", StandardScaler(with_mean=False)), ("las", LassoCV(alphas=lasso_alphas, max_iter=5000, cv=5, n_jobs=None))]),
     }
 
-
-def extract_coefficients(pipe: Pipeline, feature_names: List[str]) -> Optional[pd.DataFrame]:
-    """
-    Return a DataFrame of coefficients for linear-like models.
-    Coefficients are with respect to the transformed feature space; since our
-    transformers (imputer/scaler) keep the same dimensionality/order, we map
-    them back to the original numeric feature names.
-    """
-    model = pipe.named_steps.get("model")
-    if model is None or not hasattr(model, "coef_"):
-        return None
-
-    coefs = model.coef_
-    if isinstance(coefs, np.ndarray) and coefs.ndim > 1:
-        coefs = coefs[0]
-
-    df = pd.DataFrame({"feature": feature_names, "coef": coefs})
-    df["abs_coef"] = df["coef"].abs()
-    df = df.sort_values("abs_coef", ascending=False)
-    df["rank"] = np.arange(1, len(df) + 1)
-    return df
-
-
-def train_and_eval(X: pd.DataFrame,
-                   y: pd.Series,
-                   raw_df: pd.DataFrame) -> Tuple[list, int, int, Dict[str, pd.DataFrame], str]:
-    """
-    Train/eval three models. Prefer temporal split if season/week present,
-    else fall back to random split with fixed seed.
-    Also returns per-model coefficient DataFrames and split_mode.
-    """
-    # Choose split strategy
-    idxs = temporal_split_indices(raw_df)
-    if idxs:
-        train_labels, test_labels = idxs
-        if not train_labels or not test_labels:
-            raise ValueError("Temporal split produced empty train or test indices.")
-        X_train, X_test = X.loc[train_labels], X.loc[test_labels]
-        y_train, y_test = y.loc[train_labels], y.loc[test_labels]
-        split_mode = "temporal(season,week)"
-    else:
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=RANDOM_STATE
-        )
-        split_mode = "random"
-
-    models = make_pipelines()
-    metrics = []
-    coeffs_by_model: Dict[str, pd.DataFrame] = {}
-
-    os.makedirs(MODEL_DIR, exist_ok=True)
+    # Fit/Eval
+    metrics_rows = []
+    coeff_rows = []
 
     for name, pipe in models.items():
-        pipe.fit(X_train, y_train)
-        y_pred = pipe.predict(X_test)
+        rmse, mae, r2, pred, fitted = fit_and_eval(X_train, y_train, X_test, y_test, name, pipe)
+        # Logging
+        log(f"{name}: rmse={rmse:.6f}, mae={mae:.6f}, r2={r2:.6f}, n_train={len(X_train)}, n_test={len(X_test)}, n_features={X_train.shape[1]}, split_mode={split_mode}")
+        metrics_rows.append({"model": name, "rmse": rmse, "mae": mae, "r2": r2, "n_train": len(X_train), "n_test": len(X_test), "n_features": X_train.shape[1], "split_mode": split_mode})
 
-        rmse = float(mean_squared_error(y_test, y_pred) ** 0.5)
-        mae  = float(mean_absolute_error(y_test, y_pred))
-        r2   = float(r2_score(y_test, y_pred))
+        # Save model
+        out_path = MODELS_DIR / f"{name}_model.pkl"
+        joblib.dump(fitted, out_path)
 
-        metrics.append({
-            "model": name,
-            "rmse": rmse,
-            "mae": mae,
-            "r2": r2,
-            "n_train": int(len(y_train)),
-            "n_test": int(len(y_test)),
-            "n_features": int(X.shape[1]),
-            "split_mode": split_mode
-        })
+        # Extract coefficients
+        try:
+            if name == "linear":
+                est = fitted.named_steps["lin"]
+            elif name == "ridge":
+                est = fitted.named_steps["rid"]
+            else:
+                est = fitted.named_steps["las"]
+            feature_names = list(X_train.columns)
+            coefs = est.coef_.ravel() if hasattr(est.coef_, "ravel") else np.array(est.coef_)
+            for feat, coef in zip(feature_names, coefs):
+                coeff_rows.append({"model": name, "feature": feat, "coefficient": float(coef)})
+            if hasattr(est, "intercept_"):
+                coeff_rows.append({"model": name, "feature": "__intercept__", "coefficient": float(np.atleast_1d(est.intercept_)[0])})
+        except Exception as e:
+            log(f"WARNING: failed to extract coefficients for {name}: {e}")
 
-        joblib.dump(pipe, os.path.join(MODEL_DIR, f"{name}.pkl"))
+    # Write metrics and coeffs
+    pd.DataFrame(metrics_rows).to_csv(METRICS_CSV, index=False)
+    pd.DataFrame(coeff_rows).to_csv(COEFFS_CSV, index=False)
 
-        coef_df = extract_coefficients(pipe, list(X.columns))
-        if coef_df is not None:
-            coef_df.insert(0, "model", name)
-            coef_df["n_features"] = int(X.shape[1])
-            coef_df["split_mode"] = split_mode
-            coeffs_by_model[name] = coef_df
-
-    return metrics, X.shape[1], len(y), coeffs_by_model, split_mode
-
-
-# ======================
-# Main
-# ======================
-def main():
-    if not os.path.exists(INPUT_CSV):
-        raise FileNotFoundError(f"Input dataset not found: {INPUT_CSV}")
-
-    df_raw = pd.read_csv(INPUT_CSV)
-    if df_raw.shape[0] == 0:
-        raise ValueError("Input dataset is empty.")
-
-    # Resolve target
-    target_col = select_target(df_raw)
-
-    # Drop rows with NaN target (prevents 'Input y contains NaN')
-    if df_raw[target_col].isna().any():
-        n_missing = int(df_raw[target_col].isna().sum())
-        print(f"[WARN] Dropping {n_missing} rows with NaN target values in '{target_col}'")
-        df_raw = df_raw.dropna(subset=[target_col])
-        if df_raw.shape[0] == 0:
-            raise ValueError(f"All rows dropped due to NaN target '{target_col}'.")
-
-    # Build features (+ dynamic exclusions)
-    X, y, excluded = build_features(df_raw, target_col)
-
-    # Train & evaluate (+ collect coeffs)
-    metrics, n_feats, n_rows, coeffs_by_model, split_mode = train_and_eval(X, y, df_raw)
-
-    # Ensure output dirs
-    for p in [OUT_METRICS, OUT_LOG, OUT_COEFFS]:
-        d = os.path.dirname(p) or "."
-        os.makedirs(d, exist_ok=True)
-
-    # Write metrics CSV
-    pd.DataFrame(metrics).to_csv(OUT_METRICS, index=False)
-
-    # Write coefficients CSV (concat available models)
-    if coeffs_by_model:
-        coeff_all = pd.concat(list(coeffs_by_model.values()), ignore_index=True)
-        coeff_all.to_csv(OUT_COEFFS, index=False)
-    else:
-        pd.DataFrame(columns=["model","feature","coef","abs_coef","rank","n_features","split_mode"]).to_csv(OUT_COEFFS, index=False)
-
-    # Write log
-    with open(OUT_LOG, "w", encoding="utf-8") as f:
-        f.write(f"snapshot_utc={dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}\n")
-        f.write(f"input_rows={n_rows}\n")
-        f.write(f"features={n_feats}\n")
-        f.write(f"target={target_col}\n")
-        if excluded:
-            f.write(f"excluded_features={len(excluded)} -> {', '.join(excluded[:20])}{' ...' if len(excluded)>20 else ''}\n")
-        for m in metrics:
-            f.write(
-                f"{m['model']}: rmse={m['rmse']:.6f}, mae={m['mae']:.6f}, "
-                f"r2={m['r2']:.6f}, n_train={m['n_train']}, n_test={m['n_test']}, "
-                f"n_features={m['n_features']}, split_mode={m['split_mode']}\n"
-            )
-
-    print("Regression models complete.")
-
+    # Prepend summary header to logs (matches your style)
+    excluded_count = len(dropped)
+    excluded_list = ", ".join(sorted(dropped)) if excluded_count else ""
+    hdr = [
+        f"snapshot_utc={pd.Timestamp.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')}",
+        f"input_rows={len(df_raw)}",
+        f"features={X_train.shape[1]}",
+        f"target={target}",
+        f"excluded_features={excluded_count}" + (f" -> {excluded_list}" if excluded_count else ""),
+    ]
+    existing = LOG_FILE.read_text() if LOG_FILE.exists() else ""
+    LOG_FILE.write_text("\n".join(hdr) + "\n" + existing)
 
 if __name__ == "__main__":
+    # Ensure dirs exist
+    MODELS_DIR.mkdir(exist_ok=True, parents=True)
+    DATA_DIR.mkdir(exist_ok=True, parents=True)
+
+    # Default leak-guard if not provided and target is an outcome
+    if EXCLUDE_TARGET_REGEX is None and TARGET_COL.lower() in ("points_scored","points","pts","score","margin"):
+        EXCLUDE_TARGET_REGEX = r"(?i)^(?!{}$).*(points?|scores?|margin|spread)$".format(re.escape(TARGET_COL))
+
     try:
         main()
     except Exception as e:
-        print(f"[REGRESSION_ERROR] {type(e).__name__}: {e}", file=sys.stderr)
-        raise
+        err = f"ERROR: {type(e).__name__}: {e}"
+        with LOG_FILE.open("a", encoding="utf-8") as f:
+            f.write(err + "\n")
+        print(err)
+        sys.exit(1)
