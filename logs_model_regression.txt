@@ -1,7 +1,7 @@
-snapshot_utc=2025-09-17T10:43:28Z
-input_rows=7298
+snapshot_utc=2025-09-18T11:22:40Z
+input_rows=1570
 features=42
-target=week
-linear: rmse=0.000000, mae=0.000000, r2=1.000000, n_train=5838, n_test=1460, n_features=42
-ridge: rmse=0.012745, mae=0.008662, r2=0.999988, n_train=5838, n_test=1460, n_features=42
-lasso: rmse=0.010176, mae=0.008797, r2=0.999992, n_train=5838, n_test=1460, n_features=42
+target=eff_off_overall_ppa
+linear: rmse=0.015763, mae=0.011866, r2=0.991664, n_train=1256, n_test=314, n_features=42, split_mode=temporal(season,week)
+ridge: rmse=0.015908, mae=0.012050, r2=0.991511, n_train=1256, n_test=314, n_features=42, split_mode=temporal(season,week)
+lasso: rmse=0.026167, mae=0.019757, r2=0.977030, n_train=1256, n_test=314, n_features=42, split_mode=temporal(season,week)
