@@ -27,10 +27,14 @@ jobs:
 
       - name: Execute regression script
         env:
-          # TARGET switched per checklist 2.5
+          # Checklist 2.5: train on outcome target
           TARGET_COL: points_scored
-          # Optional: give your script a regex to auto-drop other score/margin fields (except the target)
+
+          # Leak guard: drop any other points/score/margin/spread features from X (but keep the target)
           EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
+
+          # Optional: point this directly at your scores file if auto-discovery fails
+          # SCORES_GLOB: "data/raw/*games*.csv"
         run: |
           set -e
           python scripts/run_regression_models.py
