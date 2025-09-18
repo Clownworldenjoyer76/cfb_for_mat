@@ -6,7 +6,7 @@ import datetime as dt
 import pandas as pd
 import numpy as np
 
-from typing import Tuple, Optional, Sequence
+from typing import Tuple, Optional, Sequence, List, Dict
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
@@ -20,10 +20,11 @@ import joblib
 # ======================
 # I/O & Config
 # ======================
-INPUT_CSV   = "data/modeling_dataset.csv"
-OUT_METRICS = "data/model_regression_metrics.csv"
-OUT_LOG     = "logs_model_regression.txt"
-MODEL_DIR   = "models"
+INPUT_CSV    = "data/modeling_dataset.csv"
+OUT_METRICS  = "data/model_regression_metrics.csv"
+OUT_LOG      = "logs_model_regression.txt"
+OUT_COEFFS   = "data/model_regression_coeffs.csv"
+MODEL_DIR    = "models"
 
 # Allow explicit override, e.g. TARGET_COL=points_scored
 TARGET_OVERRIDE = os.environ.get("TARGET_COL", "").strip() or None
@@ -85,15 +86,14 @@ def select_target(df: pd.DataFrame) -> str:
 
 def build_features(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.Series]:
     """Drop IDs, expand datetimes, keep numerics, drop all-NaN cols, split X/y."""
-    # Defensive copy
     df = df.copy()
 
-    # Drop identifiers if present
+    # Drop identifier-ish columns if present
     drop_cols = [c for c in ID_COLUMNS if c in df.columns]
     if drop_cols:
         df.drop(columns=drop_cols, inplace=True)
 
-    # Encode datetimes
+    # Encode datetimes into numeric parts
     df = encode_datetime(df)
 
     # Target validations
@@ -147,7 +147,7 @@ def temporal_split_indices(df_raw: pd.DataFrame, test_frac: float = 0.2) -> Opti
 # ======================
 # Modeling
 # ======================
-def make_pipelines():
+def make_pipelines() -> Dict[str, Pipeline]:
     linear = Pipeline(steps=[
         ("impute", SimpleImputer(strategy="median")),
         ("model", LinearRegression())
@@ -172,12 +172,37 @@ def make_pipelines():
     }
 
 
+def extract_coefficients(pipe: Pipeline, feature_names: List[str]) -> Optional[pd.DataFrame]:
+    """
+    Return a DataFrame of coefficients for linear-like models.
+    Coefficients are with respect to the transformed feature space; since our
+    transformers (imputer/scaler) keep the same dimensionality/order, we map
+    them back to the original numeric feature names.
+    """
+    model = pipe.named_steps.get("model")
+    if model is None or not hasattr(model, "coef_"):
+        return None
+
+    coefs = model.coef_
+    # coefs can be (n_targets, n_features) for multioutput; flatten if needed
+    if isinstance(coefs, np.ndarray) and coefs.ndim > 1:
+        coefs = coefs[0]
+
+    df = pd.DataFrame({"feature": feature_names, "coef": coefs})
+    df["abs_coef"] = df["coef"].abs()
+    df = df.sort_values("abs_coef", ascending=False)
+    # add rank for convenience
+    df["rank"] = np.arange(1, len(df) + 1)
+    return df
+
+
 def train_and_eval(X: pd.DataFrame,
                    y: pd.Series,
-                   raw_df: pd.DataFrame) -> Tuple[list, int, int]:
+                   raw_df: pd.DataFrame) -> Tuple[list, int, int, Dict[str, pd.DataFrame]]:
     """
     Train/eval three models. Prefer temporal split if season/week present,
     else fall back to random split with fixed seed.
+    Also returns per-model coefficient DataFrames.
     """
     # Choose split strategy
     idxs = temporal_split_indices(raw_df)
@@ -198,6 +223,7 @@ def train_and_eval(X: pd.DataFrame,
 
     models = make_pipelines()
     metrics = []
+    coeffs_by_model: Dict[str, pd.DataFrame] = {}
 
     # Ensure model dir exists
     os.makedirs(MODEL_DIR, exist_ok=True)
@@ -206,7 +232,7 @@ def train_and_eval(X: pd.DataFrame,
         pipe.fit(X_train, y_train)
         y_pred = pipe.predict(X_test)
 
-        # RMSE compatible with older sklearn (no 'squared' kwarg)
+        # Metrics
         rmse = float(mean_squared_error(y_test, y_pred) ** 0.5)
         mae  = float(mean_absolute_error(y_test, y_pred))
         r2   = float(r2_score(y_test, y_pred))
@@ -222,9 +248,19 @@ def train_and_eval(X: pd.DataFrame,
             "split_mode": split_mode
         })
 
+        # Save model artifact
         joblib.dump(pipe, os.path.join(MODEL_DIR, f"{name}.pkl"))
 
-    return metrics, X.shape[1], len(y)
+        # Extract coefficients (if supported)
+        coef_df = extract_coefficients(pipe, list(X.columns))
+        if coef_df is not None:
+            # attach context columns
+            coef_df.insert(0, "model", name)
+            coef_df["n_features"] = int(X.shape[1])
+            coef_df["split_mode"] = split_mode
+            coeffs_by_model[name] = coef_df
+
+    return metrics, X.shape[1], len(y), coeffs_by_model
 
 
 # ======================
@@ -253,17 +289,30 @@ def main():
     # Build features
     X, y = build_features(df_raw, target_col)
 
-    # Train & evaluate
-    metrics, n_feats, n_rows = train_and_eval(X, y, df_raw)
+    # Train & evaluate (+ collect coeffs)
+    metrics, n_feats, n_rows, coeffs_by_model = train_and_eval(X, y, df_raw)
 
     # Ensure output dirs
     out_metrics_dir = os.path.dirname(OUT_METRICS) or "."
     out_log_dir     = os.path.dirname(OUT_LOG) or "."
+    out_coeffs_dir  = os.path.dirname(OUT_COEFFS) or "."
     os.makedirs(out_metrics_dir, exist_ok=True)
     os.makedirs(out_log_dir, exist_ok=True)
+    os.makedirs(out_coeffs_dir, exist_ok=True)
 
     # Write metrics CSV
     pd.DataFrame(metrics).to_csv(OUT_METRICS, index=False)
+
+    # Write coefficients CSV (concat available models)
+    if coeffs_by_model:
+        coeff_frames = []
+        for name, cdf in coeffs_by_model.items():
+            coeff_frames.append(cdf)
+        coeff_all = pd.concat(coeff_frames, ignore_index=True)
+        coeff_all.to_csv(OUT_COEFFS, index=False)
+    else:
+        # If none produced coefs (unlikely here), create an empty stub for consistency
+        pd.DataFrame(columns=["model","feature","coef","abs_coef","rank","n_features","split_mode"]).to_csv(OUT_COEFFS, index=False)
 
     # Write log
     with open(OUT_LOG, "w", encoding="utf-8") as f:
