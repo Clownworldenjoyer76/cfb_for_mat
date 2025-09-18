@@ -30,6 +30,10 @@ MODEL_DIR    = "models"
 # Allow explicit override, e.g. TARGET_COL=points_scored
 TARGET_OVERRIDE = os.environ.get("TARGET_COL", "").strip() or None
 
+# Optional: additional regex patterns to exclude (comma-separated), e.g.:
+# EXTRA_EXCLUDE_REGEX="^eff_def_.*_ppa$,^wx_.*$"
+EXTRA_EXCLUDE_REGEX = os.environ.get("EXTRA_EXCLUDE_REGEX", "").strip()
+
 # Columns never sent to model
 ID_COLUMNS = [
     "game_id", "team", "opponent", "home_team", "away_team",
@@ -85,21 +89,73 @@ def select_target(df: pd.DataFrame) -> str:
     )
 
 
+# --------- NEW: dynamic exclusion rules ---------
+def _patterns_from_env() -> List[re.Pattern]:
+    if not EXTRA_EXCLUDE_REGEX:
+        return []
+    parts = [p.strip() for p in EXTRA_EXCLUDE_REGEX.split(",") if p.strip()]
+    return [re.compile(p) for p in parts]
+
+
 def _exclusion_patterns_for_target(target_col: str) -> List[re.Pattern]:
     """
-    Rules to drop feature families that are likely to leak the target.
-    For `eff_off_*_ppa` targets, exclude ALL offensive PPA features, both per-down and cumulative.
+    Rules to drop feature families likely to leak the target.
+    These are name-based heuristics; tighten/expand as needed.
     """
     pats: List[str] = []
-    if re.fullmatch(r"eff_off_.*_ppa", target_col):
-        # Exclude any offensive PPA metric siblings (includes cum_ variants and down splits)
-        pats.append(r"^eff_off_.*_ppa$")
-    elif target_col == "eff_off_overall_ppa":
+
+    t = target_col.lower()
+
+    # Offensive PPA family (what we used earlier)
+    if re.fullmatch(r"eff_off_.*_ppa", t) or t == "eff_off_overall_ppa":
+        # Drop all offensive PPA siblings (includes cumulative & per-down)
         pats.append(r"^eff_off_.*_ppa$")
 
-    # Add more rules here for other target families if needed
+    # Points-based targets
+    if "points" in t:
+        # Drop any points/score/total/margin flavored columns
+        pats += [
+            r"(^|_)points(_|$)",            # any ...points... column
+            r"(home|away)_(points|score)$",
+            r"(team|opp|opponent)_(points|score)$",
+            r"(total_points|game_total)$",
+            r"(score|scored)$",
+        ]
 
-    return [re.compile(p) for p in pats]
+    # Margin targets
+    if "margin" in t:
+        pats += [
+            r"margin",                      # any margin column
+            r"spread_result|cover|won_by|result",
+        ]
+
+    # Total targets
+    if "total" in t:
+        pats += [
+            r"(total_points|game_total)$",
+            r"(^|_)points(_|$)",            # individual points imply total
+        ]
+
+    # Residual vs market (e.g., resid_margin, resid_total)
+    if "resid" in t or "residual" in t or "error" in t:
+        pats += [
+            r"(closing|open)_(spread|total)",
+            r"(line|handicap|total)(_)?$",  # conservative market filter
+        ]
+        # Also drop outcome components depending on flavor
+        if "margin" in t:
+            pats.append(r"margin")
+        if "total" in t:
+            pats += [r"(total_points|game_total)$", r"(^|_)points(_|$)"]
+
+    # Always avoid echoing the target back in inputs (some datasets have duplicates)
+    pats.append(rf"^{re.escape(t)}$")
+
+    # Deduplicate and compile
+    compiled = [re.compile(p) for p in sorted(set(pats))]
+    # Append user-provided extras
+    compiled += _patterns_from_env()
+    return compiled
 
 
 def _apply_feature_exclusions(X: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, List[str]]:
@@ -110,8 +166,9 @@ def _apply_feature_exclusions(X: pd.DataFrame, target_col: str) -> Tuple[pd.Data
 
     drop_cols: List[str] = []
     for c in X.columns:
+        cl = c.lower()
         for p in pats:
-            if p.search(c):
+            if p.search(cl):
                 drop_cols.append(c)
                 break
 
@@ -120,6 +177,7 @@ def _apply_feature_exclusions(X: pd.DataFrame, target_col: str) -> Tuple[pd.Data
         X = X.drop(columns=drop_cols, errors="ignore")
 
     return X, drop_cols
+# -----------------------------------------------
 
 
 def build_features(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.Series, List[str]]:
@@ -150,7 +208,7 @@ def build_features(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.
     if X.shape[1] > 0:
         X = X.loc[:, X.notna().any(axis=0)]
 
-    # Apply exclusion rules based on target (to prevent leakage)
+    # Apply dynamic exclusion rules based on the chosen target
     X, excluded = _apply_feature_exclusions(X, target_col)
 
     if X.shape[0] == 0:
@@ -317,7 +375,7 @@ def main():
         if df_raw.shape[0] == 0:
             raise ValueError(f"All rows dropped due to NaN target '{target_col}'.")
 
-    # Build features (+ exclusions)
+    # Build features (+ dynamic exclusions)
     X, y, excluded = build_features(df_raw, target_col)
 
     # Train & evaluate (+ collect coeffs)
