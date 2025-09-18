@@ -1,7 +1,8 @@
-snapshot_utc=2025-09-18T14:33:02Z
+snapshot_utc=2025-09-18T14:44:00Z
 input_rows=1570
-features=42
+features=34
 target=eff_off_overall_ppa
-linear: rmse=0.015763, mae=0.011866, r2=0.991664, n_train=1256, n_test=314, n_features=42, split_mode=temporal(season,week)
-ridge: rmse=0.015908, mae=0.012050, r2=0.991511, n_train=1256, n_test=314, n_features=42, split_mode=temporal(season,week)
-lasso: rmse=0.026167, mae=0.019757, r2=0.977030, n_train=1256, n_test=314, n_features=42, split_mode=temporal(season,week)
+excluded_features=8 -> eff_off_cum_passing_ppa, eff_off_cum_rushing_ppa, eff_off_cum_total_ppa, eff_off_first_down_ppa, eff_off_passing_ppa, eff_off_rushing_ppa, eff_off_second_down_ppa, eff_off_third_down_ppa
+linear: rmse=0.149394, mae=0.119829, r2=0.251263, n_train=1256, n_test=314, n_features=34, split_mode=temporal(season,week)
+ridge: rmse=0.149556, mae=0.119203, r2=0.249638, n_train=1256, n_test=314, n_features=34, split_mode=temporal(season,week)
+lasso: rmse=0.154815, mae=0.123460, r2=0.195932, n_train=1256, n_test=314, n_features=34, split_mode=temporal(season,week)
