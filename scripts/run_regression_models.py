@@ -126,9 +126,9 @@ def build_features(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.
 def temporal_split_indices(df_raw: pd.DataFrame, test_frac: float = 0.2) -> Optional[Tuple[Sequence[int], Sequence[int]]]:
     """
     If both 'season' and 'week' exist, perform a temporal split:
-      - sort by season, week, (stable index)
+      - sort by season, week, (stable original index)
       - take the last portion as test set
-    Returns (train_index, test_index) or None if not possible.
+    Returns (train_label_index, test_label_index) as **label indices** that match df_raw.index.
     """
     if {"season", "week"}.issubset(df_raw.columns):
         tmp = df_raw.reset_index(drop=False).rename(columns={"index": "__row"})
@@ -137,9 +137,10 @@ def temporal_split_indices(df_raw: pd.DataFrame, test_frac: float = 0.2) -> Opti
         if n == 0:
             return [], []
         split = int(n * (1 - test_frac))
-        train_idx = tmp.iloc[:split]["__row"].tolist()
-        test_idx  = tmp.iloc[split:]["__row"].tolist()
-        return train_idx, test_idx
+        # Return original index labels (not positions)
+        train_labels = tmp.iloc[:split]["__row"].tolist()
+        test_labels  = tmp.iloc[split:]["__row"].tolist()
+        return train_labels, test_labels
     return None
 
 
@@ -181,11 +182,12 @@ def train_and_eval(X: pd.DataFrame,
     # Choose split strategy
     idxs = temporal_split_indices(raw_df)
     if idxs:
-        train_idx, test_idx = idxs
-        if not train_idx or not test_idx:
+        train_labels, test_labels = idxs
+        if not train_labels or not test_labels:
             raise ValueError("Temporal split produced empty train or test indices.")
-        X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
-        y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+        # IMPORTANT: use .loc because these are **label indices**, not positions
+        X_train, X_test = X.loc[train_labels], X.loc[test_labels]
+        y_train, y_test = y.loc[train_labels], y.loc[test_labels]
         split_mode = "temporal(season,week)"
     else:
         # Fall back to random split (fixed seed)
@@ -240,7 +242,7 @@ def main():
     # Resolve target
     target_col = select_target(df_raw)
 
-    # ---- NEW: drop rows with NaN in target (fixes 'Input y contains NaN') ----
+    # Drop rows with NaN target (prevents 'Input y contains NaN')
     if df_raw[target_col].isna().any():
         n_missing = int(df_raw[target_col].isna().sum())
         print(f"[WARN] Dropping {n_missing} rows with NaN target values in '{target_col}'")
@@ -269,7 +271,6 @@ def main():
         f.write(f"input_rows={n_rows}\n")
         f.write(f"features={n_feats}\n")
         f.write(f"target={target_col}\n")
-        # include split mode per model (duplicated but explicit)
         for m in metrics:
             f.write(
                 f"{m['model']}: rmse={m['rmse']:.6f}, mae={m['mae']:.6f}, "
@@ -281,7 +282,6 @@ def main():
 
 
 if __name__ == "__main__":
-    # Make failures loud and clear in CI
     try:
         main()
     except Exception as e:
