@@ -27,10 +27,8 @@ jobs:
 
       - name: Execute regression script
         env:
-          # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-          # Set this to your actual numeric target column in modeling_dataset.csv
+          # Set to your actual numeric target column
           TARGET_COL: eff_off_overall_ppa
-          # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         run: |
           set -e
           python scripts/run_regression_models.py
@@ -49,6 +47,13 @@ jobs:
             echo "data/model_regression_metrics.csv not found."
           fi
 
+          echo '--- data/model_regression_coeffs.csv (first 40 rows) ---'
+          if [ -f data/model_regression_coeffs.csv ]; then
+            head -n 40 data/model_regression_coeffs.csv
+          else
+            echo "data/model_regression_coeffs.csv not found."
+          fi
+
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
@@ -60,11 +65,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f logs_model_regression.txt data/model_regression_metrics.csv models/*.pkl || true
+          git add -f \
+            logs_model_regression.txt \
+            data/model_regression_metrics.csv \
+            data/model_regression_coeffs.csv \
+            models/*.pkl || true
 
           if git diff --cached --quiet; then
             echo "No changes to commit (artifacts unchanged)."
           else
-            git commit -m "Add regression metrics and model artifacts [skip ci]"
+            git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
             git push
           fi
