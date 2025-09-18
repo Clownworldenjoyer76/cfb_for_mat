@@ -27,8 +27,10 @@ jobs:
 
       - name: Execute regression script
         env:
-          # Set to your actual numeric target column
-          TARGET_COL: eff_off_overall_ppa
+          # TARGET switched per checklist 2.5
+          TARGET_COL: points_scored
+          # Optional: give your script a regex to auto-drop other score/margin fields (except the target)
+          EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
         run: |
           set -e
           python scripts/run_regression_models.py
