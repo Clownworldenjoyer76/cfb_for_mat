@@ -2,6 +2,7 @@
 
 import os
 import sys
+import re
 import datetime as dt
 import pandas as pd
 import numpy as np
@@ -84,8 +85,45 @@ def select_target(df: pd.DataFrame) -> str:
     )
 
 
-def build_features(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.Series]:
-    """Drop IDs, expand datetimes, keep numerics, drop all-NaN cols, split X/y."""
+def _exclusion_patterns_for_target(target_col: str) -> List[re.Pattern]:
+    """
+    Rules to drop feature families that are likely to leak the target.
+    For `eff_off_*_ppa` targets, exclude ALL offensive PPA features, both per-down and cumulative.
+    """
+    pats: List[str] = []
+    if re.fullmatch(r"eff_off_.*_ppa", target_col):
+        # Exclude any offensive PPA metric siblings (includes cum_ variants and down splits)
+        pats.append(r"^eff_off_.*_ppa$")
+    elif target_col == "eff_off_overall_ppa":
+        pats.append(r"^eff_off_.*_ppa$")
+
+    # Add more rules here for other target families if needed
+
+    return [re.compile(p) for p in pats]
+
+
+def _apply_feature_exclusions(X: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, List[str]]:
+    """Drop columns in X that match exclusion patterns for the given target."""
+    pats = _exclusion_patterns_for_target(target_col)
+    if not pats:
+        return X, []
+
+    drop_cols: List[str] = []
+    for c in X.columns:
+        for p in pats:
+            if p.search(c):
+                drop_cols.append(c)
+                break
+
+    drop_cols = sorted(set(drop_cols))
+    if drop_cols:
+        X = X.drop(columns=drop_cols, errors="ignore")
+
+    return X, drop_cols
+
+
+def build_features(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.Series, List[str]]:
+    """Drop IDs, expand datetimes, keep numerics, drop all-NaN cols, split X/y, apply exclusions."""
     df = df.copy()
 
     # Drop identifier-ish columns if present
@@ -112,12 +150,15 @@ def build_features(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.
     if X.shape[1] > 0:
         X = X.loc[:, X.notna().any(axis=0)]
 
+    # Apply exclusion rules based on target (to prevent leakage)
+    X, excluded = _apply_feature_exclusions(X, target_col)
+
     if X.shape[0] == 0:
         raise ValueError("Dataset has zero rows after preprocessing.")
     if X.shape[1] == 0:
-        raise ValueError("No numeric features available after preprocessing.")
+        raise ValueError("No numeric features available after preprocessing (all excluded?).")
 
-    return X, y
+    return X, y, excluded
 
 
 # ======================
@@ -184,25 +225,23 @@ def extract_coefficients(pipe: Pipeline, feature_names: List[str]) -> Optional[p
         return None
 
     coefs = model.coef_
-    # coefs can be (n_targets, n_features) for multioutput; flatten if needed
     if isinstance(coefs, np.ndarray) and coefs.ndim > 1:
         coefs = coefs[0]
 
     df = pd.DataFrame({"feature": feature_names, "coef": coefs})
     df["abs_coef"] = df["coef"].abs()
     df = df.sort_values("abs_coef", ascending=False)
-    # add rank for convenience
     df["rank"] = np.arange(1, len(df) + 1)
     return df
 
 
 def train_and_eval(X: pd.DataFrame,
                    y: pd.Series,
-                   raw_df: pd.DataFrame) -> Tuple[list, int, int, Dict[str, pd.DataFrame]]:
+                   raw_df: pd.DataFrame) -> Tuple[list, int, int, Dict[str, pd.DataFrame], str]:
     """
     Train/eval three models. Prefer temporal split if season/week present,
     else fall back to random split with fixed seed.
-    Also returns per-model coefficient DataFrames.
+    Also returns per-model coefficient DataFrames and split_mode.
     """
     # Choose split strategy
     idxs = temporal_split_indices(raw_df)
@@ -210,12 +249,10 @@ def train_and_eval(X: pd.DataFrame,
         train_labels, test_labels = idxs
         if not train_labels or not test_labels:
             raise ValueError("Temporal split produced empty train or test indices.")
-        # IMPORTANT: use .loc because these are **label indices**, not positions
         X_train, X_test = X.loc[train_labels], X.loc[test_labels]
         y_train, y_test = y.loc[train_labels], y.loc[test_labels]
         split_mode = "temporal(season,week)"
     else:
-        # Fall back to random split (fixed seed)
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=RANDOM_STATE
         )
@@ -225,14 +262,12 @@ def train_and_eval(X: pd.DataFrame,
     metrics = []
     coeffs_by_model: Dict[str, pd.DataFrame] = {}
 
-    # Ensure model dir exists
     os.makedirs(MODEL_DIR, exist_ok=True)
 
     for name, pipe in models.items():
         pipe.fit(X_train, y_train)
         y_pred = pipe.predict(X_test)
 
-        # Metrics
         rmse = float(mean_squared_error(y_test, y_pred) ** 0.5)
         mae  = float(mean_absolute_error(y_test, y_pred))
         r2   = float(r2_score(y_test, y_pred))
@@ -248,19 +283,16 @@ def train_and_eval(X: pd.DataFrame,
             "split_mode": split_mode
         })
 
-        # Save model artifact
         joblib.dump(pipe, os.path.join(MODEL_DIR, f"{name}.pkl"))
 
-        # Extract coefficients (if supported)
         coef_df = extract_coefficients(pipe, list(X.columns))
         if coef_df is not None:
-            # attach context columns
             coef_df.insert(0, "model", name)
             coef_df["n_features"] = int(X.shape[1])
             coef_df["split_mode"] = split_mode
             coeffs_by_model[name] = coef_df
 
-    return metrics, X.shape[1], len(y), coeffs_by_model
+    return metrics, X.shape[1], len(y), coeffs_by_model, split_mode
 
 
 # ======================
@@ -271,7 +303,6 @@ def main():
         raise FileNotFoundError(f"Input dataset not found: {INPUT_CSV}")
 
     df_raw = pd.read_csv(INPUT_CSV)
-
     if df_raw.shape[0] == 0:
         raise ValueError("Input dataset is empty.")
 
@@ -286,32 +317,25 @@ def main():
         if df_raw.shape[0] == 0:
             raise ValueError(f"All rows dropped due to NaN target '{target_col}'.")
 
-    # Build features
-    X, y = build_features(df_raw, target_col)
+    # Build features (+ exclusions)
+    X, y, excluded = build_features(df_raw, target_col)
 
     # Train & evaluate (+ collect coeffs)
-    metrics, n_feats, n_rows, coeffs_by_model = train_and_eval(X, y, df_raw)
+    metrics, n_feats, n_rows, coeffs_by_model, split_mode = train_and_eval(X, y, df_raw)
 
     # Ensure output dirs
-    out_metrics_dir = os.path.dirname(OUT_METRICS) or "."
-    out_log_dir     = os.path.dirname(OUT_LOG) or "."
-    out_coeffs_dir  = os.path.dirname(OUT_COEFFS) or "."
-    os.makedirs(out_metrics_dir, exist_ok=True)
-    os.makedirs(out_log_dir, exist_ok=True)
-    os.makedirs(out_coeffs_dir, exist_ok=True)
+    for p in [OUT_METRICS, OUT_LOG, OUT_COEFFS]:
+        d = os.path.dirname(p) or "."
+        os.makedirs(d, exist_ok=True)
 
     # Write metrics CSV
     pd.DataFrame(metrics).to_csv(OUT_METRICS, index=False)
 
     # Write coefficients CSV (concat available models)
     if coeffs_by_model:
-        coeff_frames = []
-        for name, cdf in coeffs_by_model.items():
-            coeff_frames.append(cdf)
-        coeff_all = pd.concat(coeff_frames, ignore_index=True)
+        coeff_all = pd.concat(list(coeffs_by_model.values()), ignore_index=True)
         coeff_all.to_csv(OUT_COEFFS, index=False)
     else:
-        # If none produced coefs (unlikely here), create an empty stub for consistency
         pd.DataFrame(columns=["model","feature","coef","abs_coef","rank","n_features","split_mode"]).to_csv(OUT_COEFFS, index=False)
 
     # Write log
@@ -320,6 +344,8 @@ def main():
         f.write(f"input_rows={n_rows}\n")
         f.write(f"features={n_feats}\n")
         f.write(f"target={target_col}\n")
+        if excluded:
+            f.write(f"excluded_features={len(excluded)} -> {', '.join(excluded[:20])}{' ...' if len(excluded)>20 else ''}\n")
         for m in metrics:
             f.write(
                 f"{m['model']}: rmse={m['rmse']:.6f}, mae={m['mae']:.6f}, "
