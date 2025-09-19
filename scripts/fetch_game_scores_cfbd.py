@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
 Fetch per-game scores for all seasons present in data/modeling_dataset.csv
-and write a normalized CSV at data/game_scores.csv with columns:
+and write data/game_scores.csv with columns:
   id,season,week,home_team,away_team,home_points,away_points
 
-Source: CollegeFootballData API /games.
+Source: CollegeFootballData /games endpoint.
 Requires env CFBD_API_KEY (GitHub Actions secret).
+
 Exit codes:
   0  success
   2  missing CFBD_API_KEY
@@ -45,19 +46,16 @@ def seasons_from_modeling_dataset() -> List[int]:
     return seasons
 
 def fetch_games_for_season(session: requests.Session, season: int):
-    all_rows = []
-    # Regular + Postseason to be safe
+    rows = []
     for season_type in ("regular", "postseason"):
         r = session.get(API_BASE, params={"year": season, "seasonType": season_type}, timeout=30)
         if r.status_code != 200:
             raise RuntimeError(f"/games {season} {season_type} -> {r.status_code}: {r.text[:300]}")
-        rows = r.json() or []
-        all_rows.extend(rows)
+        rows.extend(r.json() or [])
         time.sleep(0.25)  # gentle rate limiting
-    return all_rows
+    return rows
 
 def normalize_rows(rows: List[Dict]) -> pd.DataFrame:
-    # Keep only the columns you approved
     out = []
     for g in rows:
         out.append({
@@ -70,12 +68,11 @@ def normalize_rows(rows: List[Dict]) -> pd.DataFrame:
             "away_points": g.get("away_points"),
         })
     df = pd.DataFrame(out)
-    # Only finished games with numeric scores
+    # finished games only (numeric scores)
     df = df.dropna(subset=["home_points", "away_points"])
     df["home_points"] = pd.to_numeric(df["home_points"], errors="coerce")
     df["away_points"] = pd.to_numeric(df["away_points"], errors="coerce")
     df = df.dropna(subset=["home_points", "away_points"])
-    # Final column order
     return df[["id","season","week","home_team","away_team","home_points","away_points"]].reset_index(drop=True)
 
 def main():
@@ -89,7 +86,7 @@ def main():
     session = requests.Session()
     session.headers.update({"Authorization": f"Bearer {api_key}"})
 
-    all_frames = []
+    frames = []
     for yr in seasons:
         try:
             rows = fetch_games_for_season(session, yr)
@@ -98,12 +95,12 @@ def main():
             die(4, f"API error for season {yr}: {e}")
         if df.empty:
             print(f"WARNING: no finished games found for season {yr}")
-        all_frames.append(df)
+        frames.append(df)
 
-    if not any(len(df) for df in all_frames):
+    if not any(len(f) for f in frames):
         die(4, "No game scores retrieved for any season.")
 
-    out = pd.concat(all_frames, ignore_index=True)
+    out = pd.concat(frames, ignore_index=True)
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(OUT_CSV, index=False)
     print(f"Wrote {len(out)} rows to {OUT_CSV}")
