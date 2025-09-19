@@ -2,6 +2,8 @@ name: Run Regression Models (CFB)
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 17 * * 2"  # 12:00 PM EST Tuesdays (cron is UTC)
 
 permissions:
   contents: write
@@ -42,28 +44,28 @@ jobs:
           echo '--- logs_model_regression.txt ---'
           if [ -f logs_model_regression.txt ]; then
             cat logs_model_regression.txt
-          else
+          else:
             echo "logs_model_regression.txt not found."
           fi
 
           echo '--- data/model_regression_metrics.csv ---'
           if [ -f data/model_regression_metrics.csv ]; then
             cat data/model_regression_metrics.csv
-          else
+          else:
             echo "data/model_regression_metrics.csv not found."
           fi
 
           echo '--- data/model_regression_coeffs.csv (first 40 rows) ---'
           if [ -f data/model_regression_coeffs.csv ]; then
             head -n 40 data/model_regression_coeffs.csv
-          else
+          else:
             echo "data/model_regression_coeffs.csv not found."
           fi
 
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
-          else
+          else:
             echo "models/ directory not found."
           fi
 
@@ -79,7 +81,6 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No changes to commit (artifacts unchanged)."
-          else
+          else:
             git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
             git push
-          fi
