@@ -3,7 +3,7 @@ name: Run Regression Models (CFB)
 on:
   workflow_dispatch:        # allow manual trigger
   schedule:                 # automatic weekly run
-    - cron: "0 17 * * 2"    # 17:00 UTC = 12:00 PM EST on Tuesdays
+    - cron: "0 17 * * 2"    # 17:00 UTC = 12:00 PM EST Tuesdays
 
 permissions:
   contents: write
@@ -11,6 +11,8 @@ permissions:
 jobs:
   run-models:
     runs-on: ubuntu-latest
+    env:
+      PYTHONUNBUFFERED: "1"   # live stdout/stderr so retries/warnings show immediately
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,9 +34,16 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: |
           set -e
+          echo "==> Fetching game scores from CFBD…"
           python scripts/fetch_game_scores_cfbd.py
-          echo "Preview of data/game_scores.csv:"
-          head -n 10 data/game_scores.csv || true
+          echo "==> Preview of data/game_scores.csv"
+          head -n 20 data/game_scores.csv || true
+          echo "==> Row count:"
+          python - << 'PY'
+import pandas as pd
+df = pd.read_csv("data/game_scores.csv")
+print(f"rows={len(df)}, seasons={sorted(df['season'].unique())[:10]}")
+PY
 
       - name: Execute regression script
         env:
@@ -43,6 +52,7 @@ jobs:
           SCORES_CSV: data/game_scores.csv
         run: |
           set -e
+          echo "==> Running regression with TARGET_COL=${TARGET_COL}"
           python scripts/run_regression_models.py
 
           echo '--- logs_model_regression.txt ---'
@@ -69,7 +79,7 @@ jobs:
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
-          else:
+          else
             echo "models/ directory not found."
           fi
 
@@ -88,3 +98,4 @@ jobs:
           else
             git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
             git push
+          fi
