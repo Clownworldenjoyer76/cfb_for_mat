@@ -39,11 +39,7 @@ jobs:
           echo "==> Preview of data/game_scores.csv"
           head -n 20 data/game_scores.csv || true
           echo "==> Row count:"
-          python - << 'PY'
-import pandas as pd
-df = pd.read_csv("data/game_scores.csv")
-print(f"rows={len(df)}, seasons={sorted(df['season'].unique())[:10]}")
-PY
+          wc -l data/game_scores.csv || true
 
       - name: Execute regression script
         env:
@@ -98,4 +94,3 @@ PY
           else
             git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
             git push
-          fi
