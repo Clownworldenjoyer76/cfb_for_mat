@@ -1,9 +1,9 @@
 name: Run Regression Models (CFB)
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 17 * * 2"  # 12:00 PM EST Tuesdays (cron is UTC)
+  workflow_dispatch:        # allow manual trigger
+  schedule:                 # automatic weekly run
+    - cron: "0 17 * * 2"    # 17:00 UTC = 12:00 PM EST on Tuesdays
 
 permissions:
   contents: write
@@ -25,18 +25,22 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install numpy pandas scikit-learn joblib
+          pip install numpy pandas scikit-learn joblib requests
+
+      - name: Fetch per-game scores (CFBD /games)
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          set -e
+          python scripts/fetch_game_scores_cfbd.py
+          echo "Preview of data/game_scores.csv:"
+          head -n 10 data/game_scores.csv || true
 
       - name: Execute regression script
         env:
-          # Checklist 2.5: train on outcome target
           TARGET_COL: points_scored
-
-          # Leak guard: drop any other points/score/margin/spread features from X (but keep the target)
           EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
-
-          # Optional: point this directly at your scores file if auto-discovery fails
-          # SCORES_GLOB: "data/raw/*games*.csv"
+          SCORES_CSV: data/game_scores.csv
         run: |
           set -e
           python scripts/run_regression_models.py
@@ -44,21 +48,21 @@ jobs:
           echo '--- logs_model_regression.txt ---'
           if [ -f logs_model_regression.txt ]; then
             cat logs_model_regression.txt
-          else:
+          else
             echo "logs_model_regression.txt not found."
           fi
 
           echo '--- data/model_regression_metrics.csv ---'
           if [ -f data/model_regression_metrics.csv ]; then
             cat data/model_regression_metrics.csv
-          else:
+          else
             echo "data/model_regression_metrics.csv not found."
           fi
 
           echo '--- data/model_regression_coeffs.csv (first 40 rows) ---'
           if [ -f data/model_regression_coeffs.csv ]; then
             head -n 40 data/model_regression_coeffs.csv
-          else:
+          else
             echo "data/model_regression_coeffs.csv not found."
           fi
 
@@ -81,6 +85,6 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No changes to commit (artifacts unchanged)."
-          else:
+          else
             git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
             git push
