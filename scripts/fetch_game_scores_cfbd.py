@@ -7,20 +7,11 @@ and write data/game_scores.csv with columns:
 Source: CollegeFootballData /games endpoint.
 Requires env CFBD_API_KEY (GitHub Actions secret).
 
-Behavior:
-- Per-week fetching (regular + postseason) with division=fbs.
-- Retries with backoff and longer timeouts.
-- Verbose counts per request and per season.
-- If no finished games are found, dump a RAW SAMPLE of the API response for
-  the first such week to:
-    data/debug_cfbd_week_sample.json
-  and print the first few items to the CI log so you can see the actual fields.
-
-Exit codes:
-  0  success
-  2  missing CFBD_API_KEY
-  3  modeling_dataset.csv missing/invalid
-  4  API error or empty results
+Notes:
+- CFBD uses camelCase keys: homePoints / awayPoints, homeTeam / awayTeam.
+- We fetch week-by-week (regular + postseason) with retries and timeouts.
+- If we see games but no finished scores, we dump a raw JSON sample to
+  data/debug_cfbd_week_sample.json and print a truncated preview to the log.
 """
 
 import os
@@ -28,7 +19,7 @@ import sys
 import time
 import json
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
 import pandas as pd
 import requests
@@ -74,34 +65,45 @@ def fetch_with_retries(session: requests.Session, params: dict, max_retries: int
     raise RuntimeError(f"API request failed after {max_retries} retries for params={params}")
 
 def fetch_games_for_week(session: requests.Session, season: int, season_type: str, week: int) -> List[Dict]:
+    # division=fbs narrows to the top subdivision; remove if you want all divisions
     params = {"year": season, "seasonType": season_type, "week": week, "division": "fbs"}
     return fetch_with_retries(session, params)
 
 def normalize_rows(rows: List[Dict]) -> pd.DataFrame:
+    """
+    Map CFBD JSON keys (camelCase) to our flat CSV schema.
+    Also tolerates snake_case if CFBD ever changes or a proxy rewrites keys.
+    """
+    def gget(d, camel, snake):
+        v = d.get(camel)
+        if v is None and snake in d:
+            v = d.get(snake)
+        return v
+
     out = []
     for g in rows:
         out.append({
             "id": g.get("id"),
             "season": g.get("season"),
             "week": g.get("week"),
-            "home_team": g.get("home_team"),
-            "away_team": g.get("away_team"),
-            "home_points": g.get("home_points"),
-            "away_points": g.get("away_points"),
+            "home_team": gget(g, "homeTeam", "home_team"),
+            "away_team": gget(g, "awayTeam", "away_team"),
+            "home_points": gget(g, "homePoints", "home_points"),
+            "away_points": gget(g, "awayPoints", "away_points"),
         })
     df = pd.DataFrame(out)
+
     # Keep only finished games with numeric scores
     df = df.dropna(subset=["home_points", "away_points"])
     df["home_points"] = pd.to_numeric(df["home_points"], errors="coerce")
     df["away_points"] = pd.to_numeric(df["away_points"], errors="coerce")
     df = df.dropna(subset=["home_points", "away_points"])
+
+    # Final column order
     return df[["id","season","week","home_team","away_team","home_points","away_points"]].reset_index(drop=True)
 
 def maybe_dump_raw_sample(rows: List[Dict], season: int, season_type: str, week: int, already_dumped: bool) -> bool:
-    """
-    If we haven't dumped a sample yet, write the raw payload for this week to DEBUG_JSON
-    and print a small preview to the log. Returns True if we dumped.
-    """
+    """Write a raw payload sample for debugging (once per run)."""
     if already_dumped:
         return True
     try:
@@ -121,8 +123,7 @@ def maybe_dump_raw_sample(rows: List[Dict], season: int, season_type: str, week:
         return True
     except Exception as e:
         print(f"WARNING: failed to write {DEBUG_JSON}: {e}")
-        return True  # don't keep trying
-    # not reached
+        return True  # avoid repeated attempts
 
 def main():
     api_key = os.environ.get("CFBD_API_KEY")
@@ -136,26 +137,26 @@ def main():
     session.headers.update({"Authorization": f"Bearer {api_key}"})
 
     season_frames: List[pd.DataFrame] = []
-    dumped = False  # whether we dumped a raw sample yet
+    dumped = False
 
     for yr in seasons:
         rows_all: List[Dict] = []
 
-        # Regular season weeks 0..20
+        # Regular season: weeks 0..20
         for w in range(0, 21):
             chunk = fetch_games_for_week(session, yr, "regular", w)
             rows_all.extend(chunk)
-            finished = sum(1 for g in chunk if g.get("home_points") is not None and g.get("away_points") is not None)
+            finished = sum(1 for g in chunk if g.get("homePoints") is not None and g.get("awayPoints") is not None)
             print(f"season={yr} regular week={w}: got {len(chunk)} (finished={finished})")
             if finished == 0 and len(chunk) > 0 and not dumped:
                 dumped = maybe_dump_raw_sample(chunk, yr, "regular", w, dumped)
             time.sleep(0.15)
 
-        # Postseason weeks 1..6
+        # Postseason: weeks 1..6
         for w in range(1, 7):
             chunk = fetch_games_for_week(session, yr, "postseason", w)
             rows_all.extend(chunk)
-            finished = sum(1 for g in chunk if g.get("home_points") is not None and g.get("away_points") is not None)
+            finished = sum(1 for g in chunk if g.get("homePoints") is not None and g.get("awayPoints") is not None)
             print(f"season={yr} postseason week={w}: got {len(chunk)} (finished={finished})")
             if finished == 0 and len(chunk) > 0 and not dumped:
                 dumped = maybe_dump_raw_sample(chunk, yr, "postseason", w, dumped)
@@ -167,8 +168,8 @@ def main():
             print(f"WARNING: no finished FBS games found for season {yr}")
         season_frames.append(df)
 
-    all_len = sum(len(f) for f in season_frames)
-    if all_len == 0:
+    total = sum(len(f) for f in season_frames)
+    if total == 0:
         die(4, "No game scores retrieved for any season.")
 
     out = pd.concat(season_frames, ignore_index=True)
