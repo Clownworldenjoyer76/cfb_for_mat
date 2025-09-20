@@ -18001,14 +18001,14 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "firstDowns",
-    "statValue": 58
+    "statValue": 80
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "firstDownsOpponent",
-    "statValue": 31
+    "statValue": 51
   },
   {
     "season": 2025,
@@ -18036,7 +18036,7 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "fourthDownsOpponent",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -18071,7 +18071,7 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "games",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -18085,6 +18085,13 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "interceptionsOpponent",
+    "statValue": 1
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "interceptionTDs",
     "statValue": 0
   },
   {
@@ -18092,6 +18099,13 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "interceptionTDsOpponent",
+    "statValue": 0
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "interceptionYards",
     "statValue": 0
   },
   {
@@ -18106,7 +18120,7 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "kickReturns",
-    "statValue": 5
+    "statValue": 8
   },
   {
     "season": 2025,
@@ -18120,7 +18134,7 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "kickReturnTDs",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -18134,7 +18148,7 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "kickReturnYards",
-    "statValue": 111
+    "statValue": 240
   },
   {
     "season": 2025,
@@ -18148,42 +18162,49 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "netPassingYards",
-    "statValue": 365
+    "statValue": 551
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "netPassingYardsOpponent",
-    "statValue": 361
+    "statValue": 691
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "passAttempts",
-    "statValue": 71
+    "statValue": 89
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "passAttemptsOpponent",
-    "statValue": 75
+    "statValue": 115
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "passCompletions",
-    "statValue": 43
+    "statValue": 55
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "passCompletionsOpponent",
-    "statValue": 44
+    "statValue": 68
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "passesIntercepted",
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -18211,49 +18232,49 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "penalties",
-    "statValue": 7
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "penaltiesOpponent",
     "statValue": 9
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
+    "statName": "penaltiesOpponent",
+    "statValue": 15
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
     "statName": "penaltyYards",
-    "statValue": 63
+    "statValue": 93
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "penaltyYardsOpponent",
-    "statValue": 62
+    "statValue": 112
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "possessionTime",
-    "statValue": 5989
+    "statValue": 7735
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "possessionTimeOpponent",
-    "statValue": 4811
+    "statValue": 6665
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "puntReturns",
-    "statValue": 7
+    "statValue": 8
   },
   {
     "season": 2025,
@@ -18281,7 +18302,7 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "puntReturnYards",
-    "statValue": 238
+    "statValue": 281
   },
   {
     "season": 2025,
@@ -18295,112 +18316,112 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "rushingAttempts",
-    "statValue": 132
+    "statValue": 170
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 78
+    "statValue": 108
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "rushingTDs",
-    "statValue": 6
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "rushingTDsOpponent",
-    "statValue": 1
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "rushingYards",
-    "statValue": 642
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "rushingYardsOpponent",
-    "statValue": 173
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "sacks",
-    "statValue": 7
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "sacksOpponent",
-    "statValue": 6
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "tacklesForLoss",
-    "statValue": 19
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "tacklesForLossOpponent",
-    "statValue": 12
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "thirdDownConversions",
-    "statValue": 25
-  },
-  {
-    "season": 2025,
-    "team": "Iowa",
-    "conference": "Big Ten",
-    "statName": "thirdDownConversionsOpponent",
     "statValue": 10
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
+    "statName": "rushingTDsOpponent",
+    "statValue": 5
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "rushingYards",
+    "statValue": 802
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "rushingYardsOpponent",
+    "statValue": 243
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "sacks",
+    "statValue": 10
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "sacksOpponent",
+    "statValue": 8
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "tacklesForLoss",
+    "statValue": 22
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "tacklesForLossOpponent",
+    "statValue": 15
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "thirdDownConversions",
+    "statValue": 28
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
+    "statName": "thirdDownConversionsOpponent",
+    "statValue": 16
+  },
+  {
+    "season": 2025,
+    "team": "Iowa",
+    "conference": "Big Ten",
     "statName": "thirdDowns",
-    "statValue": 46
+    "statValue": 54
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "thirdDownsOpponent",
-    "statValue": 36
+    "statValue": 49
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "totalYards",
-    "statValue": 1007
+    "statValue": 1353
   },
   {
     "season": 2025,
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "totalYardsOpponent",
-    "statValue": 534
+    "statValue": 934
   },
   {
     "season": 2025,
@@ -18414,7 +18435,7 @@
     "team": "Iowa",
     "conference": "Big Ten",
     "statName": "turnoversOpponent",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
@@ -35802,42 +35823,42 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "firstDowns",
-    "statValue": 29
+    "statValue": 52
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "firstDownsOpponent",
-    "statValue": 37
+    "statValue": 58
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "fourthDownConversions",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 1
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "fourthDowns",
-    "statValue": 2
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "fourthDownsOpponent",
-    "statValue": 2
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -35851,6 +35872,20 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "fumblesLostOpponent",
+    "statValue": 1
+  },
+  {
+    "season": 2025,
+    "team": "Oklahoma State",
+    "conference": "Big 12",
+    "statName": "fumblesRecovered",
+    "statValue": 1
+  },
+  {
+    "season": 2025,
+    "team": "Oklahoma State",
+    "conference": "Big 12",
+    "statName": "fumblesRecoveredOpponent",
     "statValue": 0
   },
   {
@@ -35858,7 +35893,7 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "games",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -35913,7 +35948,21 @@
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
+    "statName": "kickReturnsOpponent",
+    "statValue": 2
+  },
+  {
+    "season": 2025,
+    "team": "Oklahoma State",
+    "conference": "Big 12",
     "statName": "kickReturnTDs",
+    "statValue": 0
+  },
+  {
+    "season": 2025,
+    "team": "Oklahoma State",
+    "conference": "Big 12",
+    "statName": "kickReturnTDsOpponent",
     "statValue": 0
   },
   {
@@ -35927,43 +35976,50 @@
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
+    "statName": "kickReturnYardsOpponent",
+    "statValue": 28
+  },
+  {
+    "season": 2025,
+    "team": "Oklahoma State",
+    "conference": "Big 12",
     "statName": "netPassingYards",
-    "statValue": 299
+    "statValue": 485
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "netPassingYardsOpponent",
-    "statValue": 428
+    "statValue": 647
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "passAttempts",
-    "statValue": 49
+    "statValue": 90
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "passAttemptsOpponent",
-    "statValue": 42
+    "statValue": 78
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "passCompletions",
-    "statValue": 25
+    "statValue": 50
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "passCompletionsOpponent",
-    "statValue": 28
+    "statValue": 51
   },
   {
     "season": 2025,
@@ -35991,56 +36047,56 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "passingTDsOpponent",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "penalties",
-    "statValue": 13
+    "statValue": 16
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "penaltiesOpponent",
-    "statValue": 13
+    "statValue": 17
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "penaltyYards",
-    "statValue": 100
+    "statValue": 130
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "penaltyYardsOpponent",
-    "statValue": 85
+    "statValue": 119
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "possessionTime",
-    "statValue": 3760
+    "statValue": 5272
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "possessionTimeOpponent",
-    "statValue": 3440
+    "statValue": 5525
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "puntReturns",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -36068,7 +36124,7 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "puntReturnYards",
-    "statValue": 17
+    "statValue": 20
   },
   {
     "season": 2025,
@@ -36082,21 +36138,21 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "rushingAttempts",
-    "statValue": 84
+    "statValue": 117
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 75
+    "statValue": 118
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "rushingTDs",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -36110,14 +36166,14 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "rushingYards",
-    "statValue": 271
+    "statValue": 456
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "rushingYardsOpponent",
-    "statValue": 428
+    "statValue": 633
   },
   {
     "season": 2025,
@@ -36131,63 +36187,63 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "sacksOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "tacklesForLoss",
-    "statValue": 12
+    "statValue": 18
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "tacklesForLossOpponent",
-    "statValue": 13
+    "statValue": 20
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "thirdDownConversions",
-    "statValue": 14
+    "statValue": 17
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 13
+    "statValue": 20
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "thirdDowns",
-    "statValue": 34
+    "statValue": 48
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "thirdDownsOpponent",
-    "statValue": 27
+    "statValue": 46
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "totalYards",
-    "statValue": 570
+    "statValue": 941
   },
   {
     "season": 2025,
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "totalYardsOpponent",
-    "statValue": 856
+    "statValue": 1280
   },
   {
     "season": 2025,
@@ -36201,7 +36257,7 @@
     "team": "Oklahoma State",
     "conference": "Big 12",
     "statName": "turnoversOpponent",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
@@ -39666,14 +39722,14 @@
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "firstDowns",
-    "statValue": 88
+    "statValue": 108
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "firstDownsOpponent",
-    "statValue": 49
+    "statValue": 71
   },
   {
     "season": 2025,
@@ -39694,7 +39750,7 @@
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "fourthDowns",
-    "statValue": 10
+    "statValue": 11
   },
   {
     "season": 2025,
@@ -39736,14 +39792,14 @@
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "games",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "interceptions",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -39763,8 +39819,22 @@
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
+    "statName": "interceptionTDsOpponent",
+    "statValue": 0
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
     "statName": "interceptionYards",
     "statValue": 89
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "interceptionYardsOpponent",
+    "statValue": 0
   },
   {
     "season": 2025,
@@ -39778,7 +39848,7 @@
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "kickReturnsOpponent",
-    "statValue": 5
+    "statValue": 8
   },
   {
     "season": 2025,
@@ -39792,7 +39862,7 @@
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "kickReturnTDsOpponent",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -39806,49 +39876,49 @@
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 40
+    "statValue": 169
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "netPassingYards",
-    "statValue": 889
+    "statValue": 1219
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "netPassingYardsOpponent",
-    "statValue": 582
+    "statValue": 768
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "passAttempts",
-    "statValue": 93
+    "statValue": 133
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "passAttemptsOpponent",
-    "statValue": 76
+    "statValue": 94
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "passCompletions",
-    "statValue": 67
+    "statValue": 91
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "passCompletionsOpponent",
-    "statValue": 44
+    "statValue": 56
   },
   {
     "season": 2025,
@@ -39856,6 +39926,13 @@
     "conference": "Big Ten",
     "statName": "passesIntercepted",
     "statValue": 2
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "passesInterceptedOpponent",
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -39876,42 +39953,42 @@
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "penalties",
-    "statValue": 12
+    "statValue": 18
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "penaltiesOpponent",
-    "statValue": 22
+    "statValue": 24
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "penaltyYards",
-    "statValue": 94
+    "statValue": 144
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "penaltyYardsOpponent",
-    "statValue": 178
+    "statValue": 208
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "possessionTime",
-    "statValue": 6416
+    "statValue": 8270
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "possessionTimeOpponent",
-    "statValue": 4384
+    "statValue": 6130
   },
   {
     "season": 2025,
@@ -39924,8 +40001,22 @@
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
+    "statName": "puntReturnsOpponent",
+    "statValue": 1
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
     "statName": "puntReturnTDs",
     "statValue": 3
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "puntReturnTDsOpponent",
+    "statValue": 0
   },
   {
     "season": 2025,
@@ -39938,120 +40029,127 @@
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
+    "statName": "puntReturnYardsOpponent",
+    "statValue": 43
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
     "statName": "rushingAttempts",
-    "statValue": 124
+    "statValue": 154
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 80
+    "statValue": 118
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "rushingTDs",
-    "statValue": 6
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "rushingTDsOpponent",
-    "statValue": 4
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "rushingYards",
-    "statValue": 494
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "rushingYardsOpponent",
-    "statValue": 446
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "sacks",
-    "statValue": 4
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "sacksOpponent",
-    "statValue": 7
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "tacklesForLoss",
-    "statValue": 15
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "tacklesForLossOpponent",
-    "statValue": 15
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "thirdDownConversions",
-    "statValue": 17
-  },
-  {
-    "season": 2025,
-    "team": "Rutgers",
-    "conference": "Big Ten",
-    "statName": "thirdDownConversionsOpponent",
     "statValue": 10
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
+    "statName": "rushingTDsOpponent",
+    "statValue": 8
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "rushingYards",
+    "statValue": 564
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "rushingYardsOpponent",
+    "statValue": 606
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "sacks",
+    "statValue": 6
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "sacksOpponent",
+    "statValue": 10
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "tacklesForLoss",
+    "statValue": 18
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "tacklesForLossOpponent",
+    "statValue": 18
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "thirdDownConversions",
+    "statValue": 23
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
+    "statName": "thirdDownConversionsOpponent",
+    "statValue": 13
+  },
+  {
+    "season": 2025,
+    "team": "Rutgers",
+    "conference": "Big Ten",
     "statName": "thirdDowns",
-    "statValue": 34
+    "statValue": 47
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "thirdDownsOpponent",
-    "statValue": 28
+    "statValue": 36
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "totalYards",
-    "statValue": 1383
+    "statValue": 1783
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "totalYardsOpponent",
-    "statValue": 1028
+    "statValue": 1374
   },
   {
     "season": 2025,
     "team": "Rutgers",
     "conference": "Big Ten",
     "statName": "turnovers",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -48668,49 +48766,49 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "firstDowns",
-    "statValue": 73
+    "statValue": 94
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "firstDownsOpponent",
-    "statValue": 57
+    "statValue": 80
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "fourthDownConversions",
-    "statValue": 8
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "fourthDowns",
-    "statValue": 12
+    "statValue": 15
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "fourthDownsOpponent",
-    "statValue": 7
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "fumblesLost",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
@@ -48731,14 +48829,14 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "fumblesRecoveredOpponent",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "games",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -48787,7 +48885,7 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "kickReturns",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
@@ -48815,7 +48913,7 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "kickReturnYards",
-    "statValue": 119
+    "statValue": 147
   },
   {
     "season": 2025,
@@ -48829,42 +48927,42 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "netPassingYards",
-    "statValue": 660
+    "statValue": 879
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "netPassingYardsOpponent",
-    "statValue": 486
+    "statValue": 672
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "passAttempts",
-    "statValue": 111
+    "statValue": 147
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "passAttemptsOpponent",
-    "statValue": 74
+    "statValue": 115
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "passCompletions",
-    "statValue": 71
+    "statValue": 94
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "passCompletionsOpponent",
-    "statValue": 47
+    "statValue": 72
   },
   {
     "season": 2025,
@@ -48885,7 +48983,7 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "passingTDs",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -48899,42 +48997,42 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "penalties",
-    "statValue": 20
+    "statValue": 24
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "penaltiesOpponent",
-    "statValue": 15
+    "statValue": 18
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "penaltyYards",
-    "statValue": 122
+    "statValue": 156
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "penaltyYardsOpponent",
-    "statValue": 129
+    "statValue": 159
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "possessionTime",
-    "statValue": 5211
+    "statValue": 7296
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "possessionTimeOpponent",
-    "statValue": 5589
+    "statValue": 7101
   },
   {
     "season": 2025,
@@ -48948,7 +49046,7 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "puntReturnsOpponent",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -48976,21 +49074,21 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "puntReturnYardsOpponent",
-    "statValue": 30
+    "statValue": 33
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "rushingAttempts",
-    "statValue": 113
+    "statValue": 156
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 129
+    "statValue": 162
   },
   {
     "season": 2025,
@@ -49004,28 +49102,28 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "rushingTDsOpponent",
-    "statValue": 6
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "rushingYards",
-    "statValue": 549
+    "statValue": 754
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "rushingYardsOpponent",
-    "statValue": 526
+    "statValue": 711
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "sacks",
-    "statValue": 8
+    "statValue": 10
   },
   {
     "season": 2025,
@@ -49039,63 +49137,63 @@
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "tacklesForLoss",
-    "statValue": 20
+    "statValue": 27
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "tacklesForLossOpponent",
-    "statValue": 14
+    "statValue": 20
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "thirdDownConversions",
-    "statValue": 18
+    "statValue": 25
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 23
+    "statValue": 26
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "thirdDowns",
-    "statValue": 47
+    "statValue": 66
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "thirdDownsOpponent",
-    "statValue": 47
+    "statValue": 61
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "totalYards",
-    "statValue": 1209
+    "statValue": 1633
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "totalYardsOpponent",
-    "statValue": 1012
+    "statValue": 1383
   },
   {
     "season": 2025,
     "team": "Tulsa",
     "conference": "American Athletic",
     "statName": "turnovers",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
