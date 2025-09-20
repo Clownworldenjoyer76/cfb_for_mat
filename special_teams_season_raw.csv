@@ -2570,66 +2570,69 @@ season,team,conference,statName,statValue
 2025,Indiana,Big Ten,totalYardsOpponent,662
 2025,Indiana,Big Ten,turnovers,1
 2025,Indiana,Big Ten,turnoversOpponent,5
-2025,Iowa,Big Ten,firstDowns,58
-2025,Iowa,Big Ten,firstDownsOpponent,31
+2025,Iowa,Big Ten,firstDowns,80
+2025,Iowa,Big Ten,firstDownsOpponent,51
 2025,Iowa,Big Ten,fourthDownConversions,4
 2025,Iowa,Big Ten,fourthDownConversionsOpponent,1
 2025,Iowa,Big Ten,fourthDowns,6
-2025,Iowa,Big Ten,fourthDownsOpponent,3
+2025,Iowa,Big Ten,fourthDownsOpponent,4
 2025,Iowa,Big Ten,fumblesLost,1
 2025,Iowa,Big Ten,fumblesLostOpponent,1
 2025,Iowa,Big Ten,fumblesRecovered,1
 2025,Iowa,Big Ten,fumblesRecoveredOpponent,1
-2025,Iowa,Big Ten,games,3
+2025,Iowa,Big Ten,games,4
 2025,Iowa,Big Ten,interceptions,1
-2025,Iowa,Big Ten,interceptionsOpponent,0
+2025,Iowa,Big Ten,interceptionsOpponent,1
+2025,Iowa,Big Ten,interceptionTDs,0
 2025,Iowa,Big Ten,interceptionTDsOpponent,0
+2025,Iowa,Big Ten,interceptionYards,0
 2025,Iowa,Big Ten,interceptionYardsOpponent,24
-2025,Iowa,Big Ten,kickReturns,5
+2025,Iowa,Big Ten,kickReturns,8
 2025,Iowa,Big Ten,kickReturnsOpponent,4
-2025,Iowa,Big Ten,kickReturnTDs,0
+2025,Iowa,Big Ten,kickReturnTDs,1
 2025,Iowa,Big Ten,kickReturnTDsOpponent,0
-2025,Iowa,Big Ten,kickReturnYards,111
+2025,Iowa,Big Ten,kickReturnYards,240
 2025,Iowa,Big Ten,kickReturnYardsOpponent,29
-2025,Iowa,Big Ten,netPassingYards,365
-2025,Iowa,Big Ten,netPassingYardsOpponent,361
-2025,Iowa,Big Ten,passAttempts,71
-2025,Iowa,Big Ten,passAttemptsOpponent,75
-2025,Iowa,Big Ten,passCompletions,43
-2025,Iowa,Big Ten,passCompletionsOpponent,44
+2025,Iowa,Big Ten,netPassingYards,551
+2025,Iowa,Big Ten,netPassingYardsOpponent,691
+2025,Iowa,Big Ten,passAttempts,89
+2025,Iowa,Big Ten,passAttemptsOpponent,115
+2025,Iowa,Big Ten,passCompletions,55
+2025,Iowa,Big Ten,passCompletionsOpponent,68
+2025,Iowa,Big Ten,passesIntercepted,1
 2025,Iowa,Big Ten,passesInterceptedOpponent,1
 2025,Iowa,Big Ten,passingTDs,4
 2025,Iowa,Big Ten,passingTDsOpponent,2
-2025,Iowa,Big Ten,penalties,7
-2025,Iowa,Big Ten,penaltiesOpponent,9
-2025,Iowa,Big Ten,penaltyYards,63
-2025,Iowa,Big Ten,penaltyYardsOpponent,62
-2025,Iowa,Big Ten,possessionTime,5989
-2025,Iowa,Big Ten,possessionTimeOpponent,4811
-2025,Iowa,Big Ten,puntReturns,7
+2025,Iowa,Big Ten,penalties,9
+2025,Iowa,Big Ten,penaltiesOpponent,15
+2025,Iowa,Big Ten,penaltyYards,93
+2025,Iowa,Big Ten,penaltyYardsOpponent,112
+2025,Iowa,Big Ten,possessionTime,7735
+2025,Iowa,Big Ten,possessionTimeOpponent,6665
+2025,Iowa,Big Ten,puntReturns,8
 2025,Iowa,Big Ten,puntReturnsOpponent,3
 2025,Iowa,Big Ten,puntReturnTDs,1
 2025,Iowa,Big Ten,puntReturnTDsOpponent,0
-2025,Iowa,Big Ten,puntReturnYards,238
+2025,Iowa,Big Ten,puntReturnYards,281
 2025,Iowa,Big Ten,puntReturnYardsOpponent,34
-2025,Iowa,Big Ten,rushingAttempts,132
-2025,Iowa,Big Ten,rushingAttemptsOpponent,78
-2025,Iowa,Big Ten,rushingTDs,6
-2025,Iowa,Big Ten,rushingTDsOpponent,1
-2025,Iowa,Big Ten,rushingYards,642
-2025,Iowa,Big Ten,rushingYardsOpponent,173
-2025,Iowa,Big Ten,sacks,7
-2025,Iowa,Big Ten,sacksOpponent,6
-2025,Iowa,Big Ten,tacklesForLoss,19
-2025,Iowa,Big Ten,tacklesForLossOpponent,12
-2025,Iowa,Big Ten,thirdDownConversions,25
-2025,Iowa,Big Ten,thirdDownConversionsOpponent,10
-2025,Iowa,Big Ten,thirdDowns,46
-2025,Iowa,Big Ten,thirdDownsOpponent,36
-2025,Iowa,Big Ten,totalYards,1007
-2025,Iowa,Big Ten,totalYardsOpponent,534
+2025,Iowa,Big Ten,rushingAttempts,170
+2025,Iowa,Big Ten,rushingAttemptsOpponent,108
+2025,Iowa,Big Ten,rushingTDs,10
+2025,Iowa,Big Ten,rushingTDsOpponent,5
+2025,Iowa,Big Ten,rushingYards,802
+2025,Iowa,Big Ten,rushingYardsOpponent,243
+2025,Iowa,Big Ten,sacks,10
+2025,Iowa,Big Ten,sacksOpponent,8
+2025,Iowa,Big Ten,tacklesForLoss,22
+2025,Iowa,Big Ten,tacklesForLossOpponent,15
+2025,Iowa,Big Ten,thirdDownConversions,28
+2025,Iowa,Big Ten,thirdDownConversionsOpponent,16
+2025,Iowa,Big Ten,thirdDowns,54
+2025,Iowa,Big Ten,thirdDownsOpponent,49
+2025,Iowa,Big Ten,totalYards,1353
+2025,Iowa,Big Ten,totalYardsOpponent,934
 2025,Iowa,Big Ten,turnovers,2
-2025,Iowa,Big Ten,turnoversOpponent,1
+2025,Iowa,Big Ten,turnoversOpponent,2
 2025,Iowa State,Big 12,firstDowns,81
 2025,Iowa State,Big 12,firstDownsOpponent,60
 2025,Iowa State,Big 12,fourthDownConversions,3
@@ -5113,15 +5116,17 @@ season,team,conference,statName,statValue
 2025,Oklahoma,SEC,totalYardsOpponent,544
 2025,Oklahoma,SEC,turnovers,5
 2025,Oklahoma,SEC,turnoversOpponent,0
-2025,Oklahoma State,Big 12,firstDowns,29
-2025,Oklahoma State,Big 12,firstDownsOpponent,37
-2025,Oklahoma State,Big 12,fourthDownConversions,2
-2025,Oklahoma State,Big 12,fourthDownConversionsOpponent,1
-2025,Oklahoma State,Big 12,fourthDowns,2
-2025,Oklahoma State,Big 12,fourthDownsOpponent,2
+2025,Oklahoma State,Big 12,firstDowns,52
+2025,Oklahoma State,Big 12,firstDownsOpponent,58
+2025,Oklahoma State,Big 12,fourthDownConversions,3
+2025,Oklahoma State,Big 12,fourthDownConversionsOpponent,4
+2025,Oklahoma State,Big 12,fourthDowns,6
+2025,Oklahoma State,Big 12,fourthDownsOpponent,5
 2025,Oklahoma State,Big 12,fumblesLost,0
-2025,Oklahoma State,Big 12,fumblesLostOpponent,0
-2025,Oklahoma State,Big 12,games,2
+2025,Oklahoma State,Big 12,fumblesLostOpponent,1
+2025,Oklahoma State,Big 12,fumblesRecovered,1
+2025,Oklahoma State,Big 12,fumblesRecoveredOpponent,0
+2025,Oklahoma State,Big 12,games,3
 2025,Oklahoma State,Big 12,interceptions,2
 2025,Oklahoma State,Big 12,interceptionsOpponent,1
 2025,Oklahoma State,Big 12,interceptionTDs,0
@@ -5129,48 +5134,51 @@ season,team,conference,statName,statValue
 2025,Oklahoma State,Big 12,interceptionYards,1
 2025,Oklahoma State,Big 12,interceptionYardsOpponent,56
 2025,Oklahoma State,Big 12,kickReturns,5
+2025,Oklahoma State,Big 12,kickReturnsOpponent,2
 2025,Oklahoma State,Big 12,kickReturnTDs,0
+2025,Oklahoma State,Big 12,kickReturnTDsOpponent,0
 2025,Oklahoma State,Big 12,kickReturnYards,80
-2025,Oklahoma State,Big 12,netPassingYards,299
-2025,Oklahoma State,Big 12,netPassingYardsOpponent,428
-2025,Oklahoma State,Big 12,passAttempts,49
-2025,Oklahoma State,Big 12,passAttemptsOpponent,42
-2025,Oklahoma State,Big 12,passCompletions,25
-2025,Oklahoma State,Big 12,passCompletionsOpponent,28
+2025,Oklahoma State,Big 12,kickReturnYardsOpponent,28
+2025,Oklahoma State,Big 12,netPassingYards,485
+2025,Oklahoma State,Big 12,netPassingYardsOpponent,647
+2025,Oklahoma State,Big 12,passAttempts,90
+2025,Oklahoma State,Big 12,passAttemptsOpponent,78
+2025,Oklahoma State,Big 12,passCompletions,50
+2025,Oklahoma State,Big 12,passCompletionsOpponent,51
 2025,Oklahoma State,Big 12,passesIntercepted,1
 2025,Oklahoma State,Big 12,passesInterceptedOpponent,2
 2025,Oklahoma State,Big 12,passingTDs,1
-2025,Oklahoma State,Big 12,passingTDsOpponent,4
-2025,Oklahoma State,Big 12,penalties,13
-2025,Oklahoma State,Big 12,penaltiesOpponent,13
-2025,Oklahoma State,Big 12,penaltyYards,100
-2025,Oklahoma State,Big 12,penaltyYardsOpponent,85
-2025,Oklahoma State,Big 12,possessionTime,3760
-2025,Oklahoma State,Big 12,possessionTimeOpponent,3440
-2025,Oklahoma State,Big 12,puntReturns,3
+2025,Oklahoma State,Big 12,passingTDsOpponent,5
+2025,Oklahoma State,Big 12,penalties,16
+2025,Oklahoma State,Big 12,penaltiesOpponent,17
+2025,Oklahoma State,Big 12,penaltyYards,130
+2025,Oklahoma State,Big 12,penaltyYardsOpponent,119
+2025,Oklahoma State,Big 12,possessionTime,5272
+2025,Oklahoma State,Big 12,possessionTimeOpponent,5525
+2025,Oklahoma State,Big 12,puntReturns,4
 2025,Oklahoma State,Big 12,puntReturnsOpponent,2
 2025,Oklahoma State,Big 12,puntReturnTDs,0
 2025,Oklahoma State,Big 12,puntReturnTDsOpponent,0
-2025,Oklahoma State,Big 12,puntReturnYards,17
+2025,Oklahoma State,Big 12,puntReturnYards,20
 2025,Oklahoma State,Big 12,puntReturnYardsOpponent,15
-2025,Oklahoma State,Big 12,rushingAttempts,84
-2025,Oklahoma State,Big 12,rushingAttemptsOpponent,75
-2025,Oklahoma State,Big 12,rushingTDs,2
+2025,Oklahoma State,Big 12,rushingAttempts,117
+2025,Oklahoma State,Big 12,rushingAttemptsOpponent,118
+2025,Oklahoma State,Big 12,rushingTDs,3
 2025,Oklahoma State,Big 12,rushingTDsOpponent,5
-2025,Oklahoma State,Big 12,rushingYards,271
-2025,Oklahoma State,Big 12,rushingYardsOpponent,428
+2025,Oklahoma State,Big 12,rushingYards,456
+2025,Oklahoma State,Big 12,rushingYardsOpponent,633
 2025,Oklahoma State,Big 12,sacks,4
-2025,Oklahoma State,Big 12,sacksOpponent,4
-2025,Oklahoma State,Big 12,tacklesForLoss,12
-2025,Oklahoma State,Big 12,tacklesForLossOpponent,13
-2025,Oklahoma State,Big 12,thirdDownConversions,14
-2025,Oklahoma State,Big 12,thirdDownConversionsOpponent,13
-2025,Oklahoma State,Big 12,thirdDowns,34
-2025,Oklahoma State,Big 12,thirdDownsOpponent,27
-2025,Oklahoma State,Big 12,totalYards,570
-2025,Oklahoma State,Big 12,totalYardsOpponent,856
+2025,Oklahoma State,Big 12,sacksOpponent,6
+2025,Oklahoma State,Big 12,tacklesForLoss,18
+2025,Oklahoma State,Big 12,tacklesForLossOpponent,20
+2025,Oklahoma State,Big 12,thirdDownConversions,17
+2025,Oklahoma State,Big 12,thirdDownConversionsOpponent,20
+2025,Oklahoma State,Big 12,thirdDowns,48
+2025,Oklahoma State,Big 12,thirdDownsOpponent,46
+2025,Oklahoma State,Big 12,totalYards,941
+2025,Oklahoma State,Big 12,totalYardsOpponent,1280
 2025,Oklahoma State,Big 12,turnovers,2
-2025,Oklahoma State,Big 12,turnoversOpponent,1
+2025,Oklahoma State,Big 12,turnoversOpponent,2
 2025,Old Dominion,Sun Belt,firstDowns,64
 2025,Old Dominion,Sun Belt,firstDownsOpponent,68
 2025,Old Dominion,Sun Belt,fourthDownConversions,1
@@ -5665,62 +5673,68 @@ season,team,conference,statName,statValue
 2025,Rice,American Athletic,totalYardsOpponent,1219
 2025,Rice,American Athletic,turnovers,2
 2025,Rice,American Athletic,turnoversOpponent,3
-2025,Rutgers,Big Ten,firstDowns,88
-2025,Rutgers,Big Ten,firstDownsOpponent,49
+2025,Rutgers,Big Ten,firstDowns,108
+2025,Rutgers,Big Ten,firstDownsOpponent,71
 2025,Rutgers,Big Ten,fourthDownConversions,8
 2025,Rutgers,Big Ten,fourthDownConversionsOpponent,1
-2025,Rutgers,Big Ten,fourthDowns,10
+2025,Rutgers,Big Ten,fourthDowns,11
 2025,Rutgers,Big Ten,fourthDownsOpponent,2
 2025,Rutgers,Big Ten,fumblesLost,0
 2025,Rutgers,Big Ten,fumblesLostOpponent,1
 2025,Rutgers,Big Ten,fumblesRecovered,2
 2025,Rutgers,Big Ten,fumblesRecoveredOpponent,0
-2025,Rutgers,Big Ten,games,3
-2025,Rutgers,Big Ten,interceptions,0
+2025,Rutgers,Big Ten,games,4
+2025,Rutgers,Big Ten,interceptions,1
 2025,Rutgers,Big Ten,interceptionsOpponent,2
 2025,Rutgers,Big Ten,interceptionTDs,0
+2025,Rutgers,Big Ten,interceptionTDsOpponent,0
 2025,Rutgers,Big Ten,interceptionYards,89
+2025,Rutgers,Big Ten,interceptionYardsOpponent,0
 2025,Rutgers,Big Ten,kickReturns,6
-2025,Rutgers,Big Ten,kickReturnsOpponent,5
+2025,Rutgers,Big Ten,kickReturnsOpponent,8
 2025,Rutgers,Big Ten,kickReturnTDs,0
-2025,Rutgers,Big Ten,kickReturnTDsOpponent,0
+2025,Rutgers,Big Ten,kickReturnTDsOpponent,1
 2025,Rutgers,Big Ten,kickReturnYards,125
-2025,Rutgers,Big Ten,kickReturnYardsOpponent,40
-2025,Rutgers,Big Ten,netPassingYards,889
-2025,Rutgers,Big Ten,netPassingYardsOpponent,582
-2025,Rutgers,Big Ten,passAttempts,93
-2025,Rutgers,Big Ten,passAttemptsOpponent,76
-2025,Rutgers,Big Ten,passCompletions,67
-2025,Rutgers,Big Ten,passCompletionsOpponent,44
+2025,Rutgers,Big Ten,kickReturnYardsOpponent,169
+2025,Rutgers,Big Ten,netPassingYards,1219
+2025,Rutgers,Big Ten,netPassingYardsOpponent,768
+2025,Rutgers,Big Ten,passAttempts,133
+2025,Rutgers,Big Ten,passAttemptsOpponent,94
+2025,Rutgers,Big Ten,passCompletions,91
+2025,Rutgers,Big Ten,passCompletionsOpponent,56
 2025,Rutgers,Big Ten,passesIntercepted,2
+2025,Rutgers,Big Ten,passesInterceptedOpponent,1
 2025,Rutgers,Big Ten,passingTDs,9
 2025,Rutgers,Big Ten,passingTDsOpponent,3
-2025,Rutgers,Big Ten,penalties,12
-2025,Rutgers,Big Ten,penaltiesOpponent,22
-2025,Rutgers,Big Ten,penaltyYards,94
-2025,Rutgers,Big Ten,penaltyYardsOpponent,178
-2025,Rutgers,Big Ten,possessionTime,6416
-2025,Rutgers,Big Ten,possessionTimeOpponent,4384
+2025,Rutgers,Big Ten,penalties,18
+2025,Rutgers,Big Ten,penaltiesOpponent,24
+2025,Rutgers,Big Ten,penaltyYards,144
+2025,Rutgers,Big Ten,penaltyYardsOpponent,208
+2025,Rutgers,Big Ten,possessionTime,8270
+2025,Rutgers,Big Ten,possessionTimeOpponent,6130
 2025,Rutgers,Big Ten,puntReturns,5
+2025,Rutgers,Big Ten,puntReturnsOpponent,1
 2025,Rutgers,Big Ten,puntReturnTDs,3
+2025,Rutgers,Big Ten,puntReturnTDsOpponent,0
 2025,Rutgers,Big Ten,puntReturnYards,86
-2025,Rutgers,Big Ten,rushingAttempts,124
-2025,Rutgers,Big Ten,rushingAttemptsOpponent,80
-2025,Rutgers,Big Ten,rushingTDs,6
-2025,Rutgers,Big Ten,rushingTDsOpponent,4
-2025,Rutgers,Big Ten,rushingYards,494
-2025,Rutgers,Big Ten,rushingYardsOpponent,446
-2025,Rutgers,Big Ten,sacks,4
-2025,Rutgers,Big Ten,sacksOpponent,7
-2025,Rutgers,Big Ten,tacklesForLoss,15
-2025,Rutgers,Big Ten,tacklesForLossOpponent,15
-2025,Rutgers,Big Ten,thirdDownConversions,17
-2025,Rutgers,Big Ten,thirdDownConversionsOpponent,10
-2025,Rutgers,Big Ten,thirdDowns,34
-2025,Rutgers,Big Ten,thirdDownsOpponent,28
-2025,Rutgers,Big Ten,totalYards,1383
-2025,Rutgers,Big Ten,totalYardsOpponent,1028
-2025,Rutgers,Big Ten,turnovers,0
+2025,Rutgers,Big Ten,puntReturnYardsOpponent,43
+2025,Rutgers,Big Ten,rushingAttempts,154
+2025,Rutgers,Big Ten,rushingAttemptsOpponent,118
+2025,Rutgers,Big Ten,rushingTDs,10
+2025,Rutgers,Big Ten,rushingTDsOpponent,8
+2025,Rutgers,Big Ten,rushingYards,564
+2025,Rutgers,Big Ten,rushingYardsOpponent,606
+2025,Rutgers,Big Ten,sacks,6
+2025,Rutgers,Big Ten,sacksOpponent,10
+2025,Rutgers,Big Ten,tacklesForLoss,18
+2025,Rutgers,Big Ten,tacklesForLossOpponent,18
+2025,Rutgers,Big Ten,thirdDownConversions,23
+2025,Rutgers,Big Ten,thirdDownConversionsOpponent,13
+2025,Rutgers,Big Ten,thirdDowns,47
+2025,Rutgers,Big Ten,thirdDownsOpponent,36
+2025,Rutgers,Big Ten,totalYards,1783
+2025,Rutgers,Big Ten,totalYardsOpponent,1374
+2025,Rutgers,Big Ten,turnovers,1
 2025,Rutgers,Big Ten,turnoversOpponent,3
 2025,Sam Houston,Conference USA,firstDowns,53
 2025,Sam Houston,Conference USA,firstDownsOpponent,70
@@ -6951,68 +6965,68 @@ season,team,conference,statName,statValue
 2025,Tulane,American Athletic,totalYardsOpponent,1110
 2025,Tulane,American Athletic,turnovers,2
 2025,Tulane,American Athletic,turnoversOpponent,8
-2025,Tulsa,American Athletic,firstDowns,73
-2025,Tulsa,American Athletic,firstDownsOpponent,57
-2025,Tulsa,American Athletic,fourthDownConversions,8
-2025,Tulsa,American Athletic,fourthDownConversionsOpponent,4
-2025,Tulsa,American Athletic,fourthDowns,12
-2025,Tulsa,American Athletic,fourthDownsOpponent,7
-2025,Tulsa,American Athletic,fumblesLost,1
+2025,Tulsa,American Athletic,firstDowns,94
+2025,Tulsa,American Athletic,firstDownsOpponent,80
+2025,Tulsa,American Athletic,fourthDownConversions,11
+2025,Tulsa,American Athletic,fourthDownConversionsOpponent,5
+2025,Tulsa,American Athletic,fourthDowns,15
+2025,Tulsa,American Athletic,fourthDownsOpponent,11
+2025,Tulsa,American Athletic,fumblesLost,2
 2025,Tulsa,American Athletic,fumblesLostOpponent,2
 2025,Tulsa,American Athletic,fumblesRecovered,2
-2025,Tulsa,American Athletic,fumblesRecoveredOpponent,1
-2025,Tulsa,American Athletic,games,3
+2025,Tulsa,American Athletic,fumblesRecoveredOpponent,2
+2025,Tulsa,American Athletic,games,4
 2025,Tulsa,American Athletic,interceptions,3
 2025,Tulsa,American Athletic,interceptionsOpponent,3
 2025,Tulsa,American Athletic,interceptionTDs,0
 2025,Tulsa,American Athletic,interceptionTDsOpponent,0
 2025,Tulsa,American Athletic,interceptionYards,4
 2025,Tulsa,American Athletic,interceptionYardsOpponent,11
-2025,Tulsa,American Athletic,kickReturns,5
+2025,Tulsa,American Athletic,kickReturns,7
 2025,Tulsa,American Athletic,kickReturnsOpponent,4
 2025,Tulsa,American Athletic,kickReturnTDs,0
 2025,Tulsa,American Athletic,kickReturnTDsOpponent,0
-2025,Tulsa,American Athletic,kickReturnYards,119
+2025,Tulsa,American Athletic,kickReturnYards,147
 2025,Tulsa,American Athletic,kickReturnYardsOpponent,108
-2025,Tulsa,American Athletic,netPassingYards,660
-2025,Tulsa,American Athletic,netPassingYardsOpponent,486
-2025,Tulsa,American Athletic,passAttempts,111
-2025,Tulsa,American Athletic,passAttemptsOpponent,74
-2025,Tulsa,American Athletic,passCompletions,71
-2025,Tulsa,American Athletic,passCompletionsOpponent,47
+2025,Tulsa,American Athletic,netPassingYards,879
+2025,Tulsa,American Athletic,netPassingYardsOpponent,672
+2025,Tulsa,American Athletic,passAttempts,147
+2025,Tulsa,American Athletic,passAttemptsOpponent,115
+2025,Tulsa,American Athletic,passCompletions,94
+2025,Tulsa,American Athletic,passCompletionsOpponent,72
 2025,Tulsa,American Athletic,passesIntercepted,3
 2025,Tulsa,American Athletic,passesInterceptedOpponent,3
-2025,Tulsa,American Athletic,passingTDs,4
+2025,Tulsa,American Athletic,passingTDs,5
 2025,Tulsa,American Athletic,passingTDsOpponent,3
-2025,Tulsa,American Athletic,penalties,20
-2025,Tulsa,American Athletic,penaltiesOpponent,15
-2025,Tulsa,American Athletic,penaltyYards,122
-2025,Tulsa,American Athletic,penaltyYardsOpponent,129
-2025,Tulsa,American Athletic,possessionTime,5211
-2025,Tulsa,American Athletic,possessionTimeOpponent,5589
+2025,Tulsa,American Athletic,penalties,24
+2025,Tulsa,American Athletic,penaltiesOpponent,18
+2025,Tulsa,American Athletic,penaltyYards,156
+2025,Tulsa,American Athletic,penaltyYardsOpponent,159
+2025,Tulsa,American Athletic,possessionTime,7296
+2025,Tulsa,American Athletic,possessionTimeOpponent,7101
 2025,Tulsa,American Athletic,puntReturns,4
-2025,Tulsa,American Athletic,puntReturnsOpponent,5
+2025,Tulsa,American Athletic,puntReturnsOpponent,6
 2025,Tulsa,American Athletic,puntReturnTDs,0
 2025,Tulsa,American Athletic,puntReturnTDsOpponent,0
 2025,Tulsa,American Athletic,puntReturnYards,36
-2025,Tulsa,American Athletic,puntReturnYardsOpponent,30
-2025,Tulsa,American Athletic,rushingAttempts,113
-2025,Tulsa,American Athletic,rushingAttemptsOpponent,129
+2025,Tulsa,American Athletic,puntReturnYardsOpponent,33
+2025,Tulsa,American Athletic,rushingAttempts,156
+2025,Tulsa,American Athletic,rushingAttemptsOpponent,162
 2025,Tulsa,American Athletic,rushingTDs,5
-2025,Tulsa,American Athletic,rushingTDsOpponent,6
-2025,Tulsa,American Athletic,rushingYards,549
-2025,Tulsa,American Athletic,rushingYardsOpponent,526
-2025,Tulsa,American Athletic,sacks,8
+2025,Tulsa,American Athletic,rushingTDsOpponent,7
+2025,Tulsa,American Athletic,rushingYards,754
+2025,Tulsa,American Athletic,rushingYardsOpponent,711
+2025,Tulsa,American Athletic,sacks,10
 2025,Tulsa,American Athletic,sacksOpponent,4
-2025,Tulsa,American Athletic,tacklesForLoss,20
-2025,Tulsa,American Athletic,tacklesForLossOpponent,14
-2025,Tulsa,American Athletic,thirdDownConversions,18
-2025,Tulsa,American Athletic,thirdDownConversionsOpponent,23
-2025,Tulsa,American Athletic,thirdDowns,47
-2025,Tulsa,American Athletic,thirdDownsOpponent,47
-2025,Tulsa,American Athletic,totalYards,1209
-2025,Tulsa,American Athletic,totalYardsOpponent,1012
-2025,Tulsa,American Athletic,turnovers,4
+2025,Tulsa,American Athletic,tacklesForLoss,27
+2025,Tulsa,American Athletic,tacklesForLossOpponent,20
+2025,Tulsa,American Athletic,thirdDownConversions,25
+2025,Tulsa,American Athletic,thirdDownConversionsOpponent,26
+2025,Tulsa,American Athletic,thirdDowns,66
+2025,Tulsa,American Athletic,thirdDownsOpponent,61
+2025,Tulsa,American Athletic,totalYards,1633
+2025,Tulsa,American Athletic,totalYardsOpponent,1383
+2025,Tulsa,American Athletic,turnovers,5
 2025,Tulsa,American Athletic,turnoversOpponent,5
 2025,UAB,American Athletic,firstDowns,73
 2025,UAB,American Athletic,firstDownsOpponent,67
