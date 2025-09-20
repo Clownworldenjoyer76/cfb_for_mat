@@ -34,18 +34,28 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: |
           set -e
-          echo "==> Fetching game scores from CFBD…"
+          echo "==> Fetching game scores from CFBD (per week)…"
           python scripts/fetch_game_scores_cfbd.py
           echo "==> Preview of data/game_scores.csv"
           head -n 20 data/game_scores.csv || true
-          echo "==> Row count:"
+          echo "==> Row count (raw):"
           wc -l data/game_scores.csv || true
+
+      - name: Clean scores to unique game IDs
+        run: |
+          set -e
+          python scripts/clean_scores_unique_by_id.py
+          echo "==> Preview of data/game_scores_clean.csv"
+          head -n 20 data/game_scores_clean.csv || true
+          echo "==> Row count (clean):"
+          wc -l data/game_scores_clean.csv || true
 
       - name: Execute regression script
         env:
           TARGET_COL: points_scored
           EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
-          SCORES_CSV: data/game_scores.csv
+          # IMPORTANT: use the cleaned, unique-by-id file
+          SCORES_CSV: data/game_scores_clean.csv
         run: |
           set -e
           echo "==> Running regression with TARGET_COL=${TARGET_COL}"
@@ -61,21 +71,21 @@ jobs:
           echo '--- data/model_regression_metrics.csv ---'
           if [ -f data/model_regression_metrics.csv ]; then
             cat data/model_regression_metrics.csv
-          else
+          else:
             echo "data/model_regression_metrics.csv not found."
           fi
 
           echo '--- data/model_regression_coeffs.csv (first 40 rows) ---'
           if [ -f data/model_regression_coeffs.csv ]; then
             head -n 40 data/model_regression_coeffs.csv
-          else
+          else:
             echo "data/model_regression_coeffs.csv not found."
           fi
 
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
-          else
+          else:
             echo "models/ directory not found."
           fi
 
@@ -91,6 +101,6 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No changes to commit (artifacts unchanged)."
-          else
+          else:
             git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
             git push
