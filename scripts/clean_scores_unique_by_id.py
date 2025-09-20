@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-Clean CFBD scores to ensure one row per game ID, for safe merging in regression.
+Clean CFBD scores so merges are many-to-one for the regression step.
 
-Input  : data/game_scores.csv
-         (columns from CFBD /games: id,season,week,home_team,away_team,home_points,away_points)
-Output : data/game_scores_clean.csv
-         - only finished games (numeric scores)
-         - deduplicated by id (keep the first complete record)
-         - stable, deterministic ordering
+Input : data/game_scores.csv
+Cols  : id,season,week,home_team,away_team,home_points,away_points
+Output: data/game_scores_clean.csv
+       - finished games only (numeric scores)
+       - add game_id column (copy of id) for 1-key joins
+       - drop duplicates by id
+       - drop duplicates by (season,week,home_team,away_team)
 """
 
 from pathlib import Path
@@ -22,25 +23,30 @@ def main():
 
     df = pd.read_csv(IN_CSV)
 
-    # Keep only rows with numeric scores (finished games)
+    # keep finished games
     df["home_points"] = pd.to_numeric(df["home_points"], errors="coerce")
     df["away_points"] = pd.to_numeric(df["away_points"], errors="coerce")
     df = df.dropna(subset=["home_points", "away_points"])
 
-    # Basic sanity trims
-    keep_cols = ["id","season","week","home_team","away_team","home_points","away_points"]
-    df = df[keep_cols].copy()
+    # expected columns only
+    df = df[["id","season","week","home_team","away_team","home_points","away_points"]].copy()
+    df["game_id"] = df["id"]
 
-    # Deduplicate by game id (CFBD ids should be unique; if duplicates exist, keep the first)
     before = len(df)
-    df = df.sort_values(["season","week","id"]).drop_duplicates(subset=["id"], keep="first")
-    after = len(df)
 
-    # Write out
+    # dedup by id
+    df = df.sort_values(["season","week","id"]).drop_duplicates(subset=["id"], keep="first")
+    after_id = len(df)
+
+    # dedup by composite keys used by the fallback join
+    df = df.drop_duplicates(subset=["season","week","home_team","away_team"], keep="first")
+    after_combo = len(df)
+
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(OUT_CSV, index=False)
 
-    print(f"Cleaned scores: input_rows={before}, unique_game_ids={after}, wrote={OUT_CSV}")
+    print(f"Cleaned scores:"
+          f" input_rows={before}, unique_by_id={after_id}, unique_by_combo={after_combo}, wrote={OUT_CSV}")
 
 if __name__ == "__main__":
     main()
