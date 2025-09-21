@@ -103,7 +103,6 @@ def attach_outcome_targets(df_raw: pd.DataFrame) -> pd.DataFrame:
 
     # Ensure points_allowed exists; compute if possible
     if "points_allowed" not in s.columns:
-        # Try derive from wide columns if present
         hp = cmap.get("home_points")
         ap = cmap.get("away_points")
         is_home_col = cmap.get("is_home")
@@ -164,7 +163,6 @@ def select_target_column(df: pd.DataFrame, target_override: str) -> str:
     for c in df.columns:
         if c.lower() == target_override.lower():
             return c
-    # common aliases for outcomes
     for alias in ("points_scored","points","pts","score","team_points","points_for","pf","margin"):
         for c in df.columns:
             if c.lower() == alias:
@@ -176,7 +174,7 @@ def exclude_leaky_features(X: pd.DataFrame, target_col: str, pattern: str | None
     if pattern:
         rx = re.compile(pattern)
         for col in list(X.columns):
-            if col == target_col:  # never drop target itself here
+            if col == target_col:
                 continue
             if rx.search(col):
                 dropped.append(col)
@@ -186,7 +184,6 @@ def exclude_leaky_features(X: pd.DataFrame, target_col: str, pattern: str | None
 def build_features(df: pd.DataFrame, target_col: str):
     y = pd.to_numeric(df[target_col], errors="coerce")
 
-    # Non-features / leakage
     drop_cols = {target_col, "home_points","away_points","points_allowed","margin"}
     meta_like = {"game_id","start_date","wx_start_date"}
     drop_cols |= (set(df.columns) & meta_like)
@@ -275,7 +272,7 @@ def main():
     lasso_alphas = np.logspace(-3, 1, 9)
     models = {
         "linear": Pipeline([("scaler", StandardScaler(with_mean=False)), ("lin", LinearRegression())]),
-        "ridge":  Pipeline([("scaler", StandardScaler(with_mean=False)), ("rid", RidgeCV(alphas=ridge_alphas, store_cv_values=False))]),
+        "ridge":  Pipeline([("scaler", StandardScaler(with_mean=False)), ("rid", RidgeCV(alphas=ridge_alphas))]),  # removed store_cv_values
         "lasso":  Pipeline([("scaler", StandardScaler(with_mean=False)), ("las", LassoCV(alphas=lasso_alphas, max_iter=5000, cv=5, n_jobs=None))]),
     }
 
