@@ -1,73 +1,383 @@
 [
   {
+    "game_id": "401762471",
+    "kickoff_utc": "2025-09-25T23:30:00.000Z",
+    "home": "East Carolina",
+    "away": "Army",
+    "total": 52.5,
+    "home_spread": -3.5,
+    "home_pred": 28.0,
+    "away_pred": 24.5
+  },
+  {
     "game_id": "401754543",
     "kickoff_utc": "2025-09-26T23:00:00.000Z",
     "home": "Virginia",
     "away": "Florida State",
-    "total": 51.5,
-    "home_spread": 7.5,
-    "home_pred": 22.0,
-    "away_pred": 29.5
+    "total": 57.5,
+    "home_spread": 7.0,
+    "home_pred": 25.2,
+    "away_pred": 32.2
+  },
+  {
+    "game_id": "401756902",
+    "kickoff_utc": "2025-09-27T01:00:00.000Z",
+    "home": "Arizona State",
+    "away": "TCU",
+    "total": 55.5,
+    "home_spread": -2.5,
+    "home_pred": 29.0,
+    "away_pred": 26.5
+  },
+  {
+    "game_id": "401752939",
+    "kickoff_utc": "2025-09-27T02:30:00.000Z",
+    "home": "Oregon State",
+    "away": "Houston",
+    "total": 48.5,
+    "home_spread": 12.5,
+    "home_pred": 18.0,
+    "away_pred": 30.5
+  },
+  {
+    "game_id": "401754546",
+    "kickoff_utc": "2025-09-27T16:00:00.000Z",
+    "home": "Wake Forest",
+    "away": "Georgia Tech",
+    "total": 53.5,
+    "home_spread": 14.5,
+    "home_pred": 19.5,
+    "away_pred": 34.0
   },
   {
     "game_id": "401752717",
     "kickoff_utc": "2025-09-27T16:00:00.000Z",
     "home": "Arkansas",
     "away": "Notre Dame",
-    "total": 58.5,
-    "home_spread": 6.5,
-    "home_pred": 26.0,
-    "away_pred": 32.5
+    "total": 64.5,
+    "home_spread": 6.0,
+    "home_pred": 29.2,
+    "away_pred": 35.2
+  },
+  {
+    "game_id": "401761617",
+    "kickoff_utc": "2025-09-27T16:00:00.000Z",
+    "home": "North Texas",
+    "away": "South Alabama",
+    "total": 63.5,
+    "home_spread": -12.5,
+    "home_pred": 38.0,
+    "away_pred": 25.5
+  },
+  {
+    "game_id": "401762825",
+    "kickoff_utc": "2025-09-27T16:00:00.000Z",
+    "home": "Ohio",
+    "away": "Bowling Green",
+    "total": 50.5,
+    "home_spread": -10.5,
+    "home_pred": 30.5,
+    "away_pred": 20.0
   },
   {
     "game_id": "401752850",
     "kickoff_utc": "2025-09-27T16:00:00.000Z",
     "home": "Illinois",
     "away": "USC",
-    "total": 57.5,
-    "home_spread": 4.5,
+    "total": 59.5,
+    "home_spread": 6.5,
     "home_pred": 26.5,
-    "away_pred": 31.0
+    "away_pred": 33.0
   },
   {
-    "game_id": "401752719",
-    "kickoff_utc": "2025-09-27T19:30:00.000Z",
-    "home": "Ole Miss",
-    "away": "LSU",
-    "total": 54.5,
-    "home_spread": -1.5,
-    "home_pred": 28.0,
-    "away_pred": 26.5
+    "game_id": "401756906",
+    "kickoff_utc": "2025-09-27T16:00:00.000Z",
+    "home": "Kansas State",
+    "away": "UCF",
+    "total": 49.5,
+    "home_spread": -5.5,
+    "home_pred": 27.5,
+    "away_pred": 22.0
   },
   {
-    "game_id": "401752724",
-    "kickoff_utc": "2025-09-27T19:30:00.000Z",
-    "home": "Texas A&M",
-    "away": "Auburn",
-    "total": 46.5,
-    "home_spread": -6.5,
-    "home_pred": 26.5,
-    "away_pred": 20.0
+    "game_id": "401756905",
+    "kickoff_utc": "2025-09-27T16:00:00.000Z",
+    "home": "Kansas",
+    "away": "Cincinnati",
+    "total": 55.5,
+    "home_spread": -6.0,
+    "home_pred": 30.8,
+    "away_pred": 24.8
   },
   {
-    "game_id": "401752853",
-    "kickoff_utc": "2025-09-27T19:30:00.000Z",
-    "home": "Iowa",
-    "away": "Indiana",
+    "game_id": "401754547",
+    "kickoff_utc": "2025-09-27T16:00:00.000Z",
+    "home": "Pittsburgh",
+    "away": "Louisville",
+    "total": 55.5,
+    "home_spread": 3.0,
+    "home_pred": 26.2,
+    "away_pred": 29.2
+  },
+  {
+    "game_id": "401754545",
+    "kickoff_utc": "2025-09-27T16:00:00.000Z",
+    "home": "Syracuse",
+    "away": "Duke",
+    "total": 60.5,
+    "home_spread": 5.5,
+    "home_pred": 27.5,
+    "away_pred": 33.0
+  },
+  {
+    "game_id": "401752849",
+    "kickoff_utc": "2025-09-27T16:00:00.000Z",
+    "home": "Minnesota",
+    "away": "Rutgers",
     "total": 50.5,
-    "home_spread": 2.5,
-    "home_pred": 24.0,
+    "home_spread": -5.5,
+    "home_pred": 28.0,
+    "away_pred": 22.5
+  },
+  {
+    "game_id": "401752725",
+    "kickoff_utc": "2025-09-27T16:45:00.000Z",
+    "home": "Vanderbilt",
+    "away": "Utah State",
+    "total": 59.5,
+    "home_spread": -22.5,
+    "home_pred": 41.0,
+    "away_pred": 18.5
+  },
+  {
+    "game_id": "401762826",
+    "kickoff_utc": "2025-09-27T17:00:00.000Z",
+    "home": "Central Michigan",
+    "away": "Eastern Michigan",
+    "total": 53.5,
+    "home_spread": -5.5,
+    "home_pred": 29.5,
+    "away_pred": 24.0
+  },
+  {
+    "game_id": "401761614",
+    "kickoff_utc": "2025-09-27T17:30:00.000Z",
+    "home": "James Madison",
+    "away": "Georgia Southern",
+    "total": 54.5,
+    "home_spread": -16.5,
+    "home_pred": 35.5,
+    "away_pred": 19.0
+  },
+  {
+    "game_id": "401761616",
+    "kickoff_utc": "2025-09-27T19:00:00.000Z",
+    "home": "UL Monroe",
+    "away": "Arkansas State",
+    "total": 56.5,
+    "home_spread": -3.5,
+    "home_pred": 30.0,
     "away_pred": 26.5
+  },
+  {
+    "game_id": "401756907",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Oklahoma State",
+    "away": "Baylor",
+    "total": 59.5,
+    "home_spread": 20.5,
+    "home_pred": 19.5,
+    "away_pred": 40.0
   },
   {
     "game_id": "401752852",
     "kickoff_utc": "2025-09-27T19:30:00.000Z",
     "home": "Washington",
     "away": "Ohio State",
+    "total": 52.5,
+    "home_spread": 8.5,
+    "home_pred": 22.0,
+    "away_pred": 30.5
+  },
+  {
+    "game_id": "401752853",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Iowa",
+    "away": "Indiana",
     "total": 48.5,
-    "home_spread": 10.5,
-    "home_pred": 19.0,
-    "away_pred": 29.5
+    "home_spread": 7.5,
+    "home_pred": 20.5,
+    "away_pred": 28.0
+  },
+  {
+    "game_id": "401752719",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Ole Miss",
+    "away": "LSU",
+    "total": 55.5,
+    "home_spread": -2.5,
+    "home_pred": 29.0,
+    "away_pred": 26.5
+  },
+  {
+    "game_id": "401756908",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "West Virginia",
+    "away": "Utah",
+    "total": 49.5,
+    "home_spread": 10.0,
+    "home_pred": 19.8,
+    "away_pred": 29.8
+  },
+  {
+    "game_id": "401762824",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Toledo",
+    "away": "Akron",
+    "total": 48.5,
+    "home_spread": -20.5,
+    "home_pred": 34.5,
+    "away_pred": 14.0
+  },
+  {
+    "game_id": "401760380",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Northern Illinois",
+    "away": "San Diego State",
+    "total": 43.5,
+    "home_spread": 3.0,
+    "home_pred": 20.2,
+    "away_pred": 23.2
+  },
+  {
+    "game_id": "401762473",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Navy",
+    "away": "Rice",
+    "total": 45.5,
+    "home_spread": -14.5,
+    "home_pred": 30.0,
+    "away_pred": 15.5
+  },
+  {
+    "game_id": "401757170",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Buffalo",
+    "away": "UConn",
+    "total": 51.5,
+    "home_spread": 2.5,
+    "home_pred": 24.5,
+    "away_pred": 27.0
+  },
+  {
+    "game_id": "401752724",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Texas A&M",
+    "away": "Auburn",
+    "total": 52.5,
+    "home_spread": -6.5,
+    "home_pred": 29.5,
+    "away_pred": 23.0
+  },
+  {
+    "game_id": "401752851",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Northwestern",
+    "away": "UCLA",
+    "total": 45.5,
+    "home_spread": -6.5,
+    "home_pred": 26.0,
+    "away_pred": 19.5
+  },
+  {
+    "game_id": "401754544",
+    "kickoff_utc": "2025-09-27T19:30:00.000Z",
+    "home": "Boston College",
+    "away": "California",
+    "total": 51.5,
+    "home_spread": -6.5,
+    "home_pred": 29.0,
+    "away_pred": 22.5
+  },
+  {
+    "game_id": "401762474",
+    "kickoff_utc": "2025-09-27T20:00:00.000Z",
+    "home": "Tulsa",
+    "away": "Tulane",
+    "total": 53.5,
+    "home_spread": 13.5,
+    "home_pred": 20.0,
+    "away_pred": 33.5
+  },
+  {
+    "game_id": "401757274",
+    "kickoff_utc": "2025-09-27T20:00:00.000Z",
+    "home": "New Mexico",
+    "away": "New Mexico State",
+    "total": 54.5,
+    "home_spread": -14.0,
+    "home_pred": 34.2,
+    "away_pred": 20.2
+  },
+  {
+    "game_id": "401760378",
+    "kickoff_utc": "2025-09-27T20:10:00.000Z",
+    "home": "Air Force",
+    "away": "Hawai'i",
+    "total": 53.5,
+    "home_spread": -4.5,
+    "home_pred": 29.0,
+    "away_pred": 24.5
+  },
+  {
+    "game_id": "401752720",
+    "kickoff_utc": "2025-09-27T20:15:00.000Z",
+    "home": "Mississippi State",
+    "away": "Tennessee",
+    "total": 62.5,
+    "home_spread": 7.5,
+    "home_pred": 27.5,
+    "away_pred": 35.0
+  },
+  {
+    "game_id": "401757270",
+    "kickoff_utc": "2025-09-27T22:00:00.000Z",
+    "home": "Kennesaw State",
+    "away": "Middle Tennessee",
+    "total": 50.5,
+    "home_spread": -7.0,
+    "home_pred": 28.8,
+    "away_pred": 21.8
+  },
+  {
+    "game_id": "401757271",
+    "kickoff_utc": "2025-09-27T22:00:00.000Z",
+    "home": "Old Dominion",
+    "away": "Liberty",
+    "total": 51.5,
+    "home_spread": -16.5,
+    "home_pred": 34.0,
+    "away_pred": 17.5
+  },
+  {
+    "game_id": "401757269",
+    "kickoff_utc": "2025-09-27T23:00:00.000Z",
+    "home": "Southern Miss",
+    "away": "Jacksonville State",
+    "total": 57.5,
+    "home_spread": -4.0,
+    "home_pred": 30.8,
+    "away_pred": 26.8
+  },
+  {
+    "game_id": "401757273",
+    "kickoff_utc": "2025-09-27T23:00:00.000Z",
+    "home": "Missouri State",
+    "away": "Western Kentucky",
+    "total": 59.5,
+    "home_spread": 5.5,
+    "home_pred": 27.0,
+    "away_pred": 32.5
   },
   {
     "game_id": "401756904",
@@ -80,14 +390,54 @@
     "away_pred": 21.5
   },
   {
+    "game_id": "401762472",
+    "kickoff_utc": "2025-09-27T23:00:00.000Z",
+    "home": "Florida Atlantic",
+    "away": "Memphis",
+    "total": 61.5,
+    "home_spread": 13.5,
+    "home_pred": 24.0,
+    "away_pred": 37.5
+  },
+  {
+    "game_id": "401754548",
+    "kickoff_utc": "2025-09-27T23:00:00.000Z",
+    "home": "NC State",
+    "away": "Virginia Tech",
+    "total": 57.5,
+    "home_spread": -10.5,
+    "home_pred": 34.0,
+    "away_pred": 23.5
+  },
+  {
     "game_id": "401752854",
     "kickoff_utc": "2025-09-27T23:30:00.000Z",
     "home": "Penn State",
     "away": "Oregon",
-    "total": 52.5,
-    "home_spread": -3.0,
-    "home_pred": 27.8,
-    "away_pred": 24.8
+    "total": 53.5,
+    "home_spread": -3.5,
+    "home_pred": 28.5,
+    "away_pred": 25.0
+  },
+  {
+    "game_id": "401752950",
+    "kickoff_utc": "2025-09-27T23:30:00.000Z",
+    "home": "Colorado State",
+    "away": "Washington State",
+    "total": 50.5,
+    "home_spread": -4.5,
+    "home_pred": 27.5,
+    "away_pred": 23.0
+  },
+  {
+    "game_id": "401760379",
+    "kickoff_utc": "2025-09-27T23:30:00.000Z",
+    "home": "Boise State",
+    "away": "App State",
+    "total": 60.5,
+    "home_spread": -17.5,
+    "home_pred": 39.0,
+    "away_pred": 21.5
   },
   {
     "game_id": "401752718",
@@ -95,8 +445,68 @@
     "home": "Georgia",
     "away": "Alabama",
     "total": 53.5,
-    "home_spread": -3.5,
-    "home_pred": 28.5,
-    "away_pred": 25.0
+    "home_spread": -3.0,
+    "home_pred": 28.2,
+    "away_pred": 25.2
+  },
+  {
+    "game_id": "401754549",
+    "kickoff_utc": "2025-09-27T23:30:00.000Z",
+    "home": "Stanford",
+    "away": "San Jos\u00e9 State",
+    "total": 49.5,
+    "home_spread": -2.5,
+    "home_pred": 26.0,
+    "away_pred": 23.5
+  },
+  {
+    "game_id": "401752721",
+    "kickoff_utc": "2025-09-27T23:30:00.000Z",
+    "home": "Missouri",
+    "away": "Massachusetts",
+    "total": 55.5,
+    "home_spread": -43.5,
+    "home_pred": 49.5,
+    "away_pred": 6.0
+  },
+  {
+    "game_id": "401752722",
+    "kickoff_utc": "2025-09-27T23:45:00.000Z",
+    "home": "South Carolina",
+    "away": "Kentucky",
+    "total": 47.5,
+    "home_spread": -6.5,
+    "home_pred": 27.0,
+    "away_pred": 20.5
+  },
+  {
+    "game_id": "401761615",
+    "kickoff_utc": "2025-09-28T00:00:00.000Z",
+    "home": "Louisiana",
+    "away": "Marshall",
+    "total": 46.5,
+    "home_spread": -2.5,
+    "home_pred": 24.5,
+    "away_pred": 22.0
+  },
+  {
+    "game_id": "401757272",
+    "kickoff_utc": "2025-09-28T01:00:00.000Z",
+    "home": "UTEP",
+    "away": "Louisiana Tech",
+    "total": 48.5,
+    "home_spread": 4.0,
+    "home_pred": 22.2,
+    "away_pred": 26.2
+  },
+  {
+    "game_id": "401756903",
+    "kickoff_utc": "2025-09-28T02:15:00.000Z",
+    "home": "Colorado",
+    "away": "BYU",
+    "total": 47.5,
+    "home_spread": 6.5,
+    "home_pred": 20.5,
+    "away_pred": 27.0
   }
 ]
