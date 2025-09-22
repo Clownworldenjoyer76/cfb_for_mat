@@ -1,12 +1,17 @@
 name: Train ML Models (CFB)
 
 on:
-  workflow_dispatch:        # manual trigger
-  # schedule:               # optional
-  #   - cron: "15 17 * * 2"  # Tuesdays 17:15 UTC
+  workflow_dispatch:        # allow manual trigger
+  schedule:                 # automatic weekly run (after regression)
+    - cron: "15 17 * * 2"   # 17:15 UTC = 12:15 PM US/Eastern (Tuesdays)
 
 permissions:
   contents: write
+
+# Prevent overlapping runs of this workflow
+concurrency:
+  group: train-ml-models
+  cancel-in-progress: false
 
 jobs:
   train-ml:
@@ -64,28 +69,28 @@ jobs:
           echo '--- logs_ml_models.txt (tail) ---'
           if [ -f logs_ml_models.txt ]; then
             tail -n 200 logs_ml_models.txt
-          else
+          else:
             echo "logs_ml_models.txt not found."
           fi
 
           echo '--- data/ml_model_metrics.csv ---'
           if [ -f data/ml_model_metrics.csv ]; then
             cat data/ml_model_metrics.csv
-          else
+          else:
             echo "data/ml_model_metrics.csv not found."
           fi
 
           echo '--- data/ml_feature_importance.csv (head) ---'
           if [ -f data/ml_feature_importance.csv ]; then
             head -n 40 data/ml_feature_importance.csv
-          else
+          else:
             echo "data/ml_feature_importance.csv not found."
           fi
 
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
-          else
+          else:
             echo "models/ directory not found."
           fi
 
