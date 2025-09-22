@@ -1,7 +1,15 @@
 model_rows_total=7298
 matched_exact=2176
 unmatched_exact=5122
+  unmatched_missing_game_id=5090
+  unmatched_team_mismatch=32
+  of_team_mismatch__would_match_by_normalization=0
 of_unmatched__would_match_by_normalization=0
-
 unmatched_exact_csv=data/diagnostics/unmatched_exact.csv
+unmatched_missing_game_id_csv=data/diagnostics/unmatched_missing_game_id.csv
+unmatched_team_mismatch_csv=data/diagnostics/unmatched_team_mismatch.csv
+unmatched_team_mismatch_would_normalize_csv=data/diagnostics/unmatched_team_mismatch_would_normalize.csv
 unmatched_with_norm_help_csv=data/diagnostics/unmatched_with_norm_help.csv
+top_missing_game_ids_csv=data/diagnostics/top_missing_game_ids.csv
+top_unmatched_teams_csv=data/diagnostics/top_unmatched_teams.csv
+unmatched_by_season_csv=data/diagnostics/unmatched_by_season.csv
