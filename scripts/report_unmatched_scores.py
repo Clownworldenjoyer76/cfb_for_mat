@@ -109,6 +109,7 @@ def main():
         .rename(columns={"points_scored":"points_scored_by_norm"})
     )
 
+    # Map normalization help back to (game_id, team) space
     help_norm = unmatched_exact.merge(
         joined_norm[["game_id","team","points_scored_by_norm"]],
         on=["game_id","team"],
@@ -119,7 +120,6 @@ def main():
     unmatched_with_norm_help.to_csv(unmatched_with_norm_help_path, index=False)
 
     # ---------- Classification: missing game_id vs team mismatch ----------
-    # Does the game_id exist in scores at all?
     gids_in_scores = set(scores["game_id"].dropna().unique().tolist())
     missing_gid_mask = ~unmatched_exact["game_id"].isin(gids_in_scores)
 
@@ -127,13 +127,15 @@ def main():
     unmatched_team_mismatch = unmatched_exact[~missing_gid_mask].copy()
 
     # Of the team mismatches, which would match after normalization?
-    would_norm_mask = unmatched_team_mismatch.merge(
+    # NOTE: we avoid misaligned boolean masks by filtering directly on a merged frame.
+    team_mismatch_norm_merge = unmatched_team_mismatch.merge(
         unmatched_with_norm_help[["game_id","team","points_scored_by_norm"]],
         on=["game_id","team"],
-        how="left",
-    )["points_scored_by_norm"].notna()
-
-    unmatched_team_mismatch_would_norm = unmatched_team_mismatch[would_norm_mask].copy()
+        how="left"
+    )
+    unmatched_team_mismatch_would_norm = team_mismatch_norm_merge[
+        team_mismatch_norm_merge["points_scored_by_norm"].notna()
+    ].copy()
 
     # ---------- Write classified CSVs ----------
     path_missing_gid = OUT_DIR / "unmatched_missing_game_id.csv"
