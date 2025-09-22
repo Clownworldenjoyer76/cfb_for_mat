@@ -1,181 +1,125 @@
 #!/usr/bin/env python3
 """
-Fetch per-game scores for all seasons present in data/modeling_dataset.csv
-and write data/game_scores.csv with columns:
-  id,season,week,home_team,away_team,home_points,away_points
+Fetch CFBD game scores for ALL (season, week) pairs present in data/modeling_dataset.csv,
+so that every (game_id, team) used by the modeling dataset can be matched.
 
-Source: CollegeFootballData /games endpoint.
-Requires env CFBD_API_KEY (GitHub Actions secret).
+Output: data/game_scores.csv with columns:
+  id, season, week, home_team, away_team, home_points, away_points
 
-Notes:
-- CFBD uses camelCase keys: homePoints / awayPoints, homeTeam / awayTeam.
-- We fetch week-by-week (regular + postseason) with retries and timeouts.
-- If we see games but no finished scores, we dump a raw JSON sample to
-  data/debug_cfbd_week_sample.json and print a truncated preview to the log.
+Requires env:
+  CFBD_API_KEY
 """
+
+from __future__ import annotations
 
 import os
 import sys
 import time
-import json
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, Any, List
 
-import pandas as pd
 import requests
+import pandas as pd
 
-INPUT_DATASET = Path("data/modeling_dataset.csv")
-OUT_CSV       = Path("data/game_scores.csv")
-DEBUG_JSON    = Path("data/debug_cfbd_week_sample.json")
-API_BASE      = "https://api.collegefootballdata.com/games"
+MODEL_CSV  = Path("data/modeling_dataset.csv")
+OUT_CSV    = Path("data/game_scores.csv")
 
-def die(code: int, msg: str):
+CFBD_API_KEY = os.environ.get("CFBD_API_KEY")
+BASE_URL = "https://api.collegefootballdata.com/games"
+
+# polite rate-limit for CFBD (keep it light)
+SLEEP_SEC = 0.25
+
+def die(msg: str, code: int = 2):
     print(f"ERROR: {msg}", file=sys.stderr)
     sys.exit(code)
 
-def seasons_from_modeling_dataset() -> List[int]:
-    if not INPUT_DATASET.exists():
-        die(3, f"{INPUT_DATASET} not found")
-    try:
-        df = pd.read_csv(INPUT_DATASET, usecols=["season"])
-    except Exception as e:
-        die(3, f"Failed reading {INPUT_DATASET}: {e}")
-    if "season" not in df.columns or df.empty:
-        die(3, f"{INPUT_DATASET} missing 'season' column or no rows")
-    seasons = sorted(int(s) for s in df["season"].dropna().unique())
-    if not seasons:
-        die(3, "No seasons found in modeling_dataset.csv")
-    return seasons
+def cfbd_get(params: Dict[str, Any]) -> List[Dict[str, Any]]:
+    headers = {"Authorization": f"Bearer {CFBD_API_KEY}"} if CFBD_API_KEY else {}
+    r = requests.get(BASE_URL, headers=headers, params=params, timeout=30)
+    r.raise_for_status()
+    return r.json()  # list of games
 
-def fetch_with_retries(session: requests.Session, params: dict, max_retries: int = 3, timeout: int = 90):
-    """Try API call multiple times with backoff."""
-    for attempt in range(1, max_retries + 1):
-        try:
-            r = session.get(API_BASE, params=params, timeout=timeout)
-            if r.status_code == 200:
-                return r.json() or []
-            else:
-                print(f"WARNING: API {params} -> {r.status_code} body={r.text[:200]}")
-        except requests.RequestException as e:
-            print(f"WARNING: API {params} failed (attempt {attempt}/{max_retries}): {e}")
-        if attempt < max_retries:
-            sleep_time = attempt * 5
-            print(f"Retrying after {sleep_time}s...")
-            time.sleep(sleep_time)
-    raise RuntimeError(f"API request failed after {max_retries} retries for params={params}")
+def normalize_games_to_rows(games: List[Dict[str, Any]], season: int, week: int) -> List[Dict[str, Any]]:
+    rows = []
+    for g in games:
+        # Ids & names vary by endpoint fields; handle common keys safely
+        gid = g.get("id", g.get("game_id", None))
+        ht  = g.get("home_team") or g.get("homeTeam")
+        at  = g.get("away_team") or g.get("awayTeam")
+        hp  = g.get("home_points", g.get("homePoints"))
+        ap  = g.get("away_points", g.get("awayPoints"))
 
-def fetch_games_for_week(session: requests.Session, season: int, season_type: str, week: int) -> List[Dict]:
-    # division=fbs narrows to the top subdivision; remove if you want all divisions
-    params = {"year": season, "seasonType": season_type, "week": week, "division": "fbs"}
-    return fetch_with_retries(session, params)
-
-def normalize_rows(rows: List[Dict]) -> pd.DataFrame:
-    """
-    Map CFBD JSON keys (camelCase) to our flat CSV schema.
-    Also tolerates snake_case if CFBD ever changes or a proxy rewrites keys.
-    """
-    def gget(d, camel, snake):
-        v = d.get(camel)
-        if v is None and snake in d:
-            v = d.get(snake)
-        return v
-
-    out = []
-    for g in rows:
-        out.append({
-            "id": g.get("id"),
-            "season": g.get("season"),
-            "week": g.get("week"),
-            "home_team": gget(g, "homeTeam", "home_team"),
-            "away_team": gget(g, "awayTeam", "away_team"),
-            "home_points": gget(g, "homePoints", "home_points"),
-            "away_points": gget(g, "awayPoints", "away_points"),
-        })
-    df = pd.DataFrame(out)
-
-    # Keep only finished games with numeric scores
-    df = df.dropna(subset=["home_points", "away_points"])
-    df["home_points"] = pd.to_numeric(df["home_points"], errors="coerce")
-    df["away_points"] = pd.to_numeric(df["away_points"], errors="coerce")
-    df = df.dropna(subset=["home_points", "away_points"])
-
-    # Final column order
-    return df[["id","season","week","home_team","away_team","home_points","away_points"]].reset_index(drop=True)
-
-def maybe_dump_raw_sample(rows: List[Dict], season: int, season_type: str, week: int, already_dumped: bool) -> bool:
-    """Write a raw payload sample for debugging (once per run)."""
-    if already_dumped:
-        return True
-    try:
-        DEBUG_JSON.parent.mkdir(parents=True, exist_ok=True)
-        sample_obj = {
+        rows.append({
+            "id": gid,
             "season": season,
-            "season_type": season_type,
             "week": week,
-            "count": len(rows),
-            "sample_first_5": rows[:5],
-        }
-        with DEBUG_JSON.open("w", encoding="utf-8") as f:
-            json.dump(sample_obj, f, ensure_ascii=False, indent=2)
-        print("---- CFBD RAW SAMPLE (first 5 rows) ----")
-        print(json.dumps(sample_obj, ensure_ascii=False, indent=2)[:4000])  # cap output
-        print(f"Raw sample saved to {DEBUG_JSON}")
-        return True
-    except Exception as e:
-        print(f"WARNING: failed to write {DEBUG_JSON}: {e}")
-        return True  # avoid repeated attempts
+            "home_team": ht,
+            "away_team": at,
+            "home_points": hp,
+            "away_points": ap,
+        })
+    return rows
 
 def main():
-    api_key = os.environ.get("CFBD_API_KEY")
-    if not api_key:
-        die(2, "CFBD_API_KEY env var is required (add it as a GitHub Actions secret).")
+    if not MODEL_CSV.exists():
+        die(f"{MODEL_CSV} not found. Run upstream steps that produce modeling_dataset.csv first.")
 
-    seasons = seasons_from_modeling_dataset()
-    print(f"Fetching scores for seasons: {seasons}")
+    # Derive the full set of (season, week) present in the modeling data
+    model = pd.read_csv(MODEL_CSV, usecols=lambda c: c in {"season","week"})
+    if not {"season","week"}.issubset(model.columns):
+        die("modeling_dataset.csv must include 'season' and 'week' columns.")
 
-    session = requests.Session()
-    session.headers.update({"Authorization": f"Bearer {api_key}"})
+    model["season"] = pd.to_numeric(model["season"], errors="coerce").astype("Int64")
+    model["week"]   = pd.to_numeric(model["week"], errors="coerce").astype("Int64")
+    sw = (
+        model.dropna(subset=["season","week"])
+             .drop_duplicates(subset=["season","week"])
+             .sort_values(["season","week"])
+    )
 
-    season_frames: List[pd.DataFrame] = []
-    dumped = False
+    if sw.empty:
+        die("No (season, week) pairs found in modeling_dataset.csv.")
 
-    for yr in seasons:
-        rows_all: List[Dict] = []
+    if not CFBD_API_KEY:
+        print("WARNING: CFBD_API_KEY not set — requests may be rate-limited or rejected.", file=sys.stderr)
 
-        # Regular season: weeks 0..20
-        for w in range(0, 21):
-            chunk = fetch_games_for_week(session, yr, "regular", w)
-            rows_all.extend(chunk)
-            finished = sum(1 for g in chunk if g.get("homePoints") is not None and g.get("awayPoints") is not None)
-            print(f"season={yr} regular week={w}: got {len(chunk)} (finished={finished})")
-            if finished == 0 and len(chunk) > 0 and not dumped:
-                dumped = maybe_dump_raw_sample(chunk, yr, "regular", w, dumped)
-            time.sleep(0.15)
+    all_rows: List[Dict[str, Any]] = []
+    for _, row in sw.iterrows():
+        season = int(row["season"])
+        week   = int(row["week"])
 
-        # Postseason: weeks 1..6
-        for w in range(1, 7):
-            chunk = fetch_games_for_week(session, yr, "postseason", w)
-            rows_all.extend(chunk)
-            finished = sum(1 for g in chunk if g.get("homePoints") is not None and g.get("awayPoints") is not None)
-            print(f"season={yr} postseason week={w}: got {len(chunk)} (finished={finished})")
-            if finished == 0 and len(chunk) > 0 and not dumped:
-                dumped = maybe_dump_raw_sample(chunk, yr, "postseason", w, dumped)
-            time.sleep(0.15)
+        # query regular + postseason defensively (some datasets encode bowls/champ games)
+        for season_type in ("regular", "postseason"):
+            params = {"year": season, "week": week, "seasonType": season_type}
+            try:
+                games = cfbd_get(params)
+            except requests.HTTPError as e:
+                # continue but log; we still want whatever we can fetch
+                print(f"[warn] CFBD {season} wk{week} type={season_type}: {e}", file=sys.stderr)
+                games = []
+            rows = normalize_games_to_rows(games, season, week)
+            all_rows.extend(rows)
+            time.sleep(SLEEP_SEC)
 
-        df = normalize_rows(rows_all)
-        print(f"season={yr}: finished_games={len(df)}")
-        if df.empty:
-            print(f"WARNING: no finished FBS games found for season {yr}")
-        season_frames.append(df)
+    # Write CSV
+    df = pd.DataFrame(all_rows)
 
-    total = sum(len(f) for f in season_frames)
-    if total == 0:
-        die(4, "No game scores retrieved for any season.")
+    # Keep only expected columns and ensure types
+    cols = ["id","season","week","home_team","away_team","home_points","away_points"]
+    for c in cols:
+        if c not in df.columns:
+            df[c] = pd.Series(dtype="object")
+    df = df[cols].copy()
 
-    out = pd.concat(season_frames, ignore_index=True)
+    # numeric coercion for finished games (cleaner will drop NAs later)
+    df["home_points"] = pd.to_numeric(df["home_points"], errors="coerce")
+    df["away_points"] = pd.to_numeric(df["away_points"], errors="coerce")
+
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-    out.to_csv(OUT_CSV, index=False)
-    print(f"Wrote {len(out)} rows to {OUT_CSV}")
+    df.to_csv(OUT_CSV, index=False)
+
+    print(f"[fetch] wrote {OUT_CSV} rows={len(df)} from {len(sw)} (season,week) pairs")
 
 if __name__ == "__main__":
     main()
