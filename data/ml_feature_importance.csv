@@ -1,0 +1,2859 @@
+model,feature,importance
+xgboost,week,0.0006914542755112052
+xgboost,is_home,0.012015827931463718
+xgboost,venue_lat,0.0019241429399698973
+xgboost,venue_lon,0.0021970446687191725
+xgboost,team_lat,0.0016866829246282578
+xgboost,team_lon,0.001000980380922556
+xgboost,travel_distance_km,0.002648511901497841
+xgboost,rest_days,0.0027006356976926327
+xgboost,wx_season,0.0
+xgboost,wx_week,0.0032750575337558985
+xgboost,wx_latitude,0.002258768305182457
+xgboost,wx_longitude,0.002711840206757188
+xgboost,wx_temperature_c,0.0023560684639960527
+xgboost,wx_wind_speed_mps,0.0027075628750026226
+xgboost,wx_wind_direction_deg,0.003456596052274108
+xgboost,wx_precip_mm,0.0012258973438292742
+xgboost,wx_precip_prob_pct,0.0036250536795705557
+xgboost,wx_http_status,0.0
+xgboost,wx_hour_index,0.003343390068039298
+xgboost,ts_scoring_offense_ppg,0.0
+xgboost,ts_scoring_defense_ppg,0.0
+xgboost,ts_yards_per_play,0.0
+xgboost,ts_seconds_per_play,0.0
+xgboost,eff_off_overall_ppa,0.015291983261704445
+xgboost,eff_off_passing_ppa,0.003030882216989994
+xgboost,eff_off_rushing_ppa,0.0021795283537358046
+xgboost,eff_off_first_down_ppa,0.005888378247618675
+xgboost,eff_off_second_down_ppa,0.0030111256055533886
+xgboost,eff_off_third_down_ppa,0.004189796280115843
+xgboost,eff_off_cum_total_ppa,0.007770441938191652
+xgboost,eff_off_cum_passing_ppa,0.003497570287436247
+xgboost,eff_off_cum_rushing_ppa,0.005222273524850607
+xgboost,eff_def_overall_ppa,0.0014840473886579275
+xgboost,eff_def_passing_ppa,0.00305248168297112
+xgboost,eff_def_rushing_ppa,0.0017161235446110368
+xgboost,eff_def_first_down_ppa,0.002149116015061736
+xgboost,eff_def_second_down_ppa,0.0031910345423966646
+xgboost,eff_def_third_down_ppa,0.003009287640452385
+xgboost,eff_def_cum_total_ppa,0.002435969654470682
+xgboost,eff_def_cum_passing_ppa,0.002630523405969143
+xgboost,eff_def_cum_rushing_ppa,0.0017468919977545738
+xgboost,season,0.0
+xgboost,opponent_Central Arkansas,0.002155404770746827
+xgboost,opponent_East Carolina,0.0020061181858181953
+xgboost,opponent_Georgia Southern,0.0009701756644062698
+xgboost,opponent_North Dakota,0.0013992985477671027
+xgboost,opponent_Northern Illinois,0.0007044338271953166
+xgboost,opponent_Northern Iowa,0.0
+xgboost,opponent_South Dakota,0.0009534659911878407
+xgboost,opponent_Southern Illinois,0.0
+xgboost,opponent_Southern Utah,0.0
+xgboost,opponent_Stephen F. Austin,0.0009278019424527884
+xgboost,opponent_UT Martin,0.0007634869543835521
+xgboost,opponent_West Virginia,0.001247541862539947
+xgboost,opponent_adams state,0.0
+xgboost,opponent_adrian,0.0022968738339841366
+xgboost,opponent_air force,0.0
+xgboost,opponent_akron,0.0013777136337012053
+xgboost,opponent_alabama,0.0021359738893806934
+xgboost,opponent_alabama aandm,0.0
+xgboost,opponent_alabama birmingham,0.0013399739982560277
+xgboost,opponent_alabama state,0.001395493047311902
+xgboost,opponent_albany state ga,0.0
+xgboost,opponent_albion,0.0
+xgboost,opponent_albright,0.0
+xgboost,opponent_alcorn state,0.0011298545869067311
+xgboost,opponent_alfred state,0.00017118976393248886
+xgboost,opponent_alfred university,0.0012649251148104668
+xgboost,opponent_allegheny,0.0011312569258734584
+xgboost,opponent_allen,0.0001291409571422264
+xgboost,opponent_alma,0.00036797375651076436
+xgboost,opponent_american international,0.001978175947442651
+xgboost,opponent_amherst,6.363989513147317e-08
+xgboost,opponent_anderson,0.0028098360635340214
+xgboost,opponent_angelo state,0.0010721744038164616
+xgboost,opponent_anna maria college,0.0014094146899878979
+xgboost,opponent_appalachian state,0.0
+xgboost,opponent_apprentice school,0.0
+xgboost,opponent_arizona,0.0011154604144394398
+xgboost,opponent_arizona state,0.001551377004943788
+xgboost,opponent_arkansas,0.001026769750751555
+xgboost,opponent_arkansas monticello,0.001341099152341485
+xgboost,opponent_arkansas pine bluff,0.0
+xgboost,opponent_arkansas state,0.0
+xgboost,opponent_arkansas tech,0.0017104139551520348
+xgboost,opponent_army,0.00026715820422396064
+xgboost,opponent_ashland,0.0
+xgboost,opponent_assumption,0.001212220056913793
+xgboost,opponent_auburn,0.0
+xgboost,opponent_augsburg,0.0
+xgboost,opponent_augustana,0.0
+xgboost,opponent_augustana university,0.0012827025493606925
+xgboost,opponent_aurora,0.0
+xgboost,opponent_austin,0.0
+xgboost,opponent_austin peay,0.0
+xgboost,opponent_averett,0.0033659085165709257
+xgboost,opponent_baldwin wallace,0.00142185902222991
+xgboost,opponent_ball state,0.0002729656407609582
+xgboost,opponent_bates,0.0
+xgboost,opponent_baylor,0.0003694071201607585
+xgboost,opponent_belhaven,0.0
+xgboost,opponent_beloit,0.0
+xgboost,opponent_bemidji state,0.0017507962184026837
+xgboost,opponent_benedict college,0.001958649605512619
+xgboost,opponent_benedictine university,0.001446855952963233
+xgboost,opponent_bentley,0.0009543065680190921
+xgboost,opponent_berry college,0.002044880297034979
+xgboost,opponent_bethany,0.0018394793150946498
+xgboost,opponent_bethel,0.0
+xgboost,opponent_bethel university tennessee,0.0
+xgboost,opponent_bethune cookman,0.0017192267114296556
+xgboost,opponent_biddeford,0.0017733824206516147
+xgboost,opponent_black hills state,0.0010715719545260072
+xgboost,opponent_bloomsburg,0.0
+xgboost,opponent_bluefield,0.0
+xgboost,opponent_bluefield state,0.0032766798976808786
+xgboost,opponent_bluffton,0.0
+xgboost,opponent_boise state,0.0
+xgboost,opponent_boston college,0.0
+xgboost,opponent_bowdoin,0.00017587724141776562
+xgboost,opponent_bowie state,0.0011148737976327538
+xgboost,opponent_bowling green,0.0
+xgboost,opponent_brevard college,0.0011454616906121373
+xgboost,opponent_bridgewater,0.0018861162243410945
+xgboost,opponent_bridgewater state,0.0
+xgboost,opponent_brigham young,0.0
+xgboost,opponent_brockport,0.00218193675391376
+xgboost,opponent_brown,0.0
+xgboost,opponent_bryant,0.0004959015059284866
+xgboost,opponent_bucknell,0.0
+xgboost,opponent_buena vista,0.001411507255397737
+xgboost,opponent_buffalo,0.0022631275933235884
+xgboost,opponent_buffalo state,0.001402084482833743
+xgboost,opponent_butler,0.0
+xgboost,opponent_cal poly,0.0010187601437792182
+xgboost,opponent_california,0.0
+xgboost,opponent_california los angeles,0.0
+xgboost,opponent_california lutheran university,0.0
+xgboost,opponent_calvin university,0.0015206601237878203
+xgboost,opponent_campbell,0.0010070641292259097
+xgboost,opponent_capital,0.0
+xgboost,opponent_carleton,0.0
+xgboost,opponent_carnegie mellon,0.002018266124650836
+xgboost,opponent_carroll university,0.0
+xgboost,opponent_carson newman college,0.0
+xgboost,opponent_carthage,0.0
+xgboost,opponent_case western reserve,0.0
+xgboost,opponent_castleton,0.0
+xgboost,opponent_catawba,0.0
+xgboost,opponent_catholic,0.0
+xgboost,opponent_centenary,0.0029356307350099087
+xgboost,opponent_central college,0.0
+xgboost,opponent_central connecticut,0.0
+xgboost,opponent_central florida,0.0
+xgboost,opponent_central methodist,0.0014480061363428831
+xgboost,opponent_central michigan,0.0
+xgboost,opponent_central missouri,0.0
+xgboost,opponent_central oklahoma,0.0
+xgboost,opponent_central state,0.0
+xgboost,opponent_central washington,0.0
+xgboost,opponent_centre college kentucky,0.0
+xgboost,opponent_chadron st,0.0013481175992637873
+xgboost,opponent_chapman,0.0019342041341587901
+xgboost,opponent_charleston,0.0
+xgboost,opponent_charleston southern,0.00107643473893404
+xgboost,opponent_charlotte,0.00031386828050017357
+xgboost,opponent_chattanooga,0.0003219703212380409
+xgboost,opponent_chicago,0.0003778138488996774
+xgboost,opponent_chowan,0.0
+xgboost,opponent_christopher newport,0.0012796600349247456
+xgboost,opponent_cincinnati,0.0006570141995325685
+xgboost,opponent_claremont mudd scripps college,0.0016120808431878686
+xgboost,opponent_clarion,0.0
+xgboost,opponent_clark atlanta,0.0
+xgboost,opponent_clemson,0.001993534155189991
+xgboost,opponent_coast guard,0.0
+xgboost,opponent_coastal carolina,0.0
+xgboost,opponent_coe college,0.0
+xgboost,opponent_colby college,0.0
+xgboost,opponent_colgate,0.0014858638169243932
+xgboost,opponent_college of new jersey,3.7875459383940324e-05
+xgboost,opponent_colorado,0.0
+xgboost,opponent_colorado mesa,0.0
+xgboost,opponent_colorado school of mines,0.0
+xgboost,opponent_colorado state,0.0019280229462310672
+xgboost,opponent_columbia,0.0
+xgboost,opponent_concord university,0.0
+xgboost,opponent_concordia moorhead,0.0011730687692761421
+xgboost,opponent_concordia university chicago,0.0
+xgboost,opponent_concordia university state paul,0.0023996976669877768
+xgboost,opponent_concordia wisconsin,0.0
+xgboost,opponent_connecticut,0.001128228846937418
+xgboost,opponent_cornell,0.0
+xgboost,opponent_cornell college,0.0
+xgboost,opponent_cortland,0.0
+xgboost,opponent_crown college,0.002147774212062359
+xgboost,opponent_csu pueblo,0.0
+xgboost,opponent_cumberland,0.0
+xgboost,opponent_curry college,0.0
+xgboost,opponent_dakota state university,0.0
+xgboost,opponent_dartmouth,0.0
+xgboost,opponent_davenport,0.0
+xgboost,opponent_davidson,0.004033864941447973
+xgboost,opponent_dayton,0.0
+xgboost,opponent_dean college,0.0013707303442060947
+xgboost,opponent_delaware,0.0
+xgboost,opponent_delaware state,0.0003033529210370034
+xgboost,opponent_delaware valley,0.0
+xgboost,opponent_delta state,0.0
+xgboost,opponent_denison university,0.0
+xgboost,opponent_depauw,0.002115132985636592
+xgboost,opponent_dickinson,0.0013312682276591659
+xgboost,opponent_drake,0.0
+xgboost,opponent_dubuque,0.0016304391901940107
+xgboost,opponent_duke,0.0
+xgboost,opponent_duquesne,0.0012153091374784708
+xgboost,opponent_east central,0.0
+xgboost,opponent_east stroudsburg university,0.0
+xgboost,opponent_east tennessee state,0.0
+xgboost,opponent_east texas aandm,0.001130474847741425
+xgboost,opponent_east texas baptist university,0.0009339843527413905
+xgboost,opponent_eastern illinois,0.0020439790096133947
+xgboost,opponent_eastern kentucky,0.0005251600523479283
+xgboost,opponent_eastern michigan,0.002052372321486473
+xgboost,opponent_eastern new mexico,0.0
+xgboost,opponent_eastern oregon,0.0
+xgboost,opponent_eastern university,0.0
+xgboost,opponent_eastern washington,0.0
+xgboost,opponent_edinboro university,0.001001723576337099
+xgboost,opponent_edward waters,0.0007854202413000166
+xgboost,opponent_elizabeth city state,0.0
+xgboost,opponent_elmhurst,0.0
+xgboost,opponent_elon,0.0
+xgboost,opponent_emory and henry college,0.0
+xgboost,opponent_emporia state university,0.0
+xgboost,opponent_endicott college,0.0006755096255801618
+xgboost,opponent_erskine,0.00014290283434092999
+xgboost,opponent_eureka college,0.0
+xgboost,opponent_fairmont state,0.0
+xgboost,opponent_fayetteville state,0.001271486864425242
+xgboost,opponent_fdu florham,0.0
+xgboost,opponent_ferris state,0.0
+xgboost,opponent_ferrum,0.0016005480429157615
+xgboost,opponent_findlay,0.0
+xgboost,opponent_fitchburg state,0.0
+xgboost,opponent_florida,0.000779690220952034
+xgboost,opponent_florida aandm,0.0
+xgboost,opponent_florida atlantic,0.0
+xgboost,opponent_florida international,0.0007395713473670185
+xgboost,opponent_florida memorial university,0.0
+xgboost,opponent_florida state,0.0017169760540127754
+xgboost,opponent_fordham,0.002123781479895115
+xgboost,opponent_fort hays state,0.0
+xgboost,opponent_fort lewis,0.0
+xgboost,opponent_fort valley state,0.0
+xgboost,opponent_framingham state,0.0
+xgboost,opponent_franklin,0.0
+xgboost,opponent_franklin and marshall,0.0
+xgboost,opponent_franklin pierce,0.000808717857580632
+xgboost,opponent_fresno state,0.0004323474713601172
+xgboost,opponent_frostburg state,0.0
+xgboost,opponent_furman,0.0
+xgboost,opponent_gallaudet,0.0
+xgboost,opponent_gannon,0.002909131580963731
+xgboost,opponent_gardner webb,0.001306189689785242
+xgboost,opponent_geneva,0.0012675876496359706
+xgboost,opponent_georgetown,0.0017750256229192019
+xgboost,opponent_georgia,0.001136715873144567
+xgboost,opponent_georgia state,0.0
+xgboost,opponent_georgia tech,0.0
+xgboost,opponent_gettysburg,0.0015307922149077058
+xgboost,opponent_glenville state,0.0
+xgboost,opponent_grambling,0.001460760599002242
+xgboost,opponent_grand valley state university,0.0
+xgboost,opponent_greeneville,0.0
+xgboost,opponent_greensboro college,0.0
+xgboost,opponent_greenville,0.0005799431237392128
+xgboost,opponent_grinnell,0.0
+xgboost,opponent_grove city college,0.0
+xgboost,opponent_guilford college,0.0
+xgboost,opponent_gustavus adolphus,0.0005511782946996391
+xgboost,opponent_hamilton,0.0
+xgboost,opponent_hamline university,0.0
+xgboost,opponent_hampden sydney,0.0
+xgboost,opponent_hampton,0.0
+xgboost,opponent_hanover college,0.0010355454869568348
+xgboost,opponent_hardin simmons,0.0
+xgboost,opponent_harding university,0.0019182678079232574
+xgboost,opponent_hartwick,0.0021674740128219128
+xgboost,opponent_harvard,0.0
+xgboost,opponent_hawaii,0.0
+xgboost,opponent_heidelberg,0.0
+xgboost,opponent_henderson state,0.0012458720011636615
+xgboost,opponent_hendrix college,0.0
+xgboost,opponent_hilbert college,0.0
+xgboost,opponent_hillsdale,0.0013456778833642602
+xgboost,opponent_hiram college,0.002375352429226041
+xgboost,opponent_hobart college,0.0
+xgboost,opponent_holy cross,0.0
+xgboost,opponent_hope college,0.001984399277716875
+xgboost,opponent_houston,0.0013988023856654763
+xgboost,opponent_houston christian,0.0
+xgboost,opponent_howard,0.0
+xgboost,opponent_howard payne,0.0024878147523850203
+xgboost,opponent_huntingdon college,0.0011117719113826752
+xgboost,opponent_husson,0.0
+xgboost,opponent_idaho,0.0012327549047768116
+xgboost,opponent_idaho state,0.0
+xgboost,opponent_illinois,0.001668097684159875
+xgboost,opponent_illinois college,0.0
+xgboost,opponent_illinois state,0.0004202342825010419
+xgboost,opponent_illinois wesleyan,0.0
+xgboost,opponent_incarnate word,0.0
+xgboost,opponent_indiana,0.0
+xgboost,opponent_indiana pennsylvania,0.0
+xgboost,opponent_indiana state,0.0
+xgboost,opponent_indianapolis,0.0009245123947039247
+xgboost,opponent_iowa,0.0016342087183147669
+xgboost,opponent_iowa state,0.0
+xgboost,opponent_ithaca college,0.0
+xgboost,opponent_jackson state,0.0004788152582477778
+xgboost,opponent_jacksonville state,0.002567452844232321
+xgboost,opponent_james madison,0.0017223977483808994
+xgboost,opponent_jamestown college,0.0
+xgboost,opponent_john carroll university,0.0014550199266523123
+xgboost,opponent_johns hopkins university,0.0
+xgboost,opponent_johnson c smith,0.0014694023411720991
+xgboost,opponent_juniata college,0.0
+xgboost,opponent_kalamazoo,0.0027059977874159813
+xgboost,opponent_kansas,0.0008901295950636268
+xgboost,opponent_kansas state,0.0
+xgboost,opponent_kean,0.0
+xgboost,opponent_kennesaw state,0.0
+xgboost,opponent_kent state,0.0
+xgboost,opponent_kentucky,0.0009206215618178248
+xgboost,opponent_kentucky christian,0.0
+xgboost,opponent_kentucky state,0.0005171389784663916
+xgboost,opponent_kentucky wesleyan,0.0
+xgboost,opponent_kenyon,0.0003667192650027573
+xgboost,opponent_keystone,0.0
+xgboost,opponent_kings college,0.0022150068543851376
+xgboost,opponent_knox college,0.0011479674139991403
+xgboost,opponent_kutztown university,0.0
+xgboost,opponent_la verne,0.0
+xgboost,opponent_lafayette,0.0
+xgboost,opponent_lagrange college,0.0
+xgboost,opponent_lake erie,0.002543608658015728
+xgboost,opponent_lake forest college,0.0
+xgboost,opponent_lakeland,0.0017026338027790189
+xgboost,opponent_lamar,0.0013849363895133138
+xgboost,opponent_lane college,0.0
+xgboost,opponent_langston university,0.003440908156335354
+xgboost,opponent_lawrence university,0.003503170097246766
+xgboost,opponent_lebanon valley,0.0
+xgboost,opponent_lehigh,0.0
+xgboost,opponent_lenoir rhyne,0.0
+xgboost,opponent_lewis and clark college,0.0
+xgboost,opponent_liberty,0.0
+xgboost,opponent_lincoln,0.00242168502882123
+xgboost,opponent_lindenwood,0.0
+xgboost,opponent_linfield college,0.0
+xgboost,opponent_little rock,0.0022721223067492247
+xgboost,opponent_livingstone,0.0
+xgboost,opponent_lock haven university,0.0
+xgboost,opponent_long island university,0.0014364446979016066
+xgboost,opponent_loras college,0.0012453244999051094
+xgboost,opponent_louisiana,0.0004334989353083074
+xgboost,opponent_louisiana college,0.0
+xgboost,opponent_louisiana tech,0.0
+xgboost,opponent_louisville,0.0
+xgboost,opponent_lsu,0.0
+xgboost,opponent_luther,0.00256333127617836
+xgboost,opponent_lycoming,0.0012605285737663507
+xgboost,opponent_lyoncoll,0.0
+xgboost,opponent_macalester,0.0
+xgboost,opponent_madonna university,0.0
+xgboost,opponent_maine,0.0
+xgboost,opponent_maine maritime,0.0018097958527505398
+xgboost,opponent_manchester,0.0006578246247954667
+xgboost,opponent_marian college,0.0
+xgboost,opponent_marietta,0.0
+xgboost,opponent_marist,0.0
+xgboost,opponent_mars hill,0.0
+xgboost,opponent_marshall,0.0
+xgboost,opponent_martin luther,0.0
+xgboost,opponent_mary,0.0
+xgboost,opponent_mary hardin baylor,0.0
+xgboost,opponent_maryland,0.0
+xgboost,opponent_maryville college,0.0
+xgboost,opponent_mass maritime,0.0
+xgboost,opponent_massachusetts,0.0
+xgboost,opponent_mayville state,0.0
+xgboost,opponent_mcdaniel college,0.0
+xgboost,opponent_mckendree,0.0
+xgboost,opponent_mcmurry,0.0
+xgboost,opponent_mcneese,0.0010949494317173958
+xgboost,opponent_memphis,0.0015365598956122994
+xgboost,opponent_mercer,0.0
+xgboost,opponent_merchant marine academy,0.0
+xgboost,opponent_mercyhurst,0.0
+xgboost,opponent_merrimack,0.001280502649024129
+xgboost,opponent_methodist,0.0
+xgboost,opponent_miami,0.0011987548787146807
+xgboost,opponent_michigan,0.0009750837343744934
+xgboost,opponent_michigan state,0.0
+xgboost,opponent_michigan tech,0.0
+xgboost,opponent_middle tennessee,0.0
+xgboost,opponent_middlebury,0.0008101040730252862
+xgboost,opponent_midland lutheran college,0.0
+xgboost,opponent_midwestern state,0.002517622895538807
+xgboost,opponent_miles college,0.00216647214256227
+xgboost,opponent_millersville,0.0022824571933597326
+xgboost,opponent_millikin,0.002586856484413147
+xgboost,opponent_millsaps,0.0015897260745987296
+xgboost,opponent_minnesota,0.0028801364824175835
+xgboost,opponent_minnesota duluth,0.0022770571522414684
+xgboost,opponent_minnesota morris,0.0016360689187422395
+xgboost,opponent_minnesota state mankato,0.0013403818011283875
+xgboost,opponent_minnesota state moorhead,0.0
+xgboost,opponent_minot state,0.0012150082038715482
+xgboost,opponent_misericordia,0.0
+xgboost,opponent_mississippi,0.0
+xgboost,opponent_mississippi state,0.001394239254295826
+xgboost,opponent_mississippi valley state,0.00248226011171937
+xgboost,opponent_missouri,0.0
+xgboost,opponent_missouri sandt,0.0
+xgboost,opponent_missouri southern state,0.0
+xgboost,opponent_missouri state,0.000520883419085294
+xgboost,opponent_missouri western,0.0007470372365787625
+xgboost,opponent_mit,0.001995996804907918
+xgboost,opponent_monmouth,0.001331988605670631
+xgboost,opponent_montana,0.0004950012662447989
+xgboost,opponent_montana state,0.0
+xgboost,opponent_montclair state,0.0
+xgboost,opponent_moravian,0.001937802997417748
+xgboost,opponent_morehead state,0.002014713129028678
+xgboost,opponent_morehouse college,0.0016166444402188063
+xgboost,opponent_morgan state,0.0
+xgboost,opponent_mount state joseph,0.00030239991610869765
+xgboost,opponent_mount union,0.0
+xgboost,opponent_muhlenberg,0.00027078911080025136
+xgboost,opponent_murray state,0.0019600577652454376
+xgboost,opponent_muskingum university,0.0
+xgboost,opponent_navy,0.0
+xgboost,opponent_nebraska,0.0015507529024034739
+xgboost,opponent_nebraska kearney,0.001032862695865333
+xgboost,opponent_nebraska wesleyan,0.0
+xgboost,opponent_nevada,0.0
+xgboost,opponent_nevada las vegas,0.0
+xgboost,opponent_new england college,0.003684398252516985
+xgboost,opponent_new hampshire,0.0
+xgboost,opponent_new haven,0.0011361162178218365
+xgboost,opponent_new mexico,0.0010783008765429258
+xgboost,opponent_new mexico highlands,0.0015654453309252858
+xgboost,opponent_new mexico state,0.0024780738167464733
+xgboost,opponent_newberg,0.0
+xgboost,opponent_newberry,0.0
+xgboost,opponent_nicholls,0.0
+xgboost,opponent_nichols college,0.006215329747647047
+xgboost,opponent_norfolk state,0.000975899922195822
+xgboost,opponent_north alabama,0.0
+xgboost,opponent_north carolina,0.0016728488262742758
+xgboost,opponent_north carolina aandt,0.0
+xgboost,opponent_north carolina central,0.0
+xgboost,opponent_north carolina state,0.0011993796797469258
+xgboost,opponent_north carolina wesleyan,0.0
+xgboost,opponent_north central college,0.0011963250581175089
+xgboost,opponent_north dakota state,0.002606235211715102
+xgboost,opponent_north greenville,0.0
+xgboost,opponent_north park,0.0
+xgboost,opponent_north texas,0.0003671235463116318
+xgboost,opponent_northeastern state,0.0010691896313801408
+xgboost,opponent_northern arizona,0.0
+xgboost,opponent_northern colorado,0.0
+xgboost,opponent_northern michigan,0.0
+xgboost,opponent_northern state,0.0
+xgboost,opponent_northwest missouri st,0.0
+xgboost,opponent_northwestern,0.0
+xgboost,opponent_northwestern oklahoma state,0.0014235166599974036
+xgboost,opponent_northwestern state,0.0019830770324915648
+xgboost,opponent_northwood,0.0
+xgboost,opponent_norwich,0.00027541391318663955
+xgboost,opponent_notre dame,0.00220510340295732
+xgboost,opponent_oberlin,0.005146544426679611
+xgboost,opponent_ohio,0.0008001068490557373
+xgboost,opponent_ohio dominican,0.001535748247988522
+xgboost,opponent_ohio northern,0.0
+xgboost,opponent_ohio state,0.0017954024951905012
+xgboost,opponent_ohio wesleyan,0.001254043891094625
+xgboost,opponent_oklahoma,0.0034525501541793346
+xgboost,opponent_oklahoma baptist,0.001365792821161449
+xgboost,opponent_oklahoma panhandle st,0.0007124647381715477
+xgboost,opponent_oklahoma state,0.0
+xgboost,opponent_old dominion,0.0017852495657280087
+xgboost,opponent_olivet college,0.002186292316764593
+xgboost,opponent_oregon,0.002404524479061365
+xgboost,opponent_oregon state,0.0006389603950083256
+xgboost,opponent_otterbein,0.0030789931770414114
+xgboost,opponent_ouachita baptist,0.0
+xgboost,opponent_pace,0.0
+xgboost,opponent_pacific,0.0019343678141012788
+xgboost,opponent_pacific lutheran,0.0
+xgboost,opponent_penn state,0.001645759679377079
+xgboost,opponent_pennsylvania,0.0
+xgboost,opponent_pennwest california,0.0
+xgboost,opponent_phoenix,0.0023065097630023956
+xgboost,opponent_pittsburg st,0.0
+xgboost,opponent_pittsburgh,0.0
+xgboost,opponent_plymouth state,0.0
+xgboost,opponent_point university,0.0014904815470799804
+xgboost,opponent_pomona pitzer,0.0
+xgboost,opponent_portland state,0.002068902365863323
+xgboost,opponent_post university,0.0
+xgboost,opponent_prairie view aandm,0.0012510073138400912
+xgboost,opponent_presbyterian,0.0017437454080209136
+xgboost,opponent_princeton,0.0
+xgboost,opponent_puget sound,0.0030775030609220266
+xgboost,opponent_purdue,0.0
+xgboost,opponent_quincy,0.0010152922477573156
+xgboost,opponent_randolph macon,0.0016450545517727733
+xgboost,opponent_reading,0.0
+xgboost,opponent_redlands,0.0
+xgboost,opponent_rensselaer,0.0
+xgboost,opponent_rhode island,0.0013877340825274587
+xgboost,opponent_rhodes college,0.0013490464771166444
+xgboost,opponent_rice,0.001312368898652494
+xgboost,opponent_richmond,0.0
+xgboost,opponent_rio grande,0.0
+xgboost,opponent_ripon,0.0
+xgboost,opponent_roanoke college,0.0
+xgboost,opponent_robert morris,0.0020961957052350044
+xgboost,opponent_rochester,0.0
+xgboost,opponent_rockford,0.0
+xgboost,opponent_roosevelt,0.0
+xgboost,opponent_rose hulman,0.0
+xgboost,opponent_rowan,0.0011138416593894362
+xgboost,opponent_rutgers,0.0
+xgboost,opponent_sacramento state,6.684147228952497e-05
+xgboost,opponent_sacred heart,0.0
+xgboost,opponent_saginaw valley state,0.0014161664294078946
+xgboost,opponent_saint johns,0.0012013838859274983
+xgboost,opponent_saint vincent,0.0
+xgboost,opponent_salisbury,0.0
+xgboost,opponent_salve regina,0.0
+xgboost,opponent_sam houston,0.0012603257782757282
+xgboost,opponent_samford,0.0012549752136692405
+xgboost,opponent_san diego,0.0015953292604535818
+xgboost,opponent_san diego state,0.0015200100606307387
+xgboost,opponent_san josé state,0.0012844701996073127
+xgboost,opponent_savannah st,0.002811504527926445
+xgboost,opponent_seton hill,0.0
+xgboost,opponent_sewanee,0.0
+xgboost,opponent_shaw,0.002660459605976939
+xgboost,opponent_shenandoah,0.0
+xgboost,opponent_shepherd,0.0017344928346574306
+xgboost,opponent_shippensburg,0.00016545754624530673
+xgboost,opponent_shorter,0.0
+xgboost,opponent_simpson college,0.0015854524681344628
+xgboost,opponent_simpson university,0.0
+xgboost,opponent_sioux falls,0.0012515613343566656
+xgboost,opponent_slippery rock,0.0006323072011582553
+xgboost,opponent_south alabama,0.0
+xgboost,opponent_south carolina,0.0
+xgboost,opponent_south carolina state,0.001416057231836021
+xgboost,opponent_south dakota mines,0.003010818501934409
+xgboost,opponent_south dakota state,0.0
+xgboost,opponent_south florida,0.0020025279372930527
+xgboost,opponent_southeast missouri state,0.0
+xgboost,opponent_southeastern louisiana,0.002060029888525605
+xgboost,opponent_southeastern oklahoma state,0.0
+xgboost,opponent_southern,0.0010601035319268703
+xgboost,opponent_southern arkansas,0.0
+xgboost,opponent_southern california,0.0
+xgboost,opponent_southern connecticut state,0.0
+xgboost,opponent_southern methodist,0.0
+xgboost,opponent_southern mississippi,0.0
+xgboost,opponent_southern nazarene,0.0
+xgboost,opponent_southern oregon,0.0
+xgboost,opponent_southern virginia,0.0012774316128343344
+xgboost,opponent_southwest baptist,0.0010995280463248491
+xgboost,opponent_southwest minnesota state,0.001595321693457663
+xgboost,opponent_southwestern oklahoma state,0.0
+xgboost,opponent_southwestern university,0.0010889036348089576
+xgboost,opponent_springfield,0.0
+xgboost,opponent_st john fisher university,0.0
+xgboost,opponent_stanford,0.002209368161857128
+xgboost,opponent_state anselm,0.0004958952195011079
+xgboost,opponent_state francis,0.0013523554662242532
+xgboost,opponent_state lawrence,0.0
+xgboost,opponent_state norbert,0.0022211784962564707
+xgboost,opponent_state olaf,0.0
+xgboost,opponent_state scholastica,0.0
+xgboost,opponent_state thomas,0.001324911369010806
+xgboost,opponent_stetson,0.0019440259784460068
+xgboost,opponent_stevenson,0.0
+xgboost,opponent_stonehill,0.0
+xgboost,opponent_stony brook,0.0
+xgboost,opponent_sul ross state,0.0034913348499685526
+xgboost,opponent_suny maritime,0.0
+xgboost,opponent_suny morrisville,0.0
+xgboost,opponent_susquehanna,0.0
+xgboost,opponent_syracuse,0.0011807794217020273
+xgboost,opponent_tarleton state,0.0017553374636918306
+xgboost,opponent_temple,0.0
+xgboost,opponent_tennessee,0.0004444630758371204
+xgboost,opponent_tennessee state,8.902161061996594e-05
+xgboost,opponent_tennessee tech,0.0
+xgboost,opponent_texas,0.0025685278233140707
+xgboost,opponent_texas aandm,0.0
+xgboost,opponent_texas aandm kingsville,0.0
+xgboost,opponent_texas christian,0.0
+xgboost,opponent_texas el paso,0.0
+xgboost,opponent_texas lutheran,0.0
+xgboost,opponent_texas san antonio,0.0
+xgboost,opponent_texas southern,0.0
+xgboost,opponent_texas state,0.0
+xgboost,opponent_texas tech,0.0
+xgboost,opponent_texas wesleyan,0.0
+xgboost,opponent_the citadel,0.0028788717463612556
+xgboost,opponent_thiel,0.001671448117122054
+xgboost,opponent_thomas more college,0.0010904285591095686
+xgboost,opponent_tiffin,0.0
+xgboost,opponent_toledo,0.00017576680693309754
+xgboost,opponent_towson,0.0
+xgboost,opponent_trine university,0.0
+xgboost,opponent_trinity,0.0
+xgboost,opponent_trinity university tx,0.0012984059285372496
+xgboost,opponent_troy,0.0
+xgboost,opponent_truman state,0.0
+xgboost,opponent_tufts,0.0
+xgboost,opponent_tulane,0.0
+xgboost,opponent_tulsa,0.0
+xgboost,opponent_tuskegee,0.0
+xgboost,opponent_ualbany,0.0
+xgboost,opponent_uc davis,0.0011812823358923197
+xgboost,opponent_ul monroe,0.001074995961971581
+xgboost,opponent_umass dartmouth,0.0
+xgboost,opponent_unc pembroke,0.0
+xgboost,opponent_union,0.0
+xgboost,opponent_upper iowa university,0.0
+xgboost,opponent_ursinus,0.0
+xgboost,opponent_ut permian basin,0.0022884763311594725
+xgboost,opponent_ut rio grande valley,0.0019728229381144047
+xgboost,opponent_utah,0.0026201296132057905
+xgboost,opponent_utah state,0.0
+xgboost,opponent_utah tech,0.001884355559013784
+xgboost,opponent_utica,0.0
+xgboost,opponent_uva wise,0.001522341277450323
+xgboost,opponent_valdosta state,0.0
+xgboost,opponent_valley city state,0.001482026418671012
+xgboost,opponent_valparaiso,0.001184808905236423
+xgboost,opponent_vanderbilt,0.0013094914611428976
+xgboost,opponent_villanova,0.0
+xgboost,opponent_virginia,0.0
+xgboost,opponent_virginia lynchburg,0.003262149402871728
+xgboost,opponent_virginia st,7.62933268561028e-05
+xgboost,opponent_virginia tech,0.0
+xgboost,opponent_virginia union,0.0
+xgboost,opponent_vmi,0.0009590875124558806
+xgboost,opponent_wabash college,0.0
+xgboost,opponent_wagner,0.0
+xgboost,opponent_wake forest,0.0
+xgboost,opponent_walsh,0.0
+xgboost,opponent_warner university,0.0016916795866563916
+xgboost,opponent_wartburg,0.0024632506538182497
+xgboost,opponent_washburn,0.0
+xgboost,opponent_washington,0.0
+xgboost,opponent_washington and jefferson,0.0022008235100656748
+xgboost,opponent_washington and lee,0.0
+xgboost,opponent_washington state,0.0
+xgboost,opponent_washington university,0.0011003989493474364
+xgboost,opponent_wayland baptist,0.0
+xgboost,opponent_wayne state,0.0
+xgboost,opponent_waynesburg,0.0021485681645572186
+xgboost,opponent_webber international,0.0
+xgboost,opponent_weber state,0.0010687230387702584
+xgboost,opponent_wesleyan university,0.0
+xgboost,opponent_west alabama,0.0
+xgboost,opponent_west chester,0.0
+xgboost,opponent_west florida,0.0
+xgboost,opponent_west georgia,0.0022438501473516226
+xgboost,opponent_west liberty,0.001408046344295144
+xgboost,opponent_west texas aandm,0.0017447808058932424
+xgboost,opponent_west virginia state,0.0
+xgboost,opponent_west virginia wesleyan,0.0025761311408132315
+xgboost,opponent_western carolina,0.002229988109320402
+xgboost,opponent_western colorado,0.0
+xgboost,opponent_western connecticut st,0.0
+xgboost,opponent_western illinois,0.0
+xgboost,opponent_western kentucky,0.0
+xgboost,opponent_western michigan,0.0
+xgboost,opponent_western new england,0.0
+xgboost,opponent_western new mexico,0.004177443217486143
+xgboost,opponent_western oregon,0.0016536866314709187
+xgboost,opponent_westfield state,6.880943601572653e-06
+xgboost,opponent_westminster,0.0
+xgboost,opponent_westminster college,0.0010605866555124521
+xgboost,opponent_wheaton,0.0
+xgboost,opponent_wheeling,0.0
+xgboost,opponent_whitworth,0.003068229416385293
+xgboost,opponent_widener,0.0007755463593639433
+xgboost,opponent_wilkes,0.0
+xgboost,opponent_willamette,0.0018377903616055846
+xgboost,opponent_william and mary,0.0
+xgboost,opponent_william jewell,0.0
+xgboost,opponent_william paterson,0.0
+xgboost,opponent_williams,0.0013341361191123724
+xgboost,opponent_wilmington,0.0012805075384676456
+xgboost,opponent_wilson,0.0010954308090731502
+xgboost,opponent_wingate,0.0018705226248130202
+xgboost,opponent_winona state,0.0
+xgboost,opponent_winston salem,0.0
+xgboost,opponent_wisconsin,0.0
+xgboost,opponent_wisconsin eau claire,0.001689615659415722
+xgboost,opponent_wisconsin lacrosse,0.0
+xgboost,opponent_wisconsin lutheran,4.719414937426336e-05
+xgboost,opponent_wisconsin oshkosh,0.0
+xgboost,opponent_wisconsin platteville,0.0012460077414289117
+xgboost,opponent_wisconsin river falls,0.0
+xgboost,opponent_wisconsin stevens pt,0.0
+xgboost,opponent_wisconsin stout,0.0
+xgboost,opponent_wisconsin whitewater,0.0
+xgboost,opponent_wittenberg,0.0
+xgboost,opponent_wofford,0.0
+xgboost,opponent_wooster,0.0018187714740633965
+xgboost,opponent_worcester polytechnic institute,0.0010717143304646015
+xgboost,opponent_worcester st,0.0
+xgboost,opponent_wyoming,0.0007665370940230787
+xgboost,opponent_yale,0.0
+xgboost,opponent_youngstown state,0.0
+xgboost,st_conference_American Athletic,0.0013696957612410188
+xgboost,st_conference_Big 12,0.0004789111262653023
+xgboost,st_conference_Big Ten,0.0030616289004683495
+xgboost,st_conference_Conference USA,0.0
+xgboost,st_conference_FBS Independents,0.0
+xgboost,st_conference_Mid-American,0.002726086648181081
+xgboost,st_conference_Mountain West,0.0024346329737454653
+xgboost,st_conference_NA,0.0013533433666452765
+xgboost,st_conference_Pac-12,0.0
+xgboost,st_conference_SEC,0.001486238674260676
+xgboost,st_conference_Sun Belt,0.0030747256241738796
+xgboost,team_Central Arkansas,0.0
+xgboost,team_East Carolina,0.0
+xgboost,team_Georgia Southern,0.0
+xgboost,team_North Dakota,0.0
+xgboost,team_Northern Illinois,0.0
+xgboost,team_Northern Iowa,0.0010717361001297832
+xgboost,team_South Dakota,0.0
+xgboost,team_Southern Illinois,0.001799668068997562
+xgboost,team_Southern Utah,0.0019808816723525524
+xgboost,team_Stephen F. Austin,0.0
+xgboost,team_UT Martin,0.0011052163317799568
+xgboost,team_West Virginia,0.0
+xgboost,team_adams state,0.002869947114959359
+xgboost,team_adrian,0.0036068162880837917
+xgboost,team_air force,0.0
+xgboost,team_akron,0.0
+xgboost,team_alabama,0.0
+xgboost,team_alabama aandm,0.0
+xgboost,team_alabama birmingham,0.0012951999669894576
+xgboost,team_alabama state,0.0013403056655079126
+xgboost,team_albany state ga,0.0026451717130839825
+xgboost,team_albion,0.0014356932369992137
+xgboost,team_albright,0.0
+xgboost,team_alcorn state,0.0011451576137915254
+xgboost,team_alfred state,0.002840085420757532
+xgboost,team_alfred university,0.0
+xgboost,team_allegheny,0.0
+xgboost,team_allen,0.0
+xgboost,team_alma,0.0015084764454513788
+xgboost,team_american international,0.0015359916724264622
+xgboost,team_amherst,0.0
+xgboost,team_anderson,0.002735634334385395
+xgboost,team_angelo state,0.0010931268334388733
+xgboost,team_anna maria college,0.0
+xgboost,team_appalachian state,0.0
+xgboost,team_apprentice school,0.0
+xgboost,team_arizona,0.0
+xgboost,team_arizona state,0.0
+xgboost,team_arkansas,0.0
+xgboost,team_arkansas monticello,0.001276391907595098
+xgboost,team_arkansas pine bluff,0.0
+xgboost,team_arkansas state,0.0
+xgboost,team_arkansas tech,0.0
+xgboost,team_army,0.0
+xgboost,team_ashland,0.0
+xgboost,team_assumption,0.0
+xgboost,team_auburn,0.0
+xgboost,team_augsburg,0.001592127839103341
+xgboost,team_augustana,0.0
+xgboost,team_augustana university,9.593780850991607e-05
+xgboost,team_aurora,0.0
+xgboost,team_austin,0.0
+xgboost,team_austin peay,0.0014620801666751504
+xgboost,team_averett,0.0
+xgboost,team_baldwin wallace,0.002983796177431941
+xgboost,team_ball state,0.0
+xgboost,team_bates,0.0
+xgboost,team_baylor,0.0
+xgboost,team_belhaven,0.002031136304140091
+xgboost,team_beloit,0.0017704282654449344
+xgboost,team_bemidji state,0.0013403665507212281
+xgboost,team_benedict college,0.0
+xgboost,team_benedictine university,0.0
+xgboost,team_bentley,0.0004193406202830374
+xgboost,team_berry college,0.0030282246880233288
+xgboost,team_bethany,0.0012557432055473328
+xgboost,team_bethel,0.0
+xgboost,team_bethel university tennessee,0.0
+xgboost,team_bethune cookman,0.0004229089536238462
+xgboost,team_biddeford,0.002470351755619049
+xgboost,team_black hills state,0.0
+xgboost,team_bloomsburg,0.001127540715970099
+xgboost,team_bluefield,0.0
+xgboost,team_bluefield state,0.0
+xgboost,team_bluffton,0.0
+xgboost,team_boise state,0.0
+xgboost,team_boston college,0.0
+xgboost,team_bowdoin,0.0
+xgboost,team_bowie state,0.0
+xgboost,team_bowling green,0.0
+xgboost,team_brevard college,0.0
+xgboost,team_bridgewater,0.0
+xgboost,team_bridgewater state,0.0
+xgboost,team_brigham young,0.0
+xgboost,team_brockport,0.0
+xgboost,team_brown,0.0
+xgboost,team_bryant,0.0019783407915383577
+xgboost,team_bucknell,0.0
+xgboost,team_buena vista,0.0
+xgboost,team_buffalo,0.0
+xgboost,team_buffalo state,0.0013059189077466726
+xgboost,team_butler,0.0
+xgboost,team_cal poly,0.0026184904854744673
+xgboost,team_california,0.0
+xgboost,team_california los angeles,0.0011432652827352285
+xgboost,team_california lutheran university,0.0
+xgboost,team_calvin university,0.005543294362723827
+xgboost,team_campbell,0.0
+xgboost,team_capital,0.0
+xgboost,team_carleton,0.0
+xgboost,team_carnegie mellon,0.0
+xgboost,team_carroll university,0.0
+xgboost,team_carson newman college,0.0
+xgboost,team_carthage,0.0014316882006824017
+xgboost,team_case western reserve,0.0
+xgboost,team_castleton,0.0
+xgboost,team_catawba,0.0
+xgboost,team_catholic,0.0012716808123514056
+xgboost,team_centenary,0.0
+xgboost,team_central college,0.0017144159646704793
+xgboost,team_central connecticut,0.0010359070729464293
+xgboost,team_central florida,0.0
+xgboost,team_central methodist,0.0
+xgboost,team_central michigan,0.0
+xgboost,team_central missouri,0.0
+xgboost,team_central oklahoma,0.0
+xgboost,team_central state,0.003347451565787196
+xgboost,team_central washington,0.0
+xgboost,team_centre college kentucky,0.0
+xgboost,team_chadron st,0.0
+xgboost,team_chapman,0.0
+xgboost,team_charleston,0.0
+xgboost,team_charleston southern,0.0024705794639885426
+xgboost,team_charlotte,0.0
+xgboost,team_chattanooga,0.001117731211706996
+xgboost,team_chicago,0.0015515475533902645
+xgboost,team_chowan,0.0
+xgboost,team_christopher newport,0.002006019465625286
+xgboost,team_cincinnati,0.0
+xgboost,team_claremont mudd scripps college,0.0
+xgboost,team_clarion,0.0017545328009873629
+xgboost,team_clark atlanta,0.0
+xgboost,team_clemson,0.0
+xgboost,team_coast guard,0.0031941079068928957
+xgboost,team_coastal carolina,0.002749300329014659
+xgboost,team_coe college,0.004114483017474413
+xgboost,team_colby college,0.0011126777390018106
+xgboost,team_colgate,0.0
+xgboost,team_college of new jersey,0.0
+xgboost,team_colorado,0.0
+xgboost,team_colorado mesa,0.0
+xgboost,team_colorado school of mines,0.0
+xgboost,team_colorado state,0.0
+xgboost,team_columbia,0.0
+xgboost,team_concord university,0.0006109442329034209
+xgboost,team_concordia moorhead,0.0
+xgboost,team_concordia university chicago,0.0
+xgboost,team_concordia university state paul,0.00172264757566154
+xgboost,team_concordia wisconsin,0.0
+xgboost,team_connecticut,0.0
+xgboost,team_cornell,0.0
+xgboost,team_cornell college,0.0011974036460742354
+xgboost,team_cortland,0.002398217562586069
+xgboost,team_crown college,0.0001898105110740289
+xgboost,team_csu pueblo,0.0007064709789119661
+xgboost,team_cumberland,0.0
+xgboost,team_curry college,0.0
+xgboost,team_dakota state university,0.0
+xgboost,team_dartmouth,0.0
+xgboost,team_davenport,0.0
+xgboost,team_davidson,0.0012972877593711019
+xgboost,team_dayton,0.0
+xgboost,team_dean college,0.002637615194544196
+xgboost,team_delaware,0.0
+xgboost,team_delaware state,0.0012897670967504382
+xgboost,team_delaware valley,0.0014751835260540247
+xgboost,team_delta state,0.0
+xgboost,team_denison university,0.0
+xgboost,team_depauw,0.0013556621270254254
+xgboost,team_dickinson,0.0028652383480221033
+xgboost,team_drake,0.0
+xgboost,team_dubuque,0.0
+xgboost,team_duke,0.0
+xgboost,team_duquesne,0.001082532457076013
+xgboost,team_east central,0.0
+xgboost,team_east stroudsburg university,0.0032195497769862413
+xgboost,team_east tennessee state,0.0012611128622666001
+xgboost,team_east texas aandm,0.0
+xgboost,team_east texas baptist university,0.002107532462105155
+xgboost,team_eastern illinois,0.0
+xgboost,team_eastern kentucky,0.001127232564613223
+xgboost,team_eastern michigan,0.0
+xgboost,team_eastern new mexico,0.0
+xgboost,team_eastern oregon,0.0
+xgboost,team_eastern university,0.0
+xgboost,team_eastern washington,0.0
+xgboost,team_edinboro university,0.002744440920650959
+xgboost,team_edward waters,0.001680139685049653
+xgboost,team_elizabeth city state,0.0
+xgboost,team_elmhurst,0.0
+xgboost,team_elon,0.0
+xgboost,team_emory and henry college,0.0017926685977727175
+xgboost,team_emporia state university,0.0
+xgboost,team_endicott college,0.0
+xgboost,team_erskine,7.027392257441534e-06
+xgboost,team_eureka college,0.001112832105718553
+xgboost,team_fairmont state,0.0
+xgboost,team_fayetteville state,0.0
+xgboost,team_fdu florham,0.001564647420309484
+xgboost,team_ferris state,0.0024772679898887873
+xgboost,team_ferrum,0.001420020591467619
+xgboost,team_findlay,0.0010967429261654615
+xgboost,team_fitchburg state,0.0011631411034613848
+xgboost,team_florida,0.0
+xgboost,team_florida aandm,0.0
+xgboost,team_florida atlantic,0.0013293892843648791
+xgboost,team_florida international,0.0
+xgboost,team_florida memorial university,0.0
+xgboost,team_florida state,0.0
+xgboost,team_fordham,0.0
+xgboost,team_fort hays state,0.0
+xgboost,team_fort lewis,0.0
+xgboost,team_fort valley state,0.0
+xgboost,team_framingham state,0.0
+xgboost,team_franklin,0.0
+xgboost,team_franklin and marshall,0.0
+xgboost,team_franklin pierce,0.0
+xgboost,team_fresno state,0.0
+xgboost,team_frostburg state,0.0
+xgboost,team_furman,3.39456346409861e-05
+xgboost,team_gallaudet,0.0
+xgboost,team_gannon,0.0
+xgboost,team_gardner webb,0.0
+xgboost,team_geneva,0.0
+xgboost,team_georgetown,0.0017968148458749056
+xgboost,team_georgia,0.0
+xgboost,team_georgia state,0.0
+xgboost,team_georgia tech,0.0
+xgboost,team_gettysburg,0.0008187692728824914
+xgboost,team_glenville state,0.0
+xgboost,team_grambling,0.0
+xgboost,team_grand valley state university,0.0
+xgboost,team_greeneville,0.001493572723120451
+xgboost,team_greensboro college,0.0
+xgboost,team_greenville,0.0004994693445041776
+xgboost,team_grinnell,0.0
+xgboost,team_grove city college,0.0
+xgboost,team_guilford college,0.0
+xgboost,team_gustavus adolphus,0.0025324204470962286
+xgboost,team_hamilton,0.0
+xgboost,team_hamline university,0.0
+xgboost,team_hampden sydney,0.0010922460351139307
+xgboost,team_hampton,0.0
+xgboost,team_hanover college,0.00108750828076154
+xgboost,team_hardin simmons,0.0
+xgboost,team_harding university,0.0027049079071730375
+xgboost,team_hartwick,0.0
+xgboost,team_harvard,0.0
+xgboost,team_hawaii,0.0
+xgboost,team_heidelberg,0.0022338132839649916
+xgboost,team_henderson state,0.0012636644532904029
+xgboost,team_hendrix college,0.0
+xgboost,team_hilbert college,0.0012743313563987613
+xgboost,team_hillsdale,0.0
+xgboost,team_hiram college,0.0003950143582187593
+xgboost,team_hobart college,0.0
+xgboost,team_holy cross,0.0015399990370497108
+xgboost,team_hope college,0.0030636570882052183
+xgboost,team_houston,0.0
+xgboost,team_houston christian,0.003009508829563856
+xgboost,team_howard,0.0
+xgboost,team_howard payne,0.0
+xgboost,team_huntingdon college,0.0
+xgboost,team_husson,0.0
+xgboost,team_idaho,0.0
+xgboost,team_idaho state,0.0
+xgboost,team_illinois,0.0
+xgboost,team_illinois college,0.0
+xgboost,team_illinois state,0.0027377591468393803
+xgboost,team_illinois wesleyan,0.0
+xgboost,team_incarnate word,0.000511276419274509
+xgboost,team_indiana,0.0
+xgboost,team_indiana pennsylvania,0.0
+xgboost,team_indiana state,0.0
+xgboost,team_indianapolis,0.0016623050905764103
+xgboost,team_iowa,0.0
+xgboost,team_iowa state,0.0
+xgboost,team_ithaca college,0.0
+xgboost,team_jackson state,0.0
+xgboost,team_jacksonville state,0.0
+xgboost,team_james madison,0.0
+xgboost,team_jamestown college,0.0017017627833411098
+xgboost,team_john carroll university,0.0
+xgboost,team_johns hopkins university,0.0
+xgboost,team_johnson c smith,0.0
+xgboost,team_juniata college,0.0
+xgboost,team_kalamazoo,0.0
+xgboost,team_kansas,0.0
+xgboost,team_kansas state,0.0
+xgboost,team_kean,0.0
+xgboost,team_kennesaw state,0.0
+xgboost,team_kent state,0.000736951595172286
+xgboost,team_kentucky,0.0
+xgboost,team_kentucky christian,0.0
+xgboost,team_kentucky state,0.0
+xgboost,team_kentucky wesleyan,0.0
+xgboost,team_kenyon,0.0
+xgboost,team_keystone,0.0
+xgboost,team_kings college,0.0
+xgboost,team_knox college,0.0011959067778661847
+xgboost,team_kutztown university,0.0016023331554606557
+xgboost,team_la verne,0.0
+xgboost,team_lafayette,0.0017081062542274594
+xgboost,team_lagrange college,0.00130965665448457
+xgboost,team_lake erie,0.0
+xgboost,team_lake forest college,0.0
+xgboost,team_lakeland,0.0
+xgboost,team_lamar,0.0
+xgboost,team_lane college,0.0012799836695194244
+xgboost,team_langston university,0.0011253515258431435
+xgboost,team_lawrence university,0.0012032639933750033
+xgboost,team_lebanon valley,0.0
+xgboost,team_lehigh,0.0
+xgboost,team_lenoir rhyne,0.0
+xgboost,team_lewis and clark college,0.0
+xgboost,team_liberty,0.0
+xgboost,team_lincoln,0.001164456713013351
+xgboost,team_lindenwood,0.0
+xgboost,team_linfield college,0.0
+xgboost,team_little rock,0.0
+xgboost,team_livingstone,0.0
+xgboost,team_lock haven university,0.0
+xgboost,team_long island university,0.0
+xgboost,team_loras college,0.0019283387809991837
+xgboost,team_louisiana,0.0
+xgboost,team_louisiana college,0.0
+xgboost,team_louisiana tech,0.0
+xgboost,team_louisville,0.0
+xgboost,team_lsu,0.0
+xgboost,team_luther,0.0022371308878064156
+xgboost,team_lycoming,0.0
+xgboost,team_lyoncoll,0.0012209812412038445
+xgboost,team_macalester,0.0
+xgboost,team_madonna university,0.0
+xgboost,team_maine,0.0013788709184154868
+xgboost,team_maine maritime,0.0028058814350515604
+xgboost,team_manchester,0.0
+xgboost,team_marian college,0.0
+xgboost,team_marietta,0.0
+xgboost,team_marist,0.0
+xgboost,team_mars hill,0.0
+xgboost,team_marshall,0.0
+xgboost,team_martin luther,0.0
+xgboost,team_mary,0.0
+xgboost,team_mary hardin baylor,0.0
+xgboost,team_maryland,0.0
+xgboost,team_maryville college,0.002031159121543169
+xgboost,team_mass maritime,0.0
+xgboost,team_massachusetts,0.0
+xgboost,team_mayville state,0.0
+xgboost,team_mcdaniel college,0.0017704581841826439
+xgboost,team_mckendree,0.0
+xgboost,team_mcmurry,0.0
+xgboost,team_mcneese,0.0017770116683095694
+xgboost,team_memphis,0.0
+xgboost,team_mercer,0.0
+xgboost,team_merchant marine academy,0.0
+xgboost,team_mercyhurst,0.0
+xgboost,team_merrimack,0.0
+xgboost,team_methodist,0.0
+xgboost,team_miami,0.0
+xgboost,team_michigan,0.0
+xgboost,team_michigan state,0.0
+xgboost,team_michigan tech,0.001380109111778438
+xgboost,team_middle tennessee,0.0
+xgboost,team_middlebury,0.0
+xgboost,team_midland lutheran college,0.0
+xgboost,team_midwestern state,0.0
+xgboost,team_miles college,0.0013109853025525808
+xgboost,team_millersville,0.0
+xgboost,team_millikin,0.0
+xgboost,team_millsaps,0.0
+xgboost,team_minnesota,0.0
+xgboost,team_minnesota duluth,0.002777657238766551
+xgboost,team_minnesota morris,0.0013405651552602649
+xgboost,team_minnesota state mankato,0.001001173397526145
+xgboost,team_minnesota state moorhead,0.0024959989823400974
+xgboost,team_minot state,0.001233211369253695
+xgboost,team_misericordia,0.0
+xgboost,team_mississippi,0.0
+xgboost,team_mississippi state,0.0014258741866797209
+xgboost,team_mississippi valley state,0.0015248418785631657
+xgboost,team_missouri,0.0
+xgboost,team_missouri sandt,0.0013204810675233603
+xgboost,team_missouri southern state,0.0
+xgboost,team_missouri state,0.0
+xgboost,team_missouri western,0.0
+xgboost,team_mit,0.0015770868631079793
+xgboost,team_monmouth,0.003955695778131485
+xgboost,team_montana,0.0
+xgboost,team_montana state,0.0
+xgboost,team_montclair state,0.0
+xgboost,team_moravian,0.0011615259572863579
+xgboost,team_morehead state,0.0
+xgboost,team_morehouse college,0.0
+xgboost,team_morgan state,0.0
+xgboost,team_mount state joseph,0.0
+xgboost,team_mount union,0.0018443007720634341
+xgboost,team_muhlenberg,0.0
+xgboost,team_murray state,0.0
+xgboost,team_muskingum university,0.0
+xgboost,team_navy,0.0
+xgboost,team_nebraska,0.0
+xgboost,team_nebraska kearney,0.001109315431676805
+xgboost,team_nebraska wesleyan,0.0011847515124827623
+xgboost,team_nevada,0.0
+xgboost,team_nevada las vegas,0.001481884391978383
+xgboost,team_new england college,0.001647253055125475
+xgboost,team_new hampshire,0.0
+xgboost,team_new haven,0.0
+xgboost,team_new mexico,0.0003328823659103364
+xgboost,team_new mexico highlands,0.0017009965376928449
+xgboost,team_new mexico state,0.0
+xgboost,team_newberg,0.0
+xgboost,team_newberry,0.0
+xgboost,team_nicholls,0.0
+xgboost,team_nichols college,0.0
+xgboost,team_norfolk state,0.0012136331060901284
+xgboost,team_north alabama,0.0
+xgboost,team_north carolina,0.0
+xgboost,team_north carolina aandt,0.0
+xgboost,team_north carolina central,0.0018897649133577943
+xgboost,team_north carolina state,0.0
+xgboost,team_north carolina wesleyan,0.0032454393804073334
+xgboost,team_north central college,0.0011128830956295133
+xgboost,team_north dakota state,0.002782744588330388
+xgboost,team_north greenville,0.0
+xgboost,team_north park,0.0
+xgboost,team_north texas,0.0
+xgboost,team_northeastern state,0.0
+xgboost,team_northern arizona,0.0019905969966202974
+xgboost,team_northern colorado,0.0
+xgboost,team_northern michigan,0.0012449300847947598
+xgboost,team_northern state,0.0
+xgboost,team_northwest missouri st,0.0014138190308585763
+xgboost,team_northwestern,0.0
+xgboost,team_northwestern oklahoma state,0.0021539709996432066
+xgboost,team_northwestern state,0.0022373641841113567
+xgboost,team_northwood,0.0
+xgboost,team_norwich,0.0015733195468783379
+xgboost,team_notre dame,0.0
+xgboost,team_oberlin,0.0
+xgboost,team_ohio,0.0
+xgboost,team_ohio dominican,0.0
+xgboost,team_ohio northern,0.0
+xgboost,team_ohio state,0.0
+xgboost,team_ohio wesleyan,0.006014277692884207
+xgboost,team_oklahoma,0.002200086135417223
+xgboost,team_oklahoma baptist,0.0
+xgboost,team_oklahoma panhandle st,0.0
+xgboost,team_oklahoma state,0.0
+xgboost,team_old dominion,0.0
+xgboost,team_olivet college,0.0
+xgboost,team_oregon,0.0
+xgboost,team_oregon state,0.0
+xgboost,team_otterbein,0.0
+xgboost,team_ouachita baptist,0.0
+xgboost,team_pace,0.0018058534478768706
+xgboost,team_pacific,0.0
+xgboost,team_pacific lutheran,0.0
+xgboost,team_penn state,0.0
+xgboost,team_pennsylvania,0.0
+xgboost,team_pennwest california,0.0
+xgboost,team_phoenix,0.0
+xgboost,team_pittsburg st,0.0
+xgboost,team_pittsburgh,0.0
+xgboost,team_plymouth state,0.0018811923218891025
+xgboost,team_point university,0.0015212050639092922
+xgboost,team_pomona pitzer,0.0
+xgboost,team_portland state,0.0031758469995111227
+xgboost,team_post university,0.0
+xgboost,team_prairie view aandm,0.0
+xgboost,team_presbyterian,0.0012653658632189035
+xgboost,team_princeton,0.0
+xgboost,team_puget sound,0.0011727679520845413
+xgboost,team_purdue,0.0029353045392781496
+xgboost,team_quincy,0.0
+xgboost,team_randolph macon,0.0012870683567598462
+xgboost,team_reading,0.0
+xgboost,team_redlands,0.0
+xgboost,team_rensselaer,0.0
+xgboost,team_rhode island,0.0009221082436852157
+xgboost,team_rhodes college,0.0
+xgboost,team_rice,0.0
+xgboost,team_richmond,0.0
+xgboost,team_rio grande,0.0
+xgboost,team_ripon,0.0016687429742887616
+xgboost,team_roanoke college,0.0
+xgboost,team_robert morris,0.0
+xgboost,team_rochester,0.0
+xgboost,team_rockford,0.0
+xgboost,team_roosevelt,0.0
+xgboost,team_rose hulman,0.001644430449232459
+xgboost,team_rowan,0.0
+xgboost,team_rutgers,0.0
+xgboost,team_sacramento state,0.0
+xgboost,team_sacred heart,0.0
+xgboost,team_saginaw valley state,0.0
+xgboost,team_saint johns,0.0011633418034762144
+xgboost,team_saint vincent,0.0
+xgboost,team_salisbury,0.003005574457347393
+xgboost,team_salve regina,0.0
+xgboost,team_sam houston,0.0
+xgboost,team_samford,0.0025051741395145655
+xgboost,team_san diego,0.0011505045695230365
+xgboost,team_san diego state,0.0
+xgboost,team_san josé state,0.0
+xgboost,team_savannah st,0.0011059388052672148
+xgboost,team_seton hill,0.0
+xgboost,team_sewanee,0.0011593247763812542
+xgboost,team_shaw,0.0015101069584488869
+xgboost,team_shenandoah,0.0
+xgboost,team_shepherd,0.0
+xgboost,team_shippensburg,0.0
+xgboost,team_shorter,0.001487115048803389
+xgboost,team_simpson college,0.0012861532159149647
+xgboost,team_simpson university,0.0
+xgboost,team_sioux falls,0.0012930042576044798
+xgboost,team_slippery rock,0.0
+xgboost,team_south alabama,0.0
+xgboost,team_south carolina,0.0
+xgboost,team_south carolina state,0.0
+xgboost,team_south dakota mines,0.0018628701800480485
+xgboost,team_south dakota state,0.0
+xgboost,team_south florida,0.0
+xgboost,team_southeast missouri state,0.0
+xgboost,team_southeastern louisiana,0.0029347073286771774
+xgboost,team_southeastern oklahoma state,0.0
+xgboost,team_southern,0.0021164068020880222
+xgboost,team_southern arkansas,0.0010696911485865712
+xgboost,team_southern california,0.0
+xgboost,team_southern connecticut state,0.0
+xgboost,team_southern methodist,0.0
+xgboost,team_southern mississippi,0.0
+xgboost,team_southern nazarene,0.0
+xgboost,team_southern oregon,0.0
+xgboost,team_southern virginia,0.0
+xgboost,team_southwest baptist,0.0014300867915153503
+xgboost,team_southwest minnesota state,0.0013391304528340697
+xgboost,team_southwestern oklahoma state,0.0019585038535296917
+xgboost,team_southwestern university,0.0
+xgboost,team_springfield,0.0
+xgboost,team_st john fisher university,0.0
+xgboost,team_stanford,0.0
+xgboost,team_state anselm,0.0
+xgboost,team_state francis,0.0021816755179315805
+xgboost,team_state lawrence,0.0
+xgboost,team_state norbert,0.0
+xgboost,team_state olaf,0.0
+xgboost,team_state scholastica,0.0
+xgboost,team_state thomas,0.0
+xgboost,team_stetson,0.0018557104049250484
+xgboost,team_stevenson,0.0
+xgboost,team_stonehill,0.0
+xgboost,team_stony brook,0.0
+xgboost,team_sul ross state,0.0018523839535191655
+xgboost,team_suny maritime,0.0014834989560768008
+xgboost,team_suny morrisville,0.0
+xgboost,team_susquehanna,0.0018752265023067594
+xgboost,team_syracuse,0.001646212418563664
+xgboost,team_tarleton state,0.0036096239928156137
+xgboost,team_temple,0.0
+xgboost,team_tennessee,0.0
+xgboost,team_tennessee state,0.0
+xgboost,team_tennessee tech,0.005026858765631914
+xgboost,team_texas,0.0
+xgboost,team_texas aandm,0.0017778042238205671
+xgboost,team_texas aandm kingsville,0.0
+xgboost,team_texas christian,0.0
+xgboost,team_texas el paso,0.0
+xgboost,team_texas lutheran,0.0018444386078044772
+xgboost,team_texas san antonio,0.0012280310038477182
+xgboost,team_texas southern,0.0019710210617631674
+xgboost,team_texas state,0.0
+xgboost,team_texas tech,0.0
+xgboost,team_texas wesleyan,0.0
+xgboost,team_the citadel,0.0010798346484079957
+xgboost,team_thiel,0.0013651245972141623
+xgboost,team_thomas more college,0.0017062288243323565
+xgboost,team_tiffin,0.0
+xgboost,team_toledo,0.0
+xgboost,team_towson,0.0
+xgboost,team_trine university,0.0
+xgboost,team_trinity,0.0
+xgboost,team_trinity university tx,0.0
+xgboost,team_troy,0.0
+xgboost,team_truman state,0.0
+xgboost,team_tufts,0.0
+xgboost,team_tulane,0.0
+xgboost,team_tulsa,0.0
+xgboost,team_tuskegee,0.0010363125475123525
+xgboost,team_ualbany,0.0
+xgboost,team_uc davis,0.0
+xgboost,team_ul monroe,0.0
+xgboost,team_umass dartmouth,0.0
+xgboost,team_unc pembroke,0.0
+xgboost,team_union,0.0
+xgboost,team_upper iowa university,0.0
+xgboost,team_ursinus,0.001563969417475164
+xgboost,team_ut permian basin,0.0012250874424353242
+xgboost,team_ut rio grande valley,0.006706632673740387
+xgboost,team_utah,0.0
+xgboost,team_utah state,0.0
+xgboost,team_utah tech,0.0009065608028322458
+xgboost,team_utica,0.0017554007936269045
+xgboost,team_uva wise,0.0
+xgboost,team_valdosta state,0.0
+xgboost,team_valley city state,0.0
+xgboost,team_valparaiso,0.0017914415802806616
+xgboost,team_vanderbilt,0.0
+xgboost,team_villanova,0.0
+xgboost,team_virginia,0.0
+xgboost,team_virginia lynchburg,0.0
+xgboost,team_virginia st,0.0
+xgboost,team_virginia tech,0.0
+xgboost,team_virginia union,0.0010555395856499672
+xgboost,team_vmi,0.0
+xgboost,team_wabash college,0.0018462373409420252
+xgboost,team_wagner,0.0
+xgboost,team_wake forest,0.0
+xgboost,team_walsh,0.0
+xgboost,team_warner university,0.0
+xgboost,team_wartburg,0.0
+xgboost,team_washburn,0.0010903197107836604
+xgboost,team_washington,0.0
+xgboost,team_washington and jefferson,0.0
+xgboost,team_washington and lee,0.0
+xgboost,team_washington state,0.0
+xgboost,team_washington university,0.0013100956566631794
+xgboost,team_wayland baptist,0.0
+xgboost,team_wayne state,0.0023154534865170717
+xgboost,team_waynesburg,0.0
+xgboost,team_webber international,0.0
+xgboost,team_weber state,0.001114991377107799
+xgboost,team_wesleyan university,0.0
+xgboost,team_west alabama,0.0
+xgboost,team_west chester,0.0
+xgboost,team_west florida,0.0015304939588531852
+xgboost,team_west georgia,0.0
+xgboost,team_west liberty,0.0011395842302590609
+xgboost,team_west texas aandm,0.005462651140987873
+xgboost,team_west virginia state,0.0
+xgboost,team_west virginia wesleyan,0.0
+xgboost,team_western carolina,0.0
+xgboost,team_western colorado,0.0
+xgboost,team_western connecticut st,0.0
+xgboost,team_western illinois,0.001184075721539557
+xgboost,team_western kentucky,0.0
+xgboost,team_western michigan,0.0
+xgboost,team_western new england,0.0
+xgboost,team_western new mexico,0.002043316373601556
+xgboost,team_western oregon,0.0
+xgboost,team_westfield state,0.0
+xgboost,team_westminster,0.0
+xgboost,team_westminster college,0.0
+xgboost,team_wheaton,0.0
+xgboost,team_wheeling,0.0014938880922272801
+xgboost,team_whitworth,0.0
+xgboost,team_widener,0.0
+xgboost,team_wilkes,0.0
+xgboost,team_willamette,0.0017244350165128708
+xgboost,team_william and mary,0.0
+xgboost,team_william jewell,0.0014258322771638632
+xgboost,team_william paterson,0.0
+xgboost,team_williams,0.0
+xgboost,team_wilmington,0.0020517681259661913
+xgboost,team_wilson,0.001173192635178566
+xgboost,team_wingate,0.0029788599349558353
+xgboost,team_winona state,0.0
+xgboost,team_winston salem,0.0
+xgboost,team_wisconsin,0.0
+xgboost,team_wisconsin eau claire,0.0
+xgboost,team_wisconsin lacrosse,0.0013944267993792892
+xgboost,team_wisconsin lutheran,0.0
+xgboost,team_wisconsin oshkosh,0.0
+xgboost,team_wisconsin platteville,0.0026147859171032906
+xgboost,team_wisconsin river falls,0.002360363258048892
+xgboost,team_wisconsin stevens pt,0.0
+xgboost,team_wisconsin stout,0.0
+xgboost,team_wisconsin whitewater,0.0
+xgboost,team_wittenberg,0.0
+xgboost,team_wofford,0.0011674154084175825
+xgboost,team_wooster,0.0
+xgboost,team_worcester polytechnic institute,0.002557172439992428
+xgboost,team_worcester st,0.0
+xgboost,team_wyoming,0.0
+xgboost,team_yale,0.0
+xgboost,team_youngstown state,0.0
+lightgbm,week,2098.0
+lightgbm,is_home,2738.0
+lightgbm,venue_lat,13624.0
+lightgbm,venue_lon,13377.0
+lightgbm,team_lat,336.0
+lightgbm,team_lon,316.0
+lightgbm,travel_distance_km,183.0
+lightgbm,rest_days,7715.0
+lightgbm,wx_season,0.0
+lightgbm,wx_week,220.0
+lightgbm,wx_latitude,700.0
+lightgbm,wx_longitude,763.0
+lightgbm,wx_temperature_c,828.0
+lightgbm,wx_wind_speed_mps,747.0
+lightgbm,wx_wind_direction_deg,880.0
+lightgbm,wx_precip_mm,0.0
+lightgbm,wx_precip_prob_pct,441.0
+lightgbm,wx_http_status,0.0
+lightgbm,wx_hour_index,270.0
+lightgbm,ts_scoring_offense_ppg,0.0
+lightgbm,ts_scoring_defense_ppg,0.0
+lightgbm,ts_yards_per_play,0.0
+lightgbm,ts_seconds_per_play,0.0
+lightgbm,eff_off_overall_ppa,225.0
+lightgbm,eff_off_passing_ppa,235.0
+lightgbm,eff_off_rushing_ppa,293.0
+lightgbm,eff_off_first_down_ppa,251.0
+lightgbm,eff_off_second_down_ppa,404.0
+lightgbm,eff_off_third_down_ppa,435.0
+lightgbm,eff_off_cum_total_ppa,226.0
+lightgbm,eff_off_cum_passing_ppa,180.0
+lightgbm,eff_off_cum_rushing_ppa,276.0
+lightgbm,eff_def_overall_ppa,105.0
+lightgbm,eff_def_passing_ppa,157.0
+lightgbm,eff_def_rushing_ppa,207.0
+lightgbm,eff_def_first_down_ppa,267.0
+lightgbm,eff_def_second_down_ppa,247.0
+lightgbm,eff_def_third_down_ppa,247.0
+lightgbm,eff_def_cum_total_ppa,95.0
+lightgbm,eff_def_cum_passing_ppa,137.0
+lightgbm,eff_def_cum_rushing_ppa,202.0
+lightgbm,season,0.0
+lightgbm,opponent_Central Arkansas,0.0
+lightgbm,opponent_East Carolina,0.0
+lightgbm,opponent_Georgia Southern,0.0
+lightgbm,opponent_North Dakota,0.0
+lightgbm,opponent_Northern Illinois,0.0
+lightgbm,opponent_Northern Iowa,0.0
+lightgbm,opponent_South Dakota,0.0
+lightgbm,opponent_Southern Illinois,0.0
+lightgbm,opponent_Southern Utah,0.0
+lightgbm,opponent_Stephen F. Austin,0.0
+lightgbm,opponent_UT Martin,0.0
+lightgbm,opponent_West Virginia,0.0
+lightgbm,opponent_adams state,0.0
+lightgbm,opponent_adrian,0.0
+lightgbm,opponent_air force,0.0
+lightgbm,opponent_akron,0.0
+lightgbm,opponent_alabama,0.0
+lightgbm,opponent_alabama aandm,0.0
+lightgbm,opponent_alabama birmingham,0.0
+lightgbm,opponent_alabama state,0.0
+lightgbm,opponent_albany state ga,0.0
+lightgbm,opponent_albion,0.0
+lightgbm,opponent_albright,0.0
+lightgbm,opponent_alcorn state,0.0
+lightgbm,opponent_alfred state,0.0
+lightgbm,opponent_alfred university,0.0
+lightgbm,opponent_allegheny,0.0
+lightgbm,opponent_allen,0.0
+lightgbm,opponent_alma,0.0
+lightgbm,opponent_american international,0.0
+lightgbm,opponent_amherst,0.0
+lightgbm,opponent_anderson,0.0
+lightgbm,opponent_angelo state,0.0
+lightgbm,opponent_anna maria college,0.0
+lightgbm,opponent_appalachian state,0.0
+lightgbm,opponent_apprentice school,0.0
+lightgbm,opponent_arizona,0.0
+lightgbm,opponent_arizona state,0.0
+lightgbm,opponent_arkansas,0.0
+lightgbm,opponent_arkansas monticello,0.0
+lightgbm,opponent_arkansas pine bluff,0.0
+lightgbm,opponent_arkansas state,0.0
+lightgbm,opponent_arkansas tech,0.0
+lightgbm,opponent_army,0.0
+lightgbm,opponent_ashland,0.0
+lightgbm,opponent_assumption,0.0
+lightgbm,opponent_auburn,0.0
+lightgbm,opponent_augsburg,0.0
+lightgbm,opponent_augustana,0.0
+lightgbm,opponent_augustana university,0.0
+lightgbm,opponent_aurora,0.0
+lightgbm,opponent_austin,0.0
+lightgbm,opponent_austin peay,0.0
+lightgbm,opponent_averett,0.0
+lightgbm,opponent_baldwin wallace,0.0
+lightgbm,opponent_ball state,0.0
+lightgbm,opponent_bates,0.0
+lightgbm,opponent_baylor,0.0
+lightgbm,opponent_belhaven,0.0
+lightgbm,opponent_beloit,0.0
+lightgbm,opponent_bemidji state,0.0
+lightgbm,opponent_benedict college,0.0
+lightgbm,opponent_benedictine university,0.0
+lightgbm,opponent_bentley,0.0
+lightgbm,opponent_berry college,0.0
+lightgbm,opponent_bethany,0.0
+lightgbm,opponent_bethel,0.0
+lightgbm,opponent_bethel university tennessee,0.0
+lightgbm,opponent_bethune cookman,0.0
+lightgbm,opponent_biddeford,0.0
+lightgbm,opponent_black hills state,0.0
+lightgbm,opponent_bloomsburg,0.0
+lightgbm,opponent_bluefield,0.0
+lightgbm,opponent_bluefield state,0.0
+lightgbm,opponent_bluffton,0.0
+lightgbm,opponent_boise state,0.0
+lightgbm,opponent_boston college,0.0
+lightgbm,opponent_bowdoin,0.0
+lightgbm,opponent_bowie state,0.0
+lightgbm,opponent_bowling green,0.0
+lightgbm,opponent_brevard college,0.0
+lightgbm,opponent_bridgewater,0.0
+lightgbm,opponent_bridgewater state,0.0
+lightgbm,opponent_brigham young,0.0
+lightgbm,opponent_brockport,0.0
+lightgbm,opponent_brown,0.0
+lightgbm,opponent_bryant,0.0
+lightgbm,opponent_bucknell,0.0
+lightgbm,opponent_buena vista,0.0
+lightgbm,opponent_buffalo,0.0
+lightgbm,opponent_buffalo state,0.0
+lightgbm,opponent_butler,0.0
+lightgbm,opponent_cal poly,0.0
+lightgbm,opponent_california,0.0
+lightgbm,opponent_california los angeles,0.0
+lightgbm,opponent_california lutheran university,0.0
+lightgbm,opponent_calvin university,0.0
+lightgbm,opponent_campbell,0.0
+lightgbm,opponent_capital,0.0
+lightgbm,opponent_carleton,0.0
+lightgbm,opponent_carnegie mellon,0.0
+lightgbm,opponent_carroll university,0.0
+lightgbm,opponent_carson newman college,0.0
+lightgbm,opponent_carthage,0.0
+lightgbm,opponent_case western reserve,0.0
+lightgbm,opponent_castleton,0.0
+lightgbm,opponent_catawba,0.0
+lightgbm,opponent_catholic,0.0
+lightgbm,opponent_centenary,0.0
+lightgbm,opponent_central college,0.0
+lightgbm,opponent_central connecticut,0.0
+lightgbm,opponent_central florida,0.0
+lightgbm,opponent_central methodist,0.0
+lightgbm,opponent_central michigan,0.0
+lightgbm,opponent_central missouri,0.0
+lightgbm,opponent_central oklahoma,0.0
+lightgbm,opponent_central state,0.0
+lightgbm,opponent_central washington,0.0
+lightgbm,opponent_centre college kentucky,0.0
+lightgbm,opponent_chadron st,0.0
+lightgbm,opponent_chapman,0.0
+lightgbm,opponent_charleston,0.0
+lightgbm,opponent_charleston southern,0.0
+lightgbm,opponent_charlotte,0.0
+lightgbm,opponent_chattanooga,0.0
+lightgbm,opponent_chicago,0.0
+lightgbm,opponent_chowan,0.0
+lightgbm,opponent_christopher newport,0.0
+lightgbm,opponent_cincinnati,0.0
+lightgbm,opponent_claremont mudd scripps college,0.0
+lightgbm,opponent_clarion,0.0
+lightgbm,opponent_clark atlanta,0.0
+lightgbm,opponent_clemson,0.0
+lightgbm,opponent_coast guard,0.0
+lightgbm,opponent_coastal carolina,0.0
+lightgbm,opponent_coe college,0.0
+lightgbm,opponent_colby college,0.0
+lightgbm,opponent_colgate,0.0
+lightgbm,opponent_college of new jersey,0.0
+lightgbm,opponent_colorado,0.0
+lightgbm,opponent_colorado mesa,0.0
+lightgbm,opponent_colorado school of mines,0.0
+lightgbm,opponent_colorado state,0.0
+lightgbm,opponent_columbia,0.0
+lightgbm,opponent_concord university,0.0
+lightgbm,opponent_concordia moorhead,0.0
+lightgbm,opponent_concordia university chicago,0.0
+lightgbm,opponent_concordia university state paul,0.0
+lightgbm,opponent_concordia wisconsin,0.0
+lightgbm,opponent_connecticut,0.0
+lightgbm,opponent_cornell,0.0
+lightgbm,opponent_cornell college,0.0
+lightgbm,opponent_cortland,0.0
+lightgbm,opponent_crown college,0.0
+lightgbm,opponent_csu pueblo,0.0
+lightgbm,opponent_cumberland,0.0
+lightgbm,opponent_curry college,0.0
+lightgbm,opponent_dakota state university,0.0
+lightgbm,opponent_dartmouth,0.0
+lightgbm,opponent_davenport,0.0
+lightgbm,opponent_davidson,0.0
+lightgbm,opponent_dayton,0.0
+lightgbm,opponent_dean college,0.0
+lightgbm,opponent_delaware,0.0
+lightgbm,opponent_delaware state,0.0
+lightgbm,opponent_delaware valley,0.0
+lightgbm,opponent_delta state,0.0
+lightgbm,opponent_denison university,0.0
+lightgbm,opponent_depauw,0.0
+lightgbm,opponent_dickinson,0.0
+lightgbm,opponent_drake,0.0
+lightgbm,opponent_dubuque,0.0
+lightgbm,opponent_duke,0.0
+lightgbm,opponent_duquesne,0.0
+lightgbm,opponent_east central,0.0
+lightgbm,opponent_east stroudsburg university,0.0
+lightgbm,opponent_east tennessee state,0.0
+lightgbm,opponent_east texas aandm,0.0
+lightgbm,opponent_east texas baptist university,0.0
+lightgbm,opponent_eastern illinois,0.0
+lightgbm,opponent_eastern kentucky,0.0
+lightgbm,opponent_eastern michigan,0.0
+lightgbm,opponent_eastern new mexico,0.0
+lightgbm,opponent_eastern oregon,0.0
+lightgbm,opponent_eastern university,0.0
+lightgbm,opponent_eastern washington,0.0
+lightgbm,opponent_edinboro university,0.0
+lightgbm,opponent_edward waters,0.0
+lightgbm,opponent_elizabeth city state,0.0
+lightgbm,opponent_elmhurst,0.0
+lightgbm,opponent_elon,0.0
+lightgbm,opponent_emory and henry college,0.0
+lightgbm,opponent_emporia state university,0.0
+lightgbm,opponent_endicott college,0.0
+lightgbm,opponent_erskine,0.0
+lightgbm,opponent_eureka college,0.0
+lightgbm,opponent_fairmont state,0.0
+lightgbm,opponent_fayetteville state,0.0
+lightgbm,opponent_fdu florham,0.0
+lightgbm,opponent_ferris state,0.0
+lightgbm,opponent_ferrum,0.0
+lightgbm,opponent_findlay,0.0
+lightgbm,opponent_fitchburg state,0.0
+lightgbm,opponent_florida,0.0
+lightgbm,opponent_florida aandm,0.0
+lightgbm,opponent_florida atlantic,0.0
+lightgbm,opponent_florida international,0.0
+lightgbm,opponent_florida memorial university,0.0
+lightgbm,opponent_florida state,0.0
+lightgbm,opponent_fordham,0.0
+lightgbm,opponent_fort hays state,0.0
+lightgbm,opponent_fort lewis,0.0
+lightgbm,opponent_fort valley state,0.0
+lightgbm,opponent_framingham state,0.0
+lightgbm,opponent_franklin,0.0
+lightgbm,opponent_franklin and marshall,0.0
+lightgbm,opponent_franklin pierce,0.0
+lightgbm,opponent_fresno state,0.0
+lightgbm,opponent_frostburg state,0.0
+lightgbm,opponent_furman,0.0
+lightgbm,opponent_gallaudet,0.0
+lightgbm,opponent_gannon,0.0
+lightgbm,opponent_gardner webb,0.0
+lightgbm,opponent_geneva,0.0
+lightgbm,opponent_georgetown,0.0
+lightgbm,opponent_georgia,0.0
+lightgbm,opponent_georgia state,0.0
+lightgbm,opponent_georgia tech,0.0
+lightgbm,opponent_gettysburg,0.0
+lightgbm,opponent_glenville state,0.0
+lightgbm,opponent_grambling,0.0
+lightgbm,opponent_grand valley state university,0.0
+lightgbm,opponent_greeneville,0.0
+lightgbm,opponent_greensboro college,0.0
+lightgbm,opponent_greenville,0.0
+lightgbm,opponent_grinnell,0.0
+lightgbm,opponent_grove city college,0.0
+lightgbm,opponent_guilford college,0.0
+lightgbm,opponent_gustavus adolphus,0.0
+lightgbm,opponent_hamilton,0.0
+lightgbm,opponent_hamline university,0.0
+lightgbm,opponent_hampden sydney,0.0
+lightgbm,opponent_hampton,0.0
+lightgbm,opponent_hanover college,0.0
+lightgbm,opponent_hardin simmons,0.0
+lightgbm,opponent_harding university,0.0
+lightgbm,opponent_hartwick,0.0
+lightgbm,opponent_harvard,0.0
+lightgbm,opponent_hawaii,0.0
+lightgbm,opponent_heidelberg,0.0
+lightgbm,opponent_henderson state,0.0
+lightgbm,opponent_hendrix college,0.0
+lightgbm,opponent_hilbert college,0.0
+lightgbm,opponent_hillsdale,0.0
+lightgbm,opponent_hiram college,0.0
+lightgbm,opponent_hobart college,0.0
+lightgbm,opponent_holy cross,0.0
+lightgbm,opponent_hope college,0.0
+lightgbm,opponent_houston,0.0
+lightgbm,opponent_houston christian,0.0
+lightgbm,opponent_howard,0.0
+lightgbm,opponent_howard payne,0.0
+lightgbm,opponent_huntingdon college,0.0
+lightgbm,opponent_husson,0.0
+lightgbm,opponent_idaho,0.0
+lightgbm,opponent_idaho state,0.0
+lightgbm,opponent_illinois,0.0
+lightgbm,opponent_illinois college,0.0
+lightgbm,opponent_illinois state,0.0
+lightgbm,opponent_illinois wesleyan,0.0
+lightgbm,opponent_incarnate word,0.0
+lightgbm,opponent_indiana,0.0
+lightgbm,opponent_indiana pennsylvania,0.0
+lightgbm,opponent_indiana state,0.0
+lightgbm,opponent_indianapolis,0.0
+lightgbm,opponent_iowa,0.0
+lightgbm,opponent_iowa state,0.0
+lightgbm,opponent_ithaca college,0.0
+lightgbm,opponent_jackson state,0.0
+lightgbm,opponent_jacksonville state,0.0
+lightgbm,opponent_james madison,0.0
+lightgbm,opponent_jamestown college,0.0
+lightgbm,opponent_john carroll university,0.0
+lightgbm,opponent_johns hopkins university,0.0
+lightgbm,opponent_johnson c smith,0.0
+lightgbm,opponent_juniata college,0.0
+lightgbm,opponent_kalamazoo,0.0
+lightgbm,opponent_kansas,0.0
+lightgbm,opponent_kansas state,0.0
+lightgbm,opponent_kean,0.0
+lightgbm,opponent_kennesaw state,0.0
+lightgbm,opponent_kent state,0.0
+lightgbm,opponent_kentucky,0.0
+lightgbm,opponent_kentucky christian,0.0
+lightgbm,opponent_kentucky state,0.0
+lightgbm,opponent_kentucky wesleyan,0.0
+lightgbm,opponent_kenyon,0.0
+lightgbm,opponent_keystone,0.0
+lightgbm,opponent_kings college,0.0
+lightgbm,opponent_knox college,0.0
+lightgbm,opponent_kutztown university,0.0
+lightgbm,opponent_la verne,0.0
+lightgbm,opponent_lafayette,0.0
+lightgbm,opponent_lagrange college,0.0
+lightgbm,opponent_lake erie,0.0
+lightgbm,opponent_lake forest college,0.0
+lightgbm,opponent_lakeland,0.0
+lightgbm,opponent_lamar,0.0
+lightgbm,opponent_lane college,0.0
+lightgbm,opponent_langston university,0.0
+lightgbm,opponent_lawrence university,0.0
+lightgbm,opponent_lebanon valley,0.0
+lightgbm,opponent_lehigh,0.0
+lightgbm,opponent_lenoir rhyne,0.0
+lightgbm,opponent_lewis and clark college,0.0
+lightgbm,opponent_liberty,0.0
+lightgbm,opponent_lincoln,0.0
+lightgbm,opponent_lindenwood,0.0
+lightgbm,opponent_linfield college,0.0
+lightgbm,opponent_little rock,0.0
+lightgbm,opponent_livingstone,0.0
+lightgbm,opponent_lock haven university,0.0
+lightgbm,opponent_long island university,0.0
+lightgbm,opponent_loras college,0.0
+lightgbm,opponent_louisiana,0.0
+lightgbm,opponent_louisiana college,0.0
+lightgbm,opponent_louisiana tech,0.0
+lightgbm,opponent_louisville,0.0
+lightgbm,opponent_lsu,0.0
+lightgbm,opponent_luther,0.0
+lightgbm,opponent_lycoming,0.0
+lightgbm,opponent_lyoncoll,0.0
+lightgbm,opponent_macalester,0.0
+lightgbm,opponent_madonna university,0.0
+lightgbm,opponent_maine,0.0
+lightgbm,opponent_maine maritime,0.0
+lightgbm,opponent_manchester,0.0
+lightgbm,opponent_marian college,0.0
+lightgbm,opponent_marietta,0.0
+lightgbm,opponent_marist,0.0
+lightgbm,opponent_mars hill,0.0
+lightgbm,opponent_marshall,0.0
+lightgbm,opponent_martin luther,0.0
+lightgbm,opponent_mary,0.0
+lightgbm,opponent_mary hardin baylor,0.0
+lightgbm,opponent_maryland,0.0
+lightgbm,opponent_maryville college,0.0
+lightgbm,opponent_mass maritime,0.0
+lightgbm,opponent_massachusetts,0.0
+lightgbm,opponent_mayville state,0.0
+lightgbm,opponent_mcdaniel college,0.0
+lightgbm,opponent_mckendree,0.0
+lightgbm,opponent_mcmurry,0.0
+lightgbm,opponent_mcneese,0.0
+lightgbm,opponent_memphis,0.0
+lightgbm,opponent_mercer,0.0
+lightgbm,opponent_merchant marine academy,0.0
+lightgbm,opponent_mercyhurst,0.0
+lightgbm,opponent_merrimack,0.0
+lightgbm,opponent_methodist,0.0
+lightgbm,opponent_miami,0.0
+lightgbm,opponent_michigan,0.0
+lightgbm,opponent_michigan state,0.0
+lightgbm,opponent_michigan tech,0.0
+lightgbm,opponent_middle tennessee,0.0
+lightgbm,opponent_middlebury,0.0
+lightgbm,opponent_midland lutheran college,0.0
+lightgbm,opponent_midwestern state,0.0
+lightgbm,opponent_miles college,0.0
+lightgbm,opponent_millersville,0.0
+lightgbm,opponent_millikin,0.0
+lightgbm,opponent_millsaps,0.0
+lightgbm,opponent_minnesota,0.0
+lightgbm,opponent_minnesota duluth,0.0
+lightgbm,opponent_minnesota morris,0.0
+lightgbm,opponent_minnesota state mankato,0.0
+lightgbm,opponent_minnesota state moorhead,0.0
+lightgbm,opponent_minot state,0.0
+lightgbm,opponent_misericordia,0.0
+lightgbm,opponent_mississippi,0.0
+lightgbm,opponent_mississippi state,0.0
+lightgbm,opponent_mississippi valley state,0.0
+lightgbm,opponent_missouri,0.0
+lightgbm,opponent_missouri sandt,0.0
+lightgbm,opponent_missouri southern state,0.0
+lightgbm,opponent_missouri state,0.0
+lightgbm,opponent_missouri western,0.0
+lightgbm,opponent_mit,0.0
+lightgbm,opponent_monmouth,0.0
+lightgbm,opponent_montana,0.0
+lightgbm,opponent_montana state,0.0
+lightgbm,opponent_montclair state,0.0
+lightgbm,opponent_moravian,0.0
+lightgbm,opponent_morehead state,0.0
+lightgbm,opponent_morehouse college,0.0
+lightgbm,opponent_morgan state,0.0
+lightgbm,opponent_mount state joseph,0.0
+lightgbm,opponent_mount union,0.0
+lightgbm,opponent_muhlenberg,0.0
+lightgbm,opponent_murray state,0.0
+lightgbm,opponent_muskingum university,0.0
+lightgbm,opponent_navy,0.0
+lightgbm,opponent_nebraska,0.0
+lightgbm,opponent_nebraska kearney,0.0
+lightgbm,opponent_nebraska wesleyan,0.0
+lightgbm,opponent_nevada,0.0
+lightgbm,opponent_nevada las vegas,0.0
+lightgbm,opponent_new england college,0.0
+lightgbm,opponent_new hampshire,0.0
+lightgbm,opponent_new haven,0.0
+lightgbm,opponent_new mexico,0.0
+lightgbm,opponent_new mexico highlands,0.0
+lightgbm,opponent_new mexico state,0.0
+lightgbm,opponent_newberg,0.0
+lightgbm,opponent_newberry,0.0
+lightgbm,opponent_nicholls,0.0
+lightgbm,opponent_nichols college,0.0
+lightgbm,opponent_norfolk state,0.0
+lightgbm,opponent_north alabama,0.0
+lightgbm,opponent_north carolina,0.0
+lightgbm,opponent_north carolina aandt,0.0
+lightgbm,opponent_north carolina central,0.0
+lightgbm,opponent_north carolina state,0.0
+lightgbm,opponent_north carolina wesleyan,0.0
+lightgbm,opponent_north central college,0.0
+lightgbm,opponent_north dakota state,0.0
+lightgbm,opponent_north greenville,0.0
+lightgbm,opponent_north park,0.0
+lightgbm,opponent_north texas,0.0
+lightgbm,opponent_northeastern state,0.0
+lightgbm,opponent_northern arizona,0.0
+lightgbm,opponent_northern colorado,0.0
+lightgbm,opponent_northern michigan,0.0
+lightgbm,opponent_northern state,0.0
+lightgbm,opponent_northwest missouri st,0.0
+lightgbm,opponent_northwestern,0.0
+lightgbm,opponent_northwestern oklahoma state,0.0
+lightgbm,opponent_northwestern state,0.0
+lightgbm,opponent_northwood,0.0
+lightgbm,opponent_norwich,0.0
+lightgbm,opponent_notre dame,0.0
+lightgbm,opponent_oberlin,0.0
+lightgbm,opponent_ohio,0.0
+lightgbm,opponent_ohio dominican,0.0
+lightgbm,opponent_ohio northern,0.0
+lightgbm,opponent_ohio state,0.0
+lightgbm,opponent_ohio wesleyan,0.0
+lightgbm,opponent_oklahoma,0.0
+lightgbm,opponent_oklahoma baptist,0.0
+lightgbm,opponent_oklahoma panhandle st,0.0
+lightgbm,opponent_oklahoma state,0.0
+lightgbm,opponent_old dominion,0.0
+lightgbm,opponent_olivet college,0.0
+lightgbm,opponent_oregon,0.0
+lightgbm,opponent_oregon state,0.0
+lightgbm,opponent_otterbein,0.0
+lightgbm,opponent_ouachita baptist,0.0
+lightgbm,opponent_pace,0.0
+lightgbm,opponent_pacific,0.0
+lightgbm,opponent_pacific lutheran,0.0
+lightgbm,opponent_penn state,0.0
+lightgbm,opponent_pennsylvania,0.0
+lightgbm,opponent_pennwest california,0.0
+lightgbm,opponent_phoenix,0.0
+lightgbm,opponent_pittsburg st,0.0
+lightgbm,opponent_pittsburgh,0.0
+lightgbm,opponent_plymouth state,0.0
+lightgbm,opponent_point university,0.0
+lightgbm,opponent_pomona pitzer,0.0
+lightgbm,opponent_portland state,0.0
+lightgbm,opponent_post university,0.0
+lightgbm,opponent_prairie view aandm,0.0
+lightgbm,opponent_presbyterian,0.0
+lightgbm,opponent_princeton,0.0
+lightgbm,opponent_puget sound,0.0
+lightgbm,opponent_purdue,0.0
+lightgbm,opponent_quincy,0.0
+lightgbm,opponent_randolph macon,0.0
+lightgbm,opponent_reading,0.0
+lightgbm,opponent_redlands,0.0
+lightgbm,opponent_rensselaer,0.0
+lightgbm,opponent_rhode island,0.0
+lightgbm,opponent_rhodes college,0.0
+lightgbm,opponent_rice,0.0
+lightgbm,opponent_richmond,0.0
+lightgbm,opponent_rio grande,0.0
+lightgbm,opponent_ripon,0.0
+lightgbm,opponent_roanoke college,0.0
+lightgbm,opponent_robert morris,0.0
+lightgbm,opponent_rochester,0.0
+lightgbm,opponent_rockford,0.0
+lightgbm,opponent_roosevelt,0.0
+lightgbm,opponent_rose hulman,0.0
+lightgbm,opponent_rowan,0.0
+lightgbm,opponent_rutgers,0.0
+lightgbm,opponent_sacramento state,0.0
+lightgbm,opponent_sacred heart,0.0
+lightgbm,opponent_saginaw valley state,0.0
+lightgbm,opponent_saint johns,0.0
+lightgbm,opponent_saint vincent,0.0
+lightgbm,opponent_salisbury,0.0
+lightgbm,opponent_salve regina,0.0
+lightgbm,opponent_sam houston,0.0
+lightgbm,opponent_samford,0.0
+lightgbm,opponent_san diego,0.0
+lightgbm,opponent_san diego state,0.0
+lightgbm,opponent_san josé state,0.0
+lightgbm,opponent_savannah st,0.0
+lightgbm,opponent_seton hill,0.0
+lightgbm,opponent_sewanee,0.0
+lightgbm,opponent_shaw,0.0
+lightgbm,opponent_shenandoah,0.0
+lightgbm,opponent_shepherd,0.0
+lightgbm,opponent_shippensburg,0.0
+lightgbm,opponent_shorter,0.0
+lightgbm,opponent_simpson college,0.0
+lightgbm,opponent_simpson university,0.0
+lightgbm,opponent_sioux falls,0.0
+lightgbm,opponent_slippery rock,0.0
+lightgbm,opponent_south alabama,0.0
+lightgbm,opponent_south carolina,0.0
+lightgbm,opponent_south carolina state,0.0
+lightgbm,opponent_south dakota mines,0.0
+lightgbm,opponent_south dakota state,0.0
+lightgbm,opponent_south florida,0.0
+lightgbm,opponent_southeast missouri state,0.0
+lightgbm,opponent_southeastern louisiana,0.0
+lightgbm,opponent_southeastern oklahoma state,0.0
+lightgbm,opponent_southern,0.0
+lightgbm,opponent_southern arkansas,0.0
+lightgbm,opponent_southern california,0.0
+lightgbm,opponent_southern connecticut state,0.0
+lightgbm,opponent_southern methodist,0.0
+lightgbm,opponent_southern mississippi,0.0
+lightgbm,opponent_southern nazarene,0.0
+lightgbm,opponent_southern oregon,0.0
+lightgbm,opponent_southern virginia,0.0
+lightgbm,opponent_southwest baptist,0.0
+lightgbm,opponent_southwest minnesota state,0.0
+lightgbm,opponent_southwestern oklahoma state,0.0
+lightgbm,opponent_southwestern university,0.0
+lightgbm,opponent_springfield,0.0
+lightgbm,opponent_st john fisher university,0.0
+lightgbm,opponent_stanford,0.0
+lightgbm,opponent_state anselm,0.0
+lightgbm,opponent_state francis,0.0
+lightgbm,opponent_state lawrence,0.0
+lightgbm,opponent_state norbert,0.0
+lightgbm,opponent_state olaf,0.0
+lightgbm,opponent_state scholastica,0.0
+lightgbm,opponent_state thomas,0.0
+lightgbm,opponent_stetson,0.0
+lightgbm,opponent_stevenson,0.0
+lightgbm,opponent_stonehill,0.0
+lightgbm,opponent_stony brook,0.0
+lightgbm,opponent_sul ross state,0.0
+lightgbm,opponent_suny maritime,0.0
+lightgbm,opponent_suny morrisville,0.0
+lightgbm,opponent_susquehanna,0.0
+lightgbm,opponent_syracuse,0.0
+lightgbm,opponent_tarleton state,0.0
+lightgbm,opponent_temple,0.0
+lightgbm,opponent_tennessee,0.0
+lightgbm,opponent_tennessee state,0.0
+lightgbm,opponent_tennessee tech,0.0
+lightgbm,opponent_texas,0.0
+lightgbm,opponent_texas aandm,0.0
+lightgbm,opponent_texas aandm kingsville,0.0
+lightgbm,opponent_texas christian,0.0
+lightgbm,opponent_texas el paso,0.0
+lightgbm,opponent_texas lutheran,0.0
+lightgbm,opponent_texas san antonio,0.0
+lightgbm,opponent_texas southern,0.0
+lightgbm,opponent_texas state,0.0
+lightgbm,opponent_texas tech,0.0
+lightgbm,opponent_texas wesleyan,0.0
+lightgbm,opponent_the citadel,0.0
+lightgbm,opponent_thiel,0.0
+lightgbm,opponent_thomas more college,0.0
+lightgbm,opponent_tiffin,0.0
+lightgbm,opponent_toledo,0.0
+lightgbm,opponent_towson,0.0
+lightgbm,opponent_trine university,0.0
+lightgbm,opponent_trinity,0.0
+lightgbm,opponent_trinity university tx,0.0
+lightgbm,opponent_troy,0.0
+lightgbm,opponent_truman state,0.0
+lightgbm,opponent_tufts,0.0
+lightgbm,opponent_tulane,0.0
+lightgbm,opponent_tulsa,0.0
+lightgbm,opponent_tuskegee,0.0
+lightgbm,opponent_ualbany,0.0
+lightgbm,opponent_uc davis,0.0
+lightgbm,opponent_ul monroe,0.0
+lightgbm,opponent_umass dartmouth,0.0
+lightgbm,opponent_unc pembroke,0.0
+lightgbm,opponent_union,0.0
+lightgbm,opponent_upper iowa university,0.0
+lightgbm,opponent_ursinus,0.0
+lightgbm,opponent_ut permian basin,0.0
+lightgbm,opponent_ut rio grande valley,0.0
+lightgbm,opponent_utah,0.0
+lightgbm,opponent_utah state,0.0
+lightgbm,opponent_utah tech,0.0
+lightgbm,opponent_utica,0.0
+lightgbm,opponent_uva wise,0.0
+lightgbm,opponent_valdosta state,0.0
+lightgbm,opponent_valley city state,0.0
+lightgbm,opponent_valparaiso,0.0
+lightgbm,opponent_vanderbilt,0.0
+lightgbm,opponent_villanova,0.0
+lightgbm,opponent_virginia,0.0
+lightgbm,opponent_virginia lynchburg,0.0
+lightgbm,opponent_virginia st,0.0
+lightgbm,opponent_virginia tech,0.0
+lightgbm,opponent_virginia union,0.0
+lightgbm,opponent_vmi,0.0
+lightgbm,opponent_wabash college,0.0
+lightgbm,opponent_wagner,0.0
+lightgbm,opponent_wake forest,0.0
+lightgbm,opponent_walsh,0.0
+lightgbm,opponent_warner university,0.0
+lightgbm,opponent_wartburg,0.0
+lightgbm,opponent_washburn,0.0
+lightgbm,opponent_washington,0.0
+lightgbm,opponent_washington and jefferson,0.0
+lightgbm,opponent_washington and lee,0.0
+lightgbm,opponent_washington state,0.0
+lightgbm,opponent_washington university,0.0
+lightgbm,opponent_wayland baptist,0.0
+lightgbm,opponent_wayne state,0.0
+lightgbm,opponent_waynesburg,0.0
+lightgbm,opponent_webber international,0.0
+lightgbm,opponent_weber state,0.0
+lightgbm,opponent_wesleyan university,0.0
+lightgbm,opponent_west alabama,0.0
+lightgbm,opponent_west chester,0.0
+lightgbm,opponent_west florida,0.0
+lightgbm,opponent_west georgia,0.0
+lightgbm,opponent_west liberty,0.0
+lightgbm,opponent_west texas aandm,0.0
+lightgbm,opponent_west virginia state,0.0
+lightgbm,opponent_west virginia wesleyan,0.0
+lightgbm,opponent_western carolina,0.0
+lightgbm,opponent_western colorado,0.0
+lightgbm,opponent_western connecticut st,0.0
+lightgbm,opponent_western illinois,0.0
+lightgbm,opponent_western kentucky,0.0
+lightgbm,opponent_western michigan,0.0
+lightgbm,opponent_western new england,0.0
+lightgbm,opponent_western new mexico,0.0
+lightgbm,opponent_western oregon,0.0
+lightgbm,opponent_westfield state,0.0
+lightgbm,opponent_westminster,0.0
+lightgbm,opponent_westminster college,0.0
+lightgbm,opponent_wheaton,0.0
+lightgbm,opponent_wheeling,0.0
+lightgbm,opponent_whitworth,0.0
+lightgbm,opponent_widener,0.0
+lightgbm,opponent_wilkes,0.0
+lightgbm,opponent_willamette,0.0
+lightgbm,opponent_william and mary,0.0
+lightgbm,opponent_william jewell,0.0
+lightgbm,opponent_william paterson,0.0
+lightgbm,opponent_williams,0.0
+lightgbm,opponent_wilmington,0.0
+lightgbm,opponent_wilson,0.0
+lightgbm,opponent_wingate,0.0
+lightgbm,opponent_winona state,0.0
+lightgbm,opponent_winston salem,0.0
+lightgbm,opponent_wisconsin,0.0
+lightgbm,opponent_wisconsin eau claire,0.0
+lightgbm,opponent_wisconsin lacrosse,0.0
+lightgbm,opponent_wisconsin lutheran,0.0
+lightgbm,opponent_wisconsin oshkosh,0.0
+lightgbm,opponent_wisconsin platteville,0.0
+lightgbm,opponent_wisconsin river falls,0.0
+lightgbm,opponent_wisconsin stevens pt,0.0
+lightgbm,opponent_wisconsin stout,0.0
+lightgbm,opponent_wisconsin whitewater,0.0
+lightgbm,opponent_wittenberg,0.0
+lightgbm,opponent_wofford,0.0
+lightgbm,opponent_wooster,0.0
+lightgbm,opponent_worcester polytechnic institute,0.0
+lightgbm,opponent_worcester st,0.0
+lightgbm,opponent_wyoming,0.0
+lightgbm,opponent_yale,0.0
+lightgbm,opponent_youngstown state,0.0
+lightgbm,st_conference_American Athletic,4.0
+lightgbm,st_conference_Big 12,6.0
+lightgbm,st_conference_Big Ten,14.0
+lightgbm,st_conference_Conference USA,1.0
+lightgbm,st_conference_FBS Independents,0.0
+lightgbm,st_conference_Mid-American,8.0
+lightgbm,st_conference_Mountain West,16.0
+lightgbm,st_conference_NA,14.0
+lightgbm,st_conference_Pac-12,0.0
+lightgbm,st_conference_SEC,13.0
+lightgbm,st_conference_Sun Belt,15.0
+lightgbm,team_Central Arkansas,0.0
+lightgbm,team_East Carolina,0.0
+lightgbm,team_Georgia Southern,0.0
+lightgbm,team_North Dakota,0.0
+lightgbm,team_Northern Illinois,0.0
+lightgbm,team_Northern Iowa,0.0
+lightgbm,team_South Dakota,0.0
+lightgbm,team_Southern Illinois,0.0
+lightgbm,team_Southern Utah,0.0
+lightgbm,team_Stephen F. Austin,0.0
+lightgbm,team_UT Martin,0.0
+lightgbm,team_West Virginia,0.0
+lightgbm,team_adams state,0.0
+lightgbm,team_adrian,0.0
+lightgbm,team_air force,0.0
+lightgbm,team_akron,0.0
+lightgbm,team_alabama,0.0
+lightgbm,team_alabama aandm,0.0
+lightgbm,team_alabama birmingham,0.0
+lightgbm,team_alabama state,0.0
+lightgbm,team_albany state ga,0.0
+lightgbm,team_albion,0.0
+lightgbm,team_albright,0.0
+lightgbm,team_alcorn state,0.0
+lightgbm,team_alfred state,0.0
+lightgbm,team_alfred university,0.0
+lightgbm,team_allegheny,0.0
+lightgbm,team_allen,0.0
+lightgbm,team_alma,0.0
+lightgbm,team_american international,0.0
+lightgbm,team_amherst,0.0
+lightgbm,team_anderson,0.0
+lightgbm,team_angelo state,0.0
+lightgbm,team_anna maria college,0.0
+lightgbm,team_appalachian state,0.0
+lightgbm,team_apprentice school,0.0
+lightgbm,team_arizona,0.0
+lightgbm,team_arizona state,0.0
+lightgbm,team_arkansas,0.0
+lightgbm,team_arkansas monticello,0.0
+lightgbm,team_arkansas pine bluff,0.0
+lightgbm,team_arkansas state,0.0
+lightgbm,team_arkansas tech,0.0
+lightgbm,team_army,0.0
+lightgbm,team_ashland,0.0
+lightgbm,team_assumption,0.0
+lightgbm,team_auburn,0.0
+lightgbm,team_augsburg,0.0
+lightgbm,team_augustana,0.0
+lightgbm,team_augustana university,0.0
+lightgbm,team_aurora,0.0
+lightgbm,team_austin,0.0
+lightgbm,team_austin peay,0.0
+lightgbm,team_averett,0.0
+lightgbm,team_baldwin wallace,0.0
+lightgbm,team_ball state,0.0
+lightgbm,team_bates,0.0
+lightgbm,team_baylor,0.0
+lightgbm,team_belhaven,0.0
+lightgbm,team_beloit,0.0
+lightgbm,team_bemidji state,0.0
+lightgbm,team_benedict college,0.0
+lightgbm,team_benedictine university,0.0
+lightgbm,team_bentley,0.0
+lightgbm,team_berry college,0.0
+lightgbm,team_bethany,0.0
+lightgbm,team_bethel,0.0
+lightgbm,team_bethel university tennessee,0.0
+lightgbm,team_bethune cookman,0.0
+lightgbm,team_biddeford,0.0
+lightgbm,team_black hills state,0.0
+lightgbm,team_bloomsburg,0.0
+lightgbm,team_bluefield,0.0
+lightgbm,team_bluefield state,0.0
+lightgbm,team_bluffton,0.0
+lightgbm,team_boise state,0.0
+lightgbm,team_boston college,0.0
+lightgbm,team_bowdoin,0.0
+lightgbm,team_bowie state,0.0
+lightgbm,team_bowling green,0.0
+lightgbm,team_brevard college,0.0
+lightgbm,team_bridgewater,0.0
+lightgbm,team_bridgewater state,0.0
+lightgbm,team_brigham young,0.0
+lightgbm,team_brockport,0.0
+lightgbm,team_brown,0.0
+lightgbm,team_bryant,0.0
+lightgbm,team_bucknell,0.0
+lightgbm,team_buena vista,0.0
+lightgbm,team_buffalo,0.0
+lightgbm,team_buffalo state,0.0
+lightgbm,team_butler,0.0
+lightgbm,team_cal poly,0.0
+lightgbm,team_california,0.0
+lightgbm,team_california los angeles,0.0
+lightgbm,team_california lutheran university,0.0
+lightgbm,team_calvin university,0.0
+lightgbm,team_campbell,0.0
+lightgbm,team_capital,0.0
+lightgbm,team_carleton,0.0
+lightgbm,team_carnegie mellon,0.0
+lightgbm,team_carroll university,0.0
+lightgbm,team_carson newman college,0.0
+lightgbm,team_carthage,0.0
+lightgbm,team_case western reserve,0.0
+lightgbm,team_castleton,0.0
+lightgbm,team_catawba,0.0
+lightgbm,team_catholic,0.0
+lightgbm,team_centenary,0.0
+lightgbm,team_central college,0.0
+lightgbm,team_central connecticut,0.0
+lightgbm,team_central florida,0.0
+lightgbm,team_central methodist,0.0
+lightgbm,team_central michigan,0.0
+lightgbm,team_central missouri,0.0
+lightgbm,team_central oklahoma,0.0
+lightgbm,team_central state,0.0
+lightgbm,team_central washington,0.0
+lightgbm,team_centre college kentucky,0.0
+lightgbm,team_chadron st,0.0
+lightgbm,team_chapman,0.0
+lightgbm,team_charleston,0.0
+lightgbm,team_charleston southern,0.0
+lightgbm,team_charlotte,0.0
+lightgbm,team_chattanooga,0.0
+lightgbm,team_chicago,0.0
+lightgbm,team_chowan,0.0
+lightgbm,team_christopher newport,0.0
+lightgbm,team_cincinnati,0.0
+lightgbm,team_claremont mudd scripps college,0.0
+lightgbm,team_clarion,0.0
+lightgbm,team_clark atlanta,0.0
+lightgbm,team_clemson,0.0
+lightgbm,team_coast guard,0.0
+lightgbm,team_coastal carolina,0.0
+lightgbm,team_coe college,0.0
+lightgbm,team_colby college,0.0
+lightgbm,team_colgate,0.0
+lightgbm,team_college of new jersey,0.0
+lightgbm,team_colorado,0.0
+lightgbm,team_colorado mesa,0.0
+lightgbm,team_colorado school of mines,0.0
+lightgbm,team_colorado state,0.0
+lightgbm,team_columbia,0.0
+lightgbm,team_concord university,0.0
+lightgbm,team_concordia moorhead,0.0
+lightgbm,team_concordia university chicago,0.0
+lightgbm,team_concordia university state paul,0.0
+lightgbm,team_concordia wisconsin,0.0
+lightgbm,team_connecticut,0.0
+lightgbm,team_cornell,0.0
+lightgbm,team_cornell college,0.0
+lightgbm,team_cortland,0.0
+lightgbm,team_crown college,0.0
+lightgbm,team_csu pueblo,0.0
+lightgbm,team_cumberland,0.0
+lightgbm,team_curry college,0.0
+lightgbm,team_dakota state university,0.0
+lightgbm,team_dartmouth,0.0
+lightgbm,team_davenport,0.0
+lightgbm,team_davidson,0.0
+lightgbm,team_dayton,0.0
+lightgbm,team_dean college,0.0
+lightgbm,team_delaware,0.0
+lightgbm,team_delaware state,0.0
+lightgbm,team_delaware valley,0.0
+lightgbm,team_delta state,0.0
+lightgbm,team_denison university,0.0
+lightgbm,team_depauw,0.0
+lightgbm,team_dickinson,0.0
+lightgbm,team_drake,0.0
+lightgbm,team_dubuque,0.0
+lightgbm,team_duke,0.0
+lightgbm,team_duquesne,0.0
+lightgbm,team_east central,0.0
+lightgbm,team_east stroudsburg university,0.0
+lightgbm,team_east tennessee state,0.0
+lightgbm,team_east texas aandm,0.0
+lightgbm,team_east texas baptist university,0.0
+lightgbm,team_eastern illinois,0.0
+lightgbm,team_eastern kentucky,0.0
+lightgbm,team_eastern michigan,0.0
+lightgbm,team_eastern new mexico,0.0
+lightgbm,team_eastern oregon,0.0
+lightgbm,team_eastern university,0.0
+lightgbm,team_eastern washington,0.0
+lightgbm,team_edinboro university,0.0
+lightgbm,team_edward waters,0.0
+lightgbm,team_elizabeth city state,0.0
+lightgbm,team_elmhurst,0.0
+lightgbm,team_elon,0.0
+lightgbm,team_emory and henry college,0.0
+lightgbm,team_emporia state university,0.0
+lightgbm,team_endicott college,0.0
+lightgbm,team_erskine,0.0
+lightgbm,team_eureka college,0.0
+lightgbm,team_fairmont state,0.0
+lightgbm,team_fayetteville state,0.0
+lightgbm,team_fdu florham,0.0
+lightgbm,team_ferris state,0.0
+lightgbm,team_ferrum,0.0
+lightgbm,team_findlay,0.0
+lightgbm,team_fitchburg state,0.0
+lightgbm,team_florida,0.0
+lightgbm,team_florida aandm,0.0
+lightgbm,team_florida atlantic,0.0
+lightgbm,team_florida international,0.0
+lightgbm,team_florida memorial university,0.0
+lightgbm,team_florida state,0.0
+lightgbm,team_fordham,0.0
+lightgbm,team_fort hays state,0.0
+lightgbm,team_fort lewis,0.0
+lightgbm,team_fort valley state,0.0
+lightgbm,team_framingham state,0.0
+lightgbm,team_franklin,0.0
+lightgbm,team_franklin and marshall,0.0
+lightgbm,team_franklin pierce,0.0
+lightgbm,team_fresno state,0.0
+lightgbm,team_frostburg state,0.0
+lightgbm,team_furman,0.0
+lightgbm,team_gallaudet,0.0
+lightgbm,team_gannon,0.0
+lightgbm,team_gardner webb,0.0
+lightgbm,team_geneva,0.0
+lightgbm,team_georgetown,0.0
+lightgbm,team_georgia,0.0
+lightgbm,team_georgia state,0.0
+lightgbm,team_georgia tech,0.0
+lightgbm,team_gettysburg,0.0
+lightgbm,team_glenville state,0.0
+lightgbm,team_grambling,0.0
+lightgbm,team_grand valley state university,0.0
+lightgbm,team_greeneville,0.0
+lightgbm,team_greensboro college,0.0
+lightgbm,team_greenville,0.0
+lightgbm,team_grinnell,0.0
+lightgbm,team_grove city college,0.0
+lightgbm,team_guilford college,0.0
+lightgbm,team_gustavus adolphus,0.0
+lightgbm,team_hamilton,0.0
+lightgbm,team_hamline university,0.0
+lightgbm,team_hampden sydney,0.0
+lightgbm,team_hampton,0.0
+lightgbm,team_hanover college,0.0
+lightgbm,team_hardin simmons,0.0
+lightgbm,team_harding university,0.0
+lightgbm,team_hartwick,0.0
+lightgbm,team_harvard,0.0
+lightgbm,team_hawaii,0.0
+lightgbm,team_heidelberg,0.0
+lightgbm,team_henderson state,0.0
+lightgbm,team_hendrix college,0.0
+lightgbm,team_hilbert college,0.0
+lightgbm,team_hillsdale,0.0
+lightgbm,team_hiram college,0.0
+lightgbm,team_hobart college,0.0
+lightgbm,team_holy cross,0.0
+lightgbm,team_hope college,0.0
+lightgbm,team_houston,0.0
+lightgbm,team_houston christian,0.0
+lightgbm,team_howard,0.0
+lightgbm,team_howard payne,0.0
+lightgbm,team_huntingdon college,0.0
+lightgbm,team_husson,0.0
+lightgbm,team_idaho,0.0
+lightgbm,team_idaho state,0.0
+lightgbm,team_illinois,0.0
+lightgbm,team_illinois college,0.0
+lightgbm,team_illinois state,0.0
+lightgbm,team_illinois wesleyan,0.0
+lightgbm,team_incarnate word,0.0
+lightgbm,team_indiana,0.0
+lightgbm,team_indiana pennsylvania,0.0
+lightgbm,team_indiana state,0.0
+lightgbm,team_indianapolis,0.0
+lightgbm,team_iowa,0.0
+lightgbm,team_iowa state,0.0
+lightgbm,team_ithaca college,0.0
+lightgbm,team_jackson state,0.0
+lightgbm,team_jacksonville state,0.0
+lightgbm,team_james madison,0.0
+lightgbm,team_jamestown college,0.0
+lightgbm,team_john carroll university,0.0
+lightgbm,team_johns hopkins university,0.0
+lightgbm,team_johnson c smith,0.0
+lightgbm,team_juniata college,0.0
+lightgbm,team_kalamazoo,0.0
+lightgbm,team_kansas,0.0
+lightgbm,team_kansas state,0.0
+lightgbm,team_kean,0.0
+lightgbm,team_kennesaw state,0.0
+lightgbm,team_kent state,0.0
+lightgbm,team_kentucky,0.0
+lightgbm,team_kentucky christian,0.0
+lightgbm,team_kentucky state,0.0
+lightgbm,team_kentucky wesleyan,0.0
+lightgbm,team_kenyon,0.0
+lightgbm,team_keystone,0.0
+lightgbm,team_kings college,0.0
+lightgbm,team_knox college,0.0
+lightgbm,team_kutztown university,0.0
+lightgbm,team_la verne,0.0
+lightgbm,team_lafayette,0.0
+lightgbm,team_lagrange college,0.0
+lightgbm,team_lake erie,0.0
+lightgbm,team_lake forest college,0.0
+lightgbm,team_lakeland,0.0
+lightgbm,team_lamar,0.0
+lightgbm,team_lane college,0.0
+lightgbm,team_langston university,0.0
+lightgbm,team_lawrence university,0.0
+lightgbm,team_lebanon valley,0.0
+lightgbm,team_lehigh,0.0
+lightgbm,team_lenoir rhyne,0.0
+lightgbm,team_lewis and clark college,0.0
+lightgbm,team_liberty,0.0
+lightgbm,team_lincoln,0.0
+lightgbm,team_lindenwood,0.0
+lightgbm,team_linfield college,0.0
+lightgbm,team_little rock,0.0
+lightgbm,team_livingstone,0.0
+lightgbm,team_lock haven university,0.0
+lightgbm,team_long island university,0.0
+lightgbm,team_loras college,0.0
+lightgbm,team_louisiana,0.0
+lightgbm,team_louisiana college,0.0
+lightgbm,team_louisiana tech,0.0
+lightgbm,team_louisville,0.0
+lightgbm,team_lsu,0.0
+lightgbm,team_luther,0.0
+lightgbm,team_lycoming,0.0
+lightgbm,team_lyoncoll,0.0
+lightgbm,team_macalester,0.0
+lightgbm,team_madonna university,0.0
+lightgbm,team_maine,0.0
+lightgbm,team_maine maritime,0.0
+lightgbm,team_manchester,0.0
+lightgbm,team_marian college,0.0
+lightgbm,team_marietta,0.0
+lightgbm,team_marist,0.0
+lightgbm,team_mars hill,0.0
+lightgbm,team_marshall,0.0
+lightgbm,team_martin luther,0.0
+lightgbm,team_mary,0.0
+lightgbm,team_mary hardin baylor,0.0
+lightgbm,team_maryland,0.0
+lightgbm,team_maryville college,0.0
+lightgbm,team_mass maritime,0.0
+lightgbm,team_massachusetts,0.0
+lightgbm,team_mayville state,0.0
+lightgbm,team_mcdaniel college,0.0
+lightgbm,team_mckendree,0.0
+lightgbm,team_mcmurry,0.0
+lightgbm,team_mcneese,0.0
+lightgbm,team_memphis,0.0
+lightgbm,team_mercer,0.0
+lightgbm,team_merchant marine academy,0.0
+lightgbm,team_mercyhurst,0.0
+lightgbm,team_merrimack,0.0
+lightgbm,team_methodist,0.0
+lightgbm,team_miami,0.0
+lightgbm,team_michigan,0.0
+lightgbm,team_michigan state,0.0
+lightgbm,team_michigan tech,0.0
+lightgbm,team_middle tennessee,0.0
+lightgbm,team_middlebury,0.0
+lightgbm,team_midland lutheran college,0.0
+lightgbm,team_midwestern state,0.0
+lightgbm,team_miles college,0.0
+lightgbm,team_millersville,0.0
+lightgbm,team_millikin,0.0
+lightgbm,team_millsaps,0.0
+lightgbm,team_minnesota,0.0
+lightgbm,team_minnesota duluth,0.0
+lightgbm,team_minnesota morris,0.0
+lightgbm,team_minnesota state mankato,0.0
+lightgbm,team_minnesota state moorhead,0.0
+lightgbm,team_minot state,0.0
+lightgbm,team_misericordia,0.0
+lightgbm,team_mississippi,0.0
+lightgbm,team_mississippi state,0.0
+lightgbm,team_mississippi valley state,0.0
+lightgbm,team_missouri,0.0
+lightgbm,team_missouri sandt,0.0
+lightgbm,team_missouri southern state,0.0
+lightgbm,team_missouri state,0.0
+lightgbm,team_missouri western,0.0
+lightgbm,team_mit,0.0
+lightgbm,team_monmouth,0.0
+lightgbm,team_montana,0.0
+lightgbm,team_montana state,0.0
+lightgbm,team_montclair state,0.0
+lightgbm,team_moravian,0.0
+lightgbm,team_morehead state,0.0
+lightgbm,team_morehouse college,0.0
+lightgbm,team_morgan state,0.0
+lightgbm,team_mount state joseph,0.0
+lightgbm,team_mount union,0.0
+lightgbm,team_muhlenberg,0.0
+lightgbm,team_murray state,0.0
+lightgbm,team_muskingum university,0.0
+lightgbm,team_navy,0.0
+lightgbm,team_nebraska,0.0
+lightgbm,team_nebraska kearney,0.0
+lightgbm,team_nebraska wesleyan,0.0
+lightgbm,team_nevada,0.0
+lightgbm,team_nevada las vegas,0.0
+lightgbm,team_new england college,0.0
+lightgbm,team_new hampshire,0.0
+lightgbm,team_new haven,0.0
+lightgbm,team_new mexico,0.0
+lightgbm,team_new mexico highlands,0.0
+lightgbm,team_new mexico state,0.0
+lightgbm,team_newberg,0.0
+lightgbm,team_newberry,0.0
+lightgbm,team_nicholls,0.0
+lightgbm,team_nichols college,0.0
+lightgbm,team_norfolk state,0.0
+lightgbm,team_north alabama,0.0
+lightgbm,team_north carolina,0.0
+lightgbm,team_north carolina aandt,0.0
+lightgbm,team_north carolina central,0.0
+lightgbm,team_north carolina state,0.0
+lightgbm,team_north carolina wesleyan,0.0
+lightgbm,team_north central college,0.0
+lightgbm,team_north dakota state,0.0
+lightgbm,team_north greenville,0.0
+lightgbm,team_north park,0.0
+lightgbm,team_north texas,0.0
+lightgbm,team_northeastern state,0.0
+lightgbm,team_northern arizona,0.0
+lightgbm,team_northern colorado,0.0
+lightgbm,team_northern michigan,0.0
+lightgbm,team_northern state,0.0
+lightgbm,team_northwest missouri st,0.0
+lightgbm,team_northwestern,0.0
+lightgbm,team_northwestern oklahoma state,0.0
+lightgbm,team_northwestern state,0.0
+lightgbm,team_northwood,0.0
+lightgbm,team_norwich,0.0
+lightgbm,team_notre dame,0.0
+lightgbm,team_oberlin,0.0
+lightgbm,team_ohio,0.0
+lightgbm,team_ohio dominican,0.0
+lightgbm,team_ohio northern,0.0
+lightgbm,team_ohio state,0.0
+lightgbm,team_ohio wesleyan,0.0
+lightgbm,team_oklahoma,0.0
+lightgbm,team_oklahoma baptist,0.0
+lightgbm,team_oklahoma panhandle st,0.0
+lightgbm,team_oklahoma state,0.0
+lightgbm,team_old dominion,0.0
+lightgbm,team_olivet college,0.0
+lightgbm,team_oregon,0.0
+lightgbm,team_oregon state,0.0
+lightgbm,team_otterbein,0.0
+lightgbm,team_ouachita baptist,0.0
+lightgbm,team_pace,0.0
+lightgbm,team_pacific,0.0
+lightgbm,team_pacific lutheran,0.0
+lightgbm,team_penn state,0.0
+lightgbm,team_pennsylvania,0.0
+lightgbm,team_pennwest california,0.0
+lightgbm,team_phoenix,0.0
+lightgbm,team_pittsburg st,0.0
+lightgbm,team_pittsburgh,0.0
+lightgbm,team_plymouth state,0.0
+lightgbm,team_point university,0.0
+lightgbm,team_pomona pitzer,0.0
+lightgbm,team_portland state,0.0
+lightgbm,team_post university,0.0
+lightgbm,team_prairie view aandm,0.0
+lightgbm,team_presbyterian,0.0
+lightgbm,team_princeton,0.0
+lightgbm,team_puget sound,0.0
+lightgbm,team_purdue,0.0
+lightgbm,team_quincy,0.0
+lightgbm,team_randolph macon,0.0
+lightgbm,team_reading,0.0
+lightgbm,team_redlands,0.0
+lightgbm,team_rensselaer,0.0
+lightgbm,team_rhode island,0.0
+lightgbm,team_rhodes college,0.0
+lightgbm,team_rice,0.0
+lightgbm,team_richmond,0.0
+lightgbm,team_rio grande,0.0
+lightgbm,team_ripon,0.0
+lightgbm,team_roanoke college,0.0
+lightgbm,team_robert morris,0.0
+lightgbm,team_rochester,0.0
+lightgbm,team_rockford,0.0
+lightgbm,team_roosevelt,0.0
+lightgbm,team_rose hulman,0.0
+lightgbm,team_rowan,0.0
+lightgbm,team_rutgers,0.0
+lightgbm,team_sacramento state,0.0
+lightgbm,team_sacred heart,0.0
+lightgbm,team_saginaw valley state,0.0
+lightgbm,team_saint johns,0.0
+lightgbm,team_saint vincent,0.0
+lightgbm,team_salisbury,0.0
+lightgbm,team_salve regina,0.0
+lightgbm,team_sam houston,0.0
+lightgbm,team_samford,0.0
+lightgbm,team_san diego,0.0
+lightgbm,team_san diego state,0.0
+lightgbm,team_san josé state,0.0
+lightgbm,team_savannah st,0.0
+lightgbm,team_seton hill,0.0
+lightgbm,team_sewanee,0.0
+lightgbm,team_shaw,0.0
+lightgbm,team_shenandoah,0.0
+lightgbm,team_shepherd,0.0
+lightgbm,team_shippensburg,0.0
+lightgbm,team_shorter,0.0
+lightgbm,team_simpson college,0.0
+lightgbm,team_simpson university,0.0
+lightgbm,team_sioux falls,0.0
+lightgbm,team_slippery rock,0.0
+lightgbm,team_south alabama,0.0
+lightgbm,team_south carolina,0.0
+lightgbm,team_south carolina state,0.0
+lightgbm,team_south dakota mines,0.0
+lightgbm,team_south dakota state,0.0
+lightgbm,team_south florida,0.0
+lightgbm,team_southeast missouri state,0.0
+lightgbm,team_southeastern louisiana,0.0
+lightgbm,team_southeastern oklahoma state,0.0
+lightgbm,team_southern,0.0
+lightgbm,team_southern arkansas,0.0
+lightgbm,team_southern california,0.0
+lightgbm,team_southern connecticut state,0.0
+lightgbm,team_southern methodist,0.0
+lightgbm,team_southern mississippi,0.0
+lightgbm,team_southern nazarene,0.0
+lightgbm,team_southern oregon,0.0
+lightgbm,team_southern virginia,0.0
+lightgbm,team_southwest baptist,0.0
+lightgbm,team_southwest minnesota state,0.0
+lightgbm,team_southwestern oklahoma state,0.0
+lightgbm,team_southwestern university,0.0
+lightgbm,team_springfield,0.0
+lightgbm,team_st john fisher university,0.0
+lightgbm,team_stanford,0.0
+lightgbm,team_state anselm,0.0
+lightgbm,team_state francis,0.0
+lightgbm,team_state lawrence,0.0
+lightgbm,team_state norbert,0.0
+lightgbm,team_state olaf,0.0
+lightgbm,team_state scholastica,0.0
+lightgbm,team_state thomas,0.0
+lightgbm,team_stetson,0.0
+lightgbm,team_stevenson,0.0
+lightgbm,team_stonehill,0.0
+lightgbm,team_stony brook,0.0
+lightgbm,team_sul ross state,0.0
+lightgbm,team_suny maritime,0.0
+lightgbm,team_suny morrisville,0.0
+lightgbm,team_susquehanna,0.0
+lightgbm,team_syracuse,0.0
+lightgbm,team_tarleton state,0.0
+lightgbm,team_temple,0.0
+lightgbm,team_tennessee,0.0
+lightgbm,team_tennessee state,0.0
+lightgbm,team_tennessee tech,0.0
+lightgbm,team_texas,0.0
+lightgbm,team_texas aandm,0.0
+lightgbm,team_texas aandm kingsville,0.0
+lightgbm,team_texas christian,0.0
+lightgbm,team_texas el paso,0.0
+lightgbm,team_texas lutheran,0.0
+lightgbm,team_texas san antonio,0.0
+lightgbm,team_texas southern,0.0
+lightgbm,team_texas state,0.0
+lightgbm,team_texas tech,0.0
+lightgbm,team_texas wesleyan,0.0
+lightgbm,team_the citadel,0.0
+lightgbm,team_thiel,0.0
+lightgbm,team_thomas more college,0.0
+lightgbm,team_tiffin,0.0
+lightgbm,team_toledo,0.0
+lightgbm,team_towson,0.0
+lightgbm,team_trine university,0.0
+lightgbm,team_trinity,0.0
+lightgbm,team_trinity university tx,0.0
+lightgbm,team_troy,0.0
+lightgbm,team_truman state,0.0
+lightgbm,team_tufts,0.0
+lightgbm,team_tulane,0.0
+lightgbm,team_tulsa,0.0
+lightgbm,team_tuskegee,0.0
+lightgbm,team_ualbany,0.0
+lightgbm,team_uc davis,0.0
+lightgbm,team_ul monroe,0.0
+lightgbm,team_umass dartmouth,0.0
+lightgbm,team_unc pembroke,0.0
+lightgbm,team_union,0.0
+lightgbm,team_upper iowa university,0.0
+lightgbm,team_ursinus,0.0
+lightgbm,team_ut permian basin,0.0
+lightgbm,team_ut rio grande valley,0.0
+lightgbm,team_utah,0.0
+lightgbm,team_utah state,0.0
+lightgbm,team_utah tech,0.0
+lightgbm,team_utica,0.0
+lightgbm,team_uva wise,0.0
+lightgbm,team_valdosta state,0.0
+lightgbm,team_valley city state,0.0
+lightgbm,team_valparaiso,0.0
+lightgbm,team_vanderbilt,0.0
+lightgbm,team_villanova,0.0
+lightgbm,team_virginia,0.0
+lightgbm,team_virginia lynchburg,0.0
+lightgbm,team_virginia st,0.0
+lightgbm,team_virginia tech,0.0
+lightgbm,team_virginia union,0.0
+lightgbm,team_vmi,0.0
+lightgbm,team_wabash college,0.0
+lightgbm,team_wagner,0.0
+lightgbm,team_wake forest,0.0
+lightgbm,team_walsh,0.0
+lightgbm,team_warner university,0.0
+lightgbm,team_wartburg,0.0
+lightgbm,team_washburn,0.0
+lightgbm,team_washington,0.0
+lightgbm,team_washington and jefferson,0.0
+lightgbm,team_washington and lee,0.0
+lightgbm,team_washington state,0.0
+lightgbm,team_washington university,0.0
+lightgbm,team_wayland baptist,0.0
+lightgbm,team_wayne state,0.0
+lightgbm,team_waynesburg,0.0
+lightgbm,team_webber international,0.0
+lightgbm,team_weber state,0.0
+lightgbm,team_wesleyan university,0.0
+lightgbm,team_west alabama,0.0
+lightgbm,team_west chester,0.0
+lightgbm,team_west florida,0.0
+lightgbm,team_west georgia,0.0
+lightgbm,team_west liberty,0.0
+lightgbm,team_west texas aandm,0.0
+lightgbm,team_west virginia state,0.0
+lightgbm,team_west virginia wesleyan,0.0
+lightgbm,team_western carolina,0.0
+lightgbm,team_western colorado,0.0
+lightgbm,team_western connecticut st,0.0
+lightgbm,team_western illinois,0.0
+lightgbm,team_western kentucky,0.0
+lightgbm,team_western michigan,0.0
+lightgbm,team_western new england,0.0
+lightgbm,team_western new mexico,0.0
+lightgbm,team_western oregon,0.0
+lightgbm,team_westfield state,0.0
+lightgbm,team_westminster,0.0
+lightgbm,team_westminster college,0.0
+lightgbm,team_wheaton,0.0
+lightgbm,team_wheeling,0.0
+lightgbm,team_whitworth,0.0
+lightgbm,team_widener,0.0
+lightgbm,team_wilkes,0.0
+lightgbm,team_willamette,0.0
+lightgbm,team_william and mary,0.0
+lightgbm,team_william jewell,0.0
+lightgbm,team_william paterson,0.0
+lightgbm,team_williams,0.0
+lightgbm,team_wilmington,0.0
+lightgbm,team_wilson,0.0
+lightgbm,team_wingate,0.0
+lightgbm,team_winona state,0.0
+lightgbm,team_winston salem,0.0
+lightgbm,team_wisconsin,0.0
+lightgbm,team_wisconsin eau claire,0.0
+lightgbm,team_wisconsin lacrosse,0.0
+lightgbm,team_wisconsin lutheran,0.0
+lightgbm,team_wisconsin oshkosh,0.0
+lightgbm,team_wisconsin platteville,0.0
+lightgbm,team_wisconsin river falls,0.0
+lightgbm,team_wisconsin stevens pt,0.0
+lightgbm,team_wisconsin stout,0.0
+lightgbm,team_wisconsin whitewater,0.0
+lightgbm,team_wittenberg,0.0
+lightgbm,team_wofford,0.0
+lightgbm,team_wooster,0.0
+lightgbm,team_worcester polytechnic institute,0.0
+lightgbm,team_worcester st,0.0
+lightgbm,team_wyoming,0.0
+lightgbm,team_yale,0.0
+lightgbm,team_youngstown state,0.0

@@ -1,0 +1,11 @@
+snapshot_utc=2025-09-22T13:13:05Z
+input_rows=2176
+features=1429
+target=points_scored
+excluded_features=0
+scores_csv=data/game_scores_clean.csv
+outcome_join_mode=strict(game_id,team)
+outcome_merge_missing_rows=5122
+dropped_NaN_targets=5122
+xgboost: rmse=15.761423, mae=12.580858, r2=0.082283, n_train=1740, n_test=436, n_features=1429, split_mode=temporal(season,week)
+lightgbm: rmse=19.258571, mae=15.453866, r2=-0.370144, n_train=1740, n_test=436, n_features=1429, split_mode=temporal(season,week)
