@@ -1,8 +1,6 @@
-snapshot_utc=2025-09-18T15:05:28Z
-input_rows=1570
-features=34
-target=eff_off_overall_ppa
-excluded_features=8 -> eff_off_cum_passing_ppa, eff_off_cum_rushing_ppa, eff_off_cum_total_ppa, eff_off_first_down_ppa, eff_off_passing_ppa, eff_off_rushing_ppa, eff_off_second_down_ppa, eff_off_third_down_ppa
-linear: rmse=0.149394, mae=0.119829, r2=0.251263, n_train=1256, n_test=314, n_features=34, split_mode=temporal(season,week)
-ridge: rmse=0.149556, mae=0.119203, r2=0.249638, n_train=1256, n_test=314, n_features=34, split_mode=temporal(season,week)
-lasso: rmse=0.154815, mae=0.123460, r2=0.195932, n_train=1256, n_test=314, n_features=34, split_mode=temporal(season,week)
+outcome_join_mode=strict(game_id,team)
+outcome_merge_missing_rows=5122
+dropped_NaN_targets=5122
+linear: rmse=29.243291, mae=19.264477, r2=-2.159152, n_train=1740, n_test=436, n_features=1429, split_mode=temporal(season,week)
+ridge: rmse=14.380590, mae=11.466462, r2=0.236039, n_train=1740, n_test=436, n_features=1429, split_mode=temporal(season,week)
+lasso: rmse=15.034113, mae=12.076104, r2=0.165025, n_train=1740, n_test=436, n_features=1429, split_mode=temporal(season,week)
