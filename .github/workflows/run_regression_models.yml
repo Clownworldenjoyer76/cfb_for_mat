@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHONUNBUFFERED: "1"   # print logs immediately
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -90,16 +91,20 @@ jobs:
 
       - name: Commit and push artifacts
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f \
-            logs_model_regression.txt \
-            data/model_regression_metrics.csv \
-            data/model_regression_coeffs.csv \
-            models/*.pkl || true
+
+          # Stage each file individually to avoid fragile line continuations.
+          [ -f logs_model_regression.txt ] && git add -f logs_model_regression.txt || true
+          [ -f data/model_regression_metrics.csv ] && git add -f data/model_regression_metrics.csv || true
+          [ -f data/model_regression_coeffs.csv ] && git add -f data/model_regression_coeffs.csv || true
+          # models may not exist or the glob may expand empty; silence errors.
+          git add -f models/*.pkl 2>/dev/null || true
 
           if git diff --cached --quiet; then
             echo "No changes to commit (artifacts unchanged)."
           else
             git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
             git push
+          fi
