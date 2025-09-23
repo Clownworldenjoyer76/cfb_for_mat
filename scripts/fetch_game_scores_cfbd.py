@@ -1,77 +1,57 @@
 #!/usr/bin/env python3
 """
-Fetch CFBD game scores comprehensively with BATCHED backfill, HARD-LIMITED per-ID fetch.
+CFBD score fetcher with batching + bounded per-ID backfill (resume/time-budgeted).
 
-What it does
-------------
-1) Builds the set of (season, week) pairs present in data/modeling_dataset.csv.
-   - For each pair, fetches /games for BOTH seasonType in {regular, postseason}
-     and BOTH division in {fbs, fcs}.
-2) If diagnostics exist, reads data/diagnostics/unmatched_missing_game_id.csv
-   and BATCHES the "backfill" by (season, week) for those game_ids as well.
-   - If some rows have season but no week, it batches by (season) only.
-   - If neither season nor week are known, it falls back to sparse per-ID fetch.
-3) Per-ID backfill is **hard-limited** to at most MAX_PER_ID_BACKFILL (default 200) IDs per run.
-4) Writes a unified CSV at data/game_scores.csv with:
-     id, season, week, home_team, away_team, home_points, away_points
+Boundaries (env, all optional):
+  MAX_PER_ID_BACKFILL=100      # hard cap of per-ID fetches this run
+  MAX_BACKFILL_MINUTES=20      # wall-clock minutes for per-ID before stopping
+  ENABLE_PER_ID_BACKFILL=1     # set to 0 to disable per-ID entirely
+  CFBD_API_KEY=...             # recommended
 
-Environment
------------
-CFBD_API_KEY           (recommended to avoid harsh rate limits)
-MAX_PER_ID_BACKFILL    (optional; default "200")
-
-Output
-------
-data/game_scores.csv
-and progress logs like:
-  [fetch] wrote data/game_scores.csv rows=XXXXX (base=YYYY + batched_backfill=ZZZZ + per_id_backfill=KKK; per_id_limit=LLL)
+Outputs:
+  data/game_scores.csv   (id, season, week, home_team, away_team, home_points, away_points)
+Logs a final summary with base/batched/per-id counts and the applied limits.
 """
 
 from __future__ import annotations
 
-import os
-import sys
-import time
+import os, sys, time
 from pathlib import Path
 from typing import Dict, Any, List, Iterable, Tuple
-
 import pandas as pd
 import requests
 
-# ---- Paths ----
-MODEL_CSV    = Path("data/modeling_dataset.csv")
-OUT_CSV      = Path("data/game_scores.csv")
-DIAG_MISS    = Path("data/diagnostics/unmatched_missing_game_id.csv")
+# Paths
+MODEL_CSV = Path("data/modeling_dataset.csv")
+OUT_CSV   = Path("data/game_scores.csv")
+DIAG_MISS = Path("data/diagnostics/unmatched_missing_game_id.csv")
 
-# ---- CFBD API ----
+# API
 CFBD_API_KEY = os.environ.get("CFBD_API_KEY", "")
-BASE_URL     = "https://api.collegefootballdata.com/games"
+BASE_URL = "https://api.collegefootballdata.com/games"
 
-# polite defaults
-REQ_TIMEOUT_S = 30
-SLEEP_BETWEEN_CALLS_S = 0.15
-MAX_RETRIES = 5
-BACKOFF_BASE_S = 0.8
+# Tunables
+REQ_TIMEOUT_S = 25
+SLEEP_BETWEEN_CALLS_S = 0.12
+MAX_RETRIES = 3
+BACKOFF_BASE_S = 0.7
 
-# hard cap for per-id backfill
-try:
-    MAX_PER_ID_BACKFILL = int(os.environ.get("MAX_PER_ID_BACKFILL", "200"))
-except Exception:
-    MAX_PER_ID_BACKFILL = 200
+def _int_env(name: str, default: int) -> int:
+    try:
+        return int(os.environ.get(name, str(default)))
+    except Exception:
+        return default
 
-# ---- Helpers ----
-def log(msg: str) -> None:
-    print(msg, flush=True)
+MAX_PER_ID_BACKFILL  = _int_env("MAX_PER_ID_BACKFILL", 100)
+MAX_BACKFILL_MINUTES = _int_env("MAX_BACKFILL_MINUTES", 20)
+ENABLE_PER_ID        = _int_env("ENABLE_PER_ID_BACKFILL", 1) == 1
 
-def die(msg: str, code: int = 2) -> None:
-    log(f"ERROR: {msg}")
-    sys.exit(code)
-
-def headers() -> Dict[str, str]:
-    return {"Authorization": f"Bearer {CFBD_API_KEY}"} if CFBD_API_KEY else {}
+def log(msg: str): print(msg, flush=True)
+def die(msg: str, code: int = 2): log(f"ERROR: {msg}"); sys.exit(code)
+def headers() -> Dict[str,str]: return {"Authorization": f"Bearer {CFBD_API_KEY}"} if CFBD_API_KEY else {}
 
 def http_get(params: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """GET with retry/backoff for 429/5xx. Returns list of games."""
+    """GET with short retry/backoff; returns list of games."""
     last_err = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
@@ -80,124 +60,124 @@ def http_get(params: Dict[str, Any]) -> List[Dict[str, Any]]:
                 raise requests.HTTPError(f"{r.status_code} {r.reason}")
             r.raise_for_status()
             data = r.json()
-            if isinstance(data, dict):
-                data = data.get("games", [])
+            if isinstance(data, dict): data = data.get("games", [])
             return data if isinstance(data, list) else []
         except requests.HTTPError as e:
             last_err = e
             sleep_s = BACKOFF_BASE_S * (2 ** (attempt - 1))
-            log(f"[warn] {e} for params={params} (attempt {attempt}/{MAX_RETRIES}); sleeping {sleep_s:.1f}s…")
+            log(f"[warn] {e} params={params} attempt {attempt}/{MAX_RETRIES}; sleeping {sleep_s:.1f}s")
             time.sleep(sleep_s)
         except Exception as e:
             last_err = e
-            log(f"[warn] non-HTTP error for params={params}: {e} (attempt {attempt}/{MAX_RETRIES})")
+            log(f"[warn] non-HTTP error {e} params={params} attempt {attempt}/{MAX_RETRIES}")
             time.sleep(0.5)
     log(f"[warn] giving up after {MAX_RETRIES} attempts; params={params} last_err={last_err}")
     return []
 
 def norm_rows(games: List[Dict[str, Any]], season: int | None, week: int | None) -> List[Dict[str, Any]]:
-    rows: List[Dict[str, Any]] = []
+    rows = []
     for g in games:
         gid = g.get("id", g.get("game_id"))
-        ht  = g.get("home_team") or g.get("homeTeam")
-        at  = g.get("away_team") or g.get("awayTeam")
-        hp  = g.get("home_points", g.get("homePoints"))
-        ap  = g.get("away_points", g.get("awayPoints"))
-        s   = g.get("season", season)
-        w   = g.get("week", week)
         rows.append({
             "id": gid,
-            "season": s,
-            "week": w,
-            "home_team": ht,
-            "away_team": at,
-            "home_points": hp,
-            "away_points": ap,
+            "season": g.get("season", season),
+            "week": g.get("week", week),
+            "home_team": g.get("home_team") or g.get("homeTeam"),
+            "away_team": g.get("away_team") or g.get("awayTeam"),
+            "home_points": g.get("home_points", g.get("homePoints")),
+            "away_points": g.get("away_points", g.get("awayPoints")),
         })
     return rows
 
 def fetch_batch_by_season_week(pairs: Iterable[Tuple[int,int]]) -> List[Dict[str, Any]]:
-    all_rows: List[Dict[str, Any]] = []
+    out: List[Dict[str, Any]] = []
     for season, week in pairs:
         for season_type in ("regular", "postseason"):
             for division in ("fbs", "fcs"):
-                params = {"year": int(season), "week": int(week),
-                          "seasonType": season_type, "division": division}
-                games = http_get(params)
-                all_rows.extend(norm_rows(games, season, week))
+                params = {"year": int(season), "week": int(week), "seasonType": season_type, "division": division}
+                out.extend(norm_rows(http_get(params), season, week))
                 time.sleep(SLEEP_BETWEEN_CALLS_S)
-    return all_rows
+    return out
 
 def fetch_batch_by_season(seasons: Iterable[int]) -> List[Dict[str, Any]]:
-    """For rows where week is unknown, fetch whole seasons once per season_type/division."""
-    all_rows: List[Dict[str, Any]] = []
+    out: List[Dict[str, Any]] = []
     for season in seasons:
         for season_type in ("regular", "postseason"):
             for division in ("fbs", "fcs"):
                 params = {"year": int(season), "seasonType": season_type, "division": division}
-                games = http_get(params)
-                all_rows.extend(norm_rows(games, season, None))
+                out.extend(norm_rows(http_get(params), season, None))
                 time.sleep(SLEEP_BETWEEN_CALLS_S)
-    return all_rows
+    return out
 
-def fetch_sparse_by_ids(game_ids: Iterable[str | int]) -> List[Dict[str, Any]]:
-    """Used for stragglers after batching. Obeys MAX_PER_ID_BACKFILL."""
+def fetch_sparse_by_ids(game_ids: List[str], time_budget_s: int) -> List[Dict[str, Any]]:
+    """Resume-aware, time-budgeted per-ID fetch with hard cap."""
+    start = time.time()
     rows: List[Dict[str, Any]] = []
     count = 0
     for gid in game_ids:
         if count >= MAX_PER_ID_BACKFILL:
-            log(f"[info] Hit per-ID hard limit (MAX_PER_ID_BACKFILL={MAX_PER_ID_BACKFILL}); stopping sparse fetch.")
+            log(f"[info] Hit hard per-ID cap (MAX_PER_ID_BACKFILL={MAX_PER_ID_BACKFILL}).")
             break
-        gid_str = str(gid)
-        params1 = {"id": gid_str}
+        if time.time() - start > time_budget_s:
+            log(f"[info] Hit time budget for per-ID ({time_budget_s}s).")
+            break
+
+        params1 = {"id": gid}
         games = http_get(params1)
         if not games:
-            params2 = {"gameId": gid_str}
+            params2 = {"gameId": gid}
             games = http_get(params2)
         if games:
             rows.extend(norm_rows(games, season=None, week=None))
         else:
-            log(f"[info] no record found for game_id={gid_str} after retries")
+            log(f"[info] no record for game_id={gid}")
         count += 1
         time.sleep(SLEEP_BETWEEN_CALLS_S)
     return rows
 
-# ---- Main ----
-def main() -> None:
-    if not MODEL_CSV.exists():
-        die(f"{MODEL_CSV} not found. Upstream modeling dataset required.")
+def existing_ids_from_scores(path: Path) -> set:
+    if not path.exists(): return set()
+    try:
+        df = pd.read_csv(path, usecols=["id"])
+        return set(df["id"].dropna().astype(str))
+    except Exception:
+        return set()
 
-    # Model: we want (season, week) for base pulls; also try to get game_id->(season,week)
+def main():
+    if not MODEL_CSV.exists():
+        die(f"{MODEL_CSV} not found.")
+
     model = pd.read_csv(MODEL_CSV, usecols=lambda c: c in {"season","week","game_id"})
-    if "season" not in model.columns or "week" not in model.columns:
-        die("modeling_dataset.csv must include 'season' and 'week' columns.")
+    if not {"season","week"}.issubset(model.columns):
+        die("modeling_dataset.csv must include 'season' and 'week'.")
 
     model["season"] = pd.to_numeric(model["season"], errors="coerce").astype("Int64")
     model["week"]   = pd.to_numeric(model["week"], errors="coerce").astype("Int64")
 
-    # Base (season, week) pairs for comprehensive pulls
+    # Base season/week pairs
     sw = (model.dropna(subset=["season","week"])
                 .drop_duplicates(subset=["season","week"])
                 .sort_values(["season","week"]))
     base_pairs = [(int(r.season), int(r.week)) for r in sw.itertuples(index=False)]
 
-    # 1) Base pull: all season/week pairs across seasonType & division
+    # 1) Base fetch
     base_rows = fetch_batch_by_season_week(base_pairs)
 
-    # 2) Batched backfill from diagnostics (if present)
-    batched_backfill_rows: List[Dict[str, Any]] = []
+    # 2) Batched backfill (by season/week and season)
+    batched_rows: List[Dict[str, Any]] = []
     per_id_rows: List[Dict[str, Any]] = []
+
+    # Build resume cache: known IDs from current output (if any) and base batch
+    known_ids = existing_ids_from_scores(OUT_CSV) | {r["id"] for r in base_rows if r.get("id") is not None}
 
     if DIAG_MISS.exists():
         miss = pd.read_csv(DIAG_MISS)
-
-        # Normalize id types to string (handle float-y CSVs)
         if "game_id" not in miss.columns:
-            log("[info] unmatched_missing_game_id.csv lacked 'game_id' column; skipping backfill block.")
+            log("[info] unmatched_missing_game_id.csv lacks 'game_id'; skipping backfill.")
             miss = pd.DataFrame(columns=["game_id"])
         miss["game_id"] = miss["game_id"].astype(str).str.replace(r"\.0$", "", regex=True)
 
-        # Attach season/week to missing ids by merging with model (if model has game_id)
+        # Join season/week from model (if available)
         if "game_id" in model.columns:
             model_gid_sw = (model.assign(game_id=model["game_id"].astype(str))
                                   [["game_id","season","week"]]
@@ -209,8 +189,8 @@ def main() -> None:
             if "week"   not in miss_sw.columns: miss_sw["week"]   = pd.Series(dtype="Int64")
 
         # Buckets
-        has_sw_cols = {"season","week"}.issubset(miss_sw.columns)
-        if has_sw_cols:
+        has_sw = {"season","week"}.issubset(miss_sw.columns)
+        if has_sw:
             sw_known = miss_sw.dropna(subset=["season","week"])
             seasons_only = miss_sw[miss_sw["season"].notna() & miss_sw["week"].isna()]
         else:
@@ -223,48 +203,49 @@ def main() -> None:
         batched_seasons = sorted({int(s) for s in seasons_only["season"].dropna().unique().tolist()})
 
         if batched_pairs:
-            log(f"[info] Backfill batching by (season,week): {len(batched_pairs)} groups")
-            batched_backfill_rows.extend(fetch_batch_by_season_week(batched_pairs))
+            log(f"[info] Backfill (batch) by (season,week): {len(batched_pairs)} groups")
+            batched_rows.extend(fetch_batch_by_season_week(batched_pairs))
         if batched_seasons:
-            log(f"[info] Backfill batching by (season): {len(batched_seasons)} seasons")
-            batched_backfill_rows.extend(fetch_batch_by_season(batched_seasons))
+            log(f"[info] Backfill (batch) by (season): {len(batched_seasons)} seasons")
+            batched_rows.extend(fetch_batch_by_season(batched_seasons))
 
-        # Determine which ids still missing after batched pulls
-        have_ids = {r["id"] for r in (base_rows + batched_backfill_rows) if r.get("id") is not None}
-        still_missing_ids = [gid for gid in miss_sw["game_id"].dropna().astype(str).unique().tolist()
-                             if gid not in have_ids]
+        # Which IDs still missing after base + batched + resume cache?
+        have_ids = known_ids | {r["id"] for r in batched_rows if r.get("id") is not None}
+        remaining_ids = [gid for gid in miss_sw["game_id"].dropna().astype(str).unique().tolist()
+                         if gid not in have_ids]
 
-        # 3) Sparse per-ID fetch for stragglers only (HARD-LIMITED)
-        if still_missing_ids:
-            take_n = min(len(still_missing_ids), MAX_PER_ID_BACKFILL)
-            subset = still_missing_ids[:take_n]
+        # 3) Optional sparse per-ID, bounded by cap + time budget
+        if ENABLE_PER_ID and remaining_ids:
+            time_budget_s = max(60, int(MAX_BACKFILL_MINUTES) * 60)
+            take_n = min(len(remaining_ids), MAX_PER_ID_BACKFILL)
+            subset = remaining_ids[:take_n]
             log(f"[info] Sparse per-ID backfill for {take_n} ids "
-                f"(of {len(still_missing_ids)} remaining; MAX_PER_ID_BACKFILL={MAX_PER_ID_BACKFILL})…")
-            per_id_rows = fetch_sparse_by_ids(subset)
+                f"(of {len(remaining_ids)} remaining; cap={MAX_PER_ID_BACKFILL}; budget={time_budget_s}s)…")
+            per_id_rows = fetch_sparse_by_ids(subset, time_budget_s)
+        else:
+            log("[info] Skipping per-ID backfill (disabled or nothing remaining).")
 
-    # Combine all rows and normalize types
-    all_rows = base_rows + batched_backfill_rows + per_id_rows
+    # Combine all
+    all_rows = base_rows + batched_rows + per_id_rows
     df = pd.DataFrame(all_rows)
 
-    # Ensure columns exist
+    # Ensure columns
     cols = ["id","season","week","home_team","away_team","home_points","away_points"]
     for c in cols:
-        if c not in df.columns:
-            df[c] = pd.Series(dtype="object")
+        if c not in df.columns: df[c] = pd.Series(dtype="object")
     df = df[cols].copy()
 
-    # Coerce numeric points
+    # Coerce numerics
     df["home_points"] = pd.to_numeric(df["home_points"], errors="coerce")
     df["away_points"] = pd.to_numeric(df["away_points"], errors="coerce")
 
-    # Write
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(OUT_CSV, index=False)
     log(f"[fetch] wrote {OUT_CSV} rows={len(df)} "
-        f"(base={len(base_rows)} + batched_backfill={len(batched_backfill_rows)} + per_id_backfill={len(per_id_rows)}; "
-        f"per_id_limit={MAX_PER_ID_BACKFILL})")
+        f"(base={len(base_rows)} + batched_backfill={len(batched_rows)} + per_id_backfill={len(per_id_rows)}; "
+        f"per_id_cap={MAX_PER_ID_BACKFILL}, time_budget_min={MAX_BACKFILL_MINUTES}, resume_known_ids={len(known_ids)})")
 
 if __name__ == "__main__":
     if not CFBD_API_KEY:
-        log("WARNING: CFBD_API_KEY not set — requests may be limited.")
+        log("WARNING: CFBD_API_KEY not set — you will be rate-limited.")
     main()
