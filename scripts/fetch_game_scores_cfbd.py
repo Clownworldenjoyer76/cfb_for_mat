@@ -10,8 +10,8 @@ What it does
 2) If diagnostics exist, reads data/diagnostics/unmatched_missing_game_id.csv
    and BATCHES the "backfill" by (season, week) for those game_ids as well.
    - If some rows have season but no week, it batches by (season) only.
-   - Only if an id still isn't found after batching, it tries sparse per-ID calls
-     with exponential backoff.
+   - If neither season nor week are known, it falls back to sparse per-ID fetch
+     with retry/backoff (only for the stragglers).
 3) Writes a unified CSV at data/game_scores.csv with:
      id, season, week, home_team, away_team, home_points, away_points
 
@@ -138,11 +138,9 @@ def fetch_sparse_by_ids(game_ids: Iterable[str | int]) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
     for gid in game_ids:
         gid_str = str(gid)
-        # try ?id=
         params1 = {"id": gid_str}
         games = http_get(params1)
         if not games:
-            # try ?gameId=
             params2 = {"gameId": gid_str}
             games = http_get(params2)
         if games:
@@ -157,13 +155,15 @@ def main() -> None:
     if not MODEL_CSV.exists():
         die(f"{MODEL_CSV} not found. Upstream modeling dataset required.")
 
+    # Model: we want (season, week) for base pulls; also try to get game_id->(season,week)
     model = pd.read_csv(MODEL_CSV, usecols=lambda c: c in {"season","week","game_id"})
     if "season" not in model.columns or "week" not in model.columns:
         die("modeling_dataset.csv must include 'season' and 'week' columns.")
 
-    # Base (season, week) from modeling dataset
     model["season"] = pd.to_numeric(model["season"], errors="coerce").astype("Int64")
     model["week"]   = pd.to_numeric(model["week"], errors="coerce").astype("Int64")
+
+    # Base (season, week) pairs for comprehensive pulls
     sw = (model.dropna(subset=["season","week"])
                 .drop_duplicates(subset=["season","week"])
                 .sort_values(["season","week"]))
@@ -178,21 +178,39 @@ def main() -> None:
 
     if DIAG_MISS.exists():
         miss = pd.read_csv(DIAG_MISS)
-        # Normalize id types
+
+        # Normalize id types to string (handle float-y CSVs)
+        if "game_id" not in miss.columns:
+            log("[info] unmatched_missing_game_id.csv lacked 'game_id' column; skipping backfill block.")
+            miss = pd.DataFrame(columns=["game_id"])
         miss["game_id"] = miss["game_id"].astype(str).str.replace(r"\.0$", "", regex=True)
 
-        # Attach season/week to missing ids by merging with model
-        miss_merge_cols = ["game_id","season","week"]
-        model_gid_sw = (model.assign(game_id=model.get("game_id", pd.Series(dtype="object")))
-                              .dropna(subset=["game_id"])
-                              .astype({"game_id":"string"}))[["game_id","season","week"]].drop_duplicates()
-        miss_sw = miss.merge(model_gid_sw, on="game_id", how="left")
+        # Attach season/week to missing ids by merging with model (if model has game_id)
+        if "game_id" in model.columns:
+            # ensure comparable type
+            model_gid_sw = (model.assign(game_id=model["game_id"].astype(str))
+                                  [["game_id","season","week"]]
+                                  .drop_duplicates())
+            miss_sw = miss.merge(model_gid_sw, on="game_id", how="left")
+        else:
+            # No game_id in model; create empty season/week so we fall back gracefully
+            miss_sw = miss.copy()
+            if "season" not in miss_sw.columns: miss_sw["season"] = pd.Series(dtype="Int64")
+            if "week"   not in miss_sw.columns: miss_sw["week"]   = pd.Series(dtype="Int64")
 
-        # Build batched groups
-        sw_known = miss_sw.dropna(subset=["season","week"])
-        seasons_only = miss_sw[sw_known.index.symmetric_difference(miss_sw.index)].dropna(subset=["season"])
+        # Prepare buckets safely even if cols are missing
+        has_sw_cols = {"season","week"}.issubset(miss_sw.columns)
 
-        batched_pairs = sorted({(int(s), int(w)) for s, w in sw_known[["season","week"]].itertuples(index=False)})
+        if has_sw_cols:
+            sw_known = miss_sw.dropna(subset=["season","week"])
+            seasons_only = miss_sw[miss_sw["season"].notna() & miss_sw["week"].isna()]
+        else:
+            sw_known = pd.DataFrame(columns=["game_id","season","week"])
+            seasons_only = pd.DataFrame(columns=["game_id","season","week"])
+
+        # Unique groups
+        batched_pairs = sorted({(int(s), int(w))
+                                for s, w in sw_known[["season","week"]].dropna().itertuples(index=False, name=None)})
         batched_seasons = sorted({int(s) for s in seasons_only["season"].dropna().unique().tolist()})
 
         if batched_pairs:
@@ -207,7 +225,7 @@ def main() -> None:
         still_missing_ids = [gid for gid in miss_sw["game_id"].dropna().astype(str).unique().tolist()
                              if gid not in have_ids]
 
-        # 3) Sparse per-ID fetch for stragglers only
+        # 3) Sparse per-ID fetch for stragglers only (with backoff)
         if still_missing_ids:
             log(f"[info] Sparse per-ID backfill for {len(still_missing_ids)} remaining ids (with retry/backoff)…")
             per_id_rows = fetch_sparse_by_ids(still_missing_ids)
