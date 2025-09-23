@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
 """
-Fetch CFBD game scores comprehensively:
+Fetch CFBD game scores comprehensively with BATCHED backfill.
 
-1) Pull all (season, week) pairs present in data/modeling_dataset.csv
-   - For both seasonType in {regular, postseason}
-   - For both division in {fbs, fcs}
-2) If available, read data/diagnostics/unmatched_missing_game_id.csv
-   and backfill those game_ids directly via /games?id=<gid> (and fall back to gameId=<gid>)
-3) Write a single unified CSV at data/game_scores.csv
+What it does
+------------
+1) Builds the set of (season, week) pairs present in data/modeling_dataset.csv.
+   - For each pair, fetches /games for BOTH seasonType in {regular, postseason}
+     and BOTH division in {fbs, fcs}.
+2) If diagnostics exist, reads data/diagnostics/unmatched_missing_game_id.csv
+   and BATCHES the "backfill" by (season, week) for those game_ids as well.
+   - If some rows have season but no week, it batches by (season) only.
+   - Only if an id still isn't found after batching, it tries sparse per-ID calls
+     with exponential backoff.
+3) Writes a unified CSV at data/game_scores.csv with:
+     id, season, week, home_team, away_team, home_points, away_points
 
-Output columns:
-  id, season, week, home_team, away_team, home_points, away_points
+Environment
+-----------
+CFBD_API_KEY  (recommended to avoid harsh rate limits)
 
-Requires:
-  CFBD_API_KEY  (recommended)
+Output
+------
+data/game_scores.csv
+and progress logs like:
+  [fetch] wrote data/game_scores.csv rows=XXXXX (base=YYYY + batched_backfill=ZZZZ + per_id_backfill=KKK)
 """
 
 from __future__ import annotations
@@ -22,43 +32,70 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Iterable, Tuple
 
 import pandas as pd
 import requests
 
-MODEL_CSV   = Path("data/modeling_dataset.csv")
-OUT_CSV     = Path("data/game_scores.csv")
-DIAG_MISS   = Path("data/diagnostics/unmatched_missing_game_id.csv")
+# ---- Paths ----
+MODEL_CSV    = Path("data/modeling_dataset.csv")
+OUT_CSV      = Path("data/game_scores.csv")
+DIAG_MISS    = Path("data/diagnostics/unmatched_missing_game_id.csv")
 
-CFBD_API_KEY = os.environ.get("CFBD_API_KEY")
+# ---- CFBD API ----
+CFBD_API_KEY = os.environ.get("CFBD_API_KEY", "")
 BASE_URL     = "https://api.collegefootballdata.com/games"
 
-SLEEP_SEC = 0.25  # polite rate limit
+# polite defaults
+REQ_TIMEOUT_S = 30
+SLEEP_BETWEEN_CALLS_S = 0.15
+MAX_RETRIES = 5
+BACKOFF_BASE_S = 0.8
 
-def die(msg: str, code: int = 2):
-    print(f"ERROR: {msg}", file=sys.stderr)
+# ---- Helpers ----
+def log(msg: str) -> None:
+    print(msg, flush=True)
+
+def die(msg: str, code: int = 2) -> None:
+    log(f"ERROR: {msg}")
     sys.exit(code)
 
-def cfbd_get(params: Dict[str, Any]) -> List[Dict[str, Any]]:
-    headers = {"Authorization": f"Bearer {CFBD_API_KEY}"} if CFBD_API_KEY else {}
-    r = requests.get(BASE_URL, headers=headers, params=params, timeout=30)
-    r.raise_for_status()
-    data = r.json()
-    if isinstance(data, dict):
-        # Some proxies might return dict with 'games' key; normalize to list
-        data = data.get("games", [])
-    return data
+def headers() -> Dict[str, str]:
+    return {"Authorization": f"Bearer {CFBD_API_KEY}"} if CFBD_API_KEY else {}
 
-def normalize_games_to_rows(games: List[Dict[str, Any]], season: int | None, week: int | None) -> List[Dict[str, Any]]:
-    rows = []
+def http_get(params: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """GET with retry/backoff for 429/5xx. Returns list of games."""
+    last_err = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            r = requests.get(BASE_URL, headers=headers(), params=params, timeout=REQ_TIMEOUT_S)
+            if r.status_code in (429, 500, 502, 503, 504):
+                raise requests.HTTPError(f"{r.status_code} {r.reason}")
+            r.raise_for_status()
+            data = r.json()
+            if isinstance(data, dict):
+                data = data.get("games", [])
+            return data if isinstance(data, list) else []
+        except requests.HTTPError as e:
+            last_err = e
+            sleep_s = BACKOFF_BASE_S * (2 ** (attempt - 1))
+            log(f"[warn] {e} for params={params} (attempt {attempt}/{MAX_RETRIES}); sleeping {sleep_s:.1f}s…")
+            time.sleep(sleep_s)
+        except Exception as e:
+            last_err = e
+            log(f"[warn] non-HTTP error for params={params}: {e} (attempt {attempt}/{MAX_RETRIES})")
+            time.sleep(0.5)
+    log(f"[warn] giving up after {MAX_RETRIES} attempts; params={params} last_err={last_err}")
+    return []
+
+def norm_rows(games: List[Dict[str, Any]], season: int | None, week: int | None) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
     for g in games:
-        gid = g.get("id", g.get("game_id", None))
+        gid = g.get("id", g.get("game_id"))
         ht  = g.get("home_team") or g.get("homeTeam")
         at  = g.get("away_team") or g.get("awayTeam")
         hp  = g.get("home_points", g.get("homePoints"))
         ap  = g.get("away_points", g.get("awayPoints"))
-        # If the API returns season/week per-game, prefer those; else fall back to our request values
         s   = g.get("season", season)
         w   = g.get("week", week)
         rows.append({
@@ -72,81 +109,111 @@ def normalize_games_to_rows(games: List[Dict[str, Any]], season: int | None, wee
         })
     return rows
 
-def fetch_by_season_week(sw: pd.DataFrame) -> List[Dict[str, Any]]:
+def fetch_batch_by_season_week(pairs: Iterable[Tuple[int,int]]) -> List[Dict[str, Any]]:
     all_rows: List[Dict[str, Any]] = []
-    for _, row in sw.iterrows():
-        season = int(row["season"])
-        week   = int(row["week"])
+    for season, week in pairs:
         for season_type in ("regular", "postseason"):
             for division in ("fbs", "fcs"):
-                params = {"year": season, "week": week, "seasonType": season_type, "division": division}
-                try:
-                    games = cfbd_get(params)
-                except requests.HTTPError as e:
-                    print(f"[warn] CFBD year={season} week={week} type={season_type} div={division}: {e}", file=sys.stderr)
-                    games = []
-                all_rows.extend(normalize_games_to_rows(games, season, week))
-                time.sleep(SLEEP_SEC)
+                params = {"year": int(season), "week": int(week),
+                          "seasonType": season_type, "division": division}
+                games = http_get(params)
+                all_rows.extend(norm_rows(games, season, week))
+                time.sleep(SLEEP_BETWEEN_CALLS_S)
     return all_rows
 
-def fetch_by_game_ids(game_ids: List[int | str]) -> List[Dict[str, Any]]:
-    """Backfill exact game ids. Try id=<gid>, else gameId=<gid> if first attempt returns empty."""
+def fetch_batch_by_season(seasons: Iterable[int]) -> List[Dict[str, Any]]:
+    """For rows where week is unknown, fetch whole seasons once per season_type/division."""
+    all_rows: List[Dict[str, Any]] = []
+    for season in seasons:
+        for season_type in ("regular", "postseason"):
+            for division in ("fbs", "fcs"):
+                params = {"year": int(season), "seasonType": season_type, "division": division}
+                games = http_get(params)
+                all_rows.extend(norm_rows(games, season, None))
+                time.sleep(SLEEP_BETWEEN_CALLS_S)
+    return all_rows
+
+def fetch_sparse_by_ids(game_ids: Iterable[str | int]) -> List[Dict[str, Any]]:
+    """Only used for stubborn stragglers after batching."""
     rows: List[Dict[str, Any]] = []
     for gid in game_ids:
-        # try id
-        params = {"id": str(gid)}
-        try:
-            games = cfbd_get(params)
-        except requests.HTTPError as e:
-            print(f"[warn] CFBD id={gid} (param 'id') HTTPError: {e}", file=sys.stderr)
-            games = []
+        gid_str = str(gid)
+        # try ?id=
+        params1 = {"id": gid_str}
+        games = http_get(params1)
         if not games:
-            # try gameId (some clients refer to it this way)
-            params2 = {"gameId": str(gid)}
-            try:
-                games = cfbd_get(params2)
-            except requests.HTTPError as e:
-                print(f"[warn] CFBD id={gid} (param 'gameId') HTTPError: {e}", file=sys.stderr)
-                games = []
+            # try ?gameId=
+            params2 = {"gameId": gid_str}
+            games = http_get(params2)
         if games:
-            # When fetching by id, season/week may be in payload; pass None to avoid overwriting with wrong week
-            rows.extend(normalize_games_to_rows(games, season=None, week=None))
+            rows.extend(norm_rows(games, season=None, week=None))
         else:
-            print(f"[info] CFBD returned no record for game_id={gid}", file=sys.stderr)
-        time.sleep(SLEEP_SEC)
+            log(f"[info] no record found for game_id={gid_str} after retries")
+        time.sleep(SLEEP_BETWEEN_CALLS_S)
     return rows
 
-def main():
+# ---- Main ----
+def main() -> None:
     if not MODEL_CSV.exists():
         die(f"{MODEL_CSV} not found. Upstream modeling dataset required.")
 
-    # Build (season, week) list from modeling dataset
-    model = pd.read_csv(MODEL_CSV, usecols=lambda c: c in {"season","week"})
-    if not {"season","week"}.issubset(model.columns):
+    model = pd.read_csv(MODEL_CSV, usecols=lambda c: c in {"season","week","game_id"})
+    if "season" not in model.columns or "week" not in model.columns:
         die("modeling_dataset.csv must include 'season' and 'week' columns.")
+
+    # Base (season, week) from modeling dataset
     model["season"] = pd.to_numeric(model["season"], errors="coerce").astype("Int64")
     model["week"]   = pd.to_numeric(model["week"], errors="coerce").astype("Int64")
     sw = (model.dropna(subset=["season","week"])
                 .drop_duplicates(subset=["season","week"])
                 .sort_values(["season","week"]))
+    base_pairs = [(int(r.season), int(r.week)) for r in sw.itertuples(index=False)]
 
-    # 1) Fetch by (season, week) across season types + divisions
-    base_rows = fetch_by_season_week(sw)
+    # 1) Base pull: all season/week pairs across seasonType & division
+    base_rows = fetch_batch_by_season_week(base_pairs)
 
-    # 2) Backfill by missing game_ids if diagnostics file exists
-    backfill_rows: List[Dict[str, Any]] = []
+    # 2) Batched backfill from diagnostics (if present)
+    batched_backfill_rows: List[Dict[str, Any]] = []
+    per_id_rows: List[Dict[str, Any]] = []
+
     if DIAG_MISS.exists():
         miss = pd.read_csv(DIAG_MISS)
-        # Some CSVs may store game_id as float; force to str then int-like
-        gids = (miss["game_id"].dropna().astype(str).str.replace(r"\.0$", "", regex=True).unique().tolist())
-        # De-dup and only backfill those not already in base_rows
-        have_ids = {r["id"] for r in base_rows if r.get("id") is not None}
-        backfill_ids = [g for g in gids if g not in have_ids]
-        print(f"[info] Backfilling {len(backfill_ids)} game_ids directly via CFBD…")
-        backfill_rows = fetch_by_game_ids(backfill_ids)
+        # Normalize id types
+        miss["game_id"] = miss["game_id"].astype(str).str.replace(r"\.0$", "", regex=True)
 
-    # Combine + normalize types
-    all_rows = base_rows + backfill_rows
+        # Attach season/week to missing ids by merging with model
+        miss_merge_cols = ["game_id","season","week"]
+        model_gid_sw = (model.assign(game_id=model.get("game_id", pd.Series(dtype="object")))
+                              .dropna(subset=["game_id"])
+                              .astype({"game_id":"string"}))[["game_id","season","week"]].drop_duplicates()
+        miss_sw = miss.merge(model_gid_sw, on="game_id", how="left")
+
+        # Build batched groups
+        sw_known = miss_sw.dropna(subset=["season","week"])
+        seasons_only = miss_sw[sw_known.index.symmetric_difference(miss_sw.index)].dropna(subset=["season"])
+
+        batched_pairs = sorted({(int(s), int(w)) for s, w in sw_known[["season","week"]].itertuples(index=False)})
+        batched_seasons = sorted({int(s) for s in seasons_only["season"].dropna().unique().tolist()})
+
+        if batched_pairs:
+            log(f"[info] Backfill batching by (season,week): {len(batched_pairs)} groups")
+            batched_backfill_rows.extend(fetch_batch_by_season_week(batched_pairs))
+        if batched_seasons:
+            log(f"[info] Backfill batching by (season): {len(batched_seasons)} seasons")
+            batched_backfill_rows.extend(fetch_batch_by_season(batched_seasons))
+
+        # Determine which ids still missing after batched pulls
+        have_ids = {r["id"] for r in (base_rows + batched_backfill_rows) if r.get("id") is not None}
+        still_missing_ids = [gid for gid in miss_sw["game_id"].dropna().astype(str).unique().tolist()
+                             if gid not in have_ids]
+
+        # 3) Sparse per-ID fetch for stragglers only
+        if still_missing_ids:
+            log(f"[info] Sparse per-ID backfill for {len(still_missing_ids)} remaining ids (with retry/backoff)…")
+            per_id_rows = fetch_sparse_by_ids(still_missing_ids)
+
+    # Combine all rows and normalize types
+    all_rows = base_rows + batched_backfill_rows + per_id_rows
     df = pd.DataFrame(all_rows)
 
     # Ensure columns exist
@@ -156,15 +223,17 @@ def main():
             df[c] = pd.Series(dtype="object")
     df = df[cols].copy()
 
-    # Coerce points to numeric
+    # Coerce numeric points
     df["home_points"] = pd.to_numeric(df["home_points"], errors="coerce")
     df["away_points"] = pd.to_numeric(df["away_points"], errors="coerce")
 
+    # Write
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(OUT_CSV, index=False)
-    print(f"[fetch] wrote {OUT_CSV} rows={len(df)} (base={len(base_rows)} + backfill={len(backfill_rows)})")
+    log(f"[fetch] wrote {OUT_CSV} rows={len(df)} "
+        f"(base={len(base_rows)} + batched_backfill={len(batched_backfill_rows)} + per_id_backfill={len(per_id_rows)})")
 
 if __name__ == "__main__":
     if not CFBD_API_KEY:
-        print("WARNING: CFBD_API_KEY not set — requests may be rate-limited or incomplete.", file=sys.stderr)
+        log("WARNING: CFBD_API_KEY not set — requests may be limited.")
     main()
