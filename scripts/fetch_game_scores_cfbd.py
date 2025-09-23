@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch CFBD game scores comprehensively with BATCHED backfill.
+Fetch CFBD game scores comprehensively with BATCHED backfill, HARD-LIMITED per-ID fetch.
 
 What it does
 ------------
@@ -10,20 +10,21 @@ What it does
 2) If diagnostics exist, reads data/diagnostics/unmatched_missing_game_id.csv
    and BATCHES the "backfill" by (season, week) for those game_ids as well.
    - If some rows have season but no week, it batches by (season) only.
-   - If neither season nor week are known, it falls back to sparse per-ID fetch
-     with retry/backoff (only for the stragglers).
-3) Writes a unified CSV at data/game_scores.csv with:
+   - If neither season nor week are known, it falls back to sparse per-ID fetch.
+3) Per-ID backfill is **hard-limited** to at most MAX_PER_ID_BACKFILL (default 200) IDs per run.
+4) Writes a unified CSV at data/game_scores.csv with:
      id, season, week, home_team, away_team, home_points, away_points
 
 Environment
 -----------
-CFBD_API_KEY  (recommended to avoid harsh rate limits)
+CFBD_API_KEY           (recommended to avoid harsh rate limits)
+MAX_PER_ID_BACKFILL    (optional; default "200")
 
 Output
 ------
 data/game_scores.csv
 and progress logs like:
-  [fetch] wrote data/game_scores.csv rows=XXXXX (base=YYYY + batched_backfill=ZZZZ + per_id_backfill=KKK)
+  [fetch] wrote data/game_scores.csv rows=XXXXX (base=YYYY + batched_backfill=ZZZZ + per_id_backfill=KKK; per_id_limit=LLL)
 """
 
 from __future__ import annotations
@@ -51,6 +52,12 @@ REQ_TIMEOUT_S = 30
 SLEEP_BETWEEN_CALLS_S = 0.15
 MAX_RETRIES = 5
 BACKOFF_BASE_S = 0.8
+
+# hard cap for per-id backfill
+try:
+    MAX_PER_ID_BACKFILL = int(os.environ.get("MAX_PER_ID_BACKFILL", "200"))
+except Exception:
+    MAX_PER_ID_BACKFILL = 200
 
 # ---- Helpers ----
 def log(msg: str) -> None:
@@ -134,9 +141,13 @@ def fetch_batch_by_season(seasons: Iterable[int]) -> List[Dict[str, Any]]:
     return all_rows
 
 def fetch_sparse_by_ids(game_ids: Iterable[str | int]) -> List[Dict[str, Any]]:
-    """Only used for stubborn stragglers after batching."""
+    """Used for stragglers after batching. Obeys MAX_PER_ID_BACKFILL."""
     rows: List[Dict[str, Any]] = []
+    count = 0
     for gid in game_ids:
+        if count >= MAX_PER_ID_BACKFILL:
+            log(f"[info] Hit per-ID hard limit (MAX_PER_ID_BACKFILL={MAX_PER_ID_BACKFILL}); stopping sparse fetch.")
+            break
         gid_str = str(gid)
         params1 = {"id": gid_str}
         games = http_get(params1)
@@ -147,6 +158,7 @@ def fetch_sparse_by_ids(game_ids: Iterable[str | int]) -> List[Dict[str, Any]]:
             rows.extend(norm_rows(games, season=None, week=None))
         else:
             log(f"[info] no record found for game_id={gid_str} after retries")
+        count += 1
         time.sleep(SLEEP_BETWEEN_CALLS_S)
     return rows
 
@@ -187,20 +199,17 @@ def main() -> None:
 
         # Attach season/week to missing ids by merging with model (if model has game_id)
         if "game_id" in model.columns:
-            # ensure comparable type
             model_gid_sw = (model.assign(game_id=model["game_id"].astype(str))
                                   [["game_id","season","week"]]
                                   .drop_duplicates())
             miss_sw = miss.merge(model_gid_sw, on="game_id", how="left")
         else:
-            # No game_id in model; create empty season/week so we fall back gracefully
             miss_sw = miss.copy()
             if "season" not in miss_sw.columns: miss_sw["season"] = pd.Series(dtype="Int64")
             if "week"   not in miss_sw.columns: miss_sw["week"]   = pd.Series(dtype="Int64")
 
-        # Prepare buckets safely even if cols are missing
+        # Buckets
         has_sw_cols = {"season","week"}.issubset(miss_sw.columns)
-
         if has_sw_cols:
             sw_known = miss_sw.dropna(subset=["season","week"])
             seasons_only = miss_sw[miss_sw["season"].notna() & miss_sw["week"].isna()]
@@ -225,10 +234,13 @@ def main() -> None:
         still_missing_ids = [gid for gid in miss_sw["game_id"].dropna().astype(str).unique().tolist()
                              if gid not in have_ids]
 
-        # 3) Sparse per-ID fetch for stragglers only (with backoff)
+        # 3) Sparse per-ID fetch for stragglers only (HARD-LIMITED)
         if still_missing_ids:
-            log(f"[info] Sparse per-ID backfill for {len(still_missing_ids)} remaining ids (with retry/backoff)…")
-            per_id_rows = fetch_sparse_by_ids(still_missing_ids)
+            take_n = min(len(still_missing_ids), MAX_PER_ID_BACKFILL)
+            subset = still_missing_ids[:take_n]
+            log(f"[info] Sparse per-ID backfill for {take_n} ids "
+                f"(of {len(still_missing_ids)} remaining; MAX_PER_ID_BACKFILL={MAX_PER_ID_BACKFILL})…")
+            per_id_rows = fetch_sparse_by_ids(subset)
 
     # Combine all rows and normalize types
     all_rows = base_rows + batched_backfill_rows + per_id_rows
@@ -249,7 +261,8 @@ def main() -> None:
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(OUT_CSV, index=False)
     log(f"[fetch] wrote {OUT_CSV} rows={len(df)} "
-        f"(base={len(base_rows)} + batched_backfill={len(batched_backfill_rows)} + per_id_backfill={len(per_id_rows)})")
+        f"(base={len(base_rows)} + batched_backfill={len(batched_backfill_rows)} + per_id_backfill={len(per_id_rows)}; "
+        f"per_id_limit={MAX_PER_ID_BACKFILL})")
 
 if __name__ == "__main__":
     if not CFBD_API_KEY:
