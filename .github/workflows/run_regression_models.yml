@@ -3,7 +3,7 @@ name: Run Regression Models (CFB)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 17 * * 2"
+    - cron: "0 17 * * 2"   # Tuesdays 17:00 UTC
 
 permissions:
   contents: write
@@ -17,6 +17,9 @@ jobs:
       MAX_PER_ID_BACKFILL: "100"
       MAX_BACKFILL_MINUTES: "20"
       ENABLE_PER_ID_BACKFILL: "1"
+      # Historical season range for the builder
+      SEASON_MIN: "2019"
+      SEASON_MAX: "2024"
 
     steps:
       - name: Checkout
@@ -33,6 +36,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install numpy pandas scikit-learn joblib requests
+
+      - name: Build historical modeling dataset (2019–2024)
+        run: |
+          set -e
+          echo "==> Building modeling dataset for seasons ${SEASON_MIN}-${SEASON_MAX}…"
+          python scripts/build_modeling_dataset.py
+          echo "==> Head (data/modeling_dataset.csv)"
+          head -n 20 data/modeling_dataset.csv || true
+          echo "==> Row count (modeling_dataset.csv):"
+          wc -l data/modeling_dataset.csv || true
+          echo "==> Build log"
+          [ -f logs_build_modeling_dataset.txt ] && tail -n 50 logs_build_modeling_dataset.txt || echo "no build log"
 
       - name: Fetch per-game scores (CFBD /games, per week)
         run: |
@@ -53,22 +68,6 @@ jobs:
           head -n 20 data/game_scores_clean.csv || true
           echo "==> Row count (clean):"
           wc -l data/game_scores_clean.csv || true
-
-      - name: Inspect datasets before regression
-        run: |
-          set -e
-          echo "==> modeling_dataset.csv (head)"
-          head -n 20 data/modeling_dataset.csv || true
-          echo "==> Row count (modeling_dataset):"
-          wc -l data/modeling_dataset.csv || true
-          echo "==> Header (modeling_dataset):"
-          head -n 1 data/modeling_dataset.csv || true
-          echo "==> game_scores_clean.csv (head)"
-          head -n 20 data/game_scores_clean.csv || true
-          echo "==> Row count (game_scores_clean):"
-          wc -l data/game_scores_clean.csv || true
-          echo "==> Header (game_scores_clean):"
-          head -n 1 data/game_scores_clean.csv || true
 
       - name: Execute regression script
         env:
@@ -104,7 +103,7 @@ jobs:
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
-          else
+          else:
             echo "models/ directory not found."
           fi
 
@@ -114,6 +113,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          [ -f logs_build_modeling_dataset.txt ] && git add -f logs_build_modeling_dataset.txt || true
           [ -f logs_model_regression.txt ] && git add -f logs_model_regression.txt || true
           [ -f data/model_regression_metrics.csv ] && git add -f data/model_regression_metrics.csv || true
           [ -f data/model_regression_coeffs.csv ] && git add -f data/model_regression_coeffs.csv || true
@@ -122,6 +122,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit (artifacts unchanged)."
           else
-            git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
+            git commit -m "Add historical dataset build, regression metrics, coeffs, and model artifacts [skip ci]"
             git push
           fi
