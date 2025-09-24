@@ -3,7 +3,7 @@ name: Run Regression Models (CFB)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 17 * * 2"    # 17:00 UTC = 12:00 PM US/Eastern (Tuesdays)
+    - cron: "0 17 * * 2"
 
 permissions:
   contents: write
@@ -61,28 +61,14 @@ jobs:
           head -n 20 data/modeling_dataset.csv || true
           echo "==> Row count (modeling_dataset):"
           wc -l data/modeling_dataset.csv || true
-          echo "==> Columns (modeling_dataset):"
-          python - << 'PY'
-import pandas as pd, sys
-try:
-    df = pd.read_csv('data/modeling_dataset.csv', nrows=0)
-    print(",".join(df.columns))
-except Exception as e:
-    print(f"error: {e}", file=sys.stderr)
-PY
+          echo "==> Header (modeling_dataset):"
+          head -n 1 data/modeling_dataset.csv || true
           echo "==> game_scores_clean.csv (head)"
           head -n 20 data/game_scores_clean.csv || true
           echo "==> Row count (game_scores_clean):"
           wc -l data/game_scores_clean.csv || true
-          echo "==> Columns (game_scores_clean):"
-          python - << 'PY'
-import pandas as pd, sys
-try:
-    df = pd.read_csv('data/game_scores_clean.csv', nrows=0)
-    print(",".join(df.columns))
-except Exception as e:
-    print(f"error: {e}", file=sys.stderr)
-PY
+          echo "==> Header (game_scores_clean):"
+          head -n 1 data/game_scores_clean.csv || true
 
       - name: Execute regression script
         env:
