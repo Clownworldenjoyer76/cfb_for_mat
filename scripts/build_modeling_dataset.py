@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import datetime as dt
@@ -24,6 +27,18 @@ OPT_TEAM_ALIASES= "mappings/team_aliases.csv"        # optional (cfbd_name,alias
 OUT_DATASET_CSV = "data/modeling_dataset.csv"
 OUT_LOG_TXT     = "logs_build_modeling_dataset.txt"
 
+# =========================
+# SEASON FILTER (defaults 2019–2024; overridable by env)
+# =========================
+def _env_int(name: str, default: int) -> int:
+    v = os.environ.get(name, "")
+    try:
+        return int(v)
+    except Exception:
+        return default
+
+SEASON_MIN = _env_int("SEASON_MIN", 2019)
+SEASON_MAX = _env_int("SEASON_MAX", 2024)
 
 # =========================
 # Helpers
@@ -80,22 +95,20 @@ def _load_aliases(path: str) -> Dict[str, str]:
     if not _exists(path):
         return {}
     df = _read(path)
-    cols = {c.lower(): c for c in df.columns}
+    cols = {c.lower() for c in df.columns}
     if "cfbd_name" not in cols or "alias" not in cols:
         return {}
-    d = {}
-    for _, r in df.iterrows():
-        src = str(r[cols["cfbd_name"]]).strip()
-        tgt = str(r[cols["alias"]]).strip()
-        if src and tgt:
-            d[src] = tgt
+    src = df[[[c for c in df.columns if c.lower()=="cfbd_name"][0],
+              [c for c in df.columns if c.lower()=="alias"][0]]].dropna()
+    d: Dict[str,str] = {}
+    for _, r in src.iterrows():
+        k = str(r.iloc[0]).strip()
+        v = str(r.iloc[1]).strip()
+        if k and v:
+            d[k] = v
     return d
 
 def _safe_left_merge(left: pd.DataFrame, right: pd.DataFrame, on: List[Tuple[str,str]], suffix_tag: str) -> pd.DataFrame:
-    """
-    Left-merge with controlled suffixing so LEFT columns keep their names.
-    Any conflicting RIGHT column gets suffix `suffix_tag` (e.g., '__rts_').
-    """
     left_keys  = [lk for lk, _ in on]
     right_keys = [rk for _, rk in on]
     return left.merge(
@@ -116,10 +129,6 @@ def _coerce_season_int(df: pd.DataFrame, col: str) -> pd.DataFrame:
     return df
 
 def _dedupe_by_team_season(df: pd.DataFrame, s_col: str, t_key_col: str) -> pd.DataFrame:
-    """
-    Ensure exactly one row per (season, _t_key).
-    Numeric columns averaged; non-numeric take first.
-    """
     if df.empty:
         return df
     group_cols = [s_col, t_key_col]
@@ -180,6 +189,10 @@ def build():
 
     base = _coerce_season_int(base, "season")
 
+    # ---- Historical season filter (APPLIED EARLY) ----
+    base = base[pd.to_numeric(base["season"], errors="coerce").between(SEASON_MIN, SEASON_MAX)]
+    base = base.dropna(subset=["game_id","season","week","team","opponent","is_home"]).reset_index(drop=True)
+
     if alias_map:
         base["team"] = _apply_alias(base["team"], alias_map)
         base["opponent"] = _apply_alias(base["opponent"], alias_map)
@@ -225,14 +238,13 @@ def build():
                 if c in m_away.columns:
                     s = s.where(~s.isna(), m_away[c])
                 out[f"wx_{c}"] = s
-            # drop any suffixed right-dup cols
             cols_drop = [c for c in out.columns if c.endswith("__rwx")]
             out = out.drop(columns=cols_drop, errors="ignore")
             base = out
 
     log["rows_after_weather"] = int(len(base))
 
-    # 3) Season-team merges (team_stats, efficiency, special teams) — enforce one row per (season, team)
+    # 3) Season-team merges (team_stats, efficiency, special teams)
     def merge_season_team(path: str, prefix: str, suf: str):
         nonlocal base
         df = _read(path)
@@ -244,6 +256,8 @@ def build():
             return
 
         df = _coerce_season_int(df, s_col)
+        # apply same season range filter to right table
+        df = df[pd.to_numeric(df[s_col], errors="coerce").between(SEASON_MIN, SEASON_MAX)]
 
         if alias_map:
             df[t_col] = _apply_alias(df[t_col], alias_map)
@@ -255,18 +269,15 @@ def build():
         before = base.copy()
         merged = _safe_left_merge(base, df, on=[("season", s_col), ("_team_key", "_t_key")], suffix_tag=suf)
 
-        # Prefix only truly new columns (left columns keep names due to suffixing strategy)
         protect = list(before.columns) + [s_col, t_col, "_t_key"]
         merged = _prefix_new_columns(before, merged, prefix, protect=protect)
 
-        # Drop helper and right-dup columns
         merged = merged.drop(columns=[s_col, t_col, "_t_key"], errors="ignore")
         drop_suff = [c for c in merged.columns if c.endswith(suf)]
         merged = merged.drop(columns=drop_suff, errors="ignore")
 
-        # Enforce row count invariant
         if len(merged) != before_rows:
-            merged = before  # revert on anomaly
+            merged = before
 
         base = merged
 
@@ -291,6 +302,9 @@ def build():
             return
 
         df = _coerce_season_int(df, s_col)
+        # season range filter on injuries as well
+        df = df[pd.to_numeric(df[s_col], errors="coerce").between(SEASON_MIN, SEASON_MAX)]
+
         if alias_map:
             df[t_col] = _apply_alias(df[t_col], alias_map)
         df["_t_key"] = _std_team(df[t_col])
@@ -316,7 +330,7 @@ def build():
     merge_inj(OPT_INJ_LATEST, "latest", "__rind_")
     log["rows_after_injuries"] = int(len(base))
 
-    # 5) Restore guaranteed base keys (season, team) in case merges created suffixed variants
+    # 5) Restore guaranteed base keys
     base["season"] = base["_base_season"]
     base["team"]   = base["_base_team"]
 
@@ -328,7 +342,9 @@ def build():
     base.to_csv(OUT_DATASET_CSV, index=False)
 
     with open(OUT_LOG_TXT, "w", encoding="utf-8") as f:
-        f.write(f"snapshot_utc={dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}\n")
+        f.write(f"snapshot_utc={{}}\n".format(dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')))
+        f.write(f"season_min={SEASON_MIN}\n")
+        f.write(f"season_max={SEASON_MAX}\n")
         for k in ["rows_base_start","rows_after_weather","rows_after_team_stats","rows_after_efficiency","rows_after_special","rows_after_injuries"]:
             f.write(f"{k}={log.get(k, 0)}\n")
         f.write(f"rows_final={len(base)}\n")
@@ -338,7 +354,7 @@ def build():
 
 
 def main():
-    df = build()  # return value not used; file artifacts are the deliverable
+    _ = build()
     print("--- modeling_dataset written ---")
 
 
