@@ -54,6 +54,36 @@ jobs:
           echo "==> Row count (clean):"
           wc -l data/game_scores_clean.csv || true
 
+      - name: Inspect datasets before regression
+        run: |
+          set -e
+          echo "==> modeling_dataset.csv (head)"
+          head -n 20 data/modeling_dataset.csv || true
+          echo "==> Row count (modeling_dataset):"
+          wc -l data/modeling_dataset.csv || true
+          echo "==> Columns (modeling_dataset):"
+          python - << 'PY'
+import pandas as pd, sys
+try:
+    df = pd.read_csv('data/modeling_dataset.csv', nrows=0)
+    print(",".join(df.columns))
+except Exception as e:
+    print(f"error: {e}", file=sys.stderr)
+PY
+          echo "==> game_scores_clean.csv (head)"
+          head -n 20 data/game_scores_clean.csv || true
+          echo "==> Row count (game_scores_clean):"
+          wc -l data/game_scores_clean.csv || true
+          echo "==> Columns (game_scores_clean):"
+          python - << 'PY'
+import pandas as pd, sys
+try:
+    df = pd.read_csv('data/game_scores_clean.csv', nrows=0)
+    print(",".join(df.columns))
+except Exception as e:
+    print(f"error: {e}", file=sys.stderr)
+PY
+
       - name: Execute regression script
         env:
           TARGET_COL: points_scored
@@ -81,14 +111,14 @@ jobs:
           echo '--- data/model_regression_coeffs.csv (first 40 rows) ---'
           if [ -f data/model_regression_coeffs.csv ]; then
             head -n 40 data/model_regression_coeffs.csv
-          else:
+          else
             echo "data/model_regression_coeffs.csv not found."
           fi
 
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
-          else:
+          else
             echo "models/ directory not found."
           fi
 
