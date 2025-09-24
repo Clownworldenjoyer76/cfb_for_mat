@@ -33,6 +33,120 @@ jobs:
       - name: Fetch per-game scores (CFBD /games, per week)
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          # ---- Backfill limits (tune as needed) ----
+          MAX_PER_ID_BACKFILL: "100"      # hard cap of per-ID fetches this run
+          MAX_BACKFILL_MINUTES: "20"      # wall-clock minutes budget for per-ID
+          ENABLE_PER_ID_BACKFILL: "1"     # set to "0" to disable per-ID entirely
+        run: |
+          set -e
+          echo "==> Fetching game scores from CFBD (per week)…"
+          echo "    Limits: MAX_PER_ID_BACKFILL=${MAX_PER_ID_BACKFILL}, MAX_BACKFILL_MINUTES=${MAX_BACKFILL_MINUTES}, ENABLE_PER_ID_BACKFILL=${ENABLE_PER_ID_BACKFILL}"
+          python scripts/fetch_game_scores_cfbd.py
+          echo "==> Preview: data/game_scores.csv"
+          head -n 20 data/game_scores.csv || true
+          echo "==> Row count (raw):"
+          wc -l data/game_scores.csv || true
+
+      - name: Clean scores to unique game IDs / composite keys
+        run: |
+          set -e
+          python scripts/clean_scores_unique_by_id.py
+          echo "==> Preview: data/game_scores_clean.csv"
+          head -n 20 data/game_scores_clean.csv || true
+          echo "==> Row count (clean):"
+          wc -l data/game_scores_clean.csv || true
+
+      - name: Execute regression script
+        env:
+          TARGET_COL: points_scored
+          EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
+          SCORES_CSV: data/game_scores_clean.csv
+        run: |
+          set -e
+          echo "==> Running regression with TARGET_COL=${TARGET_COL}"
+          python scripts/run_regression_models.py
+
+          echo '--- logs_model_regression.txt ---'
+          if [ -f logs_model_regression.txt ]; then
+            tail -n 200 logs_model_regression.txt
+          else
+            echo "logs_model_regression.txt not found."
+          fi
+
+          echo '--- data/model_regression_metrics.csv ---'
+          if [ -f data/model_regression_metrics.csv ]; then
+            cat data/model_regression_metrics.csv
+          else
+            echo "data/model_regression_metrics.csv not found."
+          fi
+
+          echo '--- data/model_regression_coeffs.csv (first 40 rows) ---'
+          if [ -f data/model_regression_coeffs.csv ]; then
+            head -n 40 data/model_regression_coeffs.csv
+          else
+            echo "data/model_regression_coeffs.csv not found."
+          fi
+
+          echo '--- model artifacts ---'
+          if [ -d models ]; then
+            ls -lh models || true
+          else
+            echo "models/ directory not found."
+          fi
+
+      - name: Commit and push artifacts
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Stage each file individually to avoid fragile line continuations.
+          [ -f logs_model_regression.txt ] && git add -f logs_model_regression.txt || true
+          [ -f data/model_regression_metrics.csv ] && git add -f data/model_regression_metrics.csv || true
+          [ -f data/model_regression_coeffs.csv ] && git add -f data/model_regression_coeffs.csv || true
+          # models may not exist or the glob may expand empty; silence errors.
+          git add -f models/*.pkl 2>/dev/null || true
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit (artifacts unchanged)."
+          else
+            git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
+            git push
+          finame: Run Regression Models (CFB)
+
+on:
+  workflow_dispatch:        # allow manual trigger
+  schedule:                 # automatic weekly run
+    - cron: "0 17 * * 2"    # 17:00 UTC = 12:00 PM EST (Tuesdays)
+
+permissions:
+  contents: write
+
+jobs:
+  run-models:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUNBUFFERED: "1"   # print logs immediately
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas scikit-learn joblib requests
+
+      - name: Fetch per-game scores (CFBD /games, per week)
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: |
           set -e
           echo "==> Fetching game scores from CFBD (per week)…"
