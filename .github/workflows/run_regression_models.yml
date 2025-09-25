@@ -1,9 +1,9 @@
 name: Run Regression Models (CFB)
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 17 * * 2"   # Tuesdays 17:00 UTC
+  workflow_dispatch:        # allow manual trigger
+  schedule:                 # automatic weekly run
+    - cron: "0 17 * * 2"    # 17:00 UTC = 12:00 PM EST (Tuesdays)
 
 permissions:
   contents: write
@@ -12,14 +12,7 @@ jobs:
   run-models:
     runs-on: ubuntu-latest
     env:
-      PYTHONUNBUFFERED: "1"
-      CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
-      MAX_PER_ID_BACKFILL: "100"
-      MAX_BACKFILL_MINUTES: "20"
-      ENABLE_PER_ID_BACKFILL: "1"
-      # Historical season range for the builder
-      SEASON_MIN: "2019"
-      SEASON_MAX: "2024"
+      PYTHONUNBUFFERED: "1"   # print logs immediately
 
     steps:
       - name: Checkout
@@ -37,23 +30,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install numpy pandas scikit-learn joblib requests
 
-      - name: Build historical modeling dataset (2019–2024)
-        run: |
-          set -e
-          echo "==> Building modeling dataset for seasons ${SEASON_MIN}-${SEASON_MAX}…"
-          python scripts/build_modeling_dataset.py
-          echo "==> Head (data/modeling_dataset.csv)"
-          head -n 20 data/modeling_dataset.csv || true
-          echo "==> Row count (modeling_dataset.csv):"
-          wc -l data/modeling_dataset.csv || true
-          echo "==> Build log"
-          [ -f logs_build_modeling_dataset.txt ] && tail -n 50 logs_build_modeling_dataset.txt || echo "no build log"
-
       - name: Fetch per-game scores (CFBD /games, per week)
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: |
           set -e
           echo "==> Fetching game scores from CFBD (per week)…"
-          echo "    Limits: MAX_PER_ID_BACKFILL=${MAX_PER_ID_BACKFILL}, MAX_BACKFILL_MINUTES=${MAX_BACKFILL_MINUTES}, ENABLE_PER_ID_BACKFILL=${ENABLE_PER_ID_BACKFILL}"
           python scripts/fetch_game_scores_cfbd.py
           echo "==> Preview: data/game_scores.csv"
           head -n 20 data/game_scores.csv || true
@@ -72,7 +54,8 @@ jobs:
       - name: Execute regression script
         env:
           TARGET_COL: points_scored
-          EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
+          # Precise leak-guard: drop only obvious outcome/line columns; KEEP points_scored
+          EXCLUDE_TARGET_REGEX: '(?i)^(home_points|away_points|points_allowed|total_points|.*margin.*|.*spread.*)$'
           SCORES_CSV: data/game_scores_clean.csv
         run: |
           set -e
@@ -103,7 +86,7 @@ jobs:
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
-          else:
+          else
             echo "models/ directory not found."
           fi
 
@@ -113,7 +96,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          [ -f logs_build_modeling_dataset.txt ] && git add -f logs_build_modeling_dataset.txt || true
           [ -f logs_model_regression.txt ] && git add -f logs_model_regression.txt || true
           [ -f data/model_regression_metrics.csv ] && git add -f data/model_regression_metrics.csv || true
           [ -f data/model_regression_coeffs.csv ] && git add -f data/model_regression_coeffs.csv || true
@@ -122,6 +104,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit (artifacts unchanged)."
           else
-            git commit -m "Add historical dataset build, regression metrics, coeffs, and model artifacts [skip ci]"
+            git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
             git push
           fi
