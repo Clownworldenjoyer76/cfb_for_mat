@@ -2,7 +2,7 @@ name: Run Regression Models (CFB)
 
 on:
   workflow_dispatch:        # allow manual trigger
-  schedule:                 # automatic weekly run
+  schedule:                 # automatic weekly run (optional)
     - cron: "0 17 * * 2"    # 17:00 UTC = 12:00 PM EST (Tuesdays)
 
 permissions:
@@ -30,33 +30,26 @@ jobs:
           python -m pip install --upgrade pip
           pip install numpy pandas scikit-learn joblib requests
 
-      - name: Fetch per-game scores (CFBD /games, per week)
-        env:
-          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
-        run: |
-          set -e
-          echo "==> Fetching game scores from CFBD (per week)…"
-          python scripts/fetch_game_scores_cfbd.py
-          echo "==> Preview: data/game_scores.csv"
-          head -n 20 data/game_scores.csv || true
-          echo "==> Row count (raw):"
-          wc -l data/game_scores.csv || true
+      # We rely on data/modeling_dataset.csv as the authoritative dataset.
+      # These fetch/clean steps are intentionally omitted to avoid slow CFBD calls.
 
-      - name: Clean scores to unique game IDs / composite keys
+      - name: Inspect dataset (sanity check)
         run: |
           set -e
-          python scripts/clean_scores_unique_by_id.py
-          echo "==> Preview: data/game_scores_clean.csv"
-          head -n 20 data/game_scores_clean.csv || true
-          echo "==> Row count (clean):"
-          wc -l data/game_scores_clean.csv || true
+          if [ ! -f data/modeling_dataset.csv ]; then
+            echo "ERROR: data/modeling_dataset.csv not found."
+            exit 2
+          fi
+          echo "==> modeling_dataset.csv (head)"
+          head -n 20 data/modeling_dataset.csv || true
+          echo "==> Row count:"
+          wc -l data/modeling_dataset.csv || true
 
       - name: Execute regression script
         env:
           TARGET_COL: points_scored
-          # Precise leak-guard: drop only obvious outcome/line columns; KEEP points_scored
-          EXCLUDE_TARGET_REGEX: '(?i)^(home_points|away_points|points_allowed|total_points|.*margin.*|.*spread.*)$'
-          SCORES_CSV: data/game_scores_clean.csv
+          EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
+          # NOTE: No SCORES_CSV here. The runner will use points_scored already in modeling_dataset.csv.
         run: |
           set -e
           echo "==> Running regression with TARGET_COL=${TARGET_COL}"
@@ -96,9 +89,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          # Stage each file individually to avoid fragile line continuations.
           [ -f logs_model_regression.txt ] && git add -f logs_model_regression.txt || true
           [ -f data/model_regression_metrics.csv ] && git add -f data/model_regression_metrics.csv || true
           [ -f data/model_regression_coeffs.csv ] && git add -f data/model_regression_coeffs.csv || true
+          # models may not exist or the glob may expand empty; silence errors.
           git add -f models/*.pkl 2>/dev/null || true
 
           if git diff --cached --quiet; then
