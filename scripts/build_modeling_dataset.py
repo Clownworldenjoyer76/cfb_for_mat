@@ -3,11 +3,12 @@
 
 import os
 import sys
+import glob
+import unicodedata
 import datetime as dt
 from typing import List, Dict, Optional, Tuple
 
 import pandas as pd
-
 
 # =========================
 # INPUTS (project root)
@@ -20,6 +21,10 @@ OPT_SPECIAL     = "special_teams_metrics.csv"        # optional (season-team agg
 OPT_INJ_DAILY   = "injuries_daily.csv"               # optional (player-level; season-team)
 OPT_INJ_LATEST  = "injuries_latest.csv"              # optional (player-level; season-team)
 OPT_TEAM_ALIASES= "mappings/team_aliases.csv"        # optional (cfbd_name,alias)
+
+# Optional: allow explicit scores override via env
+ENV_SCORES_CSV  = os.environ.get("SCORES_CSV", "").strip()
+ENV_SCORES_GLOB = os.environ.get("SCORES_GLOB", "").strip()
 
 # =========================
 # OUTPUTS
@@ -86,6 +91,15 @@ def _std_team(s: pd.Series) -> pd.Series:
          .str.lower()
     )
 
+def _norm_key_val(x: object) -> str:
+    if pd.isna(x):
+        return ""
+    s = str(x)
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    s = s.upper()
+    return "".join(ch for ch in s if ch.isalnum())
+
 def _apply_alias(series: pd.Series, alias_map: Dict[str, str]) -> pd.Series:
     key = _std_team(series)
     norm_map = {_std_team(pd.Series([k]))[0]: v for k, v in alias_map.items()}
@@ -148,6 +162,84 @@ def _dedupe_by_team_season(df: pd.DataFrame, s_col: str, t_key_col: str) -> pd.D
     g = g.drop_duplicates(subset=group_cols, keep="first")
     return g
 
+# ---------- Scores discovery / normalization ----------
+def _find_scores_file() -> Optional[str]:
+    # 1) explicit env
+    if ENV_SCORES_CSV and _exists(ENV_SCORES_CSV):
+        return ENV_SCORES_CSV
+
+    # 2) env glob
+    cand: List[str] = []
+    if ENV_SCORES_GLOB:
+        cand.extend(sorted(glob.glob(ENV_SCORES_GLOB)))
+
+    # 3) common locations/patterns
+    roots = ["data", "data/raw", "docs/data", "docs/data/final"]
+    pats  = ["*game_scores_clean*.csv", "*scores_clean*.csv", "*game_scores*.csv", "*games*.csv", "*scores*.csv"]
+    for r in roots:
+        for p in pats:
+            cand.extend(sorted(glob.glob(os.path.join(r, p))))
+
+    seen, ordered = set(), []
+    for p in cand:
+        if p not in seen and _exists(p):
+            ordered.append(p); seen.add(p)
+
+    for p in ordered:
+        try:
+            df = pd.read_csv(p, nrows=5)
+            cols = {c.lower() for c in df.columns}
+        except Exception:
+            continue
+        ok1 = {"game_id","team","points_scored"}.issubset(cols)
+        ok2 = {"game_id","home_team","away_team"}.issubset(cols) and (
+              {"home_points","away_points"}.issubset(cols) or
+              {"home_score","away_score"}.issubset(cols) or
+              {"points_home","points_away"}.issubset(cols) or
+              {"score_home","score_away"}.issubset(cols)
+        )
+        if ok1 or ok2:
+            return p
+    return None
+
+def _scores_to_team_rows(scores: pd.DataFrame, alias_map: Dict[str, str]) -> pd.DataFrame:
+    cols = {c.lower(): c for c in scores.columns}
+
+    def col(*names):
+        for n in names:
+            if n in cols:
+                return cols[n]
+        return None
+
+    gid  = col("game_id","id")
+    team = col("team","school","team_name")
+    ps   = col("points_scored")
+    if gid and team and ps:
+        out = scores[[gid, team, ps]].copy()
+        out.columns = ["game_id", "team", "points_scored"]
+        if alias_map:
+            out["team"] = _apply_alias(out["team"], alias_map)
+        out["team_key"] = out["team"].map(_norm_key_val)
+        out = out.drop_duplicates(subset=["game_id","team_key"], keep="first")
+        return out
+
+    hteam = col("home_team","team_home","home")
+    ateam = col("away_team","team_away","away")
+    hp    = col("home_points","home_score","points_home","score_home")
+    ap    = col("away_points","away_score","points_away","score_away")
+    if not all([gid, hteam, ateam, hp, ap]):
+        return pd.DataFrame()
+
+    a = scores[[gid, hteam, hp]].copy()
+    a.columns = ["game_id", "team", "points_scored"]
+    b = scores[[gid, ateam, ap]].copy()
+    b.columns = ["game_id", "team", "points_scored"]
+    out = pd.concat([a, b], ignore_index=True)
+    if alias_map:
+        out["team"] = _apply_alias(out["team"], alias_map)
+    out["team_key"] = out["team"].map(_norm_key_val)
+    out = out.drop_duplicates(subset=["game_id","team_key"], keep="first")
+    return out
 
 # =========================
 # Build pipeline
@@ -202,8 +294,8 @@ def build():
     base["_base_team"]   = base["team"]
 
     # Normalized join keys
-    base["_team_key"] = _std_team(base["team"])
-    base["_opp_key"]  = _std_team(base["opponent"])
+    base["_team_key"] = base["team"].map(_norm_key_val)
+    base["_opp_key"]  = base["opponent"].map(_norm_key_val)
 
     # Ensure base key columns are first and protected
     required_keys = ["game_id","season","week","team","opponent","is_home","_team_key","_base_season","_base_team"]
@@ -221,11 +313,11 @@ def build():
             if w_home:
                 if alias_map:
                     wx[w_home] = _apply_alias(wx[w_home], alias_map)
-                wx["_w_home_key"] = _std_team(wx[w_home])
+                wx["_w_home_key"] = wx[w_home].map(_norm_key_val)
             if w_away:
                 if alias_map:
                     wx[w_away] = _apply_alias(wx[w_away], alias_map)
-                wx["_w_away_key"] = _std_team(wx[w_away])
+                wx["_w_away_key"] = wx[w_away].map(_norm_key_val)
 
             m_home = _safe_left_merge(base, wx, on=[("game_id", w_gid), ("_team_key", "_w_home_key")], suffix_tag="__rwx") if w_home else base.copy()
             m_away = _safe_left_merge(base, wx, on=[("game_id", w_gid), ("_team_key", "_w_away_key")], suffix_tag="__rwx") if w_away else base.copy()
@@ -261,7 +353,7 @@ def build():
 
         if alias_map:
             df[t_col] = _apply_alias(df[t_col], alias_map)
-        df["_t_key"] = _std_team(df[t_col])
+        df["_t_key"] = df[t_col].map(_norm_key_val)
 
         df = _dedupe_by_team_season(df, s_col, "_t_key")
 
@@ -307,7 +399,7 @@ def build():
 
         if alias_map:
             df[t_col] = _apply_alias(df[t_col], alias_map)
-        df["_t_key"] = _std_team(df[t_col])
+        df["_t_key"] = df[t_col].map(_norm_key_val)
 
         agg = df.groupby([s_col, "_t_key"], dropna=False).size().reset_index(name=f"{prefix}_count")
         agg = agg.drop_duplicates(subset=[s_col, "_t_key"], keep="first")
@@ -330,33 +422,57 @@ def build():
     merge_inj(OPT_INJ_LATEST, "latest", "__rind_")
     log["rows_after_injuries"] = int(len(base))
 
-    # 5) Restore guaranteed base keys
+    # 5) Attach OUTCOME TARGETS (points_scored) via strict (game_id, team_key)
+    scores_csv = _find_scores_file()
+    points_missing = None
+    if scores_csv:
+        s_raw = _read(scores_csv)
+        s_cols = {c.lower(): c for c in s_raw.columns}
+        s_team = _scores_to_team_rows(s_raw, alias_map)
+        if not s_team.empty and {"game_id","team_key","points_scored"}.issubset(s_team.columns):
+            merged = base.merge(
+                s_team[["game_id","team_key","points_scored"]],
+                left_on=["game_id","_team_key"],
+                right_on=["game_id","team_key"],
+                how="left",
+                validate="m:1"
+            )
+            points_missing = int(merged["points_scored"].isna().sum())
+            base = merged.drop(columns=["team_key"], errors="ignore")
+        else:
+            points_missing = len(base)
+    else:
+        points_missing = len(base)
+
+    # 6) Restore guaranteed base keys
     base["season"] = base["_base_season"]
     base["team"]   = base["_base_team"]
 
-    # 6) Cleanup helpers
+    # 7) Cleanup helpers
     base = base.drop(columns=["_team_key","_opp_key","_base_season","_base_team"], errors="ignore").reset_index(drop=True)
 
-    # 7) Write outputs
+    # 8) Write outputs
     os.makedirs(os.path.dirname(OUT_DATASET_CSV), exist_ok=True)
     base.to_csv(OUT_DATASET_CSV, index=False)
 
     with open(OUT_LOG_TXT, "w", encoding="utf-8") as f:
-        f.write(f"snapshot_utc={{}}\n".format(dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')))
+        f.write(f"snapshot_utc={dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}\n")
         f.write(f"season_min={SEASON_MIN}\n")
         f.write(f"season_max={SEASON_MAX}\n")
         for k in ["rows_base_start","rows_after_weather","rows_after_team_stats","rows_after_efficiency","rows_after_special","rows_after_injuries"]:
             f.write(f"{k}={log.get(k, 0)}\n")
         f.write(f"rows_final={len(base)}\n")
-        for c in ["game_id","season","week","team","opponent","is_home"]:
-            miss = float(base[c].isna().mean()) if len(base) else 1.0
+        if scores_csv:
+            f.write(f"scores_csv={scores_csv}\n")
+        if points_missing is not None:
+            f.write(f"points_merge_missing_rows={points_missing}\n")
+        for c in ["game_id","season","week","team","opponent","is_home","points_scored"]:
+            miss = float(base[c].isna().mean()) if c in base.columns and len(base) else 1.0
             f.write(f"pct_missing_{c}={round(miss,6)}\n")
-
 
 def main():
     _ = build()
     print("--- modeling_dataset written ---")
-
 
 if __name__ == "__main__":
     main()
