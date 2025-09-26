@@ -1,3 +1,5 @@
+# .github/workflows/build_modeling_dataset.yml
+
 name: Build Modeling Dataset
 
 on:
@@ -33,6 +35,9 @@ jobs:
           pip install pandas
 
       - name: Build modeling dataset
+        env:
+          SEASON_MIN: "2019"
+          SEASON_MAX: "2025"
         run: |
           set -e
           python scripts/build_modeling_dataset.py
@@ -55,4 +60,3 @@ jobs:
           else
             git commit -m "Build modeling_dataset artifacts [skip ci]"
             git push origin main
-          fi
