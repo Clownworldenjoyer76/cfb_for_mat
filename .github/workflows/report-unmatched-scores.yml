@@ -1,18 +1,35 @@
+# .github/workflows/report-unmatched-scores.yml
 name: Report Unmatched Scores (CFB)
 
 on:
-  workflow_dispatch:        # manual trigger
-  # schedule:               # optional; uncomment to run weekly
-  #   - cron: "0 18 * * 2"  # 18:00 UTC Tuesdays
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "CFB year (optional; defaults to current UTC year)"
+        required: false
+        type: string
+      week:
+        description: "CFB week (optional)"
+        required: false
+        type: string
+  # Uncomment to run weekly (Tuesdays 2pm ET)
+  # schedule:
+  #   - cron: "0 18 * * 2"
 
 permissions:
   contents: write
 
+concurrency:
+  group: report-unmatched-scores-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: America/New_York
+  PYTHONUNBUFFERED: "1"
+
 jobs:
-  report-unmatched:
+  scores:
     runs-on: ubuntu-latest
-    env:
-      PYTHONUNBUFFERED: "1"
 
     steps:
       - name: Checkout
@@ -27,49 +44,144 @@ jobs:
 
       - name: Install dependencies
         run: |
+          set -e
           python -m pip install --upgrade pip
-          pip install pandas numpy requests
+          pip install pandas python-dateutil
 
-      # (Optional) refresh scores so the report is current
-      - name: Fetch per-game scores (CFBD /games, per week)
-        env:
-          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+      - name: Ensure folders exist
         run: |
           set -e
-          python scripts/fetch_game_scores_cfbd.py
-          echo "==> data/game_scores.csv (head)"
-          head -n 20 data/game_scores.csv || true
-          echo "==> Row count (raw):"
+          mkdir -p data data/scores data/diagnostics
+
+      # === FETCH RAW SCORES ===
+      # Uses your existing script if present; otherwise errors with a clear message.
+      - name: Fetch scores
+        id: fetch
+        env:
+          YEAR_IN: "${{ github.event.inputs.year }}"
+          WEEK_IN: "${{ github.event.inputs.week }}"
+        run: |
+          set -e
+          echo "Inputs -> year='${YEAR_IN}', week='${WEEK_IN}'"
+          if [ -f scripts/fetch_game_scores_cfbd.py ]; then
+            python scripts/fetch_game_scores_cfbd.py ${YEAR_IN:+--year "$YEAR_IN"} ${WEEK_IN:+--week "$WEEK_IN"} --out data/game_scores.csv
+          elif [ -f scripts/fetch_game_scores.py ]; then
+            python scripts/fetch_game_scores.py ${YEAR_IN:+--year "$YEAR_IN"} ${WEEK_IN:+--week "$WEEK_IN"} --out data/game_scores.csv
+          else
+            echo "ERROR: No fetch script found (expected scripts/fetch_game_scores_cfbd.py or scripts/fetch_game_scores.py)."
+            exit 2
+          fi
+          test -s data/game_scores.csv || (echo "ERROR: data/game_scores.csv not created or empty." && exit 3)
+          echo "✅ Saved raw scores -> data/game_scores.csv"
+          echo "--- head(data/game_scores.csv) ---"
+          head -n 10 data/game_scores.csv || true
+          echo "--- wc(data/game_scores.csv) ---"
           wc -l data/game_scores.csv || true
 
-      - name: Clean scores to unique (game_id, team)
+      # === CLEAN / DEDUP ===
+      - name: Clean & dedupe scores
+        id: clean
         run: |
           set -e
-          python scripts/clean_scores_unique_by_id.py
-          echo "==> data/game_scores_clean.csv (head)"
-          head -n 20 data/game_scores_clean.csv || true
-          echo "==> Row count (clean):"
+          if [ -f scripts/clean_scores_unique_by_id.py ]; then
+            python scripts/clean_scores_unique_by_id.py --in data/game_scores.csv --out data/game_scores_clean.csv
+          else
+            # Fallback quick-clean in pure bash/pandas if your cleaner isn't present
+            python - <<'PY'
+import pandas as pd
+import sys
+src = "data/game_scores.csv"
+dst = "data/game_scores_clean.csv"
+df = pd.read_csv(src)
+# Try to build a stable unique key if not present
+key_cols = [c for c in ["game_id","id","gameId","game_key"] if c in df.columns]
+if key_cols:
+    key = key_cols[0]
+    df = df.drop_duplicates(subset=[key])
+else:
+    df = df.drop_duplicates()
+# Basic sanity: keep plausible numeric points columns if present
+for col in ["home_points","away_points","points_home","points_away","home_score","away_score"]:
+    if col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+df.to_csv(dst, index=False)
+print(f"Saved cleaned -> {dst} ({len(df)} rows)")
+PY
+          fi
+          test -s data/game_scores_clean.csv || (echo "ERROR: data/game_scores_clean.csv not created or empty." && exit 4)
+          echo "✅ Saved cleaned scores -> data/game_scores_clean.csv"
+          # Mirror into data/scores/ for alt references that some scripts may use
+          cp -f data/game_scores_clean.csv data/scores/game_scores_clean.csv
+          cp -f data/game_scores_clean.csv data/scores/scores.csv
+          echo "✅ Mirrored cleaned scores -> data/scores/game_scores_clean.csv and data/scores/scores.csv"
+          echo "--- head(data/game_scores_clean.csv) ---"
+          head -n 10 data/game_scores_clean.csv || true
+          echo "--- wc(data/game_scores_clean.csv) ---"
           wc -l data/game_scores_clean.csv || true
 
-      - name: Run unmatched report
+      # === OPTIONAL: DIAGNOSTIC AGAINST MODELING DATASET (if present) ===
+      - name: Build unmatched diagnostics (optional)
+        continue-on-error: true
         run: |
           set -e
-          python scripts/report_unmatched_scores.py
-          echo "---- coverage_summary.txt ----"
-          cat data/diagnostics/coverage_summary.txt || true
-          echo "---- unmatched_exact.csv (head) ----"
-          head -n 40 data/diagnostics/unmatched_exact.csv || true
-          echo "---- unmatched_with_norm_help.csv (head) ----"
-          head -n 40 data/diagnostics/unmatched_with_norm_help.csv || true
+          if [ -f data/modeling_dataset.csv ]; then
+            python - <<'PY'
+import pandas as pd
+from pathlib import Path
+mod = Path("data/modeling_dataset.csv")
+sc  = Path("data/game_scores_clean.csv")
+out = Path("data/diagnostics/unmatched_scores_report.csv")
+if mod.exists() and sc.exists():
+    dfm = pd.read_csv(mod)
+    dfs = pd.read_csv(sc)
+    # Heuristic keys
+    m_keys = [c for c in ["game_id","id","gameId"] if c in dfm.columns]
+    s_keys = [c for c in ["game_id","id","gameId"] if c in dfs.columns]
+    if m_keys and s_keys:
+        mk, sk = m_keys[0], s_keys[0]
+        unmatched = dfm[~dfm[mk].isin(dfs[sk])].copy()
+        unmatched.to_csv(out, index=False)
+        print(f"Saved unmatched diagnostic -> {out} ({len(unmatched)} rows)")
+    else:
+        print("Skip unmatched: no compatible key in one of the files.")
+else:
+    print("Skip unmatched: modeling_dataset.csv not present.")
+PY
+            echo "--- head(data/diagnostics/unmatched_scores_report.csv) ---"
+            head -n 20 data/diagnostics/unmatched_scores_report.csv || true
+          else
+            echo "Modeling dataset missing; skipping unmatched diagnostic."
+          fi
 
-      - name: Commit and push diagnostics
+      - name: Commit and push artifacts
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f data/diagnostics/* || true
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+          # Stage artifacts explicitly so they are easy to spot in the diff
+          [ -f data/game_scores.csv ] && git add -f data/game_scores.csv || true
+          [ -f data/game_scores_clean.csv ] && git add -f data/game_scores_clean.csv || true
+          [ -f data/scores/game_scores_clean.csv ] && git add -f data/scores/game_scores_clean.csv || true
+          [ -f data/scores/scores.csv ] && git add -f data/scores/scores.csv || true
+          [ -f data/diagnostics/unmatched_scores_report.csv ] && git add -f data/diagnostics/unmatched_scores_report.csv || true
+
           if git diff --cached --quiet; then
-            echo "No diagnostics changes to commit."
+            echo "No changes to commit."
           else
-            git commit -m "Add unmatched score diagnostics (modeling vs scores) [skip ci]"
+            git commit -m "Update scores (raw+clean) and diagnostics [skip ci]"
             git push
           fi
+
+      - name: One-line success flag for mobile
+        if: ${{ success() }}
+        run: |
+          echo ""
+          echo "============================="
+          echo "SCORES UPDATED ✅"
+          echo "• data/game_scores_clean.csv"
+          echo "• data/scores/game_scores_clean.csv"
+          echo "• data/scores/scores.csv"
+          echo "============================="
+          echo ""
