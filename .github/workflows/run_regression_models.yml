@@ -1,22 +1,15 @@
-# .github/workflows/run_regression_models.yml
-
-name: Run Regression Models (CFB)
+# .github/workflows/report-unmatched-scores.yml
+name: Report Unmatched Scores (CFB)
 
 on:
-  workflow_dispatch:        # allow manual trigger
-  schedule:                 # automatic weekly run (optional)
-    - cron: "0 17 * * 2"    # 17:00 UTC = 12:00 PM EST (Tuesdays)
+  workflow_dispatch: {}
 
 permissions:
   contents: write
 
 jobs:
-  run-models:
+  scores:
     runs-on: ubuntu-latest
-    env:
-      PYTHONUNBUFFERED: "1"   # print logs immediately
-      SEASON_MIN: "2019"
-      SEASON_MAX: "2025"
 
     steps:
       - name: Checkout
@@ -31,77 +24,72 @@ jobs:
 
       - name: Install dependencies
         run: |
+          set -e
           python -m pip install --upgrade pip
-          pip install numpy pandas scikit-learn joblib requests
+          pip install pandas python-dateutil
 
-      # We rely on data/modeling_dataset.csv as the authoritative dataset.
-      # These fetch/clean steps are intentionally omitted to avoid slow CFBD calls.
-
-      - name: Inspect dataset (sanity check)
+      - name: Ensure folders exist
         run: |
           set -e
-          if [ ! -f data/modeling_dataset.csv ]; then
-            echo "ERROR: data/modeling_dataset.csv not found."
+          mkdir -p data data/scores data/diagnostics
+
+      - name: Fetch raw scores
+        run: |
+          set -e
+          if [ -f scripts/fetch_game_scores_cfbd.py ]; then
+            echo "Using scripts/fetch_game_scores_cfbd.py"
+            python scripts/fetch_game_scores_cfbd.py --out data/game_scores.csv
+          elif [ -f scripts/fetch_game_scores.py ]; then
+            echo "Using scripts/fetch_game_scores.py"
+            python scripts/fetch_game_scores.py --out data/game_scores.csv
+          else
+            echo "ERROR: No fetch script found. Expected scripts/fetch_game_scores_cfbd.py or scripts/fetch_game_scores.py"
             exit 2
           fi
-          echo "==> modeling_dataset.csv (head)"
-          head -n 20 data/modeling_dataset.csv || true
-          echo "==> Row count:"
-          wc -l data/modeling_dataset.csv || true
+          test -s data/game_scores.csv || (echo "ERROR: data/game_scores.csv not created or empty." && exit 3)
+          echo "--- head(data/game_scores.csv) ---"
+          head -n 10 data/game_scores.csv || true
+          echo "--- wc(data/game_scores.csv) ---"
+          wc -l data/game_scores.csv || true
 
-      - name: Execute regression script
-        env:
-          TARGET_COL: points_scored
-          EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
-          # NOTE: No SCORES_CSV here. The runner will use points_scored already in modeling_dataset.csv.
+      - name: Clean & dedupe scores
         run: |
           set -e
-          echo "==> Running regression with TARGET_COL=${TARGET_COL}"
-          python scripts/run_regression_models.py
-
-          echo '--- logs_model_regression.txt ---'
-          if [ -f logs_model_regression.txt ]; then
-            tail -n 200 logs_model_regression.txt
+          if [ -f scripts/clean_scores_unique_by_id.py ]; then
+            python scripts/clean_scores_unique_by_id.py --in data/game_scores.csv --out data/game_scores_clean.csv
           else
-            echo "logs_model_regression.txt not found."
+            echo "ERROR: scripts/clean_scores_unique_by_id.py not found."
+            exit 4
           fi
-
-          echo '--- data/model_regression_metrics.csv ---'
-          if [ -f data/model_regression_metrics.csv ]; then
-            cat data/model_regression_metrics.csv
-          else
-            echo "data/model_regression_metrics.csv not found."
-          fi
-
-          echo '--- data/model_regression_coeffs.csv (first 40 rows) ---'
-          if [ -f data/model_regression_coeffs.csv ]; then
-            head -n 40 data/model_regression_coeffs.csv
-          else
-            echo "data/model_regression_coeffs.csv not found."
-          fi
-
-          echo '--- model artifacts ---'
-          if [ -d models ]; then
-            ls -lh models || true
-          else
-            echo "models/ directory not found."
-          fi
+          test -s data/game_scores_clean.csv || (echo "ERROR: data/game_scores_clean.csv not created or empty." && exit 5)
+          cp -f data/game_scores_clean.csv data/scores/game_scores_clean.csv
+          cp -f data/game_scores_clean.csv data/scores/scores.csv
+          echo "--- head(data/game_scores_clean.csv) ---"
+          head -n 10 data/game_scores_clean.csv || true
+          echo "--- wc(data/game_scores_clean.csv) ---"
+          wc -l data/game_scores_clean.csv || true
+          echo "SCORES UPDATED ✅"
+          echo "• data/game_scores_clean.csv"
+          echo "• data/scores/game_scores_clean.csv"
+          echo "• data/scores/scores.csv"
 
       - name: Commit and push artifacts
         run: |
           set -e
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-          # Stage each file individually to avoid fragile line continuations.
-          [ -f logs_model_regression.txt ] && git add -f logs_model_regression.txt || true
-          [ -f data/model_regression_metrics.csv ] && git add -f data/model_regression_metrics.csv || true
-          [ -f data/model_regression_coeffs.csv ] && git add -f data/model_regression_coeffs.csv || true
-          # models may not exist or the glob may expand empty; silence errors.
-          git add -f models/*.pkl 2>/dev/null || true
+          git add -f data/game_scores.csv || true
+          git add -f data/game_scores_clean.csv || true
+          git add -f data/scores/game_scores_clean.csv || true
+          git add -f data/scores/scores.csv || true
+          git add -f data/diagnostics/*.csv 2>/dev/null || true
 
           if git diff --cached --quiet; then
-            echo "No changes to commit (artifacts unchanged)."
+            echo "No changes to commit."
+            git status --porcelain
           else
-            git commit -m "Add regression metrics, coeffs, and model artifacts [skip ci]"
-            git push
+            git commit -m "Update scores (raw+clean) and diagnostics [skip ci]"
+            git push origin "${GITHUB_REF_NAME:-main}"
+          fi
