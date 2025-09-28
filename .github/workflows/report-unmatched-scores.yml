@@ -2,27 +2,14 @@
 name: Report Unmatched Scores (CFB)
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 permissions:
   contents: write
 
-concurrency:
-  group: report-unmatched-scores-${{ github.ref }}
-  cancel-in-progress: true
-
-defaults:
-  run:
-    shell: bash
-
-env:
-  TZ: America/New_York
-  PYTHONUNBUFFERED: "1"
-
 jobs:
   scores:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,121 +23,61 @@ jobs:
 
       - name: Install dependencies
         run: |
-          set -e
           python -m pip install --upgrade pip
           pip install pandas python-dateutil
 
       - name: Ensure folders exist
         run: |
-          set -e
           mkdir -p data data/scores data/diagnostics
 
-      # === FETCH RAW SCORES ===
-      # Assumes your repo has one of these scripts.
-      # If only one exists, the conditional resolves to that one.
-      - name: Fetch scores
-        env:
-          YEAR_IN: "${{ github.event.inputs.year }}"
-          WEEK_IN: "${{ github.event.inputs.week }}"
+      - name: Fetch raw scores
         run: |
           set -e
           if [ -f scripts/fetch_game_scores_cfbd.py ]; then
-            echo "Using scripts/fetch_game_scores_cfbd.py"
-            python scripts/fetch_game_scores_cfbd.py ${YEAR_IN:+--year "$YEAR_IN"} ${WEEK_IN:+--week "$WEEK_IN"} --out data/game_scores.csv
+            python scripts/fetch_game_scores_cfbd.py --out data/game_scores.csv
           elif [ -f scripts/fetch_game_scores.py ]; then
-            echo "Using scripts/fetch_game_scores.py"
-            python scripts/fetch_game_scores.py ${YEAR_IN:+--year "$YEAR_IN"} ${WEEK_IN:+--week "$WEEK_IN"} --out data/game_scores.csv
+            python scripts/fetch_game_scores.py --out data/game_scores.csv
           else
-            echo "ERROR: No fetch script found. Expected scripts/fetch_game_scores_cfbd.py or scripts/fetch_game_scores.py"
+            echo "ERROR: Missing fetch script (scripts/fetch_game_scores_cfbd.py or scripts/fetch_game_scores.py)"
             exit 2
           fi
-          test -s data/game_scores.csv || (echo "ERROR: data/game_scores.csv not created or empty." && exit 3)
-          echo "✅ Saved raw scores -> data/game_scores.csv"
-          head -n 10 data/game_scores.csv || true
-          wc -l data/game_scores.csv || true
+          if [ ! -s data/game_scores.csv ]; then
+            echo "ERROR: data/game_scores.csv not created or empty."
+            exit 3
+          fi
 
-      # === CLEAN / DEDUPE ===
-      # Assumes your repo has scripts/clean_scores_unique_by_id.py
       - name: Clean & dedupe scores
         run: |
           set -e
-          if [ -f scripts/clean_scores_unique_by_id.py ]; then
-            python scripts/clean_scores_unique_by_id.py --in data/game_scores.csv --out data/game_scores_clean.csv
-          else
-            echo "ERROR: scripts/clean_scores_unique_by_id.py not found."
+          if [ ! -f scripts/clean_scores_unique_by_id.py ]; then
+            echo "ERROR: Missing cleaner script (scripts/clean_scores_unique_by_id.py)"
             exit 4
           fi
-          test -s data/game_scores_clean.csv || (echo "ERROR: data/game_scores_clean.csv not created or empty." && exit 5)
-          echo "✅ Saved cleaned scores -> data/game_scores_clean.csv"
-          # Mirror for alt paths some scripts expect
+          python scripts/clean_scores_unique_by_id.py --in data/game_scores.csv --out data/game_scores_clean.csv
+          if [ ! -s data/game_scores_clean.csv ]; then
+            echo "ERROR: data/game_scores_clean.csv not created or empty."
+            exit 5
+          fi
           cp -f data/game_scores_clean.csv data/scores/game_scores_clean.csv
           cp -f data/game_scores_clean.csv data/scores/scores.csv
-          echo "✅ Mirrored -> data/scores/game_scores_clean.csv and data/scores/scores.csv"
-          head -n 10 data/game_scores_clean.csv || true
-          wc -l data/game_scores_clean.csv || true
-
-      # === OPTIONAL: DIAGNOSTIC (only if modeling dataset already exists) ===
-      - name: Build unmatched diagnostics (optional)
-        continue-on-error: true
-        run: |
-          set -e
-          if [ -f data/modeling_dataset.csv ]; then
-            python - <<'PY'
-import pandas as pd
-from pathlib import Path
-mod = Path("data/modeling_dataset.csv")
-sc  = Path("data/game_scores_clean.csv")
-out = Path("data/diagnostics/unmatched_scores_report.csv")
-if mod.exists() and sc.exists():
-    dfm = pd.read_csv(mod)
-    dfs = pd.read_csv(sc)
-    # Heuristic common key
-    key_candidates = ["game_id","id","gameId"]
-    m_keys = [c for c in key_candidates if c in dfm.columns]
-    s_keys = [c for c in key_candidates if c in dfs.columns]
-    if m_keys and s_keys:
-        mk, sk = m_keys[0], s_keys[0]
-        unmatched = dfm[~dfm[mk].isin(dfs[sk])].copy()
-        unmatched.to_csv(out, index=False)
-        print(f"Saved unmatched diagnostic -> {out} ({len(unmatched)} rows)")
-    else:
-        print("Skip unmatched: no compatible key present.")
-else:
-    print("Modeling dataset missing; skipping unmatched diagnostic.")
-PY
-            head -n 20 data/diagnostics/unmatched_scores_report.csv || true
-          else
-            echo "Modeling dataset missing; skipping unmatched diagnostic."
-          fi
 
       - name: Commit and push artifacts
         run: |
           set -e
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-          [ -f data/game_scores.csv ] && git add -f data/game_scores.csv || true
-          [ -f data/game_scores_clean.csv ] && git add -f data/game_scores_clean.csv || true
-          [ -f data/scores/game_scores_clean.csv ] && git add -f data/scores/game_scores_clean.csv || true
-          [ -f data/scores/scores.csv ] && git add -f data/scores/scores.csv || true
-          [ -f data/diagnostics/unmatched_scores_report.csv ] && git add -f data/diagnostics/unmatched_scores_report.csv || true
+          git add -f data/game_scores.csv || true
+          git add -f data/game_scores_clean.csv || true
+          git add -f data/scores/game_scores_clean.csv || true
+          git add -f data/scores/scores.csv || true
+          git add -f data/diagnostics/*.csv 2>/dev/null || true
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
+            git status --porcelain
           else
-            git commit -m "Update scores (raw+clean) and diagnostics [skip ci]"
+            git commit -m "Update scores (raw+clean) [skip ci]"
             git push
           fi
-
-      - name: Mobile-friendly success flag
-        if: ${{ success() }}
-        run: |
-          echo ""
-          echo "============================="
-          echo "SCORES UPDATED ✅"
-          echo "• data/game_scores_clean.csv"
-          echo "• data/scores/game_scores_clean.csv"
-          echo "• data/scores/scores.csv"
-          echo "============================="
-          echo ""
