@@ -1,12 +1,22 @@
 # .github/workflows/build_modeling_dataset.yml
-
 name: Build Modeling Dataset
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 permissions:
   contents: write
+
+concurrency:
+  group: build-modeling-dataset-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  TZ: America/New_York
 
 jobs:
   build:
@@ -20,6 +30,7 @@ jobs:
 
       - name: Sync to remote main (before generating artifacts)
         run: |
+          set -e
           git fetch origin main
           git reset --hard origin/main
           git status --porcelain
@@ -31,6 +42,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          set -e
           python -m pip install --upgrade pip
           pip install pandas
 
@@ -53,10 +65,13 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git add -f data/modeling_dataset.csv logs_build_modeling_dataset.txt
+
+          git add -f data/modeling_dataset.csv logs_build_modeling_dataset.txt || true
+
           if git diff --cached --quiet; then
             echo "No changes to commit."
             git status --porcelain
           else
             git commit -m "Build modeling_dataset artifacts [skip ci]"
-            git push origin main
+            git push origin "${GITHUB_REF_NAME:-main}"
+          fi
