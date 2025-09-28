@@ -2,19 +2,7 @@
 name: Report Unmatched Scores (CFB)
 
 on:
-  workflow_dispatch:
-    inputs:
-      year:
-        description: "CFB year (optional; defaults to current UTC year)"
-        required: false
-        type: string
-      week:
-        description: "CFB week (optional)"
-        required: false
-        type: string
-  # Uncomment to run weekly (Tuesdays 2pm ET)
-  # schedule:
-  #   - cron: "0 18 * * 2"
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -22,6 +10,10 @@ permissions:
 concurrency:
   group: report-unmatched-scores-${{ github.ref }}
   cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
 
 env:
   TZ: America/New_York
@@ -54,72 +46,50 @@ jobs:
           mkdir -p data data/scores data/diagnostics
 
       # === FETCH RAW SCORES ===
-      # Uses your existing script if present; otherwise errors with a clear message.
+      # Assumes your repo has one of these scripts.
+      # If only one exists, the conditional resolves to that one.
       - name: Fetch scores
-        id: fetch
         env:
           YEAR_IN: "${{ github.event.inputs.year }}"
           WEEK_IN: "${{ github.event.inputs.week }}"
         run: |
           set -e
-          echo "Inputs -> year='${YEAR_IN}', week='${WEEK_IN}'"
           if [ -f scripts/fetch_game_scores_cfbd.py ]; then
+            echo "Using scripts/fetch_game_scores_cfbd.py"
             python scripts/fetch_game_scores_cfbd.py ${YEAR_IN:+--year "$YEAR_IN"} ${WEEK_IN:+--week "$WEEK_IN"} --out data/game_scores.csv
           elif [ -f scripts/fetch_game_scores.py ]; then
+            echo "Using scripts/fetch_game_scores.py"
             python scripts/fetch_game_scores.py ${YEAR_IN:+--year "$YEAR_IN"} ${WEEK_IN:+--week "$WEEK_IN"} --out data/game_scores.csv
           else
-            echo "ERROR: No fetch script found (expected scripts/fetch_game_scores_cfbd.py or scripts/fetch_game_scores.py)."
+            echo "ERROR: No fetch script found. Expected scripts/fetch_game_scores_cfbd.py or scripts/fetch_game_scores.py"
             exit 2
           fi
           test -s data/game_scores.csv || (echo "ERROR: data/game_scores.csv not created or empty." && exit 3)
           echo "✅ Saved raw scores -> data/game_scores.csv"
-          echo "--- head(data/game_scores.csv) ---"
           head -n 10 data/game_scores.csv || true
-          echo "--- wc(data/game_scores.csv) ---"
           wc -l data/game_scores.csv || true
 
-      # === CLEAN / DEDUP ===
+      # === CLEAN / DEDUPE ===
+      # Assumes your repo has scripts/clean_scores_unique_by_id.py
       - name: Clean & dedupe scores
-        id: clean
         run: |
           set -e
           if [ -f scripts/clean_scores_unique_by_id.py ]; then
             python scripts/clean_scores_unique_by_id.py --in data/game_scores.csv --out data/game_scores_clean.csv
           else
-            # Fallback quick-clean in pure bash/pandas if your cleaner isn't present
-            python - <<'PY'
-import pandas as pd
-import sys
-src = "data/game_scores.csv"
-dst = "data/game_scores_clean.csv"
-df = pd.read_csv(src)
-# Try to build a stable unique key if not present
-key_cols = [c for c in ["game_id","id","gameId","game_key"] if c in df.columns]
-if key_cols:
-    key = key_cols[0]
-    df = df.drop_duplicates(subset=[key])
-else:
-    df = df.drop_duplicates()
-# Basic sanity: keep plausible numeric points columns if present
-for col in ["home_points","away_points","points_home","points_away","home_score","away_score"]:
-    if col in df.columns:
-        df[col] = pd.to_numeric(df[col], errors="coerce")
-df.to_csv(dst, index=False)
-print(f"Saved cleaned -> {dst} ({len(df)} rows)")
-PY
+            echo "ERROR: scripts/clean_scores_unique_by_id.py not found."
+            exit 4
           fi
-          test -s data/game_scores_clean.csv || (echo "ERROR: data/game_scores_clean.csv not created or empty." && exit 4)
+          test -s data/game_scores_clean.csv || (echo "ERROR: data/game_scores_clean.csv not created or empty." && exit 5)
           echo "✅ Saved cleaned scores -> data/game_scores_clean.csv"
-          # Mirror into data/scores/ for alt references that some scripts may use
+          # Mirror for alt paths some scripts expect
           cp -f data/game_scores_clean.csv data/scores/game_scores_clean.csv
           cp -f data/game_scores_clean.csv data/scores/scores.csv
-          echo "✅ Mirrored cleaned scores -> data/scores/game_scores_clean.csv and data/scores/scores.csv"
-          echo "--- head(data/game_scores_clean.csv) ---"
+          echo "✅ Mirrored -> data/scores/game_scores_clean.csv and data/scores/scores.csv"
           head -n 10 data/game_scores_clean.csv || true
-          echo "--- wc(data/game_scores_clean.csv) ---"
           wc -l data/game_scores_clean.csv || true
 
-      # === OPTIONAL: DIAGNOSTIC AGAINST MODELING DATASET (if present) ===
+      # === OPTIONAL: DIAGNOSTIC (only if modeling dataset already exists) ===
       - name: Build unmatched diagnostics (optional)
         continue-on-error: true
         run: |
@@ -134,20 +104,20 @@ out = Path("data/diagnostics/unmatched_scores_report.csv")
 if mod.exists() and sc.exists():
     dfm = pd.read_csv(mod)
     dfs = pd.read_csv(sc)
-    # Heuristic keys
-    m_keys = [c for c in ["game_id","id","gameId"] if c in dfm.columns]
-    s_keys = [c for c in ["game_id","id","gameId"] if c in dfs.columns]
+    # Heuristic common key
+    key_candidates = ["game_id","id","gameId"]
+    m_keys = [c for c in key_candidates if c in dfm.columns]
+    s_keys = [c for c in key_candidates if c in dfs.columns]
     if m_keys and s_keys:
         mk, sk = m_keys[0], s_keys[0]
         unmatched = dfm[~dfm[mk].isin(dfs[sk])].copy()
         unmatched.to_csv(out, index=False)
         print(f"Saved unmatched diagnostic -> {out} ({len(unmatched)} rows)")
     else:
-        print("Skip unmatched: no compatible key in one of the files.")
+        print("Skip unmatched: no compatible key present.")
 else:
-    print("Skip unmatched: modeling_dataset.csv not present.")
+    print("Modeling dataset missing; skipping unmatched diagnostic.")
 PY
-            echo "--- head(data/diagnostics/unmatched_scores_report.csv) ---"
             head -n 20 data/diagnostics/unmatched_scores_report.csv || true
           else
             echo "Modeling dataset missing; skipping unmatched diagnostic."
@@ -160,7 +130,6 @@ PY
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-          # Stage artifacts explicitly so they are easy to spot in the diff
           [ -f data/game_scores.csv ] && git add -f data/game_scores.csv || true
           [ -f data/game_scores_clean.csv ] && git add -f data/game_scores_clean.csv || true
           [ -f data/scores/game_scores_clean.csv ] && git add -f data/scores/game_scores_clean.csv || true
@@ -174,7 +143,7 @@ PY
             git push
           fi
 
-      - name: One-line success flag for mobile
+      - name: Mobile-friendly success flag
         if: ${{ success() }}
         run: |
           echo ""
