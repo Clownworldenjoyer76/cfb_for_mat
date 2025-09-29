@@ -24,17 +24,18 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas python-dateutil requests
+          # install explicitly the libraries your fetch script imports
+          pip install requests pandas python-dateutil
 
       - name: Ensure folders exist
-        run: |
-          mkdir -p data data/scores data/diagnostics
+        run: mkdir -p data data/scores data/diagnostics
 
       - name: Fetch raw scores
         run: |
           set -e
           if [ -f scripts/fetch_game_scores_cfbd.py ]; then
             echo "Using scripts/fetch_game_scores_cfbd.py"
+            python -m pip show requests || echo "requests not found"
             python scripts/fetch_game_scores_cfbd.py --out data/game_scores.csv
           elif [ -f scripts/fetch_game_scores.py ]; then
             echo "Using scripts/fetch_game_scores.py"
@@ -43,10 +44,7 @@ jobs:
             echo "ERROR: Missing fetch script"
             exit 2
           fi
-          if [ ! -s data/game_scores.csv ]; then
-            echo "ERROR: data/game_scores.csv not created or empty."
-            exit 3
-          fi
+          test -s data/game_scores.csv || (echo "ERROR: data/game_scores.csv missing or empty." && exit 3)
 
       - name: Clean & dedupe scores
         run: |
@@ -56,10 +54,7 @@ jobs:
             exit 4
           fi
           python scripts/clean_scores_unique_by_id.py --in data/game_scores.csv --out data/game_scores_clean.csv
-          if [ ! -s data/game_scores_clean.csv ]; then
-            echo "ERROR: data/game_scores_clean.csv not created or empty."
-            exit 5
-          fi
+          test -s data/game_scores_clean.csv || (echo "ERROR: data/game_scores_clean.csv missing or empty." && exit 5)
           cp -f data/game_scores_clean.csv data/scores/game_scores_clean.csv
           cp -f data/game_scores_clean.csv data/scores/scores.csv
           echo "SCORES UPDATED ✅"
@@ -75,11 +70,9 @@ jobs:
           git add -f data/game_scores_clean.csv || true
           git add -f data/scores/game_scores_clean.csv || true
           git add -f data/scores/scores.csv || true
-          git add -f data/diagnostics/*.csv 2>/dev/null || true
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
-            git status --porcelain
           else
             git commit -m "Update scores (raw+clean) [skip ci]"
             git push origin "${GITHUB_REF_NAME:-main}"
