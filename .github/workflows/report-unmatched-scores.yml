@@ -24,8 +24,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # install explicitly the libraries your fetch script imports
-          pip install requests pandas python-dateutil
+          # IMPORTANT: install into the SAME interpreter we’ll run with
+          python -m pip install requests pandas
 
       - name: Ensure folders exist
         run: mkdir -p data data/scores data/diagnostics
@@ -35,7 +35,7 @@ jobs:
           set -e
           if [ -f scripts/fetch_game_scores_cfbd.py ]; then
             echo "Using scripts/fetch_game_scores_cfbd.py"
-            python -m pip show requests || echo "requests not found"
+            python -m pip show requests || (echo "requests still missing" && exit 1)
             python scripts/fetch_game_scores_cfbd.py --out data/game_scores.csv
           elif [ -f scripts/fetch_game_scores.py ]; then
             echo "Using scripts/fetch_game_scores.py"
