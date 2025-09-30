@@ -10,6 +10,10 @@ permissions:
 jobs:
   scores:
     runs-on: ubuntu-latest
+    env:
+      CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+      PYTHONUNBUFFERED: "1"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +28,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # IMPORTANT: install into the SAME interpreter we’ll run with
           python -m pip install requests pandas
 
       - name: Ensure folders exist
@@ -35,7 +38,6 @@ jobs:
           set -e
           if [ -f scripts/fetch_game_scores_cfbd.py ]; then
             echo "Using scripts/fetch_game_scores_cfbd.py"
-            python -m pip show requests || (echo "requests still missing" && exit 1)
             python scripts/fetch_game_scores_cfbd.py --out data/game_scores.csv
           elif [ -f scripts/fetch_game_scores.py ]; then
             echo "Using scripts/fetch_game_scores.py"
@@ -44,7 +46,16 @@ jobs:
             echo "ERROR: Missing fetch script"
             exit 2
           fi
-          test -s data/game_scores.csv || (echo "ERROR: data/game_scores.csv missing or empty." && exit 3)
+          # Require at least 2 lines (header + one row)
+          lines=$(wc -l < data/game_scores.csv || echo 0)
+          echo "game_scores.csv lines: $lines"
+          if [ "$lines" -lt 2 ]; then
+            echo "ERROR: Fetch returned no rows (only headers)."
+            echo "Hints:"
+            echo " - Ensure CFBD_API_KEY is set as a repo secret and not empty."
+            echo " - If still empty, we likely need to loosen the API filters in scripts/fetch_game_scores_cfbd.py (remove 'division' filter)."
+            exit 3
+          fi
 
       - name: Clean & dedupe scores
         run: |
@@ -75,5 +86,5 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Update scores (raw+clean) [skip ci]"
-            git push origin "${GITHUB_REF_NAME:-main}"
+            git push
           fi
