@@ -1,3 +1,4 @@
+# .github/workflows/train_ml_models.yml
 name: Train ML Models (CFB)
 
 on:
@@ -18,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHONUNBUFFERED: "1"
+      TARGET_COL: "points_scored"     # use the target already in modeling_dataset.csv
+      EXCLUDE_TARGET_REGEX: "(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$"
+      DATASET_CSV: "data/modeling_dataset.csv"   # if your script reads this env; otherwise it defaults to this path
 
     steps:
       - name: Checkout
@@ -33,72 +37,68 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install numpy pandas scikit-learn joblib requests xgboost lightgbm
+          python -m pip install numpy pandas scikit-learn joblib xgboost lightgbm
 
-      - name: Fetch per-game scores (CFBD /games, per week)
-        env:
-          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+      # We DO NOT fetch/clean scores here. We rely on the unified dataset produced earlier.
+      - name: Verify modeling dataset and target
         run: |
           set -e
-          echo "==> Fetching game scores from CFBD (per week)…"
-          python scripts/fetch_game_scores_cfbd.py
-          echo "==> Preview: data/game_scores.csv"
-          head -n 20 data/game_scores.csv || true
-          echo "==> Row count (raw):"
-          wc -l data/game_scores.csv || true
-
-      - name: Clean scores to unique (game_id, team)
-        run: |
-          set -e
-          python scripts/clean_scores_unique_by_id.py
-          echo "==> Preview: data/game_scores_clean.csv"
-          head -n 20 data/game_scores_clean.csv || true
-          echo "==> Row count (clean):"
-          wc -l data/game_scores_clean.csv || true
+          if [ ! -f "$DATASET_CSV" ]; then
+            echo "ERROR: $DATASET_CSV not found. Run 'Build Modeling Dataset' first."
+            exit 2
+          fi
+          echo "==> $DATASET_CSV (head)"
+          head -n 10 "$DATASET_CSV" || true
+          echo "==> Row count:"
+          wc -l "$DATASET_CSV" || true
+          # ensure target col exists in header
+          header=$(head -n 1 "$DATASET_CSV")
+          echo "$header" | grep -qi ",$TARGET_COL," || echo "$header" | grep -qi "^$TARGET_COL," || echo "$header" | grep -qi ",$TARGET_COL$"
+          if [ $? -ne 0 ]; then
+            echo "ERROR: TARGET_COL '$TARGET_COL' not found in $DATASET_CSV header."
+            exit 3
+          fi
 
       - name: Train ML models (XGBoost / LightGBM)
-        env:
-          TARGET_COL: points_scored
-          EXCLUDE_TARGET_REGEX: '(?i)^(?!points_scored$).*(points?|scores?|margin|spread)$'
-          SCORES_CSV: data/game_scores_clean.csv
         run: |
           set -e
-          echo "==> Training ML models with TARGET_COL=${TARGET_COL}"
+          echo "==> Training ML models with TARGET_COL=$TARGET_COL using $DATASET_CSV"
           python scripts/train_ml_models.py
 
           echo '--- logs_ml_models.txt (tail) ---'
           if [ -f logs_ml_models.txt ]; then
             tail -n 200 logs_ml_models.txt
-          else:
+          else
             echo "logs_ml_models.txt not found."
           fi
 
           echo '--- data/ml_model_metrics.csv ---'
           if [ -f data/ml_model_metrics.csv ]; then
             cat data/ml_model_metrics.csv
-          else:
+          else
             echo "data/ml_model_metrics.csv not found."
           fi
 
           echo '--- data/ml_feature_importance.csv (head) ---'
           if [ -f data/ml_feature_importance.csv ]; then
             head -n 40 data/ml_feature_importance.csv
-          else:
+          else
             echo "data/ml_feature_importance.csv not found."
           fi
 
           echo '--- model artifacts ---'
           if [ -d models ]; then
             ls -lh models || true
-          else:
+          else
             echo "models/ directory not found."
           fi
 
       - name: Commit and push artifacts
         run: |
           set -e
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
           # Stage individually to avoid fragile continuations
           [ -f logs_ml_models.txt ] && git add -f logs_ml_models.txt || true
