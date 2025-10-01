@@ -44,7 +44,7 @@ jobs:
         run: |
           set -e
           python -m pip install --upgrade pip
-          pip install pandas
+          python -m pip install pandas
 
       - name: Build modeling dataset
         env:
@@ -59,6 +59,65 @@ jobs:
           [ -f data/modeling_dataset.csv ] && wc -l data/modeling_dataset.csv || echo "data/modeling_dataset.csv missing"
           [ -f logs_build_modeling_dataset.txt ] && wc -l logs_build_modeling_dataset.txt || echo "logs_build_modeling_dataset.txt missing"
 
+      # Enrich with scores so points_scored exists for downstream jobs
+      - name: Enrich dataset with points_scored (if scores available)
+        run: |
+          set -e
+          if [ ! -f data/modeling_dataset.csv ]; then
+            echo "ERROR: data/modeling_dataset.csv missing"; exit 2
+          fi
+          if [ ! -f data/game_scores_clean.csv ]; then
+            echo "NOTE: data/game_scores_clean.csv not found; skipping enrichment."
+            exit 0
+          fi
+          python - <<'PY'
+import pandas as pd
+from pathlib import Path
+
+mod_p = Path("data/modeling_dataset.csv")
+sc_p  = Path("data/game_scores_clean.csv")
+
+df = pd.read_csv(mod_p)
+sc = pd.read_csv(sc_p)
+
+def norm(s): return s.astype(str).str.strip().str.lower()
+
+# Require keys
+missing = [c for c in ("game_id","team") if c not in df.columns]
+if missing:
+    raise SystemExit(f"ERROR: modeling_dataset.csv missing needed columns: {missing}")
+
+if not {"game_id","team"}.issubset(sc.columns):
+    raise SystemExit("ERROR: game_scores_clean.csv must include 'game_id' and 'team'")
+
+pre = df["points_scored"].notna().sum() if "points_scored" in df.columns else 0
+
+df["_gid"]  = df["game_id"].astype(str)
+df["_team"] = norm(df["team"])
+sc["_gid"]  = sc["game_id"].astype(str)
+sc["_team"] = norm(sc["team"])
+
+keep = ["_gid","_team"]
+for c in ("points_scored","points_allowed"):
+    if c in sc.columns: keep.append(c)
+
+sc_small = sc[keep].drop_duplicates(subset=["_gid","_team"])
+df = df.merge(sc_small, on=["_gid","_team"], how="left").drop(columns=["_gid","_team"])
+
+df.to_csv(mod_p, index=False)
+
+post = df["points_scored"].notna().sum() if "points_scored" in df.columns else 0
+print(f"[enrich] points_scored_non_null: before={pre} after={post} total_rows={len(df)}")
+PY
+          echo "--- header check ---"
+          head -n1 data/modeling_dataset.csv | tr ',' '\n' | nl | sed -n '1,120p'
+          echo "--- points_scored non-null count ---"
+          python - <<'PY'
+import pandas as pd
+df = pd.read_csv("data/modeling_dataset.csv", usecols=lambda c: c == "points_scored")
+print(df["points_scored"].notna().sum() if "points_scored" in df.columns else 0)
+PY
+
       - name: Commit and push artifacts
         run: |
           set -e
@@ -72,6 +131,6 @@ jobs:
             echo "No changes to commit."
             git status --porcelain
           else
-            git commit -m "Build modeling_dataset artifacts [skip ci]"
+            git commit -m "Build + enrich modeling_dataset (points_scored) [skip ci]"
             git push origin "${GITHUB_REF_NAME:-main}"
           fi
