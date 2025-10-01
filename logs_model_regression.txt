@@ -1,6 +1,15 @@
-outcome_join_mode=strict(game_id,team)
-outcome_merge_missing_rows=5122
-dropped_NaN_targets=5122
-linear: rmse=29.243291, mae=19.264477, r2=-2.159152, n_train=1740, n_test=436, n_features=1429, split_mode=temporal(season,week)
-ridge: rmse=14.380590, mae=11.466462, r2=0.236039, n_train=1740, n_test=436, n_features=1429, split_mode=temporal(season,week)
-lasso: rmse=15.034113, mae=12.076104, r2=0.165025, n_train=1740, n_test=436, n_features=1429, split_mode=temporal(season,week)
+snapshot_utc=2025-10-01T17:19:10Z
+input_rows=2716
+features=40
+target=points_scored
+scores_csv=
+outcome_join_mode=direct(modeling_dataset)
+outcome_merge_missing_rows=0
+pre_drop_NaN_targets=4586
+dropped_NaN_targets=4586
+feature_candidates_after_drops=42
+numeric_features_used=40
+numeric_features_sample=is_home,venue_lat,venue_lon,team_lat,team_lon,travel_distance_km,rest_days,wx_season,wx_week,wx_latitude,wx_longitude,wx_temperature_c,wx_wind_speed_mps,wx_wind_direction_deg,wx_precip_mm,wx_precip_prob_pct,wx_http_status,wx_hour_index,ts_scoring_offense_ppg,ts_scoring_defense_ppg,ts_yards_per_play,ts_seconds_per_play,eff_off_overall_ppa,eff_off_passing_ppa,eff_off_rushing_ppa,eff_off_first_down_ppa,eff_off_second_down_ppa,eff_off_third_down_ppa,eff_off_cum_total_ppa,eff_off_cum_passing_ppa
+linear: rmse=15.271035, mae=12.090852, r2=-0.064407, n_train=2172, n_test=544, n_features=40, split_mode=temporal(season,week)
+ridge: rmse=15.171229, mae=12.045830, r2=-0.050540, n_train=2172, n_test=544, n_features=40, split_mode=temporal(season,week)
+lasso: rmse=15.204719, mae=12.055549, r2=-0.055183, n_train=2172, n_test=544, n_features=40, split_mode=temporal(season,week)
