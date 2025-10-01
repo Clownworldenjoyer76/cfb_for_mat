@@ -46,8 +46,13 @@ MAX_PER_ID_BACKFILL  = _int_env("MAX_PER_ID_BACKFILL", 100)
 MAX_BACKFILL_MINUTES = _int_env("MAX_BACKFILL_MINUTES", 20)
 ENABLE_PER_ID        = _int_env("ENABLE_PER_ID_BACKFILL", 1) == 1
 
-def log(msg: str): print(msg, flush=True)
-def die(msg: str, code: int = 2): log(f"ERROR: {msg}"); sys.exit(code)
+def log(msg: str) -> None:
+    print(msg, flush=True)
+
+def die(msg: str, code: int = 2) -> None:
+    log(f"ERROR: {msg}")
+    sys.exit(code)
+
 def headers() -> Dict[str,str]:
     return {"Authorization": f"Bearer {CFBD_API_KEY}"} if CFBD_API_KEY else {}
 
@@ -92,7 +97,7 @@ def norm_rows(games: List[Dict[str, Any]], season: int | None, week: int | None)
     return rows
 
 # -------------------------
-# IMPORTANT CHANGE: no 'division' filter
+# IMPORTANT: no 'division' filter (broader results; fewer empty responses)
 # -------------------------
 def fetch_batch_by_season_week(pairs: Iterable[Tuple[int,int]]) -> List[Dict[str, Any]]:
     out: List[Dict[str, Any]] = []
@@ -124,7 +129,7 @@ def fetch_sparse_by_ids(game_ids: List[str], time_budget_s: int) -> List[Dict[st
         if time.time() - start > time_budget_s:
             log(f"[info] Hit time budget for per-ID ({time_budget_s}s).")
             break
-
+        games = []
         for key in ("id", "gameId"):
             params = {key: gid}
             games = http_get(params)
@@ -146,7 +151,7 @@ def existing_ids_from_scores(path: Path) -> set:
     except Exception:
         return set()
 
-def main():
+def main() -> None:
     if not MODEL_CSV.exists():
         die(f"{MODEL_CSV} not found.")
 
@@ -166,7 +171,7 @@ def main():
     # 1) Base fetch
     base_rows = fetch_batch_by_season_week(base_pairs)
 
-    # 2) Batched backfill (by season)
+    # 2) Batched backfill (by season) + optional sparse per-ID
     batched_rows: List[Dict[str, Any]] = []
     per_id_rows: List[Dict[str, Any]] = []
 
@@ -175,9 +180,11 @@ def main():
 
     if DIAG_MISS.exists():
         miss = pd.read_csv(DIAG_MISS)
+
         if "game_id" not in miss.columns:
             log("[info] unmatched_missing_game_id.csv lacks 'game_id'; skipping backfill.")
             miss = pd.DataFrame(columns=["game_id"])
+
         miss["game_id"] = miss["game_id"].astype(str).str.replace(r"\.0$", "", regex=True)
 
         # Join season/week from model (if available)
@@ -188,14 +195,27 @@ def main():
             miss_sw = miss.merge(model_gid_sw, on="game_id", how="left")
         else:
             miss_sw = miss.copy()
-            if "season" not in miss_sw.columns: miss_sw["season"] = pd.Series(dtype="Int64")
-            if "week"   not in miss_sw.columns: miss_sw["week"]   = pd.Series(dtype="Int64")
 
-        # Buckets
-        batched_pairs = sorted({(int(s), int(w))
-                                for s, w in miss_sw.dropna(subset=["season","week"])[["season","week"]]
-                                                     .itertuples(index=False, name=None)})
-        batched_seasons = sorted({int(s) for s in miss_sw["season"].dropna().unique().tolist()})
+        # Ensure columns exist (avoid KeyError)
+        if "season" not in miss_sw.columns:
+            miss_sw["season"] = pd.Series(dtype="Int64")
+        if "week" not in miss_sw.columns:
+            miss_sw["week"] = pd.Series(dtype="Int64")
+
+        # Buckets (only build when columns actually present with values)
+        if {"season","week"}.issubset(miss_sw.columns):
+            sw_known = miss_sw.dropna(subset=["season","week"])
+            batched_pairs = sorted({
+                (int(s), int(w))
+                for s, w in sw_known[["season","week"]].itertuples(index=False, name=None)
+            })
+        else:
+            batched_pairs = []
+
+        if "season" in miss_sw.columns:
+            batched_seasons = sorted({int(s) for s in miss_sw["season"].dropna().unique().tolist()})
+        else:
+            batched_seasons = []
 
         if batched_pairs:
             log(f"[info] Backfill (batch) by (season,week): {len(batched_pairs)} groups")
@@ -206,8 +226,10 @@ def main():
 
         # Which IDs still missing after base + batched + resume cache?
         have_ids = known_ids | {r["id"] for r in batched_rows if r.get("id") is not None}
-        remaining_ids = [gid for gid in miss_sw["game_id"].dropna().astype(str).unique().tolist()
-                         if gid not in have_ids]
+        remaining_ids = [
+            gid for gid in miss_sw["game_id"].dropna().astype(str).unique().tolist()
+            if gid not in have_ids
+        ]
 
         # 3) Optional sparse per-ID
         if ENABLE_PER_ID and remaining_ids:
