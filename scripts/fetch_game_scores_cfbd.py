@@ -1,16 +1,16 @@
+# scripts/fetch_game_scores_cfbd.py
 #!/usr/bin/env python3
 """
 CFBD score fetcher with batching + bounded per-ID backfill (resume/time-budgeted).
 
-Boundaries (env, all optional):
-  MAX_PER_ID_BACKFILL=100      # hard cap of per-ID fetches this run
-  MAX_BACKFILL_MINUTES=20      # wall-clock minutes for per-ID before stopping
-  ENABLE_PER_ID_BACKFILL=1     # set to 0 to disable per-ID entirely
-  CFBD_API_KEY=...             # recommended
+Env (optional):
+  MAX_PER_ID_BACKFILL=100
+  MAX_BACKFILL_MINUTES=20
+  ENABLE_PER_ID_BACKFILL=1
+  CFBD_API_KEY=...   # recommended
 
 Outputs:
   data/game_scores.csv   (id, season, week, home_team, away_team, home_points, away_points)
-Logs a final summary with base/batched/per-id counts and the applied limits.
 """
 
 from __future__ import annotations
@@ -48,7 +48,8 @@ ENABLE_PER_ID        = _int_env("ENABLE_PER_ID_BACKFILL", 1) == 1
 
 def log(msg: str): print(msg, flush=True)
 def die(msg: str, code: int = 2): log(f"ERROR: {msg}"); sys.exit(code)
-def headers() -> Dict[str,str]: return {"Authorization": f"Bearer {CFBD_API_KEY}"} if CFBD_API_KEY else {}
+def headers() -> Dict[str,str]:
+    return {"Authorization": f"Bearer {CFBD_API_KEY}"} if CFBD_API_KEY else {}
 
 def http_get(params: Dict[str, Any]) -> List[Dict[str, Any]]:
     """GET with short retry/backoff; returns list of games."""
@@ -60,12 +61,13 @@ def http_get(params: Dict[str, Any]) -> List[Dict[str, Any]]:
                 raise requests.HTTPError(f"{r.status_code} {r.reason}")
             r.raise_for_status()
             data = r.json()
-            if isinstance(data, dict): data = data.get("games", [])
+            if isinstance(data, dict):
+                data = data.get("games", [])
             return data if isinstance(data, list) else []
         except requests.HTTPError as e:
             last_err = e
             sleep_s = BACKOFF_BASE_S * (2 ** (attempt - 1))
-            log(f"[warn] {e} params={params} attempt {attempt}/{MAX_RETRIES}; sleeping {sleep_s:.1f}s")
+            log(f"[warn] {e} params={params} attempt {attempt}/{MAX_RETRIES}; sleep {sleep_s:.1f}s")
             time.sleep(sleep_s)
         except Exception as e:
             last_err = e
@@ -89,24 +91,25 @@ def norm_rows(games: List[Dict[str, Any]], season: int | None, week: int | None)
         })
     return rows
 
+# -------------------------
+# IMPORTANT CHANGE: no 'division' filter
+# -------------------------
 def fetch_batch_by_season_week(pairs: Iterable[Tuple[int,int]]) -> List[Dict[str, Any]]:
     out: List[Dict[str, Any]] = []
     for season, week in pairs:
         for season_type in ("regular", "postseason"):
-            for division in ("fbs", "fcs"):
-                params = {"year": int(season), "week": int(week), "seasonType": season_type, "division": division}
-                out.extend(norm_rows(http_get(params), season, week))
-                time.sleep(SLEEP_BETWEEN_CALLS_S)
+            params = {"year": int(season), "week": int(week), "seasonType": season_type}
+            out.extend(norm_rows(http_get(params), season, week))
+            time.sleep(SLEEP_BETWEEN_CALLS_S)
     return out
 
 def fetch_batch_by_season(seasons: Iterable[int]) -> List[Dict[str, Any]]:
     out: List[Dict[str, Any]] = []
     for season in seasons:
         for season_type in ("regular", "postseason"):
-            for division in ("fbs", "fcs"):
-                params = {"year": int(season), "seasonType": season_type, "division": division}
-                out.extend(norm_rows(http_get(params), season, None))
-                time.sleep(SLEEP_BETWEEN_CALLS_S)
+            params = {"year": int(season), "seasonType": season_type}
+            out.extend(norm_rows(http_get(params), season, None))
+            time.sleep(SLEEP_BETWEEN_CALLS_S)
     return out
 
 def fetch_sparse_by_ids(game_ids: List[str], time_budget_s: int) -> List[Dict[str, Any]]:
@@ -116,27 +119,27 @@ def fetch_sparse_by_ids(game_ids: List[str], time_budget_s: int) -> List[Dict[st
     count = 0
     for gid in game_ids:
         if count >= MAX_PER_ID_BACKFILL:
-            log(f"[info] Hit hard per-ID cap (MAX_PER_ID_BACKFILL={MAX_PER_ID_BACKFILL}).")
+            log(f"[info] Hit per-ID cap (MAX_PER_ID_BACKFILL={MAX_PER_ID_BACKFILL}).")
             break
         if time.time() - start > time_budget_s:
             log(f"[info] Hit time budget for per-ID ({time_budget_s}s).")
             break
 
-        params1 = {"id": gid}
-        games = http_get(params1)
+        for key in ("id", "gameId"):
+            params = {key: gid}
+            games = http_get(params)
+            if games:
+                rows.extend(norm_rows(games, season=None, week=None))
+                break
         if not games:
-            params2 = {"gameId": gid}
-            games = http_get(params2)
-        if games:
-            rows.extend(norm_rows(games, season=None, week=None))
-        else:
             log(f"[info] no record for game_id={gid}")
         count += 1
         time.sleep(SLEEP_BETWEEN_CALLS_S)
     return rows
 
 def existing_ids_from_scores(path: Path) -> set:
-    if not path.exists(): return set()
+    if not path.exists():
+        return set()
     try:
         df = pd.read_csv(path, usecols=["id"])
         return set(df["id"].dropna().astype(str))
@@ -163,11 +166,11 @@ def main():
     # 1) Base fetch
     base_rows = fetch_batch_by_season_week(base_pairs)
 
-    # 2) Batched backfill (by season/week and season)
+    # 2) Batched backfill (by season)
     batched_rows: List[Dict[str, Any]] = []
     per_id_rows: List[Dict[str, Any]] = []
 
-    # Build resume cache: known IDs from current output (if any) and base batch
+    # Resume cache: known IDs from current output (if any) and base batch
     known_ids = existing_ids_from_scores(OUT_CSV) | {r["id"] for r in base_rows if r.get("id") is not None}
 
     if DIAG_MISS.exists():
@@ -189,18 +192,10 @@ def main():
             if "week"   not in miss_sw.columns: miss_sw["week"]   = pd.Series(dtype="Int64")
 
         # Buckets
-        has_sw = {"season","week"}.issubset(miss_sw.columns)
-        if has_sw:
-            sw_known = miss_sw.dropna(subset=["season","week"])
-            seasons_only = miss_sw[miss_sw["season"].notna() & miss_sw["week"].isna()]
-        else:
-            sw_known = pd.DataFrame(columns=["game_id","season","week"])
-            seasons_only = pd.DataFrame(columns=["game_id","season","week"])
-
-        # Unique groups
         batched_pairs = sorted({(int(s), int(w))
-                                for s, w in sw_known[["season","week"]].dropna().itertuples(index=False, name=None)})
-        batched_seasons = sorted({int(s) for s in seasons_only["season"].dropna().unique().tolist()})
+                                for s, w in miss_sw.dropna(subset=["season","week"])[["season","week"]]
+                                                     .itertuples(index=False, name=None)})
+        batched_seasons = sorted({int(s) for s in miss_sw["season"].dropna().unique().tolist()})
 
         if batched_pairs:
             log(f"[info] Backfill (batch) by (season,week): {len(batched_pairs)} groups")
@@ -214,7 +209,7 @@ def main():
         remaining_ids = [gid for gid in miss_sw["game_id"].dropna().astype(str).unique().tolist()
                          if gid not in have_ids]
 
-        # 3) Optional sparse per-ID, bounded by cap + time budget
+        # 3) Optional sparse per-ID
         if ENABLE_PER_ID and remaining_ids:
             time_budget_s = max(60, int(MAX_BACKFILL_MINUTES) * 60)
             take_n = min(len(remaining_ids), MAX_PER_ID_BACKFILL)
@@ -225,14 +220,15 @@ def main():
         else:
             log("[info] Skipping per-ID backfill (disabled or nothing remaining).")
 
-    # Combine all
+    # Combine and finalize
     all_rows = base_rows + batched_rows + per_id_rows
     df = pd.DataFrame(all_rows)
 
     # Ensure columns
     cols = ["id","season","week","home_team","away_team","home_points","away_points"]
     for c in cols:
-        if c not in df.columns: df[c] = pd.Series(dtype="object")
+        if c not in df.columns:
+            df[c] = pd.Series(dtype="object")
     df = df[cols].copy()
 
     # Coerce numerics
@@ -247,5 +243,5 @@ def main():
 
 if __name__ == "__main__":
     if not CFBD_API_KEY:
-        log("WARNING: CFBD_API_KEY not set — you will be rate-limited.")
+        log("WARNING: CFBD_API_KEY not set — you may be rate-limited.")
     main()
