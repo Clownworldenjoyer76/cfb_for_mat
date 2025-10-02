@@ -1,0 +1,16 @@
+column,type,description
+is_home,int (0/1),Game is at home venue for the team
+is_away,int (0/1),Game is at opponent's venue
+is_neutral,int (0/1),Game is at neutral site
+rest_days,int,Days since team's previous game
+had_bye,int (0/1),"Previous interval suggests a bye week (e.g., ≥13 days)"
+short_week,int (0/1),Rest_days ≤ 6
+back_to_back_road,int (0/1),Team played away in previous game too
+third_straight_road,int (0/1),Team on third consecutive away game
+travel_km,float,Great-circle distance from previous game site to current site
+long_trip_flag,int (0/1),"Travel_km exceeds threshold (e.g., 1500km)"
+tz_diff_from_home,int,Time zone offset (hours) between team's home TZ and venue TZ
+east_to_west_flag,int (0/1),Travel direction from eastern to western time zone
+west_to_east_flag,int (0/1),Travel direction from western to eastern time zone
+body_clock_kickoff_hour,int,Kickoff local time converted to team's home time zone
+altitude_game,int (0/1),"Venue altitude exceeds threshold (e.g., 1000m)"
