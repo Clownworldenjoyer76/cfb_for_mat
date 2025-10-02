@@ -1,0 +1,7 @@
+feature_group,generated_in,consumed_by,artifacts_updated,sanity_test
+is_home/is_away/is_neutral,scripts/build_modeling_dataset.py,train_ml_models.py; run_regression_models.py,data/modeling_dataset.csv; logs_build_modeling_dataset.txt,one-hot sum equals 1
+rest_days/had_bye/short_week,scripts/build_modeling_dataset.py,train_ml_models.py; run_regression_models.py,data/modeling_dataset.csv; logs_build_modeling_dataset.txt,rest_days non-negative; bye threshold applied
+back_to_back_road/third_straight_road,scripts/build_modeling_dataset.py,train_ml_models.py; run_regression_models.py,data/modeling_dataset.csv,flag counts logged
+travel_km/long_trip_flag,scripts/build_modeling_dataset.py,train_ml_models.py; run_regression_models.py,data/modeling_dataset.csv; logs_build_modeling_dataset.txt,km computed where coords known
+tz_diff_from_home/east_to_west_flag/west_to_east_flag/body_clock_kickoff_hour,scripts/build_modeling_dataset.py,train_ml_models.py; run_regression_models.py,data/modeling_dataset.csv; logs_build_modeling_dataset.txt,tz present or null with counts
+altitude_game,scripts/build_modeling_dataset.py,train_ml_models.py; run_regression_models.py,data/modeling_dataset.csv,threshold applied
