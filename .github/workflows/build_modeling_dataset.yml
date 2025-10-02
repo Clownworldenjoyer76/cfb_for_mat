@@ -1,11 +1,12 @@
 name: Build Modeling Dataset (Situational)
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,7 +16,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install pandas
@@ -29,12 +30,11 @@ jobs:
           python scripts/build_modeling_dataset.py
 
       - name: Acceptance checks
-        shell: bash
         run: |
-          set -euo pipefail
+          set -e
           test -s data/modeling_dataset.csv
           header="$(head -n1 data/modeling_dataset.csv)"
-          printf '%s\n' "$header" | tr ',' '\n' > headers.txt
+          echo "$header" | tr ',' '\n' > headers.txt
           for col in is_home is_away is_neutral rest_days had_bye short_week travel_km long_trip_flag tz_diff_from_home east_to_west_flag west_to_east_flag body_clock_kickoff_hour altitude_game; do
             grep -Fxq "$col" headers.txt || { echo "Missing required column: $col"; exit 1; }
           done
