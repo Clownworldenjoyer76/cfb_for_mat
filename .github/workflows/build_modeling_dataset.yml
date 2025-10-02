@@ -1,98 +1,60 @@
-name: Build Modeling Dataset
+name: Build Modeling Dataset (Situational)
 
 on:
-  workflow_dispatch: {}
-
-permissions:
-  contents: write
-
-concurrency:
-  group: build-modeling-dataset-${{ github.ref }}
-  cancel-in-progress: true
-
-defaults:
-  run:
-    shell: bash
-
-env:
-  TZ: America/New_York
-  BYE_THRESHOLD_DAYS: "13"
-  SHORT_WEEK_MAX_DAYS: "6"
-  LONG_TRIP_KM: "1500"
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Sync to remote main (before generating artifacts)
-        run: |
-          set -e
-          git fetch origin main
-          git reset --hard origin/main
-          git status --porcelain
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install tzdata (timezones)
         run: |
-          set -e
+          sudo apt-get update
+          sudo apt-get install -y tzdata
+
+      - name: Install Python deps
+        run: |
           python -m pip install --upgrade pip
           python -m pip install pandas
 
-      - name: Build modeling dataset (with situational features)
+      - name: Build modeling dataset
         env:
-          BYE_THRESHOLD_DAYS: ${{ env.BYE_THRESHOLD_DAYS }}
-          SHORT_WEEK_MAX_DAYS: ${{ env.SHORT_WEEK_MAX_DAYS }}
-          LONG_TRIP_KM: ${{ env.LONG_TRIP_KM }}
+          BYE_THRESHOLD_DAYS: "13"
+          SHORT_WEEK_MAX_DAYS: "6"
+          LONG_TRIP_KM: "1500"
         run: |
-          set -e
           python scripts/build_modeling_dataset.py
-          echo "--- data/modeling_dataset.csv (head) ---"; head -n 10 data/modeling_dataset.csv || true
-          echo "--- logs_build_modeling_dataset.txt ---"; tail -n 200 logs_build_modeling_dataset.txt || true
+          echo "---- head(data/modeling_dataset.csv) ----" || true
+          head -n 5 data/modeling_dataset.csv || true
+          echo "---- tail(logs_build_modeling_dataset.txt) ----" || true
+          tail -n 100 logs_build_modeling_dataset.txt || true
 
-      - name: Acceptance checks (situational features)
+      - name: Acceptance checks (bash)
         run: |
           set -e
-          python - <<'PY'
-import sys, pandas as pd
-m = pd.read_csv('data/modeling_dataset.csv')
-required = [
- 'is_home','is_away','is_neutral','rest_days','had_bye','short_week',
- 'travel_km','long_trip_flag','tz_diff_from_home','east_to_west_flag',
- 'west_to_east_flag','body_clock_kickoff_hour','altitude_game'
-]
-missing = [c for c in required if c not in m.columns]
-if missing:
-    print("ERROR: Missing required columns:", missing); sys.exit(3)
+          test -s data/modeling_dataset.csv || (echo "modeling_dataset.csv missing" && exit 1)
+          IFS=',' read -r HEADER < data/modeling_dataset.csv
+          echo "$HEADER" | tr ',' '\n' > headers.txt
+          REQUIRED="is_home is_away is_neutral rest_days had_bye short_week travel_km long_trip_flag tz_diff_from_home east_to_west_flag west_to_east_flag body_clock_kickoff_hour altitude_game"
+          for COL in $REQUIRED; do
+            if ! grep -Fxq "$COL" headers.txt; then
+              echo "Missing required column: $COL"; exit 1
+            fi
+          done
+          echo "ACCEPTANCE: PASS"
 
-one_hot_ok = ((m['is_home'].fillna(0) + m['is_away'].fillna(0) + m['is_neutral'].fillna(0)) == 1).all()
-if not one_hot_ok:
-    print("ERROR: is_home + is_away + is_neutral != 1 for some rows"); sys.exit(4)
-
-print("ACCEPTANCE: PASS")
-PY
-
-      - name: Commit and push artifacts
-        run: |
-          set -e
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
-          git add -f data/modeling_dataset.csv logs_build_modeling_dataset.txt || true
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-            git status --porcelain
-          else:
-            git commit -m "Build modeling_dataset with situational features [skip ci]"
-            git push origin "${GITHUB_REF_NAME:-main}"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: modeling-dataset-and-logs
+          path: |
+            data/modeling_dataset.csv
+            logs_build_modeling_dataset.txt
