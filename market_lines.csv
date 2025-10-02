@@ -460,166 +460,219 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2025,regular,4,401767726,2025-09-20T16:00:00.000Z,Yale,Holy Cross,-6.5,44.5,,,ESPN Bet,ESPN Bet,
 2025,regular,4,401767743,2025-09-20T22:00:00.000Z,Merrimack,Central Connecticut,-1.5,42.5,,,ESPN Bet,ESPN Bet,
 2025,regular,4,401767772,2025-09-20T17:00:00.000Z,Stonehill,Pennsylvania,17.5,49.5,,,ESPN Bet,ESPN Bet,
-2025,regular,5,401752717,2025-09-27T16:00:00.000Z,Arkansas,Notre Dame,6,64.5,185,-225,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752718,2025-09-27T23:30:00.000Z,Georgia,Alabama,-3,53.5,-148,124,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752719,2025-09-27T19:30:00.000Z,Ole Miss,LSU,-2.5,55.5,-125,105,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752720,2025-09-27T20:15:00.000Z,Mississippi State,Tennessee,7.5,61.5,260,-325,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752721,2025-09-27T23:30:00.000Z,Missouri,Massachusetts,-43.5,55.5,,,DraftKings,DraftKings,
-2025,regular,5,401752722,2025-09-27T23:45:00.000Z,South Carolina,Kentucky,-6.5,47.5,-225,185,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752724,2025-09-27T19:30:00.000Z,Texas A&M,Auburn,-6.5,52.5,-238,195,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752725,2025-09-27T16:45:00.000Z,Vanderbilt,Utah State,-22.5,59.5,-2100,1100,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752849,2025-09-27T16:00:00.000Z,Minnesota,Rutgers,-5.5,50.5,-198,164,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752850,2025-09-27T16:00:00.000Z,Illinois,USC,6.5,59.5,195,-238,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752851,2025-09-27T19:30:00.000Z,Northwestern,UCLA,-6.5,45.5,-225,185,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752852,2025-09-27T19:30:00.000Z,Washington,Ohio State,8.5,52.5,260,-325,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752853,2025-09-27T19:30:00.000Z,Iowa,Indiana,7.5,48.5,240,-298,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752854,2025-09-27T23:30:00.000Z,Penn State,Oregon,-3.5,52.5,-175,145,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752939,2025-09-27T02:30:00.000Z,Oregon State,Houston,12.5,48.5,340,-440,DraftKings,DraftKings,DraftKings
-2025,regular,5,401752950,2025-09-27T23:30:00.000Z,Colorado State,Washington State,-4.5,50.5,-198,164,DraftKings,DraftKings,DraftKings
-2025,regular,5,401754543,2025-09-26T23:00:00.000Z,Virginia,Florida State,7,57.5,205,-250,DraftKings,DraftKings,DraftKings
-2025,regular,5,401754544,2025-09-27T19:30:00.000Z,Boston College,California,-6.5,51.5,-230,190,DraftKings,DraftKings,DraftKings
-2025,regular,5,401754545,2025-09-27T16:00:00.000Z,Syracuse,Duke,5.5,60.5,180,-218,DraftKings,DraftKings,DraftKings
-2025,regular,5,401754546,2025-09-27T16:00:00.000Z,Wake Forest,Georgia Tech,14.5,53.5,470,-650,DraftKings,DraftKings,DraftKings
-2025,regular,5,401754547,2025-09-27T16:00:00.000Z,Pittsburgh,Louisville,3,55.5,140,-166,DraftKings,DraftKings,DraftKings
-2025,regular,5,401754548,2025-09-27T23:00:00.000Z,NC State,Virginia Tech,-10.5,57.5,-410,320,DraftKings,DraftKings,DraftKings
-2025,regular,5,401754549,2025-09-27T23:30:00.000Z,Stanford,San José State,-2.5,49.5,-130,110,DraftKings,DraftKings,DraftKings
-2025,regular,5,401756902,2025-09-27T01:00:00.000Z,Arizona State,TCU,-2.5,54.5,-135,114,DraftKings,DraftKings,DraftKings
-2025,regular,5,401756903,2025-09-28T02:15:00.000Z,Colorado,BYU,6.5,47.5,190,-230,DraftKings,DraftKings,DraftKings
-2025,regular,5,401756904,2025-09-27T23:00:00.000Z,Iowa State,Arizona,-6.5,49.5,-250,205,DraftKings,DraftKings,DraftKings
-2025,regular,5,401756905,2025-09-27T16:00:00.000Z,Kansas,Cincinnati,-6,55.5,-218,180,DraftKings,DraftKings,DraftKings
-2025,regular,5,401756906,2025-09-27T16:00:00.000Z,Kansas State,UCF,-5.5,49.5,-205,170,DraftKings,DraftKings,DraftKings
-2025,regular,5,401756907,2025-09-27T19:30:00.000Z,Oklahoma State,Baylor,20.5,59.5,750,-1200,DraftKings,DraftKings,DraftKings
-2025,regular,5,401756908,2025-09-27T19:30:00.000Z,West Virginia,Utah,10,49.5,300,-380,DraftKings,DraftKings,DraftKings
-2025,regular,5,401757170,2025-09-27T19:30:00.000Z,Buffalo,UConn,2.5,50.5,114,-135,DraftKings,DraftKings,DraftKings
-2025,regular,5,401757269,2025-09-27T23:00:00.000Z,Southern Miss,Jacksonville State,-4,56.5,-180,150,DraftKings,DraftKings,DraftKings
-2025,regular,5,401757270,2025-09-27T22:00:00.000Z,Kennesaw State,Middle Tennessee,-7,50.5,-250,205,DraftKings,DraftKings,DraftKings
-2025,regular,5,401757271,2025-09-27T22:00:00.000Z,Old Dominion,Liberty,-16.5,51.5,-675,490,DraftKings,DraftKings,DraftKings
-2025,regular,5,401757272,2025-09-28T01:00:00.000Z,UTEP,Louisiana Tech,4,48.5,160,-192,DraftKings,DraftKings,DraftKings
-2025,regular,5,401757273,2025-09-27T23:00:00.000Z,Missouri State,Western Kentucky,5.5,59.5,164,-198,DraftKings,DraftKings,DraftKings
-2025,regular,5,401757274,2025-09-27T20:00:00.000Z,New Mexico,New Mexico State,-14,54.5,-575,425,DraftKings,DraftKings,DraftKings
-2025,regular,5,401760378,2025-09-27T20:10:00.000Z,Air Force,Hawai'i,-4.5,53.5,-180,150,DraftKings,DraftKings,DraftKings
-2025,regular,5,401760379,2025-09-27T23:30:00.000Z,Boise State,App State,-17.5,60.5,-850,575,DraftKings,DraftKings,DraftKings
-2025,regular,5,401760380,2025-09-27T19:30:00.000Z,Northern Illinois,San Diego State,3,43.5,130,-155,DraftKings,DraftKings,DraftKings
-2025,regular,5,401761614,2025-09-27T17:30:00.000Z,James Madison,Georgia Southern,-16.5,54.5,-800,550,DraftKings,DraftKings,DraftKings
-2025,regular,5,401761615,2025-09-28T00:00:00.000Z,Louisiana,Marshall,-2.5,46.5,-130,110,DraftKings,DraftKings,DraftKings
-2025,regular,5,401761616,2025-09-27T19:00:00.000Z,UL Monroe,Arkansas State,-3.5,56.5,-166,140,DraftKings,DraftKings,DraftKings
-2025,regular,5,401761617,2025-09-27T16:00:00.000Z,North Texas,South Alabama,-12.5,63.5,-485,370,DraftKings,DraftKings,DraftKings
-2025,regular,5,401762471,2025-09-25T23:30:00.000Z,East Carolina,Army,-3.5,52.5,-170,142,DraftKings,DraftKings,DraftKings
-2025,regular,5,401762472,2025-09-27T23:00:00.000Z,Florida Atlantic,Memphis,13.5,61.5,370,-485,DraftKings,DraftKings,DraftKings
-2025,regular,5,401762473,2025-09-27T19:30:00.000Z,Navy,Rice,-14.5,45.5,-675,490,DraftKings,DraftKings,DraftKings
-2025,regular,5,401762474,2025-09-27T20:00:00.000Z,Tulsa,Tulane,13.5,53.5,380,-500,DraftKings,DraftKings,DraftKings
-2025,regular,5,401762824,2025-09-27T19:30:00.000Z,Toledo,Akron,-20.5,48.5,-1600,900,DraftKings,DraftKings,DraftKings
-2025,regular,5,401762825,2025-09-27T16:00:00.000Z,Ohio,Bowling Green,-10.5,50.5,-425,330,DraftKings,DraftKings,DraftKings
-2025,regular,5,401762826,2025-09-27T17:00:00.000Z,Central Michigan,Eastern Michigan,-5.5,53.5,-218,180,DraftKings,DraftKings,DraftKings
-2025,regular,5,401762827,2025-09-27T19:30:00.000Z,Miami (OH),Lindenwood,,,,,,,
-2025,regular,5,401762828,2025-09-27T22:30:00.000Z,Western Michigan,Rhode Island,,,,,,,
-2025,regular,6,401752726,2025-10-04T04:00:00.000Z,Alabama,Vanderbilt,-24,51.5,-2000,1000,ESPN Bet,ESPN Bet,ESPN Bet
-2025,regular,6,401752727,2025-10-04T04:00:00.000Z,Florida,Texas,6.5,51.5,175,-210,DraftKings,ESPN Bet,ESPN Bet
-2025,regular,6,401752728,2025-10-04T16:00:00.000Z,Georgia,Kentucky,,,,,,,
-2025,regular,6,401752729,2025-10-04T20:00:00.000Z,Oklahoma,Kent State,,,,,,,
-2025,regular,6,401752730,2025-10-04T04:00:00.000Z,Texas A&M,Mississippi State,,,,,,,
-2025,regular,6,401752855,2025-10-04T04:00:00.000Z,UCLA,Penn State,,,,,,,
-2025,regular,6,401752856,2025-10-04T04:00:00.000Z,Michigan,Wisconsin,,,,,,,
-2025,regular,6,401752857,2025-10-04T04:00:00.000Z,Maryland,Washington,,,,,,,
-2025,regular,6,401752858,2025-10-04T04:00:00.000Z,Northwestern,UL Monroe,,,,,,,
-2025,regular,6,401752859,2025-10-04T04:00:00.000Z,Ohio State,Minnesota,,,,,,,
-2025,regular,6,401752860,2025-10-04T04:00:00.000Z,Nebraska,Michigan State,,,,,,,
-2025,regular,6,401752861,2025-10-04T04:00:00.000Z,Purdue,Illinois,,,,,,,
-2025,regular,6,401752940,2025-10-04T04:00:00.000Z,App State,Oregon State,,,,,,,
-2025,regular,6,401754550,2025-10-04T04:00:00.000Z,Pittsburgh,Boston College,,,,,,,
-2025,regular,6,401754551,2025-10-04T04:00:00.000Z,California,Duke,,,,,,,
-2025,regular,6,401754552,2025-10-04T04:00:00.000Z,North Carolina,Clemson,13.5,,,,DraftKings,,
-2025,regular,6,401754553,2025-10-04T04:00:00.000Z,Florida State,Miami,7,53.5,160,-190,DraftKings,ESPN Bet,ESPN Bet
-2025,regular,6,401754554,2025-10-04T04:00:00.000Z,Louisville,Virginia,,,,,,,
-2025,regular,6,401754555,2025-10-04T04:00:00.000Z,SMU,Syracuse,,,,,,,
-2025,regular,6,401754556,2025-10-04T04:00:00.000Z,Virginia Tech,Wake Forest,,,,,,,
-2025,regular,6,401754557,2025-10-04T04:00:00.000Z,NC State,Campbell,,,,,,,
-2025,regular,6,401756909,2025-10-04T02:30:00.000Z,BYU,West Virginia,,,,,,,
-2025,regular,6,401756910,2025-10-04T04:00:00.000Z,Arizona,Oklahoma State,,,,,,,
-2025,regular,6,401756911,2025-10-04T04:00:00.000Z,Baylor,Kansas State,,,,,,,
-2025,regular,6,401756912,2025-10-04T04:00:00.000Z,Cincinnati,Iowa State,,,,,,,
-2025,regular,6,401756913,2025-10-04T04:00:00.000Z,Houston,Texas Tech,,,,,,,
-2025,regular,6,401756914,2025-10-04T04:00:00.000Z,TCU,Colorado,,,,,,,
-2025,regular,6,401756915,2025-10-04T04:00:00.000Z,UCF,Kansas,,,,,,,
-2025,regular,6,401757165,2025-10-04T19:30:00.000Z,Notre Dame,Boise State,-16.5,53.5,-750,475,DraftKings,ESPN Bet,ESPN Bet
-2025,regular,6,401757171,2025-10-04T19:30:00.000Z,UConn,Florida International,,,,,,,
-2025,regular,6,401757275,2025-10-03T01:00:00.000Z,New Mexico State,Sam Houston,,,,,,,
-2025,regular,6,401757276,2025-10-03T23:00:00.000Z,Delaware,Western Kentucky,,,,,,,
-2025,regular,6,401760381,2025-10-04T16:00:00.000Z,Navy,Air Force,,,,,,,
-2025,regular,6,401760382,2025-10-04T02:30:00.000Z,San Diego State,Colorado State,,,,,,,
-2025,regular,6,401760383,2025-10-05T02:30:00.000Z,Fresno State,Nevada,,,,,,,
-2025,regular,6,401760384,2025-10-04T02:00:00.000Z,San José State,New Mexico,,,,,,,
-2025,regular,6,401760385,2025-10-04T23:00:00.000Z,Wyoming,UNLV,,,,,,,
-2025,regular,6,401761618,2025-10-04T04:00:00.000Z,Georgia State,James Madison,,,,,,,
-2025,regular,6,401761619,2025-10-04T04:00:00.000Z,Old Dominion,Coastal Carolina,,,,,,,
-2025,regular,6,401761620,2025-10-04T23:00:00.000Z,Arkansas State,Texas State,,,,,,,
-2025,regular,6,401761621,2025-10-04T04:00:00.000Z,Troy,South Alabama,,,,,,,
-2025,regular,6,401762475,2025-10-03T23:00:00.000Z,South Florida,Charlotte,,,,,,,
-2025,regular,6,401762476,2025-10-04T04:00:00.000Z,UAB,Army,,,,,,,
-2025,regular,6,401762477,2025-10-04T04:00:00.000Z,Rice,Florida Atlantic,,,,,,,
-2025,regular,6,401762478,2025-10-04T04:00:00.000Z,Memphis,Tulsa,,,,,,,
-2025,regular,6,401762479,2025-10-04T04:00:00.000Z,Temple,UTSA,,,,,,,
-2025,regular,6,401762829,2025-10-04T19:30:00.000Z,Akron,Central Michigan,,,,,,,
-2025,regular,6,401762830,2025-10-04T16:00:00.000Z,Ball State,Ohio,,,,,,,
-2025,regular,6,401762831,2025-10-04T19:30:00.000Z,Buffalo,Eastern Michigan,,,,,,,
-2025,regular,6,401762832,2025-10-04T04:00:00.000Z,Massachusetts,Western Michigan,,,,,,,
-2025,regular,6,401762873,2025-10-04T04:00:00.000Z,Northern Illinois,Miami (OH),,,,,,,
-2025,regular,7,401752731,2025-10-11T04:00:00.000Z,Auburn,Georgia,7,50.5,180,-215,DraftKings,ESPN Bet,ESPN Bet
-2025,regular,7,401752732,2025-10-11T04:00:00.000Z,LSU,South Carolina,,,,,,,
+2025,regular,5,401752717,2025-09-27T16:00:00.000Z,Arkansas,Notre Dame,5.5,64.5,180,-218,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752718,2025-09-27T23:30:00.000Z,Georgia,Alabama,-2.5,53.5,-142,120,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752719,2025-09-27T19:30:00.000Z,Ole Miss,LSU,-2.5,57.5,-142,120,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752720,2025-09-27T20:15:00.000Z,Mississippi State,Tennessee,7.5,63.5,235,-290,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752721,2025-09-27T23:30:00.000Z,Missouri,Massachusetts,-44.5,57.5,,,DraftKings,DraftKings,
+2025,regular,5,401752722,2025-09-27T23:45:00.000Z,South Carolina,Kentucky,-5.5,46.5,-218,180,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752724,2025-09-27T19:30:00.000Z,Texas A&M,Auburn,-6.5,51.5,-238,195,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752725,2025-09-27T16:45:00.000Z,Vanderbilt,Utah State,-23.5,57.5,-2100,1100,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752849,2025-09-27T16:00:00.000Z,Minnesota,Rutgers,-3.5,51.5,-175,145,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752850,2025-09-27T16:00:00.000Z,Illinois,USC,6.5,62.5,205,-250,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752851,2025-09-27T19:30:00.000Z,Northwestern,UCLA,-6,45.5,-218,180,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752852,2025-09-27T19:30:00.000Z,Washington,Ohio State,9.5,52.5,295,-375,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752853,2025-09-27T19:30:00.000Z,Iowa,Indiana,9.5,47.5,270,-340,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752854,2025-09-27T23:30:00.000Z,Penn State,Oregon,-3.5,53.5,-180,150,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752939,2025-09-27T02:30:00.000Z,Oregon State,Houston,11.5,48.5,360,-470,DraftKings,DraftKings,DraftKings
+2025,regular,5,401752950,2025-09-27T23:30:00.000Z,Colorado State,Washington State,-4.5,48.5,-205,170,DraftKings,DraftKings,DraftKings
+2025,regular,5,401754543,2025-09-26T23:00:00.000Z,Virginia,Florida State,7,59.5,220,-270,DraftKings,DraftKings,DraftKings
+2025,regular,5,401754544,2025-09-27T19:30:00.000Z,Boston College,California,-6,54.5,-230,190,DraftKings,DraftKings,DraftKings
+2025,regular,5,401754545,2025-09-27T16:00:00.000Z,Syracuse,Duke,4,59.5,160,-192,DraftKings,DraftKings,DraftKings
+2025,regular,5,401754546,2025-09-27T16:00:00.000Z,Wake Forest,Georgia Tech,13.5,53.5,410,-550,DraftKings,DraftKings,DraftKings
+2025,regular,5,401754547,2025-09-27T16:00:00.000Z,Pittsburgh,Louisville,3,53.5,130,-155,DraftKings,DraftKings,DraftKings
+2025,regular,5,401754548,2025-09-27T23:00:00.000Z,NC State,Virginia Tech,-10,57.5,-360,285,DraftKings,DraftKings,DraftKings
+2025,regular,5,401754549,2025-09-27T23:30:00.000Z,Stanford,San José State,-3,49.5,-148,124,DraftKings,DraftKings,DraftKings
+2025,regular,5,401756902,2025-09-27T01:00:00.000Z,Arizona State,TCU,-3,54.5,-148,124,DraftKings,DraftKings,DraftKings
+2025,regular,5,401756903,2025-09-28T02:15:00.000Z,Colorado,BYU,6.5,48.5,205,-250,DraftKings,DraftKings,DraftKings
+2025,regular,5,401756904,2025-09-27T23:00:00.000Z,Iowa State,Arizona,-4,48.5,-180,150,DraftKings,DraftKings,DraftKings
+2025,regular,5,401756905,2025-09-27T16:00:00.000Z,Kansas,Cincinnati,-5.5,55.5,-218,180,DraftKings,DraftKings,DraftKings
+2025,regular,5,401756906,2025-09-27T16:00:00.000Z,Kansas State,UCF,-6,48.5,-225,185,DraftKings,DraftKings,DraftKings
+2025,regular,5,401756907,2025-09-27T19:30:00.000Z,Oklahoma State,Baylor,21,58.5,850,-1450,DraftKings,DraftKings,DraftKings
+2025,regular,5,401756908,2025-09-27T19:30:00.000Z,West Virginia,Utah,13.5,46.5,400,-535,DraftKings,DraftKings,DraftKings
+2025,regular,5,401757170,2025-09-27T19:30:00.000Z,Buffalo,UConn,3,51.5,130,-155,DraftKings,DraftKings,DraftKings
+2025,regular,5,401757269,2025-09-27T23:00:00.000Z,Southern Miss,Jacksonville State,-4.5,55.5,-192,160,DraftKings,DraftKings,DraftKings
+2025,regular,5,401757270,2025-09-27T22:00:00.000Z,Kennesaw State,Middle Tennessee,-7,54.5,-250,205,DraftKings,DraftKings,DraftKings
+2025,regular,5,401757271,2025-09-27T22:00:00.000Z,Old Dominion,Liberty,-14.5,53.5,-675,490,DraftKings,DraftKings,DraftKings
+2025,regular,5,401757272,2025-09-28T01:00:00.000Z,UTEP,Louisiana Tech,3.5,48.5,154,-185,DraftKings,DraftKings,DraftKings
+2025,regular,5,401757273,2025-09-27T23:00:00.000Z,Missouri State,Western Kentucky,3.5,59.5,145,-175,DraftKings,DraftKings,DraftKings
+2025,regular,5,401757274,2025-09-27T20:00:00.000Z,New Mexico,New Mexico State,-16.5,53.5,-750,525,DraftKings,DraftKings,DraftKings
+2025,regular,5,401760378,2025-09-27T20:00:00.000Z,Air Force,Hawai'i,-7,52.5,-278,225,DraftKings,DraftKings,DraftKings
+2025,regular,5,401760379,2025-09-27T23:30:00.000Z,Boise State,App State,-16.5,59.5,-900,600,DraftKings,DraftKings,DraftKings
+2025,regular,5,401760380,2025-09-27T19:30:00.000Z,Northern Illinois,San Diego State,1.5,41.5,105,-125,DraftKings,DraftKings,DraftKings
+2025,regular,5,401761614,2025-09-27T17:30:00.000Z,James Madison,Georgia Southern,-14.5,54.5,-675,490,DraftKings,DraftKings,DraftKings
+2025,regular,5,401761615,2025-09-28T00:00:00.000Z,Louisiana,Marshall,2.5,47.5,110,-130,DraftKings,DraftKings,DraftKings
+2025,regular,5,401761616,2025-09-27T19:00:00.000Z,UL Monroe,Arkansas State,-1.5,55.5,-115,-105,DraftKings,DraftKings,DraftKings
+2025,regular,5,401761617,2025-09-27T16:00:00.000Z,North Texas,South Alabama,-13.5,63.5,-500,380,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762471,2025-09-25T23:30:00.000Z,East Carolina,Army,-3.5,52.5,-175,145,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762472,2025-09-27T23:00:00.000Z,Florida Atlantic,Memphis,14,62.5,425,-575,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762473,2025-09-27T19:30:00.000Z,Navy,Rice,-14,45.5,-600,440,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762474,2025-09-27T20:00:00.000Z,Tulsa,Tulane,14.5,52.5,500,-700,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762824,2025-09-27T19:30:00.000Z,Toledo,Akron,-21.5,50.5,-2100,1100,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762825,2025-09-27T16:00:00.000Z,Ohio,Bowling Green,-7.5,49.5,-325,260,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762826,2025-09-27T17:00:00.000Z,Central Michigan,Eastern Michigan,-3,55.5,-162,136,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762827,2025-09-27T19:30:00.000Z,Miami (OH),Lindenwood,-22.5,49.5,-2100,1100,DraftKings,DraftKings,DraftKings
+2025,regular,5,401762828,2025-09-27T22:30:00.000Z,Western Michigan,Rhode Island,-7,45.5,-270,220,DraftKings,DraftKings,DraftKings
+2025,regular,5,401767032,2025-09-27T17:00:00.000Z,Bryant,Towson,9.5,54.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767062,2025-09-27T20:00:00.000Z,Montana State,Eastern Washington,-21,57.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767073,2025-09-28T01:00:00.000Z,Sacramento State,Cal Poly,-18,57.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767082,2025-09-27T19:00:00.000Z,Northern Colorado,Idaho State,3.5,54.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767091,2025-09-28T02:15:00.000Z,Montana,Idaho,-7.5,55.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767115,2025-09-27T21:00:00.000Z,Portland State,Northern Arizona,21,54.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767142,2025-09-27T19:30:00.000Z,Campbell,Western Carolina,6.5,68.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767152,2025-09-27T18:00:00.000Z,Elon,Hampton,-17.5,55.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767158,2025-09-28T02:00:00.000Z,UC Davis,Weber State,-16.5,63.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767163,2025-09-27T22:00:00.000Z,Charleston Southern,South Carolina State,10.5,51.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767174,2025-09-27T20:00:00.000Z,Western Illinois,Eastern Illinois,-2.5,62.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767191,2025-09-27T19:30:00.000Z,Maine,North Carolina A&T,-13.5,48.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767219,2025-09-27T23:00:00.000Z,UT Martin,Southeast Missouri State,3,56.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767226,2025-09-27T20:30:00.000Z,Tennessee State,Tennessee Tech,31.5,56.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767240,2025-09-27T23:00:00.000Z,Incarnate Word,Abilene Christian,-2,56.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767249,2025-09-27T18:00:00.000Z,Austin Peay,Utah Tech,-14,46.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767268,2025-09-27T17:00:00.000Z,New Hampshire,UAlbany,-13,44.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767279,2025-09-27T22:00:00.000Z,Eastern Kentucky,Nicholls,-2.5,42.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767293,2025-09-28T00:30:00.000Z,Southern Utah,West Georgia,1,59.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767311,2025-09-27T19:00:00.000Z,Bethune-Cookman,Alabama A&M,4.5,58.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767323,2025-09-27T19:30:00.000Z,Stony Brook,Merrimack,-7,47.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767337,2025-09-27T19:30:00.000Z,Villanova,William & Mary,-6.5,50.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767343,2025-09-27T16:00:00.000Z,Sacred Heart,Delaware State,5,54.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767352,2025-09-27T18:00:00.000Z,Richmond,Howard,-16,43.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767361,2025-09-27T19:00:00.000Z,Florida A&M,Alabama State,4,50.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767370,2025-09-27T23:00:00.000Z,Alcorn State,Arkansas-Pine Bluff,7,50.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767406,2025-09-27T16:00:00.000Z,Wagner,Norfolk State,2.5,47.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767412,2025-09-27T23:00:00.000Z,East Texas A&M,North Carolina Central,14.5,56.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767417,2025-09-27T23:00:00.000Z,Prairie View A&M,Grambling,3,52.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767422,2025-09-27T23:00:00.000Z,Southern,Jackson State,9.5,50.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767427,2025-09-27T21:00:00.000Z,Mississippi Valley State,Texas Southern,13.5,47.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767483,2025-09-27T23:00:00.000Z,Lamar,Central Arkansas,-6.5,48.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767491,2025-09-28T00:00:00.000Z,Stephen F. Austin,McNeese,-13.5,55.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767510,2025-09-27T18:00:00.000Z,North Dakota State,South Dakota,-25.5,50.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767523,2025-09-27T23:00:00.000Z,SE Louisiana,UT Rio Grande Valley,-18,53.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767530,2025-09-27T22:00:00.000Z,Chattanooga,The Citadel,-15.5,47.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767545,2025-09-27T19:00:00.000Z,South Dakota State,Mercyhurst,-32.5,58.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767552,2025-09-27T22:00:00.000Z,Harvard,Brown,-16.5,57.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767558,2025-09-27T21:30:00.000Z,East Tennessee State,Mercer,2,52.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767566,2025-09-27T19:30:00.000Z,Samford,Furman,7,54.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767594,2025-09-27T17:00:00.000Z,Butler,Marist,-6.5,47.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767614,2025-09-27T16:00:00.000Z,Dayton,Stetson,-25.5,49.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767636,2025-09-27T17:00:00.000Z,Presbyterian,Morehead State,-23.5,54.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767645,2025-09-27T20:00:00.000Z,San Diego,St. Thomas (MN),-1,53.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767665,2025-09-27T22:00:00.000Z,Bucknell,St. Francis (PA),-18.5,49.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767673,2025-09-27T17:00:00.000Z,Fordham,Holy Cross,14.5,45.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767689,2025-09-27T16:00:00.000Z,Yale,Cornell,-19.5,48.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767697,2025-09-27T16:00:00.000Z,Central Connecticut,Dartmouth,7.5,45.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767721,2025-09-27T16:00:00.000Z,Columbia,Georgetown,-11.5,50.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767734,2025-09-27T16:00:00.000Z,Lehigh,Pennsylvania,-9.5,47.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401767758,2025-09-27T17:00:00.000Z,Stonehill,Long Island University,6,46.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401769866,2025-09-27T19:30:00.000Z,Lafayette,Princeton,-7,60.5,,,ESPN Bet,ESPN Bet,
+2025,regular,5,401779328,2025-09-27T16:00:00.000Z,Duquesne,New Haven,-18,54.5,,,ESPN Bet,ESPN Bet,
+2025,regular,6,401752726,2025-10-04T19:30:00.000Z,Alabama,Vanderbilt,-10.5,55.5,-425,330,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752727,2025-10-04T19:30:00.000Z,Florida,Texas,6.5,41.5,210,-258,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752728,2025-10-04T16:00:00.000Z,Georgia,Kentucky,-20.5,48.5,-1350,800,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752729,2025-10-04T20:00:00.000Z,Oklahoma,Kent State,-45.5,53.5,,,DraftKings,DraftKings,
+2025,regular,6,401752730,2025-10-04T23:30:00.000Z,Texas A&M,Mississippi State,-14.5,55.5,-650,470,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752855,2025-10-04T19:30:00.000Z,UCLA,Penn State,24.5,49.5,1200,-2400,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752856,2025-10-04T16:00:00.000Z,Michigan,Wisconsin,-17.5,43.5,-900,600,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752857,2025-10-04T19:30:00.000Z,Maryland,Washington,6.5,53.5,200,-245,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752858,2025-10-04T19:30:00.000Z,Northwestern,UL Monroe,-11.5,40.5,-455,350,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752859,2025-10-04T23:30:00.000Z,Ohio State,Minnesota,-23.5,44.5,-2400,1200,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752860,2025-10-04T20:00:00.000Z,Nebraska,Michigan State,-11.5,48.5,-470,360,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752861,2025-10-04T16:00:00.000Z,Purdue,Illinois,9.5,55.5,285,-360,DraftKings,DraftKings,DraftKings
+2025,regular,6,401752940,2025-10-04T19:30:00.000Z,App State,Oregon State,-1.5,53.5,-118,-102,DraftKings,DraftKings,DraftKings
+2025,regular,6,401754550,2025-10-04T16:00:00.000Z,Pittsburgh,Boston College,-6,58.5,-238,195,DraftKings,DraftKings,DraftKings
+2025,regular,6,401754551,2025-10-05T02:30:00.000Z,California,Duke,3,55.5,124,-148,DraftKings,DraftKings,DraftKings
+2025,regular,6,401754552,2025-10-04T16:00:00.000Z,North Carolina,Clemson,14,46.5,425,-575,DraftKings,DraftKings,DraftKings
+2025,regular,6,401754553,2025-10-04T23:30:00.000Z,Florida State,Miami,4.5,53.5,164,-198,DraftKings,DraftKings,DraftKings
+2025,regular,6,401754554,2025-10-04T19:30:00.000Z,Louisville,Virginia,-6.5,61.5,-250,205,DraftKings,DraftKings,DraftKings
+2025,regular,6,401754555,2025-10-04T19:30:00.000Z,SMU,Syracuse,-17.5,58.5,-850,575,DraftKings,DraftKings,DraftKings
+2025,regular,6,401754556,2025-10-04T17:00:00.000Z,Virginia Tech,Wake Forest,-7,50.5,-265,215,DraftKings,DraftKings,DraftKings
+2025,regular,6,401754557,2025-10-04T18:00:00.000Z,NC State,Campbell,,,,,,,
+2025,regular,6,401756909,2025-10-04T02:30:00.000Z,BYU,West Virginia,-19.5,47.5,-1200,750,DraftKings,DraftKings,DraftKings
+2025,regular,6,401756910,2025-10-04T19:00:00.000Z,Arizona,Oklahoma State,-20.5,55.5,-1200,750,DraftKings,DraftKings,DraftKings
+2025,regular,6,401756911,2025-10-04T16:00:00.000Z,Baylor,Kansas State,-6.5,61.5,-245,200,DraftKings,DraftKings,DraftKings
+2025,regular,6,401756912,2025-10-04T16:00:00.000Z,Cincinnati,Iowa State,-1.5,54.5,-118,-102,DraftKings,DraftKings,DraftKings
+2025,regular,6,401756913,2025-10-04T23:00:00.000Z,Houston,Texas Tech,11.5,51.5,360,-470,DraftKings,DraftKings,DraftKings
+2025,regular,6,401756914,2025-10-04T23:30:00.000Z,TCU,Colorado,-13.5,58.5,-535,400,DraftKings,DraftKings,DraftKings
+2025,regular,6,401756915,2025-10-04T23:30:00.000Z,UCF,Kansas,4,54.5,160,-192,DraftKings,DraftKings,DraftKings
+2025,regular,6,401757165,2025-10-04T19:30:00.000Z,Notre Dame,Boise State,-20.5,62.5,-1350,800,DraftKings,DraftKings,DraftKings
+2025,regular,6,401757171,2025-10-04T19:30:00.000Z,UConn,Florida International,-7.5,54.5,-290,235,DraftKings,DraftKings,DraftKings
+2025,regular,6,401757275,2025-10-03T01:00:00.000Z,New Mexico State,Sam Houston,2.5,53.5,105,-125,DraftKings,DraftKings,DraftKings
+2025,regular,6,401757276,2025-10-03T23:00:00.000Z,Delaware,Western Kentucky,-3,61.5,-142,120,DraftKings,DraftKings,DraftKings
+2025,regular,6,401760381,2025-10-04T16:00:00.000Z,Navy,Air Force,-12.5,52.5,-455,350,DraftKings,DraftKings,DraftKings
+2025,regular,6,401760382,2025-10-04T02:30:00.000Z,San Diego State,Colorado State,-6,40.5,-238,195,DraftKings,DraftKings,DraftKings
+2025,regular,6,401760383,2025-10-05T02:30:00.000Z,Fresno State,Nevada,-13.5,45.5,-535,400,DraftKings,DraftKings,DraftKings
+2025,regular,6,401760384,2025-10-04T02:00:00.000Z,San José State,New Mexico,-2.5,58.5,-135,114,DraftKings,DraftKings,DraftKings
+2025,regular,6,401760385,2025-10-04T23:00:00.000Z,Wyoming,UNLV,3.5,49.5,142,-170,DraftKings,DraftKings,DraftKings
+2025,regular,6,401761618,2025-10-04T19:30:00.000Z,Georgia State,James Madison,20.5,53.5,900,-1600,DraftKings,DraftKings,DraftKings
+2025,regular,6,401761619,2025-10-04T22:00:00.000Z,Old Dominion,Coastal Carolina,-21,54.5,-1450,850,DraftKings,DraftKings,DraftKings
+2025,regular,6,401761620,2025-10-04T20:00:00.000Z,Arkansas State,Texas State,13.5,64.5,390,-520,DraftKings,DraftKings,DraftKings
+2025,regular,6,401761621,2025-10-04T23:00:00.000Z,Troy,South Alabama,-1.5,47.5,-125,105,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762475,2025-10-03T23:00:00.000Z,South Florida,Charlotte,-27.5,55.5,-5000,1800,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762476,2025-10-04T16:00:00.000Z,UAB,Army,7,57.5,230,-285,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762477,2025-10-04T23:00:00.000Z,Rice,Florida Atlantic,-4.5,53.5,-198,164,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762478,2025-10-05T00:00:00.000Z,Memphis,Tulsa,-20.5,56.5,-1450,850,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762479,2025-10-04T17:00:00.000Z,Temple,UTSA,6.5,57.5,200,-245,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762829,2025-10-04T19:30:00.000Z,Akron,Central Michigan,7.5,45.5,250,-310,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762830,2025-10-04T16:00:00.000Z,Ball State,Ohio,14.5,51.5,470,-650,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762831,2025-10-04T19:30:00.000Z,Buffalo,Eastern Michigan,-10,54.5,-375,295,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762832,2025-10-04T18:30:00.000Z,Massachusetts,Western Michigan,13.5,46.5,410,-550,DraftKings,DraftKings,DraftKings
+2025,regular,6,401762873,2025-10-04T19:30:00.000Z,Northern Illinois,Miami (OH),4.5,38.5,160,-192,DraftKings,DraftKings,DraftKings
+2025,regular,7,401752731,2025-10-11T04:00:00.000Z,Auburn,Georgia,4.5,50.5,180,-215,DraftKings,ESPN Bet,ESPN Bet
+2025,regular,7,401752732,2025-10-11T04:00:00.000Z,LSU,South Carolina,-10.5,,,,DraftKings,,
 2025,regular,7,401752733,2025-10-11T16:45:00.000Z,Ole Miss,Washington State,,,,,,,
-2025,regular,7,401752734,2025-10-11T16:00:00.000Z,Missouri,Alabama,,,,,,,
-2025,regular,7,401752735,2025-10-11T04:00:00.000Z,Tennessee,Arkansas,,,,,,,
-2025,regular,7,401752736,2025-10-11T19:30:00.000Z,Texas,Oklahoma,-9.5,56.5,-280,230,DraftKings,ESPN Bet,ESPN Bet
-2025,regular,7,401752737,2025-10-11T04:00:00.000Z,Texas A&M,Florida,,,,,,,
+2025,regular,7,401752734,2025-10-11T16:00:00.000Z,Missouri,Alabama,6.5,,,,DraftKings,,
+2025,regular,7,401752735,2025-10-11T20:15:00.000Z,Tennessee,Arkansas,-13.5,,,,DraftKings,,
+2025,regular,7,401752736,2025-10-11T19:30:00.000Z,Texas,Oklahoma,-3.5,56.5,-280,230,DraftKings,ESPN Bet,ESPN Bet
+2025,regular,7,401752737,2025-10-11T04:00:00.000Z,Texas A&M,Florida,-9.5,,,,DraftKings,,
 2025,regular,7,401752862,2025-10-11T01:00:00.000Z,Washington,Rutgers,,,,,,,
 2025,regular,7,401752863,2025-10-11T16:00:00.000Z,Michigan State,UCLA,,,,,,,
-2025,regular,7,401752864,2025-10-11T04:00:00.000Z,Minnesota,Purdue,,,,,,,
-2025,regular,7,401752865,2025-10-11T04:00:00.000Z,Illinois,Ohio State,13.5,50.5,400,-600,ESPN Bet,ESPN Bet,ESPN Bet
-2025,regular,7,401752866,2025-10-11T04:00:00.000Z,Penn State,Northwestern,,,,,,,
-2025,regular,7,401752867,2025-10-11T04:00:00.000Z,Maryland,Nebraska,,,,,,,
-2025,regular,7,401752868,2025-10-11T04:00:00.000Z,USC,Michigan,1.5,,,,DraftKings,,
-2025,regular,7,401752869,2025-10-11T04:00:00.000Z,Wisconsin,Iowa,,,,,,,
-2025,regular,7,401752870,2025-10-11T04:00:00.000Z,Oregon,Indiana,-14.5,55.5,-550,380,DraftKings,ESPN Bet,ESPN Bet
-2025,regular,7,401754558,2025-10-11T04:00:00.000Z,Boston College,Clemson,,,,,,,
-2025,regular,7,401754559,2025-10-11T04:00:00.000Z,Florida State,Pittsburgh,,,,,,,
-2025,regular,7,401754560,2025-10-11T04:00:00.000Z,Georgia Tech,Virginia Tech,,,,,,,
-2025,regular,7,401754561,2025-10-11T04:00:00.000Z,SMU,Stanford,,,,,,,
+2025,regular,7,401752864,2025-10-11T23:30:00.000Z,Minnesota,Purdue,,,,,,,
+2025,regular,7,401752865,2025-10-11T16:00:00.000Z,Illinois,Ohio State,13.5,50.5,400,-600,DraftKings,ESPN Bet,ESPN Bet
+2025,regular,7,401752866,2025-10-11T19:30:00.000Z,Penn State,Northwestern,,,,,,,
+2025,regular,7,401752867,2025-10-11T19:30:00.000Z,Maryland,Nebraska,,,,,,,
+2025,regular,7,401752868,2025-10-11T23:30:00.000Z,USC,Michigan,-2.5,,,,DraftKings,,
+2025,regular,7,401752869,2025-10-11T23:00:00.000Z,Wisconsin,Iowa,,,,,,,
+2025,regular,7,401752870,2025-10-11T19:30:00.000Z,Oregon,Indiana,-10,55.5,-550,380,DraftKings,ESPN Bet,ESPN Bet
+2025,regular,7,401754558,2025-10-11T23:30:00.000Z,Boston College,Clemson,,,,,,,
+2025,regular,7,401754559,2025-10-11T16:00:00.000Z,Florida State,Pittsburgh,,,,,,,
+2025,regular,7,401754560,2025-10-11T19:30:00.000Z,Georgia Tech,Virginia Tech,,,,,,,
+2025,regular,7,401754561,2025-10-11T16:00:00.000Z,SMU,Stanford,,,,,,,
 2025,regular,7,401754562,2025-10-11T19:30:00.000Z,Notre Dame,NC State,,,,,,,
 2025,regular,7,401754563,2025-10-11T19:30:00.000Z,Oregon State,Wake Forest,,,,,,,
-2025,regular,7,401756916,2025-10-11T04:00:00.000Z,Arizona,BYU,,,,,,,
-2025,regular,7,401756917,2025-10-11T04:00:00.000Z,Cincinnati,UCF,,,,,,,
-2025,regular,7,401756918,2025-10-11T04:00:00.000Z,Colorado,Iowa State,,,,,,,
-2025,regular,7,401756919,2025-10-11T04:00:00.000Z,Kansas State,TCU,,,,,,,
-2025,regular,7,401756920,2025-10-11T04:00:00.000Z,Oklahoma State,Houston,,,,,,,
-2025,regular,7,401756921,2025-10-11T04:00:00.000Z,Texas Tech,Kansas,,,,,,,
-2025,regular,7,401756922,2025-10-11T04:00:00.000Z,Utah,Arizona State,-2.5,,,,DraftKings,,
+2025,regular,7,401756916,2025-10-12T00:00:00.000Z,Arizona,BYU,,,,,,,
+2025,regular,7,401756917,2025-10-11T16:00:00.000Z,Cincinnati,UCF,,,,,,,
+2025,regular,7,401756918,2025-10-11T19:30:00.000Z,Colorado,Iowa State,,,,,,,
+2025,regular,7,401756919,2025-10-11T19:30:00.000Z,Kansas State,TCU,,,,,,,
+2025,regular,7,401756920,2025-10-11T16:00:00.000Z,Oklahoma State,Houston,,,,,,,
+2025,regular,7,401756921,2025-10-11T23:30:00.000Z,Texas Tech,Kansas,,,,,,,
+2025,regular,7,401756922,2025-10-12T02:15:00.000Z,Utah,Arizona State,-4.5,,,,DraftKings,,
 2025,regular,7,401757277,2025-10-09T00:00:00.000Z,UTEP,Liberty,,,,,,,
 2025,regular,7,401757278,2025-10-08T23:30:00.000Z,Middle Tennessee,Missouri State,,,,,,,
 2025,regular,7,401757279,2025-10-10T00:00:00.000Z,Sam Houston,Jacksonville State,,,,,,,
 2025,regular,7,401757280,2025-10-09T23:00:00.000Z,Kennesaw State,Louisiana Tech,,,,,,,
 2025,regular,7,401760386,2025-10-11T19:30:00.000Z,UNLV,Air Force,,,,,,,
-2025,regular,7,401760387,2025-10-11T04:00:00.000Z,Boise State,New Mexico,,,,,,,
+2025,regular,7,401760387,2025-10-12T01:45:00.000Z,Boise State,New Mexico,,,,,,,
 2025,regular,7,401760388,2025-10-11T01:00:00.000Z,Colorado State,Fresno State,,,,,,,
 2025,regular,7,401760389,2025-10-12T03:59:00.000Z,Hawai'i,Utah State,,,,,,,
 2025,regular,7,401760390,2025-10-12T02:30:00.000Z,Nevada,San Diego State,,,,,,,
 2025,regular,7,401760391,2025-10-11T23:00:00.000Z,Wyoming,San José State,,,,,,,
-2025,regular,7,401761622,2025-10-09T04:00:00.000Z,Georgia Southern,Southern Miss,,,,,,,
-2025,regular,7,401761623,2025-10-11T04:00:00.000Z,Coastal Carolina,UL Monroe,,,,,,,
-2025,regular,7,401761624,2025-10-11T04:00:00.000Z,Georgia State,App State,,,,,,,
-2025,regular,7,401761625,2025-10-11T04:00:00.000Z,James Madison,Louisiana,,,,,,,
-2025,regular,7,401761626,2025-10-11T04:00:00.000Z,Marshall,Old Dominion,,,,,,,
-2025,regular,7,401761627,2025-10-11T04:00:00.000Z,Texas State,Troy,,,,,,,
-2025,regular,7,401762480,2025-10-09T04:00:00.000Z,Tulane,East Carolina,,,,,,,
-2025,regular,7,401762481,2025-10-10T23:30:00.000Z,North Texas,South Florida,,,,,,,
-2025,regular,7,401762482,2025-10-11T04:00:00.000Z,Florida Atlantic,UAB,,,,,,,
+2025,regular,7,401761622,2025-10-10T00:00:00.000Z,Georgia Southern,Southern Miss,,,,,,,
+2025,regular,7,401761623,2025-10-11T23:00:00.000Z,Coastal Carolina,UL Monroe,,,,,,,
+2025,regular,7,401761624,2025-10-11T19:30:00.000Z,Georgia State,App State,,,,,,,
+2025,regular,7,401761625,2025-10-11T16:00:00.000Z,James Madison,Louisiana,,,,,,,
+2025,regular,7,401761626,2025-10-11T19:30:00.000Z,Marshall,Old Dominion,,,,,,,
+2025,regular,7,401761627,2025-10-12T00:00:00.000Z,Texas State,Troy,,,,,,,
+2025,regular,7,401762480,2025-10-09T23:30:00.000Z,Tulane,East Carolina,-7,,,,DraftKings,,
+2025,regular,7,401762481,2025-10-10T23:30:00.000Z,North Texas,South Florida,-2.5,,,,DraftKings,,
+2025,regular,7,401762482,2025-10-11T22:00:00.000Z,Florida Atlantic,UAB,,,,,,,
 2025,regular,7,401762483,2025-10-11T16:00:00.000Z,Army,Charlotte,,,,,,,
-2025,regular,7,401762484,2025-10-11T04:00:00.000Z,Temple,Navy,,,,,,,
-2025,regular,7,401762485,2025-10-11T04:00:00.000Z,UTSA,Rice,,,,,,,
-2025,regular,7,401762833,2025-10-11T04:00:00.000Z,Akron,Miami (OH),,,,,,,
+2025,regular,7,401762484,2025-10-11T20:00:00.000Z,Temple,Navy,,,,,,,
+2025,regular,7,401762485,2025-10-11T23:30:00.000Z,UTSA,Rice,,,,,,,
+2025,regular,7,401762833,2025-10-11T16:00:00.000Z,Akron,Miami (OH),,,,,,,
 2025,regular,7,401762834,2025-10-11T19:30:00.000Z,Western Michigan,Ball State,,,,,,,
-2025,regular,7,401762835,2025-10-11T04:00:00.000Z,Bowling Green,Toledo,,,,,,,
-2025,regular,7,401762836,2025-10-11T04:00:00.000Z,Eastern Michigan,Northern Illinois,,,,,,,
-2025,regular,7,401762837,2025-10-11T04:00:00.000Z,Kent State,Massachusetts,,,,,,,
+2025,regular,7,401762835,2025-10-11T16:00:00.000Z,Bowling Green,Toledo,,,,,,,
+2025,regular,7,401762836,2025-10-11T17:00:00.000Z,Eastern Michigan,Northern Illinois,,,,,,,
+2025,regular,7,401762837,2025-10-11T18:30:00.000Z,Kent State,Massachusetts,,,,,,,
 2025,regular,8,401752738,2025-10-18T04:00:00.000Z,Alabama,Tennessee,-12.5,52.5,-400,300,DraftKings,ESPN Bet,ESPN Bet
 2025,regular,8,401752739,2025-10-18T04:00:00.000Z,Arkansas,Texas A&M,,,,,,,
 2025,regular,8,401752740,2025-10-18T04:00:00.000Z,Auburn,Missouri,,,,,,,
@@ -1001,7 +1054,7 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2025,regular,14,401757313,2025-11-29T20:30:00.000Z,Liberty,Kennesaw State,,,,,,,
 2025,regular,14,401757314,2025-11-29T19:00:00.000Z,Missouri State,Louisiana Tech,,,,,,,
 2025,regular,14,401757315,2025-11-29T20:00:00.000Z,New Mexico State,Middle Tennessee,,,,,,,
-2025,regular,14,401760421,2025-11-28T05:00:00.000Z,Colorado State,Air Force,,,,,,,
+2025,regular,14,401760421,2025-11-28T20:00:00.000Z,Colorado State,Air Force,,,,,,,
 2025,regular,14,401760422,2025-11-28T21:00:00.000Z,Utah State,Boise State,,,,,,,
 2025,regular,14,401760423,2025-11-29T05:00:00.000Z,San José State,Fresno State,,,,,,,
 2025,regular,14,401760424,2025-11-30T04:00:00.000Z,Hawai'i,Wyoming,,,,,,,
