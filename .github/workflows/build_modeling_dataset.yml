@@ -1,4 +1,3 @@
-# .github/workflows/build_modeling_dataset.yml
 name: Build Modeling Dataset
 
 on:
@@ -17,6 +16,9 @@ defaults:
 
 env:
   TZ: America/New_York
+  BYE_THRESHOLD_DAYS: "13"
+  SHORT_WEEK_MAX_DAYS: "6"
+  LONG_TRIP_KM: "1500"
 
 jobs:
   build:
@@ -46,51 +48,37 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pandas
 
-      - name: Build modeling dataset
+      - name: Build modeling dataset (with situational features)
         env:
-          SEASON_MIN: "2019"
-          SEASON_MAX: "2025"
+          BYE_THRESHOLD_DAYS: ${{ env.BYE_THRESHOLD_DAYS }}
+          SHORT_WEEK_MAX_DAYS: ${{ env.SHORT_WEEK_MAX_DAYS }}
+          LONG_TRIP_KM: ${{ env.LONG_TRIP_KM }}
         run: |
           set -e
           python scripts/build_modeling_dataset.py
           echo "--- data/modeling_dataset.csv (head) ---"; head -n 10 data/modeling_dataset.csv || true
-          echo "--- logs_build_modeling_dataset.txt ---"; cat logs_build_modeling_dataset.txt || true
-          echo "--- counts ---"
-          [ -f data/modeling_dataset.csv ] && wc -l data/modeling_dataset.csv || echo "data/modeling_dataset.csv missing"
-          [ -f logs_build_modeling_dataset.txt ] && wc -l logs_build_modeling_dataset.txt || echo "logs_build_modeling_dataset.txt missing"
+          echo "--- logs_build_modeling_dataset.txt ---"; tail -n 200 logs_build_modeling_dataset.txt || true
 
-      # Minimal, robust enrichment: add points_scored from game_scores_clean.csv
-      - name: Inject points_scored (if scores available)
+      - name: Acceptance checks (situational features)
         run: |
           set -e
-          if [ ! -f data/modeling_dataset.csv ]; then
-            echo "ERROR: data/modeling_dataset.csv missing"; exit 2
-          fi
-          if [ ! -f data/game_scores_clean.csv ]; then
-            echo "NOTE: data/game_scores_clean.csv not found; skipping enrichment."; exit 0
-          fi
           python - <<'PY'
-import pandas as pd
-
+import sys, pandas as pd
 m = pd.read_csv('data/modeling_dataset.csv')
-s = pd.read_csv('data/game_scores_clean.csv', usecols=['game_id','team','points_scored','points_allowed'])
+required = [
+ 'is_home','is_away','is_neutral','rest_days','had_bye','short_week',
+ 'travel_km','long_trip_flag','tz_diff_from_home','east_to_west_flag',
+ 'west_to_east_flag','body_clock_kickoff_hour','altitude_game'
+]
+missing = [c for c in required if c not in m.columns]
+if missing:
+    print("ERROR: Missing required columns:", missing); sys.exit(3)
 
-if 'game_id' not in m.columns or 'team' not in m.columns:
-    raise SystemExit("ERROR: modeling_dataset.csv must have 'game_id' and 'team'.")
+one_hot_ok = ((m['is_home'].fillna(0) + m['is_away'].fillna(0) + m['is_neutral'].fillna(0)) == 1).all()
+if not one_hot_ok:
+    print("ERROR: is_home + is_away + is_neutral != 1 for some rows"); sys.exit(4)
 
-# normalize keys
-m['game_id'] = m['game_id'].astype(str)
-s['game_id'] = s['game_id'].astype(str)
-m['__t'] = m['team'].astype(str).str.strip().str.lower()
-s['__t'] = s['team'].astype(str).str.strip().str.lower()
-
-# de-dup scores and merge
-s_small = s.drop_duplicates(subset=['game_id','__t'])[['game_id','__t','points_scored','points_allowed']]
-m = m.merge(s_small, on=['game_id','__t'], how='left')
-m.drop(columns='__t', inplace=True)
-
-m.to_csv('data/modeling_dataset.csv', index=False)
-print("points_scored non-null:", int(m['points_scored'].notna().sum()))
+print("ACCEPTANCE: PASS")
 PY
 
       - name: Commit and push artifacts
@@ -105,7 +93,6 @@ PY
           if git diff --cached --quiet; then
             echo "No changes to commit."
             git status --porcelain
-          else
-            git commit -m "Build + enrich modeling_dataset (points_scored) [skip ci]"
+          else:
+            git commit -m "Build modeling_dataset with situational features [skip ci]"
             git push origin "${GITHUB_REF_NAME:-main}"
-          fi
