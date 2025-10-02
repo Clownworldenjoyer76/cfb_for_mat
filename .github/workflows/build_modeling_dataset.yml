@@ -1,7 +1,7 @@
 name: Build Modeling Dataset (Situational)
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 jobs:
   build:
@@ -15,12 +15,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install tzdata (timezones)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y tzdata
-
-      - name: Install Python deps
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install pandas
@@ -32,22 +27,16 @@ jobs:
           LONG_TRIP_KM: "1500"
         run: |
           python scripts/build_modeling_dataset.py
-          echo "---- head(data/modeling_dataset.csv) ----" || true
-          head -n 5 data/modeling_dataset.csv || true
-          echo "---- tail(logs_build_modeling_dataset.txt) ----" || true
-          tail -n 100 logs_build_modeling_dataset.txt || true
 
-      - name: Acceptance checks (bash)
+      - name: Acceptance checks
+        shell: bash
         run: |
-          set -e
-          test -s data/modeling_dataset.csv || (echo "modeling_dataset.csv missing" && exit 1)
-          IFS=',' read -r HEADER < data/modeling_dataset.csv
-          echo "$HEADER" | tr ',' '\n' > headers.txt
-          REQUIRED="is_home is_away is_neutral rest_days had_bye short_week travel_km long_trip_flag tz_diff_from_home east_to_west_flag west_to_east_flag body_clock_kickoff_hour altitude_game"
-          for COL in $REQUIRED; do
-            if ! grep -Fxq "$COL" headers.txt; then
-              echo "Missing required column: $COL"; exit 1
-            fi
+          set -euo pipefail
+          test -s data/modeling_dataset.csv
+          header="$(head -n1 data/modeling_dataset.csv)"
+          printf '%s\n' "$header" | tr ',' '\n' > headers.txt
+          for col in is_home is_away is_neutral rest_days had_bye short_week travel_km long_trip_flag tz_diff_from_home east_to_west_flag west_to_east_flag body_clock_kickoff_hour altitude_game; do
+            grep -Fxq "$col" headers.txt || { echo "Missing required column: $col"; exit 1; }
           done
           echo "ACCEPTANCE: PASS"
 
