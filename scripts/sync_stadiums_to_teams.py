@@ -1,78 +1,110 @@
 #!/usr/bin/env python3
-import os, sys, csv, datetime as dt
+# Minimal stadiums sync (pure stdlib).
+# - Reads data/reference/stadiums.csv
+# - Ensures required columns exist (adds if missing)
+# - Fills safe defaults
+# - De-duplicates by team (keeps first occurrence)
+# - Writes summaries/sync_stadiums_summary.txt
+
+import os
+import sys
+import csv
 
 STADIUMS_PATH = "data/reference/stadiums.csv"
 SUMMARY_PATH = "summaries/sync_stadiums_summary.txt"
 
-REQUIRED = ["team","venue","city","state","country","lat","lon","timezone","altitude_m","is_neutral_site","notes"]
-DEFAULTS = {"country":"USA","is_neutral_site":"0"}
+REQUIRED = [
+    "team", "venue", "city", "state", "country",
+    "lat", "lon", "timezone", "altitude_m",
+    "is_neutral_site", "notes"
+]
 
-def read_csv(p):
-    with open(p, "r", newline="", encoding="utf-8") as f:
-        r = csv.DictReader(f); rows = [dict(x) for x in r]; headers = r.fieldnames or []
+DEFAULTS = {
+    "country": "USA",
+    "is_neutral_site": "0"
+}
+
+def read_csv(path):
+    with open(path, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        rows = [dict(x) for x in reader]
+        headers = reader.fieldnames or []
     return headers, rows
 
 def ensure_columns(headers, rows):
-    s = set(headers)
+    have = set(headers)
     for c in REQUIRED:
-        if c not in s:
-            headers.append(c); s.add(c)
-            for r in rows: r[c] = ""
-    for r in rows:
+        if c not in have:
+            headers.append(c)
+            have.add(c)
+            for row in rows:
+                row[c] = ""
+    for row in rows:
         for k, v in DEFAULTS.items():
-            if k in r and (r[k] is None or str(r[k]).strip() == ""): r[k] = v
+            if k in row and (row[k] is None or str(row[k]).strip() == ""):
+                row[k] = v
     return headers, rows
 
-def dedupe(rows):
-    seen = set(); out = []
-    for r in rows:
-        t = str(r.get("team","")).strip().lower()
-        if t and t not in seen:
-            seen.add(t); out.append(r)
+def dedupe_by_team_keep_first(rows):
+    seen = set()
+    out = []
+    for row in rows:
+        t = str(row.get("team", "")).strip().lower()
+        if not t:
+            continue
+        if t in seen:
+            continue
+        seen.add(t)
+        out.append(row)
     return out
 
-def reorder(headers):
-    return REQUIRED + [h for h in headers if h not in REQUIRED]
+def reorder_headers(headers):
+    extras = [h for h in headers if h not in REQUIRED]
+    return REQUIRED + extras
 
-def write_csv(p, headers, rows):
-    os.makedirs(os.path.dirname(p), exist_ok=True)
-    with open(p, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=headers, extrasaction="ignore")
-        w.writeheader()
-        for r in rows:
+def write_csv(path, headers, rows):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=headers, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
             for h in headers:
-                if h not in r: r[h] = ""
-            w.writerow(r)
+                if h not in row:
+                    row[h] = ""
+            writer.writerow(row)
 
-def summary(before, after, rows):
+def write_summary(before, after, rows):
     os.makedirs(os.path.dirname(SUMMARY_PATH), exist_ok=True)
-    miss = {"lat":0,"lon":0,"timezone":0,"altitude_m":0}
-    for r in rows:
-        for k in miss.keys():
-            if k not in r or str(r[k]).strip() == "": miss[k]+=1
-    lines = [
-        "Sync Diagnostics",
-        "Timestamp (UTC): " + dt.datetime.utcnow().isoformat() + "Z",
-        "File: " + STADIUMS_PATH,
-        "Rows before: %d" % before,
-        "Rows after: %d" % after,
-        "Missing counts:",
-        "  lat: %d" % miss["lat"],
-        "  lon: %d" % miss["lon"],
-        "  timezone: %d" % miss["timezone"],
-        "  altitude_m: %d" % miss["altitude_m"],
-    ]
+    miss_lat = sum(1 for r in rows if not str(r.get("lat", "")).strip())
+    miss_lon = sum(1 for r in rows if not str(r.get("lon", "")).strip())
+    miss_tz  = sum(1 for r in rows if not str(r.get("timezone", "")).strip())
+    miss_alt = sum(1 for r in rows if not str(r.get("altitude_m", "")).strip())
+    lines = []
+    lines.append("Sync Diagnostics")
+    lines.append("File: " + STADIUMS_PATH)
+    lines.append("Rows before: " + str(before))
+    lines.append("Rows after: " + str(after))
+    lines.append("Missing counts:")
+    lines.append("  lat: " + str(miss_lat))
+    lines.append("  lon: " + str(miss_lon))
+    lines.append("  timezone: " + str(miss_tz))
+    lines.append("  altitude_m: " + str(miss_alt))
     with open(SUMMARY_PATH, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
 
 def main():
     if not os.path.exists(STADIUMS_PATH):
-        print("[sync] ERROR: file not found: %s" % STADIUMS_PATH, file=sys.stderr); sys.exit(1)
-    headers, rows = read_csv(STADIUMS_PATH); before = len(rows)
+        print("[sync] ERROR: file not found: " + STADIUMS_PATH, file=sys.stderr)
+        sys.exit(1)
+    headers, rows = read_csv(STADIUMS_PATH)
+    before = len(rows)
     headers, rows = ensure_columns(headers, rows)
-    rows = dedupe(rows); headers = reorder(headers)
+    rows = dedupe_by_team_keep_first(rows)
+    headers = reorder_headers(headers)
     write_csv(STADIUMS_PATH, headers, rows)
-    summary(before, len(rows), rows)
-    print("[sync] OK (rows before: %d, after: %d)" % (before, len(rows)))
+    after = len(rows)
+    write_summary(before, after, rows)
+    print("[sync] OK (rows before: " + str(before) + ", after: " + str(after) + ")")
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
