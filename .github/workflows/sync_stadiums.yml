@@ -2,38 +2,51 @@ name: Sync Stadiums to Teams
 
 on:
   workflow_dispatch:
-
-permissions:
-  contents: write
+    inputs:
+      teams_csv:
+        description: "Path to teams CSV (has column 'team' or 'School')"
+        required: false
+        default: "data/reference/teams.csv"
+      schedules_csv:
+        description: "Alternative: path to schedules CSV (has home_team/away_team)"
+        required: false
+        default: ""
+  push:
+    paths:
+      - "scripts/sync_stadiums_to_teams.py"
+      - "data/reference/teams.csv"
+      - "data/games.csv"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          python -m pip install pandas
+          pip install pandas
 
-      - name: Run sync script
+      - name: Sync stadiums file
         run: |
-          python scripts/sync_stadiums_to_teams.py
+          set -euo pipefail
+          TEAMS="${{ github.event.inputs.teams_csv }}"
+          SCHED="${{ github.event.inputs.schedules_csv }}"
+          if [ -n "${SCHED}" ]; then
+            python scripts/sync_stadiums_to_teams.py --stadiums data/reference/stadiums.csv --schedules "${SCHED}"
+          else
+            python scripts/sync_stadiums_to_teams.py --stadiums data/reference/stadiums.csv --teams "${TEAMS}"
+          fi
 
-      - name: Commit and push updated stadiums.csv
+      - name: Commit changes (if any)
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git add data/reference/stadiums.csv
-          git commit -m "Sync stadiums.csv to modeling_dataset teams [skip ci]" || echo "No changes to commit"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "chore(stadiums): sync teams [skip ci]" || echo "No changes to commit"
           git push
