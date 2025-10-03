@@ -5,7 +5,6 @@ on:
   push:
     paths:
       - "scripts/sync_stadiums_to_teams.py"
-      - "data/reference/teams.csv"
       - "data/reference/stadiums.csv"
 
 jobs:
@@ -23,16 +22,77 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas
 
-      - name: Sync stadiums file
+      - name: Sync stadiums file (teams inferred if not provided)
         run: |
-          python scripts/sync_stadiums_to_teams.py \
-            --stadiums data/reference/stadiums.csv \
-            --teams data/reference/teams.csv
+          python scripts/sync_stadiums_to_teams.py --stadiums data/reference/stadiums.csv
+
+      - name: Generate diagnostic summary
+        run: |
+          python - << 'PY'
+          import pandas as pd, os, textwrap, datetime as dt
+          path = "data/reference/stadiums.csv"
+          out_dir = "summaries"
+          os.makedirs(out_dir, exist_ok=True)
+          stamp = dt.datetime.utcnow().isoformat() + "Z"
+
+          def pct(n, d): 
+              return f"{(100*n/d):.1f}%" if d else "n/a"
+
+          try:
+              df = pd.read_csv(path)
+          except FileNotFoundError:
+              open(f"{out_dir}/sync_stadiums_summary.txt","w").write(
+                  f"[{stamp}] ERROR: {path} not found.\n"
+              )
+              raise
+
+          total = len(df)
+          cols_req = ["team","venue","city","state","country","lat","lon","timezone","altitude_m","is_neutral_site","notes"]
+          for c in cols_req:
+              if c not in df.columns:
+                  df[c] = pd.NA
+
+          # Missing metrics
+          miss = df[["lat","lon","timezone","altitude_m"]].isna().sum().to_dict()
+          any_missing = df[["lat","lon","timezone","altitude_m"]].isna().any(axis=1)
+          missing_rows = df.loc[any_missing, ["team","venue","city","state","lat","lon","timezone","altitude_m"]]
+          sample_missing = missing_rows.head(50)
+
+          # Basic uniqueness / duplicates
+          teams = df["team"].astype(str).str.strip()
+          dupes = df[teams.duplicated(keep=False)].sort_values("team")
+          dup_ct = dupes["team"].nunique()
+
+          # Build report
+          lines = []
+          lines.append(f"[{stamp}] Sync Diagnostics")
+          lines.append(f"File: {path}")
+          lines.append(f"Total rows: {total}")
+          lines.append("")
+          lines.append("Required columns present: " + ", ".join(sorted(set(cols_req) & set(df.columns))))
+          lines.append("")
+          lines.append("Missing counts:")
+          for k in ["lat","lon","timezone","altitude_m"]:
+              lines.append(f"  {k}: {miss.get(k,0)} ({pct(miss.get(k,0), total)})")
+          lines.append("")
+          lines.append(f"Teams with duplicated names: {dup_ct}")
+          if dup_ct:
+              lines.append(dupes[["team","venue","city","state"]].to_string(index=False))
+              lines.append("")
+          lines.append("Up to 50 rows with any missing lat/lon/timezone/altitude_m:")
+          if not sample_missing.empty:
+              lines.append(sample_missing.to_string(index=False))
+          else:
+              lines.append("  None")
+          report = "\n".join(lines)
+          with open(f"{out_dir}/sync_stadiums_summary.txt","w") as f:
+              f.write(report)
+          PY
 
       - name: Commit changes (if any)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --staged --quiet || git commit -m "chore(stadiums): sync teams [skip ci]" || echo "No changes to commit"
+          git add data/reference/stadiums.csv summaries/sync_stadiums_summary.txt
+          git diff --staged --quiet || git commit -m "chore(stadiums): sync + diagnostics [skip ci]" || echo "No changes to commit"
           git push
