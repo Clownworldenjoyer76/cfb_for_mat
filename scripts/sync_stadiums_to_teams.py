@@ -1,95 +1,120 @@
 #!/usr/bin/env python3
 """
-Sync stadiums.csv rows to exactly match team names used in modeling_dataset.csv.
+Sync `data/reference/stadiums.csv` to ensure:
+- It contains one row per team found in your source list (teams file or schedules),
+- It has all required columns with a consistent order,
+- Existing non-null values are preserved.
 
-- Preserves ALL existing rows/values in data/reference/stadiums.csv.
-- Adds rows for ANY team present in data/modeling_dataset.csv that is missing in stadiums.csv.
-- Does NOT delete or change existing rows; only appends missing teams with blank venue metadata placeholders.
-- Writes the result back to data/reference/stadiums.csv (sorted by team).
+Usage examples:
+  python scripts/sync_stadiums_to_teams.py \
+    --stadiums data/reference/stadiums.csv \
+    --teams data/reference/teams.csv
 
-Required files in repo:
-- data/modeling_dataset.csv  (must have a 'team' column)
-- data/reference/stadiums.csv
-
-Columns guaranteed in output:
-  team,venue,city,state,country,lat,lon,timezone,altitude_m,is_neutral_site,notes
+  python scripts/sync_stadiums_to_teams.py \
+    --stadiums data/reference/stadiums.csv \
+    --schedules data/games.csv
 """
+from __future__ import annotations
 
-import os
+import argparse
 import sys
+from pathlib import Path
 import pandas as pd
 
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(REPO_ROOT, "data", "modeling_dataset.csv")
-STAD_PATH  = os.path.join(REPO_ROOT, "data", "reference", "stadiums.csv")
+REQUIRED_COLS = [
+    "team", "venue", "city", "state", "country",
+    "lat", "lon", "timezone", "altitude_m",
+    "is_neutral_site", "notes",
+]
 
-REQUIRED_COLS = ["team","venue","city","state","country","lat","lon","timezone","altitude_m","is_neutral_site","notes"]
+DEFAULTS = {
+    "country": "USA",
+    "is_neutral_site": 0,
+}
 
-def norm(s): 
-    return str(s).strip()
+def read_team_list(teams_csv: Path | None, schedules_csv: Path | None) -> pd.Series:
+    if teams_csv and teams_csv.exists():
+        df = pd.read_csv(teams_csv)
+        # Accept common column names
+        for col in ["team", "school", "name", "Team", "School"]:
+            if col in df.columns:
+                return df[col].dropna().astype(str).str.strip().drop_duplicates().sort_values()
+        raise SystemExit(f"[sync] Could not find a team-name column in {teams_csv}")
+    if schedules_csv and schedules_csv.exists():
+        df = pd.read_csv(schedules_csv)
+        candidates = [c for c in ["team", "home_team", "away_team", "Home Team", "Away Team"] if c in df.columns]
+        if not candidates:
+            raise SystemExit(f"[sync] Could not find team columns in {schedules_csv}")
+        teams = pd.concat([df[c] for c in candidates], ignore_index=True)
+        return teams.dropna().astype(str).str.strip().drop_duplicates().sort_values()
+    raise SystemExit("[sync] Provide --teams or --schedules")
 
-def ensure_schema(df: pd.DataFrame) -> pd.DataFrame:
+def ensure_columns(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy()
+    # Create any missing cols
     for c in REQUIRED_COLS:
-        if c not in df.columns:
-            df[c] = pd.NA
-    return df[REQUIRED_COLS]
+        if c not in out.columns:
+            out[c] = pd.NA
+    # Drop unexpected columns only if they fully duplicate required ones? No: keep them.
+    # Reorder to required-first, then the rest
+    rest = [c for c in out.columns if c not in REQUIRED_COLS]
+    out = out[REQUIRED_COLS + rest]
+    # Apply defaults where appropriate
+    for k, v in DEFAULTS.items():
+        if k in out.columns:
+            out[k] = out[k].fillna(v)
+    return out
 
 def main():
-    if not os.path.exists(MODEL_PATH):
-        print(f"ERROR: Missing {MODEL_PATH}", file=sys.stderr)
-        sys.exit(1)
-    if not os.path.exists(STAD_PATH):
-        print(f"ERROR: Missing {STAD_PATH}", file=sys.stderr)
-        sys.exit(1)
+    p = argparse.ArgumentParser()
+    p.add_argument("--stadiums", type=Path, required=True, help="Path to data/reference/stadiums.csv")
+    g = p.add_mutually_exclusive_group(required=True)
+    g.add_argument("--teams", type=Path, help="CSV with a 'team' column (or School/Name)")
+    g.add_argument("--schedules", type=Path, help="CSV with team columns (home_team/away_team)")
+    args = p.parse_args()
 
-    mdf = pd.read_csv(MODEL_PATH, usecols=["team"])
-    teams = (
-        mdf["team"]
-        .dropna()
-        .astype(str)
-        .map(norm)
-        .drop_duplicates()
-        .sort_values()
-        .tolist()
-    )
-
-    sdf = pd.read_csv(STAD_PATH)
-    sdf = ensure_schema(sdf)
-    sdf["__k"] = sdf["team"].astype(str).map(norm)
-
-    present = set(sdf["__k"].tolist())
-
-    # Append missing teams with placeholders
-    new_rows = []
-    for t in teams:
-        if t not in present:
-            new_rows.append({
-                "team": t,
-                "venue": "",
-                "city": "",
-                "state": "",
-                "country": "USA",
-                "lat": "",
-                "lon": "",
-                "timezone": "",
-                "altitude_m": "",
-                "is_neutral_site": 0,
-                "notes": ""
-            })
-
-    if new_rows:
-        add_df = pd.DataFrame(new_rows)[REQUIRED_COLS]
-        sdf = pd.concat([sdf.drop(columns=["__k"], errors="ignore"), add_df], ignore_index=True)
+    stad_path = args.stadiums
+    if not stad_path.exists():
+        # Start a new file if missing
+        df = pd.DataFrame(columns=REQUIRED_COLS)
     else:
-        sdf = sdf.drop(columns=["__k"], errors="ignore")
+        df = pd.read_csv(stad_path)
 
-    # Finalize & write
-    sdf = sdf[REQUIRED_COLS].sort_values("team").reset_index(drop=True)
-    os.makedirs(os.path.dirname(STAD_PATH), exist_ok=True)
-    sdf.to_csv(STAD_PATH, index=False)
+    df = ensure_columns(df)
 
-    print(f"Synced stadiums: wrote {len(sdf)} rows to {STAD_PATH}")
-    print(f"New rows added: {len(new_rows)}")
+    wanted = read_team_list(args.teams, args.schedules)
+
+    have = df["team"].fillna("").astype(str).str.strip()
+    missing = sorted(set(wanted) - set(have))
+
+    if missing:
+        new_rows = []
+        for t in missing:
+            row = {c: pd.NA for c in df.columns}
+            row.update(DEFAULTS)
+            row["team"] = t
+            new_rows.append(row)
+        df = pd.concat([df, pd.DataFrame(new_rows)], ignore_index=True)
+
+    # Deduplicate by team (keep first non-null values)
+    df.sort_values(by=["team"], key=lambda s: s.str.lower(), inplace=True)
+    df = df.groupby("team", as_index=False).first()
+
+    # Normalize types
+    for num in ["lat", "lon", "altitude_m", "is_neutral_site"]:
+        if num in df.columns:
+            df[num] = pd.to_numeric(df[num], errors="coerce")
+
+    # Persist
+    stad_path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(stad_path, index=False)
+    print(f"[sync] Stadiums synced: {stad_path} (rows={len(df)})")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit as e:
+        raise
+    except Exception as e:
+        print(f"[sync] ERROR: {e}", file=sys.stderr)
+        raise
