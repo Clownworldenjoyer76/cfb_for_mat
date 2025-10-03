@@ -2,20 +2,11 @@ name: Sync Stadiums to Teams
 
 on:
   workflow_dispatch:
-    inputs:
-      teams_csv:
-        description: "Path to teams CSV (has column 'team' or 'School')"
-        required: false
-        default: "data/reference/teams.csv"
-      schedules_csv:
-        description: "Alternative: path to schedules CSV (has home_team/away_team)"
-        required: false
-        default: ""
   push:
     paths:
       - "scripts/sync_stadiums_to_teams.py"
       - "data/reference/teams.csv"
-      - "data/games.csv"
+      - "data/reference/stadiums.csv"
 
 jobs:
   sync:
@@ -34,14 +25,9 @@ jobs:
 
       - name: Sync stadiums file
         run: |
-          set -euo pipefail
-          TEAMS="${{ github.event.inputs.teams_csv }}"
-          SCHED="${{ github.event.inputs.schedules_csv }}"
-          if [ -n "${SCHED}" ]; then
-            python scripts/sync_stadiums_to_teams.py --stadiums data/reference/stadiums.csv --schedules "${SCHED}"
-          else
-            python scripts/sync_stadiums_to_teams.py --stadiums data/reference/stadiums.csv --teams "${TEAMS}"
-          fi
+          python scripts/sync_stadiums_to_teams.py \
+            --stadiums data/reference/stadiums.csv \
+            --teams data/reference/teams.csv
 
       - name: Commit changes (if any)
         run: |
