@@ -3488,30 +3488,30 @@
       "lines": [
         {
           "provider": "DraftKings",
-          "spread": 6.5,
-          "formattedSpread": "Texas -6.5",
+          "spread": 4.5,
+          "formattedSpread": "Texas -4.5",
           "spreadOpen": 6.5,
-          "overUnder": 41.5,
+          "overUnder": 42.5,
           "overUnderOpen": null,
-          "homeMoneyline": 210,
-          "awayMoneyline": -258
+          "homeMoneyline": 170,
+          "awayMoneyline": -205
         },
         {
           "provider": "ESPN Bet",
-          "spread": 6.5,
-          "formattedSpread": "Texas -6.5",
+          "spread": 5.5,
+          "formattedSpread": "Texas -5.5",
           "spreadOpen": 6.5,
-          "overUnder": 41.5,
+          "overUnder": 42.5,
           "overUnderOpen": 53.5,
-          "homeMoneyline": 210,
-          "awayMoneyline": -250
+          "homeMoneyline": 175,
+          "awayMoneyline": -210
         },
         {
           "provider": "Bovada",
-          "spread": 6.5,
-          "formattedSpread": "Texas -6.5",
+          "spread": 5,
+          "formattedSpread": "Texas -5.0",
           "spreadOpen": 7,
-          "overUnder": 41.5,
+          "overUnder": 42.5,
           "overUnderOpen": 44,
           "homeMoneyline": 220,
           "awayMoneyline": -270
@@ -3724,55 +3724,6 @@
       ]
     },
     {
-      "id": 401757165,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T19:30:00.000Z",
-      "homeTeamId": 87,
-      "homeTeam": "Notre Dame",
-      "homeConference": "FBS Independents",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 68,
-      "awayTeam": "Boise State",
-      "awayConference": "Mountain West",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": -20.5,
-          "formattedSpread": "Notre Dame -20.5",
-          "spreadOpen": -16.5,
-          "overUnder": 62.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -1350,
-          "awayMoneyline": 800
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": -20.5,
-          "formattedSpread": "Notre Dame -20.5",
-          "spreadOpen": -16.5,
-          "overUnder": 63.5,
-          "overUnderOpen": 53.5,
-          "homeMoneyline": -1400,
-          "awayMoneyline": 750
-        },
-        {
-          "provider": "Bovada",
-          "spread": -21,
-          "formattedSpread": "Notre Dame -21.0",
-          "spreadOpen": -18,
-          "overUnder": 63,
-          "overUnderOpen": 64.5,
-          "homeMoneyline": -950,
-          "awayMoneyline": 600
-        }
-      ]
-    },
-    {
       "id": 401752718,
       "season": 2025,
       "seasonType": "regular",
@@ -3939,6 +3890,55 @@
       ]
     },
     {
+      "id": 401757165,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T19:30:00.000Z",
+      "homeTeamId": 87,
+      "homeTeam": "Notre Dame",
+      "homeConference": "FBS Independents",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 68,
+      "awayTeam": "Boise State",
+      "awayConference": "Mountain West",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": -21,
+          "formattedSpread": "Notre Dame -21",
+          "spreadOpen": -16.5,
+          "overUnder": 62.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -1600,
+          "awayMoneyline": 900
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": -20.5,
+          "formattedSpread": "Notre Dame -20.5",
+          "spreadOpen": -16.5,
+          "overUnder": 63.5,
+          "overUnderOpen": 53.5,
+          "homeMoneyline": -1400,
+          "awayMoneyline": 750
+        },
+        {
+          "provider": "Bovada",
+          "spread": -21,
+          "formattedSpread": "Notre Dame -21.0",
+          "spreadOpen": -18,
+          "overUnder": 63,
+          "overUnderOpen": 64.5,
+          "homeMoneyline": -950,
+          "awayMoneyline": 600
+        }
+      ]
+    },
+    {
       "id": 401754553,
       "season": 2025,
       "seasonType": "regular",
@@ -3970,17 +3970,17 @@
           "spread": 4.5,
           "formattedSpread": "Miami -4.5",
           "spreadOpen": 6.5,
-          "overUnder": 53.5,
+          "overUnder": 54.5,
           "overUnderOpen": 53.5,
-          "homeMoneyline": 160,
-          "awayMoneyline": -190
+          "homeMoneyline": 155,
+          "awayMoneyline": -185
         },
         {
           "provider": "Bovada",
           "spread": 4,
           "formattedSpread": "Miami -4.0",
           "spreadOpen": 5.5,
-          "overUnder": 53.5,
+          "overUnder": 54.5,
           "overUnderOpen": 53.5,
           "homeMoneyline": 175,
           "awayMoneyline": -210
@@ -9051,8 +9051,8 @@
         },
         {
           "provider": "DraftKings",
-          "spread": 13.5,
-          "formattedSpread": "Ohio State -13.5",
+          "spread": 14,
+          "formattedSpread": "Ohio State -14",
           "spreadOpen": 13.5,
           "overUnder": null,
           "overUnderOpen": null,
@@ -9419,13 +9419,13 @@
       "lines": [
         {
           "provider": "ESPN Bet",
-          "spread": -10.5,
-          "formattedSpread": "Alabama -10.5",
+          "spread": -11.5,
+          "formattedSpread": "Alabama -11.5",
           "spreadOpen": -22.5,
           "overUnder": 55.5,
           "overUnderOpen": 51.5,
-          "homeMoneyline": -400,
-          "awayMoneyline": 300
+          "homeMoneyline": -450,
+          "awayMoneyline": 340
         },
         {
           "provider": "DraftKings",
@@ -9439,10 +9439,10 @@
         },
         {
           "provider": "Bovada",
-          "spread": -10.5,
-          "formattedSpread": "Alabama -10.5",
+          "spread": -11.5,
+          "formattedSpread": "Alabama -11.5",
           "spreadOpen": -10.5,
-          "overUnder": 55,
+          "overUnder": 55.5,
           "overUnderOpen": 56.5,
           "homeMoneyline": -430,
           "awayMoneyline": 320
@@ -15360,8 +15360,8 @@
         },
         {
           "provider": "Bovada",
-          "spread": -20.5,
-          "formattedSpread": "Georgia -20.5",
+          "spread": -20,
+          "formattedSpread": "Georgia -20.0",
           "spreadOpen": -21,
           "overUnder": 48,
           "overUnderOpen": 48.5,
@@ -15518,35 +15518,6 @@
       ]
     },
     {
-      "id": 401762480,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 7,
-      "startDate": "2025-10-09T23:30:00.000Z",
-      "homeTeamId": 2655,
-      "homeTeam": "Tulane",
-      "homeConference": "American Athletic",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 151,
-      "awayTeam": "East Carolina",
-      "awayConference": "American Athletic",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": -7,
-          "formattedSpread": "Tulane -7",
-          "spreadOpen": -7,
-          "overUnder": null,
-          "overUnderOpen": null,
-          "homeMoneyline": null,
-          "awayMoneyline": null
-        }
-      ]
-    },
-    {
       "id": 401756902,
       "season": 2025,
       "seasonType": "regular",
@@ -15625,6 +15596,35 @@
       ]
     },
     {
+      "id": 401762480,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 7,
+      "startDate": "2025-10-09T23:30:00.000Z",
+      "homeTeamId": 2655,
+      "homeTeam": "Tulane",
+      "homeConference": "American Athletic",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 151,
+      "awayTeam": "East Carolina",
+      "awayConference": "American Athletic",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": -7.5,
+          "formattedSpread": "Tulane -7.5",
+          "spreadOpen": -7,
+          "overUnder": null,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
+        }
+      ]
+    },
+    {
       "id": 401752856,
       "season": 2025,
       "seasonType": "regular",
@@ -15658,13 +15658,13 @@
           "spreadOpen": -16.5,
           "overUnder": 43.5,
           "overUnderOpen": 41.5,
-          "homeMoneyline": -900,
-          "awayMoneyline": 550
+          "homeMoneyline": -1000,
+          "awayMoneyline": 600
         },
         {
           "provider": "Bovada",
-          "spread": -17,
-          "formattedSpread": "Michigan -17.0",
+          "spread": -17.5,
+          "formattedSpread": "Michigan -17.5",
           "spreadOpen": -17,
           "overUnder": 43.5,
           "overUnderOpen": 41.5,
@@ -15748,55 +15748,6 @@
           "overUnderOpen": 50.5,
           "homeMoneyline": -700,
           "awayMoneyline": 450
-        }
-      ]
-    },
-    {
-      "id": 401752859,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T23:30:00.000Z",
-      "homeTeamId": 194,
-      "homeTeam": "Ohio State",
-      "homeConference": "Big Ten",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 135,
-      "awayTeam": "Minnesota",
-      "awayConference": "Big Ten",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": -23.5,
-          "formattedSpread": "Ohio State -23.5",
-          "spreadOpen": -21,
-          "overUnder": 44.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -2400,
-          "awayMoneyline": 1200
-        },
-        {
-          "provider": "Bovada",
-          "spread": -24,
-          "formattedSpread": "Ohio State -24.0",
-          "spreadOpen": -24,
-          "overUnder": 44.5,
-          "overUnderOpen": 44.5,
-          "homeMoneyline": -2800,
-          "awayMoneyline": 1100
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": -23.5,
-          "formattedSpread": "Ohio State -23.5",
-          "spreadOpen": -24.5,
-          "overUnder": 44.5,
-          "overUnderOpen": 44.5,
-          "homeMoneyline": -3000,
-          "awayMoneyline": 1200
         }
       ]
     },
@@ -16123,6 +16074,55 @@
       ]
     },
     {
+      "id": 401752859,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T23:30:00.000Z",
+      "homeTeamId": 194,
+      "homeTeam": "Ohio State",
+      "homeConference": "Big Ten",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 135,
+      "awayTeam": "Minnesota",
+      "awayConference": "Big Ten",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": -23.5,
+          "formattedSpread": "Ohio State -23.5",
+          "spreadOpen": -21,
+          "overUnder": 43.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -2400,
+          "awayMoneyline": 1200
+        },
+        {
+          "provider": "Bovada",
+          "spread": -23.5,
+          "formattedSpread": "Ohio State -23.5",
+          "spreadOpen": -24,
+          "overUnder": 43,
+          "overUnderOpen": 44.5,
+          "homeMoneyline": -2800,
+          "awayMoneyline": 1100
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": -23.5,
+          "formattedSpread": "Ohio State -23.5",
+          "spreadOpen": -24.5,
+          "overUnder": 42.5,
+          "overUnderOpen": 44.5,
+          "homeMoneyline": -2500,
+          "awayMoneyline": 1100
+        }
+      ]
+    },
+    {
       "id": 401757260,
       "season": 2025,
       "seasonType": "regular",
@@ -16301,6 +16301,35 @@
           "formattedSpread": "Yale -6.5",
           "spreadOpen": null,
           "overUnder": 44.5,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
+        }
+      ]
+    },
+    {
+      "id": 401752734,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 7,
+      "startDate": "2025-10-11T16:00:00.000Z",
+      "homeTeamId": 142,
+      "homeTeam": "Missouri",
+      "homeConference": "SEC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 333,
+      "awayTeam": "Alabama",
+      "awayConference": "SEC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": 6,
+          "formattedSpread": "Alabama -6",
+          "spreadOpen": 6.5,
+          "overUnder": null,
           "overUnderOpen": null,
           "homeMoneyline": null,
           "awayMoneyline": null
@@ -16504,35 +16533,6 @@
       ]
     },
     {
-      "id": 401752734,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 7,
-      "startDate": "2025-10-11T16:00:00.000Z",
-      "homeTeamId": 142,
-      "homeTeam": "Missouri",
-      "homeConference": "SEC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 333,
-      "awayTeam": "Alabama",
-      "awayConference": "SEC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": 6.5,
-          "formattedSpread": "Alabama -6.5",
-          "spreadOpen": 6.5,
-          "overUnder": null,
-          "overUnderOpen": null,
-          "homeMoneyline": null,
-          "awayMoneyline": null
-        }
-      ]
-    },
-    {
       "id": 401752735,
       "season": 2025,
       "seasonType": "regular",
@@ -16614,15 +16614,15 @@
           "spreadOpen": -13.5,
           "overUnder": 58.5,
           "overUnderOpen": null,
-          "homeMoneyline": -535,
-          "awayMoneyline": 400
+          "homeMoneyline": -520,
+          "awayMoneyline": 390
         },
         {
           "provider": "Bovada",
           "spread": -13.5,
           "formattedSpread": "TCU -13.5",
           "spreadOpen": -14.5,
-          "overUnder": 58,
+          "overUnder": 58.5,
           "overUnderOpen": 58,
           "homeMoneyline": -650,
           "awayMoneyline": 450
@@ -16636,6 +16636,55 @@
           "overUnderOpen": 59.5,
           "homeMoneyline": -600,
           "awayMoneyline": 400
+        }
+      ]
+    },
+    {
+      "id": 401752730,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T23:30:00.000Z",
+      "homeTeamId": 245,
+      "homeTeam": "Texas A&M",
+      "homeConference": "SEC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 344,
+      "awayTeam": "Mississippi State",
+      "awayConference": "SEC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": -15.5,
+          "formattedSpread": "Texas A&M -15.5",
+          "spreadOpen": -13.5,
+          "overUnder": 55.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -700,
+          "awayMoneyline": 500
+        },
+        {
+          "provider": "Bovada",
+          "spread": -16,
+          "formattedSpread": "Texas A&M -16.0",
+          "spreadOpen": -14,
+          "overUnder": 56,
+          "overUnderOpen": 58,
+          "homeMoneyline": -600,
+          "awayMoneyline": 425
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": -16.5,
+          "formattedSpread": "Texas A&M -16.5",
+          "spreadOpen": -14.5,
+          "overUnder": 55.5,
+          "overUnderOpen": 58.5,
+          "homeMoneyline": -750,
+          "awayMoneyline": 475
         }
       ]
     },
@@ -16685,55 +16734,6 @@
           "overUnderOpen": 62.5,
           "homeMoneyline": 220,
           "awayMoneyline": -270
-        }
-      ]
-    },
-    {
-      "id": 401752730,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T23:30:00.000Z",
-      "homeTeamId": 245,
-      "homeTeam": "Texas A&M",
-      "homeConference": "SEC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 344,
-      "awayTeam": "Mississippi State",
-      "awayConference": "SEC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": -14.5,
-          "formattedSpread": "Texas A&M -14.5",
-          "spreadOpen": -13.5,
-          "overUnder": 55.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -650,
-          "awayMoneyline": 470
-        },
-        {
-          "provider": "Bovada",
-          "spread": -14.5,
-          "formattedSpread": "Texas A&M -14.5",
-          "spreadOpen": -14,
-          "overUnder": 55.5,
-          "overUnderOpen": 58,
-          "homeMoneyline": -600,
-          "awayMoneyline": 425
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": -14.5,
-          "formattedSpread": "Texas A&M -14.5",
-          "spreadOpen": -14.5,
-          "overUnder": 55.5,
-          "overUnderOpen": 58.5,
-          "homeMoneyline": -700,
-          "awayMoneyline": 450
         }
       ]
     },
@@ -16950,30 +16950,30 @@
       "lines": [
         {
           "provider": "DraftKings",
-          "spread": 11.5,
-          "formattedSpread": "Texas Tech -11.5",
+          "spread": 12.5,
+          "formattedSpread": "Texas Tech -12.5",
           "spreadOpen": 8.5,
-          "overUnder": 51.5,
+          "overUnder": 52.5,
           "overUnderOpen": null,
-          "homeMoneyline": 360,
-          "awayMoneyline": -470
+          "homeMoneyline": 370,
+          "awayMoneyline": -485
         },
         {
           "provider": "Bovada",
-          "spread": 11,
-          "formattedSpread": "Texas Tech -11.0",
+          "spread": 12.5,
+          "formattedSpread": "Texas Tech -12.5",
           "spreadOpen": 12,
-          "overUnder": 51,
+          "overUnder": 52,
           "overUnderOpen": 50,
           "homeMoneyline": 355,
           "awayMoneyline": -490
         },
         {
           "provider": "ESPN Bet",
-          "spread": 10.5,
-          "formattedSpread": "Texas Tech -10.5",
+          "spread": 11.5,
+          "formattedSpread": "Texas Tech -11.5",
           "spreadOpen": 12.5,
-          "overUnder": 51.5,
+          "overUnder": 52.5,
           "overUnderOpen": 50.5,
           "homeMoneyline": 360,
           "awayMoneyline": -500
@@ -17035,55 +17035,6 @@
           "overUnderOpen": null,
           "homeMoneyline": null,
           "awayMoneyline": null
-        }
-      ]
-    },
-    {
-      "id": 401752857,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T19:30:00.000Z",
-      "homeTeamId": 120,
-      "homeTeam": "Maryland",
-      "homeConference": "Big Ten",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 264,
-      "awayTeam": "Washington",
-      "awayConference": "Big Ten",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": 6.5,
-          "formattedSpread": "Washington -6.5",
-          "spreadOpen": 7.5,
-          "overUnder": 53.5,
-          "overUnderOpen": null,
-          "homeMoneyline": 200,
-          "awayMoneyline": -245
-        },
-        {
-          "provider": "Bovada",
-          "spread": 6.5,
-          "formattedSpread": "Washington -6.5",
-          "spreadOpen": 4.5,
-          "overUnder": 54,
-          "overUnderOpen": 53.5,
-          "homeMoneyline": 185,
-          "awayMoneyline": -225
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": 6.5,
-          "formattedSpread": "Washington -6.5",
-          "spreadOpen": 5.5,
-          "overUnder": 54.5,
-          "overUnderOpen": 52.5,
-          "homeMoneyline": 210,
-          "awayMoneyline": -250
         }
       ]
     },
@@ -17191,6 +17142,55 @@
           "overUnderOpen": null,
           "homeMoneyline": null,
           "awayMoneyline": null
+        }
+      ]
+    },
+    {
+      "id": 401752857,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T19:30:00.000Z",
+      "homeTeamId": 120,
+      "homeTeam": "Maryland",
+      "homeConference": "Big Ten",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 264,
+      "awayTeam": "Washington",
+      "awayConference": "Big Ten",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": 6.5,
+          "formattedSpread": "Washington -6.5",
+          "spreadOpen": 7.5,
+          "overUnder": 52.5,
+          "overUnderOpen": null,
+          "homeMoneyline": 210,
+          "awayMoneyline": -258
+        },
+        {
+          "provider": "Bovada",
+          "spread": 6.5,
+          "formattedSpread": "Washington -6.5",
+          "spreadOpen": 4.5,
+          "overUnder": 52.5,
+          "overUnderOpen": 53.5,
+          "homeMoneyline": 185,
+          "awayMoneyline": -225
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": 6.5,
+          "formattedSpread": "Washington -6.5",
+          "spreadOpen": 5.5,
+          "overUnder": 52.5,
+          "overUnderOpen": 52.5,
+          "homeMoneyline": 215,
+          "awayMoneyline": -260
         }
       ]
     },
@@ -23159,104 +23159,6 @@
       ]
     },
     {
-      "id": 401752860,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T20:00:00.000Z",
-      "homeTeamId": 158,
-      "homeTeam": "Nebraska",
-      "homeConference": "Big Ten",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 127,
-      "awayTeam": "Michigan State",
-      "awayConference": "Big Ten",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": -11.5,
-          "formattedSpread": "Nebraska -11.5",
-          "spreadOpen": -10,
-          "overUnder": 48.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -470,
-          "awayMoneyline": 360
-        },
-        {
-          "provider": "Bovada",
-          "spread": -12,
-          "formattedSpread": "Nebraska -12.0",
-          "spreadOpen": -10.5,
-          "overUnder": 48,
-          "overUnderOpen": 53.5,
-          "homeMoneyline": -410,
-          "awayMoneyline": 305
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": -11.5,
-          "formattedSpread": "Nebraska -11.5",
-          "spreadOpen": -10.5,
-          "overUnder": 47.5,
-          "overUnderOpen": 53.5,
-          "homeMoneyline": -450,
-          "awayMoneyline": 340
-        }
-      ]
-    },
-    {
-      "id": 401754551,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-05T02:30:00.000Z",
-      "homeTeamId": 25,
-      "homeTeam": "California",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 150,
-      "awayTeam": "Duke",
-      "awayConference": "ACC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": 3,
-          "formattedSpread": "Duke -3",
-          "spreadOpen": 1.5,
-          "overUnder": 55.5,
-          "overUnderOpen": null,
-          "homeMoneyline": 124,
-          "awayMoneyline": -148
-        },
-        {
-          "provider": "Bovada",
-          "spread": 3,
-          "formattedSpread": "Duke -3.0",
-          "spreadOpen": 3,
-          "overUnder": 55.5,
-          "overUnderOpen": 56,
-          "homeMoneyline": 125,
-          "awayMoneyline": -145
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": 2.5,
-          "formattedSpread": "Duke -2.5",
-          "spreadOpen": 3.5,
-          "overUnder": 55.5,
-          "overUnderOpen": 56.5,
-          "homeMoneyline": 130,
-          "awayMoneyline": -150
-        }
-      ]
-    },
-    {
       "id": 401754542,
       "season": 2025,
       "seasonType": "regular",
@@ -23302,6 +23204,104 @@
           "overUnderOpen": 53.5,
           "homeMoneyline": -3000,
           "awayMoneyline": 1200
+        }
+      ]
+    },
+    {
+      "id": 401754551,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-05T02:30:00.000Z",
+      "homeTeamId": 25,
+      "homeTeam": "California",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 150,
+      "awayTeam": "Duke",
+      "awayConference": "ACC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": 3,
+          "formattedSpread": "Duke -3",
+          "spreadOpen": 1.5,
+          "overUnder": 55.5,
+          "overUnderOpen": null,
+          "homeMoneyline": 120,
+          "awayMoneyline": -142
+        },
+        {
+          "provider": "Bovada",
+          "spread": 3,
+          "formattedSpread": "Duke -3.0",
+          "spreadOpen": 3,
+          "overUnder": 55.5,
+          "overUnderOpen": 56,
+          "homeMoneyline": 125,
+          "awayMoneyline": -145
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": 2.5,
+          "formattedSpread": "Duke -2.5",
+          "spreadOpen": 3.5,
+          "overUnder": 55.5,
+          "overUnderOpen": 56.5,
+          "homeMoneyline": 130,
+          "awayMoneyline": -150
+        }
+      ]
+    },
+    {
+      "id": 401752860,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T20:00:00.000Z",
+      "homeTeamId": 158,
+      "homeTeam": "Nebraska",
+      "homeConference": "Big Ten",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 127,
+      "awayTeam": "Michigan State",
+      "awayConference": "Big Ten",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": -11.5,
+          "formattedSpread": "Nebraska -11.5",
+          "spreadOpen": -10,
+          "overUnder": 50.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -455,
+          "awayMoneyline": 350
+        },
+        {
+          "provider": "Bovada",
+          "spread": -11.5,
+          "formattedSpread": "Nebraska -11.5",
+          "spreadOpen": -10.5,
+          "overUnder": 50,
+          "overUnderOpen": 53.5,
+          "homeMoneyline": -410,
+          "awayMoneyline": 305
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": -11.5,
+          "formattedSpread": "Nebraska -11.5",
+          "spreadOpen": -10.5,
+          "overUnder": 49.5,
+          "overUnderOpen": 53.5,
+          "homeMoneyline": -425,
+          "awayMoneyline": 320
         }
       ]
     },
@@ -23407,15 +23407,15 @@
           "spreadOpen": -7.5,
           "overUnder": 61.5,
           "overUnderOpen": null,
-          "homeMoneyline": -250,
-          "awayMoneyline": 205
+          "homeMoneyline": -238,
+          "awayMoneyline": 195
         },
         {
           "provider": "Bovada",
           "spread": -6.5,
           "formattedSpread": "Louisville -6.5",
           "spreadOpen": -6,
-          "overUnder": 62,
+          "overUnder": 61.5,
           "overUnderOpen": 61.5,
           "homeMoneyline": -225,
           "awayMoneyline": 185
@@ -23425,10 +23425,10 @@
           "spread": -6.5,
           "formattedSpread": "Louisville -6.5",
           "spreadOpen": -6.5,
-          "overUnder": 62.5,
+          "overUnder": 61.5,
           "overUnderOpen": 62.5,
-          "homeMoneyline": -240,
-          "awayMoneyline": 200
+          "homeMoneyline": -215,
+          "awayMoneyline": 180
         }
       ]
     },
@@ -23503,17 +23503,17 @@
           "spread": -1.5,
           "formattedSpread": "Cincinnati -1.5",
           "spreadOpen": 3.5,
-          "overUnder": 54.5,
+          "overUnder": 55.5,
           "overUnderOpen": null,
-          "homeMoneyline": -118,
-          "awayMoneyline": -102
+          "homeMoneyline": -122,
+          "awayMoneyline": 102
         },
         {
           "provider": "Bovada",
-          "spread": -1.5,
-          "formattedSpread": "Cincinnati -1.5",
+          "spread": -2,
+          "formattedSpread": "Cincinnati -2.0",
           "spreadOpen": -1.5,
-          "overUnder": 55,
+          "overUnder": 56,
           "overUnderOpen": 51.5,
           "homeMoneyline": -115,
           "awayMoneyline": -105
@@ -23523,9 +23523,9 @@
           "spread": -1.5,
           "formattedSpread": "Cincinnati -1.5",
           "spreadOpen": -1.5,
-          "overUnder": 54.5,
+          "overUnder": 55.5,
           "overUnderOpen": 51.5,
-          "homeMoneyline": -120,
+          "homeMoneyline": -125,
           "awayMoneyline": 105
         }
       ]
@@ -23601,17 +23601,17 @@
           "spread": -12.5,
           "formattedSpread": "Navy -12.5",
           "spreadOpen": -11.5,
-          "overUnder": 52.5,
+          "overUnder": 51.5,
           "overUnderOpen": null,
-          "homeMoneyline": -455,
-          "awayMoneyline": 350
+          "homeMoneyline": -470,
+          "awayMoneyline": 360
         },
         {
           "provider": "ESPN Bet",
           "spread": -12.5,
           "formattedSpread": "Navy -12.5",
           "spreadOpen": -12.5,
-          "overUnder": 52.5,
+          "overUnder": 50.5,
           "overUnderOpen": null,
           "homeMoneyline": -450,
           "awayMoneyline": 340
@@ -23621,7 +23621,7 @@
           "spread": -12.5,
           "formattedSpread": "Navy -12.5",
           "spreadOpen": -10,
-          "overUnder": 52.5,
+          "overUnder": 51,
           "overUnderOpen": 49,
           "homeMoneyline": -370,
           "awayMoneyline": 285
@@ -23834,6 +23834,55 @@
       ]
     },
     {
+      "id": 401762475,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-03T23:00:00.000Z",
+      "homeTeamId": 58,
+      "homeTeam": "South Florida",
+      "homeConference": "American Athletic",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 2429,
+      "awayTeam": "Charlotte",
+      "awayConference": "American Athletic",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "ESPN Bet",
+          "spread": -27.5,
+          "formattedSpread": "South Florida -27.5",
+          "spreadOpen": -28.5,
+          "overUnder": 54.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -5000,
+          "awayMoneyline": 1500
+        },
+        {
+          "provider": "DraftKings",
+          "spread": -27.5,
+          "formattedSpread": "South Florida -27.5",
+          "spreadOpen": -26.5,
+          "overUnder": 54.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -5000,
+          "awayMoneyline": 1800
+        },
+        {
+          "provider": "Bovada",
+          "spread": -28,
+          "formattedSpread": "South Florida -28.0",
+          "spreadOpen": -27.5,
+          "overUnder": 54.5,
+          "overUnderOpen": 55,
+          "homeMoneyline": -6500,
+          "awayMoneyline": 1300
+        }
+      ]
+    },
+    {
       "id": 401754538,
       "season": 2025,
       "seasonType": "regular",
@@ -23879,104 +23928,6 @@
           "overUnderOpen": 58.5,
           "homeMoneyline": -150,
           "awayMoneyline": 130
-        }
-      ]
-    },
-    {
-      "id": 401762475,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-03T23:00:00.000Z",
-      "homeTeamId": 58,
-      "homeTeam": "South Florida",
-      "homeConference": "American Athletic",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 2429,
-      "awayTeam": "Charlotte",
-      "awayConference": "American Athletic",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "ESPN Bet",
-          "spread": -28.5,
-          "formattedSpread": "South Florida -28.5",
-          "spreadOpen": -28.5,
-          "overUnder": 55.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -5000,
-          "awayMoneyline": 1500
-        },
-        {
-          "provider": "DraftKings",
-          "spread": -27.5,
-          "formattedSpread": "South Florida -27.5",
-          "spreadOpen": -26.5,
-          "overUnder": 55.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -5000,
-          "awayMoneyline": 1800
-        },
-        {
-          "provider": "Bovada",
-          "spread": -28,
-          "formattedSpread": "South Florida -28.0",
-          "spreadOpen": -27.5,
-          "overUnder": 55,
-          "overUnderOpen": 55,
-          "homeMoneyline": -6500,
-          "awayMoneyline": 1300
-        }
-      ]
-    },
-    {
-      "id": 401756909,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T02:30:00.000Z",
-      "homeTeamId": 252,
-      "homeTeam": "BYU",
-      "homeConference": "Big 12",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 277,
-      "awayTeam": "West Virginia",
-      "awayConference": "Big 12",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "ESPN Bet",
-          "spread": -18.5,
-          "formattedSpread": "BYU -18.5",
-          "spreadOpen": -20.5,
-          "overUnder": 47.5,
-          "overUnderOpen": 49.5,
-          "homeMoneyline": -1400,
-          "awayMoneyline": 750
-        },
-        {
-          "provider": "DraftKings",
-          "spread": -19.5,
-          "formattedSpread": "BYU -19.5",
-          "spreadOpen": -18.5,
-          "overUnder": 47.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -1200,
-          "awayMoneyline": 750
-        },
-        {
-          "provider": "Bovada",
-          "spread": -19,
-          "formattedSpread": "BYU -19.0",
-          "spreadOpen": -19.5,
-          "overUnder": 47.5,
-          "overUnderOpen": 48,
-          "homeMoneyline": -1200,
-          "awayMoneyline": 700
         }
       ]
     },
@@ -24030,6 +23981,55 @@
       ]
     },
     {
+      "id": 401756909,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T02:30:00.000Z",
+      "homeTeamId": 252,
+      "homeTeam": "BYU",
+      "homeConference": "Big 12",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 277,
+      "awayTeam": "West Virginia",
+      "awayConference": "Big 12",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "ESPN Bet",
+          "spread": -19.5,
+          "formattedSpread": "BYU -19.5",
+          "spreadOpen": -20.5,
+          "overUnder": 45.5,
+          "overUnderOpen": 49.5,
+          "homeMoneyline": -1400,
+          "awayMoneyline": 750
+        },
+        {
+          "provider": "DraftKings",
+          "spread": -19.5,
+          "formattedSpread": "BYU -19.5",
+          "spreadOpen": -18.5,
+          "overUnder": 46.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -1350,
+          "awayMoneyline": 800
+        },
+        {
+          "provider": "Bovada",
+          "spread": -20,
+          "formattedSpread": "BYU -20.0",
+          "spreadOpen": -19.5,
+          "overUnder": 46.5,
+          "overUnderOpen": 48,
+          "homeMoneyline": -1200,
+          "awayMoneyline": 700
+        }
+      ]
+    },
+    {
       "id": 401757275,
       "season": 2025,
       "seasonType": "regular",
@@ -24039,12 +24039,12 @@
       "homeTeam": "New Mexico State",
       "homeConference": "Conference USA",
       "homeClassification": "fbs",
-      "homeScore": null,
+      "homeScore": 37,
       "awayTeamId": 2534,
       "awayTeam": "Sam Houston",
       "awayConference": "Conference USA",
       "awayClassification": "fbs",
-      "awayScore": null,
+      "awayScore": 10,
       "lines": [
         {
           "provider": "ESPN Bet",
@@ -24053,25 +24053,25 @@
           "spreadOpen": null,
           "overUnder": 53.5,
           "overUnderOpen": 51.5,
-          "homeMoneyline": 110,
-          "awayMoneyline": -130
+          "homeMoneyline": 105,
+          "awayMoneyline": -120
         },
         {
           "provider": "DraftKings",
           "spread": 2.5,
           "formattedSpread": "Sam Houston -2.5",
           "spreadOpen": 2.5,
-          "overUnder": 53.5,
+          "overUnder": 52.5,
           "overUnderOpen": null,
-          "homeMoneyline": 105,
-          "awayMoneyline": -125
+          "homeMoneyline": 110,
+          "awayMoneyline": -130
         },
         {
           "provider": "Bovada",
-          "spread": 2.5,
-          "formattedSpread": "Sam Houston -2.5",
+          "spread": 2,
+          "formattedSpread": "Sam Houston -2.0",
           "spreadOpen": 1.5,
-          "overUnder": 53.5,
+          "overUnder": 52,
           "overUnderOpen": 53,
           "homeMoneyline": 100,
           "awayMoneyline": -120
@@ -24149,27 +24149,27 @@
           "spread": -6.5,
           "formattedSpread": "Pittsburgh -6.5",
           "spreadOpen": -4.5,
-          "overUnder": 58.5,
+          "overUnder": 57.5,
           "overUnderOpen": 54.5,
-          "homeMoneyline": -215,
-          "awayMoneyline": 180
+          "homeMoneyline": -240,
+          "awayMoneyline": 200
         },
         {
           "provider": "DraftKings",
-          "spread": -6,
-          "formattedSpread": "Pittsburgh -6",
+          "spread": -6.5,
+          "formattedSpread": "Pittsburgh -6.5",
           "spreadOpen": -4.5,
-          "overUnder": 58.5,
+          "overUnder": 56.5,
           "overUnderOpen": null,
           "homeMoneyline": -238,
           "awayMoneyline": 195
         },
         {
           "provider": "Bovada",
-          "spread": -6,
-          "formattedSpread": "Pittsburgh -6.0",
+          "spread": -6.5,
+          "formattedSpread": "Pittsburgh -6.5",
           "spreadOpen": -6,
-          "overUnder": 58.5,
+          "overUnder": 57,
           "overUnderOpen": 57.5,
           "homeMoneyline": -240,
           "awayMoneyline": 200
@@ -24465,8 +24465,8 @@
           "spreadOpen": -1.5,
           "overUnder": 61.5,
           "overUnderOpen": 62.5,
-          "homeMoneyline": -135,
-          "awayMoneyline": 115
+          "homeMoneyline": -145,
+          "awayMoneyline": 125
         }
       ]
     },
@@ -24612,8 +24612,8 @@
           "spreadOpen": -2.5,
           "overUnder": 57.5,
           "overUnderOpen": 57.5,
-          "homeMoneyline": -140,
-          "awayMoneyline": 120
+          "homeMoneyline": -135,
+          "awayMoneyline": 115
         }
       ]
     },
@@ -24685,18 +24685,18 @@
       "lines": [
         {
           "provider": "DraftKings",
-          "spread": -6,
-          "formattedSpread": "San Diego State -6",
+          "spread": -6.5,
+          "formattedSpread": "San Diego State -6.5",
           "spreadOpen": -5.5,
-          "overUnder": 40.5,
+          "overUnder": 41.5,
           "overUnderOpen": null,
           "homeMoneyline": -238,
           "awayMoneyline": 195
         },
         {
           "provider": "Bovada",
-          "spread": -6,
-          "formattedSpread": "San Diego State -6.0",
+          "spread": -6.5,
+          "formattedSpread": "San Diego State -6.5",
           "spreadOpen": -6,
           "overUnder": 41,
           "overUnderOpen": 39,
@@ -24710,8 +24710,8 @@
           "spreadOpen": -5.5,
           "overUnder": 41.5,
           "overUnderOpen": 38.5,
-          "homeMoneyline": -225,
-          "awayMoneyline": 190
+          "homeMoneyline": -230,
+          "awayMoneyline": 195
         }
       ]
     },
@@ -24979,18 +24979,18 @@
       "lines": [
         {
           "provider": "DraftKings",
-          "spread": -21,
-          "formattedSpread": "Old Dominion -21",
+          "spread": -20.5,
+          "formattedSpread": "Old Dominion -20.5",
           "spreadOpen": -15,
           "overUnder": 54.5,
           "overUnderOpen": null,
-          "homeMoneyline": -1450,
-          "awayMoneyline": 850
+          "homeMoneyline": -1350,
+          "awayMoneyline": 800
         },
         {
           "provider": "Bovada",
-          "spread": -21,
-          "formattedSpread": "Old Dominion -21.0",
+          "spread": -20.5,
+          "formattedSpread": "Old Dominion -20.5",
           "spreadOpen": -17.5,
           "overUnder": 54.5,
           "overUnderOpen": 55,
@@ -25276,17 +25276,17 @@
           "spread": 7.5,
           "formattedSpread": "Central Michigan -7.5",
           "spreadOpen": 7,
-          "overUnder": 45.5,
+          "overUnder": 46.5,
           "overUnderOpen": null,
-          "homeMoneyline": 250,
-          "awayMoneyline": -310
+          "homeMoneyline": 225,
+          "awayMoneyline": -278
         },
         {
           "provider": "Bovada",
           "spread": 7.5,
           "formattedSpread": "Central Michigan -7.5",
           "spreadOpen": 6.5,
-          "overUnder": 45.5,
+          "overUnder": 46.5,
           "overUnderOpen": 45.5,
           "homeMoneyline": 210,
           "awayMoneyline": -250
@@ -25296,10 +25296,10 @@
           "spread": 7.5,
           "formattedSpread": "Central Michigan -7.5",
           "spreadOpen": 7.5,
-          "overUnder": 45.5,
+          "overUnder": 46.5,
           "overUnderOpen": 44.5,
-          "homeMoneyline": 240,
-          "awayMoneyline": -290
+          "homeMoneyline": 230,
+          "awayMoneyline": -280
         }
       ]
     },
@@ -25402,6 +25402,55 @@
       ]
     },
     {
+      "id": 401754556,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T17:00:00.000Z",
+      "homeTeamId": 259,
+      "homeTeam": "Virginia Tech",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 154,
+      "awayTeam": "Wake Forest",
+      "awayConference": "ACC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": -6,
+          "formattedSpread": "Virginia Tech -6",
+          "spreadOpen": -5.5,
+          "overUnder": 51.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -230,
+          "awayMoneyline": 190
+        },
+        {
+          "provider": "Bovada",
+          "spread": -6,
+          "formattedSpread": "Virginia Tech -6.0",
+          "spreadOpen": -5,
+          "overUnder": 51.5,
+          "overUnderOpen": 50.5,
+          "homeMoneyline": -220,
+          "awayMoneyline": 180
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": -6.5,
+          "formattedSpread": "Virginia Tech -6.5",
+          "spreadOpen": -6.5,
+          "overUnder": 52.5,
+          "overUnderOpen": 50.5,
+          "homeMoneyline": -215,
+          "awayMoneyline": 180
+        }
+      ]
+    },
+    {
       "id": 401752723,
       "season": 2025,
       "seasonType": "regular",
@@ -25447,104 +25496,6 @@
           "overUnderOpen": 51.5,
           "homeMoneyline": null,
           "awayMoneyline": null
-        }
-      ]
-    },
-    {
-      "id": 401754556,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T17:00:00.000Z",
-      "homeTeamId": 259,
-      "homeTeam": "Virginia Tech",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 154,
-      "awayTeam": "Wake Forest",
-      "awayConference": "ACC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": -7,
-          "formattedSpread": "Virginia Tech -7",
-          "spreadOpen": -5.5,
-          "overUnder": 50.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -265,
-          "awayMoneyline": 215
-        },
-        {
-          "provider": "Bovada",
-          "spread": -6.5,
-          "formattedSpread": "Virginia Tech -6.5",
-          "spreadOpen": -5,
-          "overUnder": 50,
-          "overUnderOpen": 50.5,
-          "homeMoneyline": -220,
-          "awayMoneyline": 180
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": -6.5,
-          "formattedSpread": "Virginia Tech -6.5",
-          "spreadOpen": -6.5,
-          "overUnder": 50.5,
-          "overUnderOpen": 50.5,
-          "homeMoneyline": -250,
-          "awayMoneyline": 210
-        }
-      ]
-    },
-    {
-      "id": 401762832,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 6,
-      "startDate": "2025-10-04T18:30:00.000Z",
-      "homeTeamId": 113,
-      "homeTeam": "Massachusetts",
-      "homeConference": "Mid-American",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 2711,
-      "awayTeam": "Western Michigan",
-      "awayConference": "Mid-American",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": 13.5,
-          "formattedSpread": "Western Michigan -13.5",
-          "spreadOpen": 10.5,
-          "overUnder": 46.5,
-          "overUnderOpen": null,
-          "homeMoneyline": 410,
-          "awayMoneyline": -550
-        },
-        {
-          "provider": "Bovada",
-          "spread": 13.5,
-          "formattedSpread": "Western Michigan -13.5",
-          "spreadOpen": 11.5,
-          "overUnder": 47,
-          "overUnderOpen": 47.5,
-          "homeMoneyline": 340,
-          "awayMoneyline": -460
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": 13.5,
-          "formattedSpread": "Western Michigan -13.5",
-          "spreadOpen": 12.5,
-          "overUnder": 47.5,
-          "overUnderOpen": 45.5,
-          "homeMoneyline": 425,
-          "awayMoneyline": -650
         }
       ]
     },
@@ -25598,6 +25549,55 @@
       ]
     },
     {
+      "id": 401762832,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 6,
+      "startDate": "2025-10-04T18:30:00.000Z",
+      "homeTeamId": 113,
+      "homeTeam": "Massachusetts",
+      "homeConference": "Mid-American",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 2711,
+      "awayTeam": "Western Michigan",
+      "awayConference": "Mid-American",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": 13.5,
+          "formattedSpread": "Western Michigan -13.5",
+          "spreadOpen": 10.5,
+          "overUnder": 45.5,
+          "overUnderOpen": null,
+          "homeMoneyline": 425,
+          "awayMoneyline": -575
+        },
+        {
+          "provider": "Bovada",
+          "spread": 13.5,
+          "formattedSpread": "Western Michigan -13.5",
+          "spreadOpen": 11.5,
+          "overUnder": 46,
+          "overUnderOpen": 47.5,
+          "homeMoneyline": 340,
+          "awayMoneyline": -460
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": 13.5,
+          "formattedSpread": "Western Michigan -13.5",
+          "spreadOpen": 12.5,
+          "overUnder": 46.5,
+          "overUnderOpen": 45.5,
+          "homeMoneyline": 400,
+          "awayMoneyline": -600
+        }
+      ]
+    },
+    {
       "id": 401761621,
       "season": 2025,
       "seasonType": "regular",
@@ -25619,30 +25619,30 @@
           "spread": -1.5,
           "formattedSpread": "Troy -1.5",
           "spreadOpen": -3,
-          "overUnder": 47.5,
+          "overUnder": 46.5,
           "overUnderOpen": null,
-          "homeMoneyline": -125,
-          "awayMoneyline": 105
+          "homeMoneyline": -112,
+          "awayMoneyline": -108
         },
         {
           "provider": "Bovada",
-          "spread": -2,
-          "formattedSpread": "Troy -2.0",
+          "spread": -1,
+          "formattedSpread": "Troy -1.0",
           "spreadOpen": -3,
-          "overUnder": 47.5,
+          "overUnder": 47,
           "overUnderOpen": 47.5,
           "homeMoneyline": -135,
           "awayMoneyline": 115
         },
         {
           "provider": "ESPN Bet",
-          "spread": -1.5,
-          "formattedSpread": "Troy -1.5",
+          "spread": 1.5,
+          "formattedSpread": "South Alabama -1.5",
           "spreadOpen": -2.5,
           "overUnder": 47.5,
           "overUnderOpen": 46.5,
-          "homeMoneyline": -125,
-          "awayMoneyline": 105
+          "homeMoneyline": -110,
+          "awayMoneyline": -110
         }
       ]
     },
@@ -25717,7 +25717,7 @@
           "spread": 20.5,
           "formattedSpread": "James Madison -20.5",
           "spreadOpen": 17.5,
-          "overUnder": 53.5,
+          "overUnder": 52.5,
           "overUnderOpen": null,
           "homeMoneyline": 900,
           "awayMoneyline": -1600
@@ -25727,7 +25727,7 @@
           "spread": 20,
           "formattedSpread": "James Madison -20.0",
           "spreadOpen": 20,
-          "overUnder": 53,
+          "overUnder": 52.5,
           "overUnderOpen": 54,
           "homeMoneyline": 725,
           "awayMoneyline": -1300
@@ -25737,7 +25737,7 @@
           "spread": 19.5,
           "formattedSpread": "James Madison -19.5",
           "spreadOpen": 19.5,
-          "overUnder": 53.5,
+          "overUnder": 52.5,
           "overUnderOpen": 53.5,
           "homeMoneyline": 800,
           "awayMoneyline": -1600
@@ -25766,7 +25766,7 @@
           "spread": -20.5,
           "formattedSpread": "Memphis -20.5",
           "spreadOpen": -21,
-          "overUnder": 56.5,
+          "overUnder": 55.5,
           "overUnderOpen": null,
           "homeMoneyline": -1450,
           "awayMoneyline": 850
@@ -25776,7 +25776,7 @@
           "spread": -20.5,
           "formattedSpread": "Memphis -20.5",
           "spreadOpen": -21,
-          "overUnder": 56,
+          "overUnder": 55.5,
           "overUnderOpen": 56.5,
           "homeMoneyline": -1600,
           "awayMoneyline": 800
@@ -25786,7 +25786,7 @@
           "spread": -20.5,
           "formattedSpread": "Memphis -20.5",
           "spreadOpen": -21.5,
-          "overUnder": 56.5,
+          "overUnder": 55.5,
           "overUnderOpen": 55.5,
           "homeMoneyline": -1800,
           "awayMoneyline": 900
@@ -25815,7 +25815,7 @@
           "spread": -11.5,
           "formattedSpread": "Northwestern -11.5",
           "spreadOpen": -9.5,
-          "overUnder": 40.5,
+          "overUnder": 42.5,
           "overUnderOpen": null,
           "homeMoneyline": -455,
           "awayMoneyline": 350
@@ -25825,7 +25825,7 @@
           "spread": -11.5,
           "formattedSpread": "Northwestern -11.5",
           "spreadOpen": -12,
-          "overUnder": 40.5,
+          "overUnder": 42,
           "overUnderOpen": 40.5,
           "homeMoneyline": -435,
           "awayMoneyline": 325
@@ -25835,7 +25835,7 @@
           "spread": -11.5,
           "formattedSpread": "Northwestern -11.5",
           "spreadOpen": -10.5,
-          "overUnder": 40.5,
+          "overUnder": 42.5,
           "overUnderOpen": 40.5,
           "homeMoneyline": -450,
           "awayMoneyline": 340
@@ -25876,15 +25876,15 @@
           "spreadOpen": 12.5,
           "overUnder": 55.5,
           "overUnderOpen": null,
-          "homeMoneyline": 285,
-          "awayMoneyline": -360
+          "homeMoneyline": 270,
+          "awayMoneyline": -340
         },
         {
           "provider": "Bovada",
           "spread": 9.5,
           "formattedSpread": "Illinois -9.5",
           "spreadOpen": 10,
-          "overUnder": 56,
+          "overUnder": 55.5,
           "overUnderOpen": 55.5,
           "homeMoneyline": 295,
           "awayMoneyline": -390
@@ -25920,8 +25920,8 @@
         },
         {
           "provider": "Bovada",
-          "spread": -20,
-          "formattedSpread": "Arizona -20.0",
+          "spread": -20.5,
+          "formattedSpread": "Arizona -20.5",
           "spreadOpen": -18.5,
           "overUnder": 56,
           "overUnderOpen": 55.5,
@@ -25935,8 +25935,8 @@
           "spreadOpen": -18.5,
           "overUnder": 55.5,
           "overUnderOpen": 56.5,
-          "homeMoneyline": -1400,
-          "awayMoneyline": 750
+          "homeMoneyline": -1600,
+          "awayMoneyline": 800
         }
       ]
     },
@@ -25964,15 +25964,15 @@
           "spreadOpen": 1.5,
           "overUnder": 38.5,
           "overUnderOpen": null,
-          "homeMoneyline": 160,
-          "awayMoneyline": -192
+          "homeMoneyline": 164,
+          "awayMoneyline": -198
         },
         {
           "provider": "Bovada",
-          "spread": 5,
-          "formattedSpread": "Miami (OH) -5.0",
+          "spread": 4.5,
+          "formattedSpread": "Miami (OH) -4.5",
           "spreadOpen": 3.5,
-          "overUnder": 38,
+          "overUnder": 39,
           "overUnderOpen": 39.5,
           "homeMoneyline": 165,
           "awayMoneyline": -195
@@ -25982,7 +25982,7 @@
           "spread": 4.5,
           "formattedSpread": "Miami (OH) -4.5",
           "spreadOpen": 3.5,
-          "overUnder": 38.5,
+          "overUnder": 39.5,
           "overUnderOpen": 38.5,
           "homeMoneyline": 175,
           "awayMoneyline": -210
@@ -26011,7 +26011,7 @@
           "spread": -4.5,
           "formattedSpread": "Rice -4.5",
           "spreadOpen": -5.5,
-          "overUnder": 53.5,
+          "overUnder": 54.5,
           "overUnderOpen": null,
           "homeMoneyline": -198,
           "awayMoneyline": 164
@@ -26021,7 +26021,7 @@
           "spread": -4.5,
           "formattedSpread": "Rice -4.5",
           "spreadOpen": -4,
-          "overUnder": 54,
+          "overUnder": 55,
           "overUnderOpen": 52.5,
           "homeMoneyline": -185,
           "awayMoneyline": 160
@@ -26060,27 +26060,27 @@
           "spread": 24.5,
           "formattedSpread": "Penn State -24.5",
           "spreadOpen": 27.5,
-          "overUnder": 49.5,
+          "overUnder": 48.5,
           "overUnderOpen": null,
           "homeMoneyline": 1200,
           "awayMoneyline": -2400
         },
         {
           "provider": "Bovada",
-          "spread": 25,
-          "formattedSpread": "Penn State -25.0",
+          "spread": 24.5,
+          "formattedSpread": "Penn State -24.5",
           "spreadOpen": 25,
-          "overUnder": 49.5,
+          "overUnder": 48.5,
           "overUnderOpen": 50,
           "homeMoneyline": 1100,
           "awayMoneyline": -3500
         },
         {
           "provider": "ESPN Bet",
-          "spread": 25.5,
-          "formattedSpread": "Penn State -25.5",
+          "spread": 24.5,
+          "formattedSpread": "Penn State -24.5",
           "spreadOpen": 25.5,
-          "overUnder": 49.5,
+          "overUnder": 48.5,
           "overUnderOpen": 49.5,
           "homeMoneyline": 1500,
           "awayMoneyline": -5000
@@ -26109,7 +26109,7 @@
           "spread": -17.5,
           "formattedSpread": "SMU -17.5",
           "spreadOpen": -16.5,
-          "overUnder": 58.5,
+          "overUnder": 56.5,
           "overUnderOpen": null,
           "homeMoneyline": -850,
           "awayMoneyline": 575
@@ -26119,7 +26119,7 @@
           "spread": -17.5,
           "formattedSpread": "SMU -17.5",
           "spreadOpen": -16.5,
-          "overUnder": 58.5,
+          "overUnder": 57,
           "overUnderOpen": 58.5,
           "homeMoneyline": -750,
           "awayMoneyline": 500
@@ -26129,7 +26129,7 @@
           "spread": -17.5,
           "formattedSpread": "SMU -17.5",
           "spreadOpen": -16.5,
-          "overUnder": 58.5,
+          "overUnder": 56.5,
           "overUnderOpen": 58.5,
           "homeMoneyline": -1000,
           "awayMoneyline": 600
@@ -26155,28 +26155,28 @@
       "lines": [
         {
           "provider": "DraftKings",
-          "spread": -6.5,
-          "formattedSpread": "Baylor -6.5",
+          "spread": -6,
+          "formattedSpread": "Baylor -6",
           "spreadOpen": -5.5,
           "overUnder": 61.5,
           "overUnderOpen": null,
-          "homeMoneyline": -245,
-          "awayMoneyline": 200
+          "homeMoneyline": -225,
+          "awayMoneyline": 185
         },
         {
           "provider": "ESPN Bet",
-          "spread": -6.5,
-          "formattedSpread": "Baylor -6.5",
+          "spread": -5.5,
+          "formattedSpread": "Baylor -5.5",
           "spreadOpen": -5.5,
           "overUnder": 61.5,
           "overUnderOpen": null,
-          "homeMoneyline": -230,
-          "awayMoneyline": 195
+          "homeMoneyline": -210,
+          "awayMoneyline": 175
         },
         {
           "provider": "Bovada",
-          "spread": -6.5,
-          "formattedSpread": "Baylor -6.5",
+          "spread": -6,
+          "formattedSpread": "Baylor -6.0",
           "spreadOpen": -6.5,
           "overUnder": 61.5,
           "overUnderOpen": 61.5,
@@ -26204,13 +26204,13 @@
       "lines": [
         {
           "provider": "DraftKings",
-          "spread": 7,
-          "formattedSpread": "Army -7",
+          "spread": 6.5,
+          "formattedSpread": "Army -6.5",
           "spreadOpen": 9.5,
-          "overUnder": 57.5,
+          "overUnder": 56.5,
           "overUnderOpen": null,
-          "homeMoneyline": 230,
-          "awayMoneyline": -285
+          "homeMoneyline": 215,
+          "awayMoneyline": -265
         },
         {
           "provider": "ESPN Bet",
@@ -26219,15 +26219,15 @@
           "spreadOpen": 7.5,
           "overUnder": 57.5,
           "overUnderOpen": 58.5,
-          "homeMoneyline": 220,
-          "awayMoneyline": -270
+          "homeMoneyline": 215,
+          "awayMoneyline": -260
         },
         {
           "provider": "Bovada",
-          "spread": 7,
-          "formattedSpread": "Army -7.0",
+          "spread": 6.5,
+          "formattedSpread": "Army -6.5",
           "spreadOpen": 7,
-          "overUnder": 58,
+          "overUnder": 57,
           "overUnderOpen": 57.5,
           "homeMoneyline": 220,
           "awayMoneyline": -270
@@ -26276,7 +26276,7 @@
           "spread": -45.5,
           "formattedSpread": "Oklahoma -45.5",
           "spreadOpen": -45.5,
-          "overUnder": 54.5,
+          "overUnder": 53.5,
           "overUnderOpen": 53.5,
           "homeMoneyline": null,
           "awayMoneyline": null
@@ -26305,17 +26305,17 @@
           "spread": -7.5,
           "formattedSpread": "UConn -7.5",
           "spreadOpen": -10,
-          "overUnder": 54.5,
+          "overUnder": 53.5,
           "overUnderOpen": null,
-          "homeMoneyline": -290,
-          "awayMoneyline": 235
+          "homeMoneyline": -278,
+          "awayMoneyline": 225
         },
         {
           "provider": "Bovada",
           "spread": -7,
           "formattedSpread": "UConn -7.0",
           "spreadOpen": -8.5,
-          "overUnder": 54.5,
+          "overUnder": 53.5,
           "overUnderOpen": 54.5,
           "homeMoneyline": -320,
           "awayMoneyline": 260
@@ -26325,10 +26325,10 @@
           "spread": -7.5,
           "formattedSpread": "UConn -7.5",
           "spreadOpen": -7.5,
-          "overUnder": 54.5,
+          "overUnder": 53.5,
           "overUnderOpen": 54.5,
-          "homeMoneyline": -290,
-          "awayMoneyline": 240
+          "homeMoneyline": -275,
+          "awayMoneyline": 225
         }
       ]
     },
@@ -26356,15 +26356,15 @@
           "spreadOpen": 4.5,
           "overUnder": 49.5,
           "overUnderOpen": null,
-          "homeMoneyline": 142,
-          "awayMoneyline": -170
+          "homeMoneyline": 145,
+          "awayMoneyline": -175
         },
         {
           "provider": "Bovada",
           "spread": 3.5,
           "formattedSpread": "UNLV -3.5",
           "spreadOpen": 6,
-          "overUnder": 50,
+          "overUnder": 49.5,
           "overUnderOpen": 53,
           "homeMoneyline": 190,
           "awayMoneyline": -230
@@ -26374,10 +26374,10 @@
           "spread": 3.5,
           "formattedSpread": "UNLV -3.5",
           "spreadOpen": 5.5,
-          "overUnder": 49.5,
+          "overUnder": 50.5,
           "overUnderOpen": 52.5,
-          "homeMoneyline": 150,
-          "awayMoneyline": -175
+          "homeMoneyline": 155,
+          "awayMoneyline": -185
         }
       ]
     },
@@ -26405,8 +26405,8 @@
           "spreadOpen": 8.5,
           "overUnder": 64.5,
           "overUnderOpen": null,
-          "homeMoneyline": 390,
-          "awayMoneyline": -520
+          "homeMoneyline": 370,
+          "awayMoneyline": -485
         },
         {
           "provider": "Bovada",
@@ -26454,15 +26454,15 @@
           "spreadOpen": -15.5,
           "overUnder": 45.5,
           "overUnderOpen": null,
-          "homeMoneyline": -535,
-          "awayMoneyline": 400
+          "homeMoneyline": -520,
+          "awayMoneyline": 390
         },
         {
           "provider": "Bovada",
-          "spread": -14,
-          "formattedSpread": "Fresno State -14.0",
+          "spread": -13.5,
+          "formattedSpread": "Fresno State -13.5",
           "spreadOpen": -12.5,
-          "overUnder": 45,
+          "overUnder": 45.5,
           "overUnderOpen": 44,
           "homeMoneyline": -500,
           "awayMoneyline": 360
@@ -26472,10 +26472,10 @@
           "spread": -13.5,
           "formattedSpread": "Fresno State -13.5",
           "spreadOpen": -13.5,
-          "overUnder": 44.5,
+          "overUnder": 46.5,
           "overUnderOpen": 44.5,
-          "homeMoneyline": -650,
-          "awayMoneyline": 425
+          "homeMoneyline": -600,
+          "awayMoneyline": 400
         }
       ]
     },
@@ -26501,7 +26501,7 @@
           "spread": 6.5,
           "formattedSpread": "UTSA -6.5",
           "spreadOpen": 6.5,
-          "overUnder": 57.5,
+          "overUnder": 58.5,
           "overUnderOpen": null,
           "homeMoneyline": 200,
           "awayMoneyline": -245
@@ -26523,8 +26523,8 @@
           "spreadOpen": 6.5,
           "overUnder": 58.5,
           "overUnderOpen": 58.5,
-          "homeMoneyline": 195,
-          "awayMoneyline": -230
+          "homeMoneyline": 200,
+          "awayMoneyline": -240
         }
       ]
     },
@@ -26547,18 +26547,18 @@
       "lines": [
         {
           "provider": "DraftKings",
-          "spread": 4,
-          "formattedSpread": "Kansas -4",
+          "spread": 4.5,
+          "formattedSpread": "Kansas -4.5",
           "spreadOpen": 3,
           "overUnder": 54.5,
           "overUnderOpen": null,
-          "homeMoneyline": 160,
-          "awayMoneyline": -192
+          "homeMoneyline": 180,
+          "awayMoneyline": -218
         },
         {
           "provider": "Bovada",
-          "spread": 4,
-          "formattedSpread": "Kansas -4.0",
+          "spread": 5,
+          "formattedSpread": "Kansas -5.0",
           "spreadOpen": 4,
           "overUnder": 54,
           "overUnderOpen": 55.5,
@@ -26567,13 +26567,13 @@
         },
         {
           "provider": "ESPN Bet",
-          "spread": 4.5,
-          "formattedSpread": "Kansas -4.5",
+          "spread": 5.5,
+          "formattedSpread": "Kansas -5.5",
           "spreadOpen": 3.5,
           "overUnder": 53.5,
           "overUnderOpen": 55.5,
-          "homeMoneyline": 165,
-          "awayMoneyline": -195
+          "homeMoneyline": 175,
+          "awayMoneyline": -210
         }
       ]
     },
@@ -28792,24 +28792,6 @@
       "lines": []
     },
     {
-      "id": 401756924,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 8,
-      "startDate": "2025-10-18T04:00:00.000Z",
-      "homeTeamId": 252,
-      "homeTeam": "BYU",
-      "homeConference": "Big 12",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 254,
-      "awayTeam": "Utah",
-      "awayConference": "Big 12",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401760404,
       "season": 2025,
       "seasonType": "regular",
@@ -28823,6 +28805,24 @@
       "awayTeamId": 167,
       "awayTeam": "New Mexico",
       "awayConference": "Mountain West",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401756924,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 8,
+      "startDate": "2025-10-18T04:00:00.000Z",
+      "homeTeamId": 252,
+      "homeTeam": "BYU",
+      "homeConference": "Big 12",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 254,
+      "awayTeam": "Utah",
+      "awayConference": "Big 12",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
@@ -32266,24 +32266,6 @@
       "lines": []
     },
     {
-      "id": 401754572,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 9,
-      "startDate": "2025-10-25T04:00:00.000Z",
-      "homeTeamId": 2390,
-      "homeTeam": "Miami",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 24,
-      "awayTeam": "Stanford",
-      "awayConference": "ACC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
       "id": 401762492,
       "season": 2025,
       "seasonType": "regular",
@@ -32297,6 +32279,24 @@
       "awayTeamId": 249,
       "awayTeam": "North Texas",
       "awayConference": "American Athletic",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": []
+    },
+    {
+      "id": 401754572,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 9,
+      "startDate": "2025-10-25T04:00:00.000Z",
+      "homeTeamId": 2390,
+      "homeTeam": "Miami",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 24,
+      "awayTeam": "Stanford",
+      "awayConference": "ACC",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
