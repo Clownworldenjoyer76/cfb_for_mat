@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Fill missing lat/lon/timezone/altitude_m in a stadiums CSV using CFBD Venues.
-# Plain ASCII, preserves existing non-null values, creates required helper columns before use.
+# Plain ASCII, preserves existing non-null values, creates helper columns before use.
 
 import argparse
 import os
@@ -28,7 +28,6 @@ def norm(s):
     s = str(s)
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii")
     s = s.lower()
-    s = s.replace("–", "-").replace("—", "-")
     s = re.sub(r"[^a-z0-9\s\-]", " ", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
@@ -100,6 +99,7 @@ def main():
         if c not in stad.columns:
             stad[c] = pd.NA
 
+    # Helper columns BEFORE any merge
     stad["venue_n"] = stad["venue"].map(norm)
     stad["city_n"] = stad["city"].map(norm)
     stad["state_n"] = stad["state"].map(norm)
@@ -109,7 +109,6 @@ def main():
 
     needs_mask = stad[["lat", "lon", "timezone", "altitude_m"]].isna().any(axis=1)
     if not needs_mask.any():
-        # Drop helper columns before exiting
         for helper in ["venue_n", "city_n", "state_n"]:
             if helper in stad.columns:
                 stad.drop(columns=[helper], inplace=True)
@@ -119,6 +118,7 @@ def main():
 
     needs = stad.loc[needs_mask].copy()
 
+    # 1) Exact normalized venue name join
     exact = needs.merge(
         cfbd,
         left_on="venue_n",
@@ -128,18 +128,24 @@ def main():
         indicator=True
     )
 
+    # 2) City+state join for those still missing latitude
     still_mask = exact["latitude"].isna()
     if still_mask.any():
-        to_loc = exact.loc[still_mask, ["team", "venue", "city", "state", "city_n", "state_n"]].copy()
+        # Build a frame with same row order as the still-missing slice
+        to_loc = exact.loc[still_mask, ["team", "city_n", "state_n"]].copy()
         by_loc = to_loc.merge(
             cfbd,
             on=["city_n", "state_n"],
             how="left",
             suffixes=("", "_loc"),
         )
+        # Align series by the exact.loc index to avoid ndarray TypeError
+        idx = exact.index[still_mask]
         for col in ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]:
-            exact.loc[still_mask, col] = exact.loc[still_mask, col].fillna(by_loc[col].values)
+            aligned_series = pd.Series(by_loc[col].values, index=idx)
+            exact.loc[still_mask, col] = exact.loc[still_mask, col].fillna(aligned_series)
 
+    # 3) Fuzzy fallback on venue name
     remain_idx = exact.index[exact["latitude"].isna()].tolist()
     for i in remain_idx:
         row = exact.loc[i]
@@ -150,6 +156,7 @@ def main():
                 if pd.isna(exact.at[i, col]):
                     exact.at[i, col] = v.get(col)
 
+    # Write fills back to main frame
     updated = stad.copy().set_index("team")
     exact = exact.set_index("team")
     common = updated.index.intersection(exact.index)
@@ -162,17 +169,18 @@ def main():
 
     updated = updated.reset_index(drop=False)
 
+    # Normalize numeric types
     for c in ["lat", "lon", "altitude_m"]:
         updated[c] = pd.to_numeric(updated[c], errors="coerce")
     if "is_neutral_site" in updated.columns:
         updated["is_neutral_site"] = pd.to_numeric(updated["is_neutral_site"], errors="coerce").fillna(0).astype(int)
 
+    # Drop helpers
     for helper in ["venue_n", "city_n", "state_n", "name_n"]:
         if helper in updated.columns:
             updated.drop(columns=[helper], inplace=True)
 
     updated.to_csv(args.stadiums, index=False)
-
     print("[fill] OK")
 
 if __name__ == "__main__":
