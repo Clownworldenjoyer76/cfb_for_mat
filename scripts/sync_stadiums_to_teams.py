@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-# Minimal stadiums sync (pure stdlib).
+# Minimal stadiums sync (pure standard library, ASCII-only).
 # - Reads data/reference/stadiums.csv
 # - Ensures required columns exist (adds if missing)
 # - Fills safe defaults
 # - De-duplicates by team (keeps first occurrence)
+# - Saves the CSV back
 # - Writes summaries/sync_stadiums_summary.txt
 
 import os
@@ -96,12 +97,15 @@ def main():
     if not os.path.exists(STADIUMS_PATH):
         print("[sync] ERROR: file not found: " + STADIUMS_PATH, file=sys.stderr)
         sys.exit(1)
+
     headers, rows = read_csv(STADIUMS_PATH)
     before = len(rows)
+
     headers, rows = ensure_columns(headers, rows)
     rows = dedupe_by_team_keep_first(rows)
     headers = reorder_headers(headers)
     write_csv(STADIUMS_PATH, headers, rows)
+
     after = len(rows)
     write_summary(before, after, rows)
     print("[sync] OK (rows before: " + str(before) + ", after: " + str(after) + ")")
