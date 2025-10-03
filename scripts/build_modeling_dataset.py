@@ -13,7 +13,7 @@ Outputs:
 
 import os, sys, math, traceback
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from zoneinfo import ZoneInfo
 
 # ---------- Config (env-overridable) ----------
@@ -87,6 +87,45 @@ def ensure_cols(df, cols):
             df[c] = pd.NA
     return df
 
+# ---------- NEW: synthesize date/kickoff if missing ----------
+def _first_september_saturday(year: int) -> date:
+    d = date(int(year), 9, 1)
+    # Monday=0 ... Sunday=6; Saturday=5
+    offset = (5 - d.weekday()) % 7
+    return d + timedelta(days=offset)
+
+def synthesize_kickoff_if_missing(scores: pd.DataFrame) -> pd.DataFrame:
+    """Create 'date' and 'kickoff_datetime' if none of the datetime-like columns exist or are entirely null."""
+    cols = [c.lower() for c in scores.columns]
+    has_any_time_col = any(c in cols for c in ["kickoff_datetime","date","game_date","datetime","start_time"])
+    # Also treat the case where columns exist but are all NaN/empty
+    if has_any_time_col:
+        dt_series = parse_kickoff(scores)
+        if dt_series.notna().any():
+            return scores  # usable datetime already present
+    # Need season/week to synthesize
+    if "season" in cols and "week" in cols:
+        # Work with lower-case aliases safely
+        season_col = [c for c in scores.columns if c.lower() == "season"][0]
+        week_col = [c for c in scores.columns if c.lower() == "week"][0]
+        dates_only = []
+        kickoffs = []
+        for yr, wk in zip(scores[season_col].astype(int), scores[week_col].astype(int)):
+            base = _first_september_saturday(int(yr))
+            gdate = base + timedelta(days=7*(int(wk)-1))
+            dates_only.append(gdate.isoformat())
+            # Use a consistent placeholder time (18:00:00Z) if true kickoff time not available
+            kickoffs.append(f"{gdate.isoformat()}T18:00:00Z")
+        # Only append if not already present
+        if "date" not in cols:
+            scores["date"] = dates_only
+        if "kickoff_datetime" not in cols:
+            scores["kickoff_datetime"] = kickoffs
+        log("INFO: Synthesized 'date' and 'kickoff_datetime' from season/week.")
+    else:
+        log("WARNING: Cannot synthesize datetime — 'season' and 'week' not found.")
+    return scores
+
 # ---------- Load ----------
 def load_scores():
     for p in SCORES_PATHS:
@@ -143,6 +182,8 @@ def build():
     if "opponent" in scores.columns:
         scores["__opponent_key"] = scores["opponent"].astype(str).map(k)
 
+    # NEW: synthesize date/kickoff if missing, then parse kickoff
+    scores = synthesize_kickoff_if_missing(scores)
     scores["__kickoff_utc"] = parse_kickoff(scores)
     if scores["__kickoff_utc"].isna().all():
         log("WARNING: No valid kickoff datetime; rest/travel will be null.")
