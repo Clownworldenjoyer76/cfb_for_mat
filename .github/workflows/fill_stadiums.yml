@@ -1,3 +1,4 @@
+# .github/workflows/fill_stadiums.yml
 name: Fill Stadiums Metadata
 
 on:
@@ -6,6 +7,9 @@ on:
     paths:
       - "scripts/fill_stadiums_from_cfbd.py"
       - "data/reference/stadiums.csv"
+
+permissions:
+  contents: write
 
 jobs:
   fill:
@@ -31,7 +35,7 @@ jobs:
       - name: Generate diagnostic summary
         run: |
           python - << 'PY'
-          import pandas as pd, os, datetime as dt
+          import os, pandas as pd, datetime as dt
           path = "data/reference/stadiums.csv"
           out_dir = "summaries"
           os.makedirs(out_dir, exist_ok=True)
@@ -39,30 +43,32 @@ jobs:
 
           df = pd.read_csv(path)
           total = len(df)
-          for c in ["team","venue","city","state","country","lat","lon","timezone","altitude_m","is_neutral_site","notes"]:
+          cols_req = ["team","venue","city","state","country","lat","lon","timezone","altitude_m","is_neutral_site","notes"]
+          for c in cols_req:
               if c not in df.columns:
                   df[c] = pd.NA
 
-          miss_after = df[["lat","lon","timezone","altitude_m"]].isna().sum().to_dict()
-          remaining = df[df[["lat","lon","timezone","altitude_m"]].isna().any(axis=1)][["team","venue","city","state","lat","lon","timezone","altitude_m"]].sort_values("team")
+          miss = df[["lat","lon","timezone","altitude_m"]].isna().sum().to_dict()
+          remaining = df[df[["lat","lon","timezone","altitude_m"]].isna().any(axis=1)][["team","venue","city","state","lat","lon","timezone","altitude_m"]]
 
           lines = []
-          lines.append(f"[{stamp}] Fill Diagnostics")
-          lines.append(f"File: {path}")
-          lines.append(f"Total rows: {total}")
+          lines.append("[" + stamp + "] Fill Diagnostics")
+          lines.append("File: " + path)
+          lines.append("Total rows: " + str(total))
           lines.append("")
           lines.append("Missing after fill:")
           for k in ["lat","lon","timezone","altitude_m"]:
-              lines.append(f"  {k}: {miss_after.get(k,0)} ({(100*miss_after.get(k,0,0)/total):.1f}% if total else 0)")
+              lines.append("  " + k + ": " + str(miss.get(k,0)))
           lines.append("")
-          lines.append("Remaining rows with any missing fields (up to 200 shown):")
+          lines.append("Rows still missing (up to 200):")
           if remaining.empty:
               lines.append("  None")
           else:
-              lines.append(remaining.head(200).to_string(index=False))
+              # Avoid pandas to_string kwargs for broad version compatibility
+              lines.append(str(remaining.head(200)))
 
-          with open(f"{out_dir}/fill_stadiums_summary.txt","w") as f:
-              f.write("\n".join(lines))
+          with open(os.path.join(out_dir, "fill_stadiums_summary.txt"), "w", encoding="utf-8") as f:
+              f.write("\n".join(lines) + "\n")
           PY
 
       - name: Commit changes (if any)
