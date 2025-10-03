@@ -1,23 +1,21 @@
 #!/usr/bin/env python3
 """
 Sync data/reference/stadiums.csv so that:
-- Required columns exist.
-- There is one row per team.
+- Required columns exist (created if missing).
+- One row per team (dedup by team, keeping first seen values).
 - Existing non-null values are preserved.
-- --teams and --schedules are optional. If neither is provided, the team list
-  is inferred from the stadiums file itself.
+- Optional --teams or --schedules can add teams; if neither is provided,
+  the script infers the list from the stadiums file itself.
 
 Usage:
   python scripts/sync_stadiums_to_teams.py --stadiums data/reference/stadiums.csv
-  (optional) --teams data/reference/teams.csv
-  (optional) --schedules data/games.csv
+  optional: --teams data/reference/teams.csv
+  optional: --schedules data/games.csv
 """
-from __future__ import annotations
 
 import argparse
 import sys
 from pathlib import Path
-from typing import Iterable, List
 
 import pandas as pd
 
@@ -33,33 +31,28 @@ DEFAULTS = {
 }
 
 
-def canonicalize_team_series(series: pd.Series) -> pd.Series:
-    s = (
-        series.dropna()
-        .astype(str)
-        .str.strip()
-        .replace("", pd.NA)
-        .dropna()
-    )
-    # sort case-insensitively but stably
+def canonicalize_team_series(series):
+    s = series.dropna().astype(str).str.strip()
+    s = s.replace("", pd.NA).dropna()
+    # stable, case-insensitive sort
     return s.drop_duplicates().sort_values(key=lambda x: x.str.lower())
 
 
-def find_team_column(df: pd.DataFrame) -> str | None:
+def find_team_column(df):
     for c in ["team", "Team", "school", "School", "name", "Name"]:
         if c in df.columns:
             return c
     return None
 
 
-def read_team_list(teams_csv: Path | None, schedules_csv: Path | None, stad_df: pd.DataFrame) -> pd.Series:
+def read_team_list(teams_csv, schedules_csv, stad_df):
     if teams_csv:
         df = pd.read_csv(teams_csv)
         col = find_team_column(df)
         if not col:
             raise SystemExit(
-                f"[sync] Could not find a team column in {teams_csv}. "
-                "Expected one of: team, Team, school, School, name, Name"
+                "[sync] Could not find a team column in %s. Expected one of: team, Team, school, School, name, Name"
+                % teams_csv
             )
         return canonicalize_team_series(df[col])
 
@@ -68,8 +61,8 @@ def read_team_list(teams_csv: Path | None, schedules_csv: Path | None, stad_df: 
         cols = [c for c in ["team", "home_team", "away_team", "Home Team", "Away Team", "Home", "Away"] if c in df.columns]
         if not cols:
             raise SystemExit(
-                f"[sync] Could not find team columns in {schedules_csv}. "
-                "Looked for: team, home_team, away_team, Home Team, Away Team, Home, Away"
+                "[sync] Could not find team columns in %s. Looked for: team, home_team, away_team, Home Team, Away Team, Home, Away"
+                % schedules_csv
             )
         teams = pd.concat([df[c] for c in cols], ignore_index=True)
         return canonicalize_team_series(teams)
@@ -81,7 +74,7 @@ def read_team_list(teams_csv: Path | None, schedules_csv: Path | None, stad_df: 
     return canonicalize_team_series(stad_df["team"])
 
 
-def ensure_columns(df: pd.DataFrame) -> pd.DataFrame:
+def ensure_columns(df):
     out = df.copy()
     for c in REQUIRED_COLS:
         if c not in out.columns:
@@ -94,13 +87,13 @@ def ensure_columns(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def add_missing_rows(df: pd.DataFrame, desired_teams: Iterable[str]) -> tuple[pd.DataFrame, List[str]]:
+def add_missing_rows(df, desired_teams):
     have = df["team"].astype(str).str.strip().fillna("")
     missing = sorted(set(desired_teams) - set(have))
     if not missing:
         return df, []
 
-    new_rows: List[dict] = []
+    new_rows = []
     for t in missing:
         row = {c: pd.NA for c in df.columns}
         row.update(DEFAULTS)
@@ -111,7 +104,7 @@ def add_missing_rows(df: pd.DataFrame, desired_teams: Iterable[str]) -> tuple[pd
     return out, missing
 
 
-def normalize_types(df: pd.DataFrame) -> pd.DataFrame:
+def normalize_types(df):
     out = df.copy()
     for num in ["lat", "lon", "altitude_m"]:
         if num in out.columns:
@@ -121,16 +114,17 @@ def normalize_types(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def dedupe_by_team_preserve_first(df: pd.DataFrame) -> pd.DataFrame:
+def dedupe_by_team_preserve_first(df):
     out = df.copy()
-    out["__team_sort__"] = out["team"].astype(str).str.lower()
-    out.sort_values(by="__team_sort__", kind="mergesort", inplace=True)
-    out.drop(columns="__team_sort__", inplace=True)
+    # stable sort by lowercase team to make groupby-first deterministic
+    out["_team_sort"] = out["team"].astype(str).str.lower()
+    out.sort_values(by="_team_sort", kind="mergesort", inplace=True)
+    out.drop(columns="_team_sort", inplace=True)
     out = out.groupby("team", as_index=False).first()
     return out
 
 
-def main() -> int:
+def main():
     p = argparse.ArgumentParser()
     p.add_argument("--stadiums", type=Path, required=True, help="Path to data/reference/stadiums.csv")
     p.add_argument("--teams", type=Path, help="CSV with a team-like column")
@@ -139,7 +133,7 @@ def main() -> int:
 
     stad_path = args.stadiums
     if not stad_path.exists():
-        raise SystemExit(f"[sync] Stadiums file not found: {stad_path}")
+        raise SystemExit("[sync] Stadiums file not found: %s" % stad_path)
 
     stad = pd.read_csv(stad_path)
     stad = ensure_columns(stad)
@@ -155,14 +149,14 @@ def main() -> int:
     stad_path.parent.mkdir(parents=True, exist_ok=True)
     stad.to_csv(stad_path, index=False)
 
-    print(f"[sync] Stadiums synced: {stad_path}")
-    print(f"[sync] Rows before: {before_rows}, after: {len(stad)}")
-    print(f"[sync] New teams added: {len(added)}")
+    print("[sync] Stadiums synced: %s" % stad_path)
+    print("[sync] Rows before: %d, after: %d" % (before_rows, len(stad)))
+    print("[sync] New teams added: %d" % len(added))
     if added:
         preview = ", ".join(list(added)[:50])
         if len(added) > 50:
             preview += " (more omitted)"
-        print(f"[sync] Added: {preview}")
+        print("[sync] Added: %s" % preview)
     return 0
 
 
@@ -172,5 +166,5 @@ if __name__ == "__main__":
     except SystemExit:
         raise
     except Exception as e:
-        print(f"[sync] ERROR: {e}", file=sys.stderr)
+        print("[sync] ERROR: %s" % e)
         raise
