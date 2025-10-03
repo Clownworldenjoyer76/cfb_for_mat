@@ -1,0 +1,25 @@
+[2025-10-03T22:50:28.212553Z] Fill Diagnostics
+File: data/reference/stadiums.csv
+Total rows: 731
+
+Missing after fill:
+  lat: 606
+  lon: 606
+  timezone: 606
+  altitude_m: 606
+
+Rows still missing (up to 200):
+                            team venue city  ... lon  timezone  altitude_m
+0              Abilene Christian   NaN  NaN  ... NaN       NaN         NaN
+4                  Anderson (Sc)   NaN  NaN  ... NaN       NaN         NaN
+5                      App State   NaN  NaN  ... NaN       NaN         NaN
+13                Augustana (IL)   NaN  NaN  ... NaN       NaN         NaN
+14     Augustana University (SD)   NaN  NaN  ... NaN       NaN         NaN
+..                           ...   ...  ...  ...  ..       ...         ...
+320                      findlay   NaN  NaN  ... NaN       NaN         NaN
+321              fitchburg state   NaN  NaN  ... NaN       NaN         NaN
+322                florida aandm   NaN  NaN  ... NaN       NaN         NaN
+323  florida memorial university   NaN  NaN  ... NaN       NaN         NaN
+324                      fordham   NaN  NaN  ... NaN       NaN         NaN
+
+[200 rows x 8 columns]
