@@ -1,19 +1,11 @@
-snapshot_utc=2025-10-01T16:49:26Z
-season_min=2019
-season_max=2025
-rows_base_start=7302
-rows_after_weather=7302
-rows_after_team_stats=7302
-rows_after_efficiency=7302
-rows_after_special=7302
-rows_after_injuries=7302
-rows_final=7302
-scores_csv=data/game_scores_clean.csv
-points_merge_missing_rows=4586
-pct_missing_game_id=0.0
-pct_missing_season=0.0
-pct_missing_week=0.0
-pct_missing_team=0.0
-pct_missing_opponent=0.0
-pct_missing_is_home=0.0
-pct_missing_points_scored=0.628047
+[2025-10-03 09:00:50-0400] Loaded scores: data/game_scores_clean.csv (2742 rows)
+[2025-10-03 09:00:50-0400] INFO: Synthesized 'date' and 'kickoff_datetime' from season/week.
+[2025-10-03 09:00:50-0400] Rows: 2742
+[2025-10-03 09:00:50-0400] Home/Away/Neutral counts: H=1572 A=1170 N=0
+[2025-10-03 09:00:50-0400] rest_days: mean=7.54 median=7.00 nonnull=2020
+[2025-10-03 09:00:50-0400] travel_km: mean=752.09 median=364.59 nonnull=369
+[2025-10-03 09:00:50-0400] tz_diff_from_home: mean=-0.00 median=0.00 nonnull=479
+[2025-10-03 09:00:50-0400] body_clock_kickoff_hour: mean=13.20 median=13.00 nonnull=496
+[2025-10-03 09:00:50-0400] Missing venue coords (applicable): 2145 rows (78.2%)
+[2025-10-03 09:00:50-0400] One-hot OK rows: 2742/2742
+[2025-10-03 09:00:50-0400] Build complete.
