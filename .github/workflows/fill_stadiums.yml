@@ -2,11 +2,6 @@ name: Fill Stadiums Metadata
 
 on:
   workflow_dispatch:
-    inputs:
-      min_fuzzy:
-        description: "Min fuzzy match score (0-100)"
-        required: false
-        default: "90"
   push:
     paths:
       - "scripts/fill_stadiums_from_cfbd.py"
@@ -31,10 +26,8 @@ jobs:
 
       - name: Fill missing lat/lon/tz/altitude
         run: |
-          set -euo pipefail
           python scripts/fill_stadiums_from_cfbd.py \
-            --stadiums data/reference/stadiums.csv \
-            --min-fuzzy "${{ github.event.inputs.min_fuzzy || 90 }}"
+            --stadiums data/reference/stadiums.csv
 
       - name: Commit changes (if any)
         run: |
