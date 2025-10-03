@@ -1,0 +1,42 @@
+name: Fill Stadiums Metadata
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write    # required to push updates
+
+jobs:
+  fill-stadiums:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas requests
+
+      - name: Run stadium filler
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          python scripts/fill_stadiums_from_cfbd.py
+
+      - name: Commit and push updated stadiums.csv
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git add data/reference/stadiums.csv
+          git commit -m "Auto-update stadiums.csv from CFBD API [skip ci]" || echo "No changes to commit"
+          git push
