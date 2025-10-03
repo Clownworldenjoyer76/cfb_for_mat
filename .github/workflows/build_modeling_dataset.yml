@@ -3,6 +3,9 @@ name: Build Modeling Dataset (Situational)
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write   # <-- this gives the workflow permission to push commits
+
 jobs:
   build:
     runs-on: ubuntu-latest
