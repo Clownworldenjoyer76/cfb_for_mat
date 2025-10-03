@@ -26,13 +26,49 @@ jobs:
 
       - name: Fill missing lat/lon/tz/altitude
         run: |
-          python scripts/fill_stadiums_from_cfbd.py \
-            --stadiums data/reference/stadiums.csv
+          python scripts/fill_stadiums_from_cfbd.py --stadiums data/reference/stadiums.csv
+
+      - name: Generate diagnostic summary
+        run: |
+          python - << 'PY'
+          import pandas as pd, os, datetime as dt
+          path = "data/reference/stadiums.csv"
+          out_dir = "summaries"
+          os.makedirs(out_dir, exist_ok=True)
+          stamp = dt.datetime.utcnow().isoformat() + "Z"
+
+          df = pd.read_csv(path)
+          total = len(df)
+          for c in ["team","venue","city","state","country","lat","lon","timezone","altitude_m","is_neutral_site","notes"]:
+              if c not in df.columns:
+                  df[c] = pd.NA
+
+          miss_after = df[["lat","lon","timezone","altitude_m"]].isna().sum().to_dict()
+          remaining = df[df[["lat","lon","timezone","altitude_m"]].isna().any(axis=1)][["team","venue","city","state","lat","lon","timezone","altitude_m"]].sort_values("team")
+
+          lines = []
+          lines.append(f"[{stamp}] Fill Diagnostics")
+          lines.append(f"File: {path}")
+          lines.append(f"Total rows: {total}")
+          lines.append("")
+          lines.append("Missing after fill:")
+          for k in ["lat","lon","timezone","altitude_m"]:
+              lines.append(f"  {k}: {miss_after.get(k,0)} ({(100*miss_after.get(k,0,0)/total):.1f}% if total else 0)")
+          lines.append("")
+          lines.append("Remaining rows with any missing fields (up to 200 shown):")
+          if remaining.empty:
+              lines.append("  None")
+          else:
+              lines.append(remaining.head(200).to_string(index=False))
+
+          with open(f"{out_dir}/fill_stadiums_summary.txt","w") as f:
+              f.write("\n".join(lines))
+          PY
 
       - name: Commit changes (if any)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/reference/stadiums.csv
-          git diff --staged --quiet || git commit -m "chore(stadiums): fill metadata from CFBD [skip ci]" || echo "No changes to commit"
+          git add data/reference/stadiums.csv summaries/fill_stadiums_summary.txt
+          git diff --staged --quiet || git commit -m "chore(stadiums): fill + diagnostics [skip ci]" || echo "No changes to commit"
           git push
