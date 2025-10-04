@@ -2,7 +2,8 @@
 # Fill missing lat/lon/timezone/altitude_m in a stadiums CSV using CFBD Venues.
 # Plain ASCII. Creates helper columns before merges. Collapses multi-matches to
 # single rows so fills are always scalars. City+state join is deduped (1:1).
-# Also applies manual overrides and runs timezone fallback at the very end.
+# Applies manual overrides, removes placeholder/duplicate coordinates, and runs
+# timezone fallback at the very end.
 
 import argparse
 import os
@@ -29,6 +30,11 @@ VENUE_STOPWORDS = [
     "stadium", "field", "memorial", "arena", "coliseum",
     "the", "of", "and"
 ]
+
+# Known bad placeholder coordinate(s)
+BAD_COORDS = {(39.474686, -87.366960)}
+# Frequency threshold to treat a lat/lon pair as suspicious and blank it
+DUP_COORD_THRESHOLD = 25
 
 def norm(s):
     if s is None or (isinstance(s, float) and math.isnan(s)):
@@ -84,7 +90,7 @@ def fill_missing_fields(row, src):
         row[k_row] = val
     maybe_set("lat", "latitude", float)
     maybe_set("lon", "longitude", float)
-    maybe_set("timezone", "timezone", str)
+    maybe_set("timezone", "timezone", None)
     maybe_set("altitude_m", "elevation", feet_to_meters)
     maybe_set("city", "city", str)
     maybe_set("state", "state", str)
@@ -110,6 +116,8 @@ def backfill_timezone_from_latlon(df):
     for i in df.index[mask]:
         try:
             tz = tf.timezone_at(lng=float(df.at[i, "lon"]), lat=float(df.at[i, "lat"]))
+            if tz is None:
+                tz = tf.closest_timezone_at(lng=float(df.at[i, "lon"]), lat=float(df.at[i, "lat"]))
             if tz:
                 df.at[i, "timezone"] = tz
         except Exception:
@@ -123,8 +131,7 @@ def first_notna(series):
     return pd.NA
 
 def apply_manual_overrides(df):
-    # Set altitude for Western Kentucky / Houchens–Smith Stadium / Cape Girardeau, MO to 371 feet.
-    # 371 ft -> meters
+    # Western Kentucky / Houchens–Smith Stadium / Cape Girardeau, MO -> 371 ft
     target_m = feet_to_meters(371)
     mask = (
         df["team"].astype(str).str.strip().str.lower().eq("western kentucky") &
@@ -134,6 +141,30 @@ def apply_manual_overrides(df):
     )
     if mask.any():
         df.loc[mask, "altitude_m"] = target_m
+    return df
+
+def blank_placeholder_and_dupe_coords(df):
+    # Ensure numeric
+    df["lat"] = pd.to_numeric(df["lat"], errors="coerce")
+    df["lon"] = pd.to_numeric(df["lon"], errors="coerce")
+
+    # Blank known bad coordinates
+    if BAD_COORDS:
+        bad_mask = False
+        for (blat, blon) in BAD_COORDS:
+            bad_mask = bad_mask | ((df["lat"] == blat) & (df["lon"] == blon))
+        df.loc[bad_mask, ["lat", "lon"]] = pd.NA
+
+    # Blank overly-common duplicate coordinates
+    grp = df.groupby(["lat", "lon"], dropna=True).size().reset_index(name="n")
+    if not grp.empty:
+        too_common = grp[grp["n"] > DUP_COORD_THRESHOLD][["lat", "lon"]]
+        if not too_common.empty:
+            m = df.merge(too_common, on=["lat", "lon"], how="left", indicator=False)
+            hit = m["n"].notna()
+            idx = m.index[hit]
+            df.loc[idx, ["lat", "lon"]] = pd.NA
+
     return df
 
 def main():
@@ -152,6 +183,9 @@ def main():
         if c not in stad.columns:
             stad[c] = pd.NA
 
+    # PRE-CLEAN: remove placeholder and overly-common coords before any fill
+    stad = blank_placeholder_and_dupe_coords(stad)
+
     # Helper columns BEFORE any merge
     stad["venue_n"] = stad["venue"].map(norm)
     stad["city_n"] = stad["city"].map(norm)
@@ -164,15 +198,16 @@ def main():
     needs = stad.loc[needs_mask].copy()
 
     if needs.empty:
-        # Manual overrides even if nothing else to fill
+        # Manual overrides
         stad = apply_manual_overrides(stad)
-        # Final timezone fallback at the very end
+        # POST-CLEAN (paranoid) and timezone fallback at the very end
+        stad = blank_placeholder_and_dupe_coords(stad)
         stad = backfill_timezone_from_latlon(stad)
         for helper in ["venue_n", "city_n", "state_n"]:
             if helper in stad.columns:
                 stad.drop(columns=[helper], inplace=True)
         stad.to_csv(args.stadiums, index=False)
-        print("[fill] Nothing to fill; applied overrides and tz fallback.")
+        print("[fill] Nothing to fill; applied overrides, cleaned coords, and tz fallback.")
         return
 
     # 1) Exact normalized venue name join
@@ -235,10 +270,13 @@ def main():
     if "is_neutral_site" in updated.columns:
         updated["is_neutral_site"] = pd.to_numeric(updated["is_neutral_site"], errors="coerce").fillna(0).astype(int)
 
-    # Manual overrides (Western Kentucky altitude)
+    # Manual overrides
     updated = apply_manual_overrides(updated)
 
-    # Final timezone fallback at the VERY END (after all fills and overrides)
+    # POST-CLEAN AGAIN: remove placeholder and overly-common coords before tz fallback
+    updated = blank_placeholder_and_dupe_coords(updated)
+
+    # Final timezone fallback at the VERY END (after all fills/overrides/cleans)
     updated = backfill_timezone_from_latlon(updated)
 
     # Drop helper columns and save
