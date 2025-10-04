@@ -1,0 +1,68 @@
+# .github/workflows/backfill_timezones.yml
+name: Backfill Timezones from LatLon
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/backfill_timezones_from_latlon.py"
+      - "data/reference/stadiums.csv"
+
+permissions:
+  contents: write
+
+jobs:
+  backfill_tz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas timezonefinder
+
+      - name: Run timezone backfill
+        run: |
+          python scripts/backfill_timezones_from_latlon.py --stadiums data/reference/stadiums.csv
+
+      - name: Generate diagnostic summary
+        run: |
+          python - << 'PY'
+          import pandas as pd, os, datetime as dt
+          path = "data/reference/stadiums.csv"
+          out_dir = "summaries"
+          os.makedirs(out_dir, exist_ok=True)
+          stamp = dt.datetime.utcnow().isoformat() + "Z"
+
+          df = pd.read_csv(path)
+          total = len(df)
+          missing = df["timezone"].isna().sum() + sum(str(x).strip().lower() == "none" for x in df["timezone"].fillna(""))
+
+          lines = []
+          lines.append("[" + stamp + "] Timezone Backfill Summary")
+          lines.append("File: " + path)
+          lines.append("Total rows: " + str(total))
+          lines.append("Missing timezones after backfill: " + str(missing))
+
+          if missing > 0:
+              lines.append("")
+              lines.append("Rows still missing (up to 50):")
+              subset = df[df["timezone"].isna() | (df["timezone"].astype(str).str.strip().str.lower() == "none")]
+              lines.append(str(subset.head(50)[["team","venue","city","state","lat","lon","timezone"]]))
+
+          with open(os.path.join(out_dir, "backfill_timezones_summary.txt"), "w", encoding="utf-8") as f:
+              f.write("\n".join(lines) + "\n")
+          PY
+
+      - name: Commit changes (if any)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/reference/stadiums.csv summaries/backfill_timezones_summary.txt
+          git diff --staged --quiet || git commit -m "chore(stadiums): backfill timezones [skip ci]" || echo "No changes to commit"
+          git push
