@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Fill missing lat/lon/timezone/altitude_m in a stadiums CSV using CFBD Venues.
-# Plain ASCII. Creates helper columns before merges. Collapses multiple matches
-# per team to a single row so fills are always scalars (no dict/Series).
+# Plain ASCII. Creates helper columns before merges. Collapses multi-matches to
+# single rows so fills are always scalars. City+state join is deduped (1:1).
 
 import argparse
 import os
@@ -73,7 +73,6 @@ def fill_missing_fields(row, src):
         if not is_blank:
             return
         val = src.get(k_src, None)
-        # Ensure we only ever use scalar values
         if isinstance(val, (dict, list, tuple, pd.Series)):
             return
         if transform:
@@ -150,8 +149,9 @@ def main():
     needs = stad.loc[needs_mask].copy()
 
     if needs.empty:
-        # clean and save
-        stad.drop(columns=[c for c in ["venue_n", "city_n", "state_n"] if c in stad.columns], inplace=True)
+        for helper in ["venue_n", "city_n", "state_n"]:
+            if helper in stad.columns:
+                stad.drop(columns=[helper], inplace=True)
         stad.to_csv(args.stadiums, index=False)
         print("[fill] Nothing to fill; all rows complete.")
         return
@@ -166,21 +166,24 @@ def main():
         indicator=True
     )
 
-    # 2) City+state join for those still missing latitude
+    # 2) City+state join (dedup CFBD to 1 row per location to guarantee 1:1)
     still_mask = exact["latitude"].isna()
     if still_mask.any():
-        to_loc = exact.loc[still_mask, ["team", "city_n", "state_n"]].copy()
-        by_loc = to_loc.merge(
-            cfbd,
+        cols_cs = ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]
+        agg_map = {c: first_notna for c in cols_cs}
+        cfbd_loc = cfbd.groupby(["city_n", "state_n"], as_index=False).agg(agg_map)
+
+        missing = exact.loc[still_mask].copy()
+        missing["__idx__"] = missing.index
+        by_loc = missing.merge(
+            cfbd_loc,
             on=["city_n", "state_n"],
             how="left",
-            suffixes=("", "_loc"),
-        )
-        # align by index to avoid ndarray issues
-        idx = exact.index[still_mask]
-        for col in ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]:
-            aligned = pd.Series(by_loc[col].values, index=idx)
-            exact.loc[still_mask, col] = exact.loc[still_mask, col].fillna(aligned)
+            suffixes=("", "_loc")
+        ).set_index("__idx__")
+
+        for col in cols_cs:
+            exact.loc[by_loc.index, col] = exact.loc[by_loc.index, col].fillna(by_loc[col])
 
     # 3) Fuzzy fallback on venue name
     remain_idx = exact.index[exact["latitude"].isna()].tolist()
@@ -193,7 +196,7 @@ def main():
                 if pd.isna(exact.at[i, col]):
                     exact.at[i, col] = v.get(col)
 
-    # COLLAPSE exact matches to a single row per team with first non-null per column
+    # Collapse to a single row per team (first non-null per column)
     cols_from_cfbd = ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]
     best = exact.groupby("team", as_index=True).agg({c: first_notna for c in cols_from_cfbd})
 
