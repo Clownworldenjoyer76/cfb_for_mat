@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Fill missing lat/lon/timezone/altitude_m in a stadiums CSV using CFBD Venues.
-# Adds a fallback to derive timezone from lat/lon when CFBD lacks it.
+# Plain ASCII. Creates helper columns before merges. Collapses multiple matches
+# per team to a single row so fills are always scalars (no dict/Series).
 
 import argparse
 import os
@@ -13,7 +14,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 from rapidfuzz import fuzz, process
-from timezonefinder import TimezoneFinder  # new: fallback tz from lat/lon
+from timezonefinder import TimezoneFinder
 
 VENUES_URL = "https://api.collegefootballdata.com/venues"
 
@@ -23,9 +24,8 @@ REQ_COLS = [
     "is_neutral_site", "notes",
 ]
 
-# words to strip from venue names to improve matching
 VENUE_STOPWORDS = [
-    "stadium", "field", "memorial", "arena", "coliseum", "stadium at",
+    "stadium", "field", "memorial", "arena", "coliseum",
     "the", "of", "and"
 ]
 
@@ -37,20 +37,21 @@ def norm(s):
     s = s.lower()
     s = re.sub(r"[^a-z0-9\s\-]", " ", s)
     s = re.sub(r"\s+", " ", s).strip()
-    # remove common venue stopwords at word boundaries
     for w in VENUE_STOPWORDS:
-        s = re.sub(rf"\b{re.escape(w)}\b", " ", s)
+        s = re.sub(r"\b" + re.escape(w) + r"\b", " ", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
 
 def feet_to_meters(x):
     try:
+        if x is None or (isinstance(x, float) and math.isnan(x)):
+            return None
         return round(float(x) * 0.3048, 1)
     except Exception:
         return None
 
 def pull_cfbd(api_key):
-    headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
+    headers = {"Authorization": "Bearer " + api_key} if api_key else {}
     r = requests.get(VENUES_URL, headers=headers, timeout=60)
     r.raise_for_status()
     js = r.json()
@@ -69,11 +70,18 @@ def fill_missing_fields(row, src):
     def maybe_set(k_row, k_src, transform=None):
         cur = row.get(k_row, pd.NA)
         is_blank = pd.isna(cur) or (isinstance(cur, str) and cur.strip() == "")
-        if is_blank:
-            val = src.get(k_src, None)
-            if transform:
+        if not is_blank:
+            return
+        val = src.get(k_src, None)
+        # Ensure we only ever use scalar values
+        if isinstance(val, (dict, list, tuple, pd.Series)):
+            return
+        if transform:
+            try:
                 val = transform(val)
-            row[k_row] = val
+            except Exception:
+                val = None
+        row[k_row] = val
     maybe_set("lat", "latitude", float)
     maybe_set("lon", "longitude", float)
     maybe_set("timezone", "timezone", str)
@@ -94,8 +102,7 @@ def fuzzy_pick(row, cfbd, min_fuzzy):
     label, score, idx = best
     return idx if score >= min_fuzzy else None
 
-def backfill_timezone_from_latlon(df: pd.DataFrame) -> pd.DataFrame:
-    """When lat/lon exist but timezone is blank, derive tz using timezonefinder."""
+def backfill_timezone_from_latlon(df):
     tf = TimezoneFinder()
     mask = df["timezone"].isna() & df["lat"].notna() & df["lon"].notna()
     if not mask.any():
@@ -109,6 +116,12 @@ def backfill_timezone_from_latlon(df: pd.DataFrame) -> pd.DataFrame:
             pass
     return df
 
+def first_notna(series):
+    for v in series:
+        if pd.notna(v):
+            return v
+    return pd.NA
+
 def main():
     ap = argparse.ArgumentParser(description="Fill missing stadium metadata from CFBD venues")
     ap.add_argument("--stadiums", type=Path, required=True, help="Path to data/reference/stadiums.csv")
@@ -116,7 +129,7 @@ def main():
     args = ap.parse_args()
 
     if not args.stadiums.exists():
-        print("[fill] ERROR: stadiums file not found: %s" % args.stadiums, file=sys.stderr)
+        print("[fill] ERROR: stadiums file not found: " + str(args.stadiums), file=sys.stderr)
         sys.exit(1)
 
     stad = pd.read_csv(args.stadiums)
@@ -134,15 +147,14 @@ def main():
     cfbd = pull_cfbd(api_key)
 
     needs_mask = stad[["lat", "lon", "timezone", "altitude_m"]].isna().any(axis=1)
-    if not needs_mask.any():
-        for helper in ["venue_n", "city_n", "state_n"]:
-            if helper in stad.columns:
-                stad.drop(columns=[helper], inplace=True)
+    needs = stad.loc[needs_mask].copy()
+
+    if needs.empty:
+        # clean and save
+        stad.drop(columns=[c for c in ["venue_n", "city_n", "state_n"] if c in stad.columns], inplace=True)
         stad.to_csv(args.stadiums, index=False)
         print("[fill] Nothing to fill; all rows complete.")
         return
-
-    needs = stad.loc[needs_mask].copy()
 
     # 1) Exact normalized venue name join
     exact = needs.merge(
@@ -164,7 +176,7 @@ def main():
             how="left",
             suffixes=("", "_loc"),
         )
-        # Align series by index to avoid ndarray TypeError
+        # align by index to avoid ndarray issues
         idx = exact.index[still_mask]
         for col in ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]:
             aligned = pd.Series(by_loc[col].values, index=idx)
@@ -181,17 +193,18 @@ def main():
                 if pd.isna(exact.at[i, col]):
                     exact.at[i, col] = v.get(col)
 
-    # Write fills back to main frame
+    # COLLAPSE exact matches to a single row per team with first non-null per column
+    cols_from_cfbd = ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]
+    best = exact.groupby("team", as_index=True).agg({c: first_notna for c in cols_from_cfbd})
+
+    # Apply fills back into main DataFrame using only scalars
     updated = stad.copy().set_index("team")
-    exact = exact.set_index("team")
-    common = updated.index.intersection(exact.index)
-
-    for t in common:
-        row = updated.loc[t]
-        src = exact.loc[t].to_dict()
-        row = fill_missing_fields(row, src)
-        updated.loc[t] = row
-
+    for t in best.index:
+        if t in updated.index:
+            src = best.loc[t].to_dict()
+            row = updated.loc[t]
+            row = fill_missing_fields(row, src)
+            updated.loc[t] = row
     updated = updated.reset_index(drop=False)
 
     # Normalize numeric types
@@ -203,7 +216,7 @@ def main():
     # Fallback: derive timezone from lat/lon where still missing
     updated = backfill_timezone_from_latlon(updated)
 
-    # Drop helpers
+    # Drop helper columns
     for helper in ["venue_n", "city_n", "state_n", "name_n"]:
         if helper in updated.columns:
             updated.drop(columns=[helper], inplace=True)
@@ -215,5 +228,5 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        print("[fill] ERROR: %s" % e, file=sys.stderr)
+        print("[fill] ERROR: " + str(e), file=sys.stderr)
         raise
