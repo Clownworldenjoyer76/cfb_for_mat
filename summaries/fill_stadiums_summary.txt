@@ -1,4 +1,4 @@
-[2025-10-04T12:29:25.833052Z] Fill Diagnostics
+[2025-10-04T12:39:03.433963Z] Fill Diagnostics
 File: data/reference/stadiums.csv
 Total rows: 731
 
@@ -6,7 +6,7 @@ Missing after fill:
   lat: 0
   lon: 0
   timezone: 606
-  altitude_m: 1
+  altitude_m: 0
 
 Rows still missing (up to 200):
                             team venue city  ...       lon  timezone  altitude_m
