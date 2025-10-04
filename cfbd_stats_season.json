@@ -6997,21 +6997,21 @@
     "team": "BYU",
     "conference": "Big 12",
     "statName": "firstDowns",
-    "statValue": 93
+    "statValue": 116
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "firstDownsOpponent",
-    "statValue": 56
+    "statValue": 74
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "fourthDownConversions",
-    "statValue": 4
+    "statValue": 8
   },
   {
     "season": 2025,
@@ -7025,21 +7025,21 @@
     "team": "BYU",
     "conference": "Big 12",
     "statName": "fourthDowns",
-    "statValue": 7
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "fourthDownsOpponent",
-    "statValue": 7
+    "statValue": 9
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "fumblesLost",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -7060,28 +7060,28 @@
     "team": "BYU",
     "conference": "Big 12",
     "statName": "fumblesRecoveredOpponent",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "games",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "interceptions",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "interceptionsOpponent",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
@@ -7094,15 +7094,29 @@
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
+    "statName": "interceptionTDsOpponent",
+    "statValue": 0
+  },
+  {
+    "season": 2025,
+    "team": "BYU",
+    "conference": "Big 12",
     "statName": "interceptionYards",
-    "statValue": 65
+    "statValue": 112
+  },
+  {
+    "season": 2025,
+    "team": "BYU",
+    "conference": "Big 12",
+    "statName": "interceptionYardsOpponent",
+    "statValue": 19
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "kickReturns",
-    "statValue": 5
+    "statValue": 8
   },
   {
     "season": 2025,
@@ -7130,7 +7144,7 @@
     "team": "BYU",
     "conference": "Big 12",
     "statName": "kickReturnYards",
-    "statValue": 143
+    "statValue": 221
   },
   {
     "season": 2025,
@@ -7144,112 +7158,119 @@
     "team": "BYU",
     "conference": "Big 12",
     "statName": "netPassingYards",
-    "statValue": 738
+    "statValue": 1089
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "netPassingYardsOpponent",
-    "statValue": 602
+    "statValue": 737
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "passAttempts",
-    "statValue": 100
+    "statValue": 125
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "passAttemptsOpponent",
-    "statValue": 110
+    "statValue": 128
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "passCompletions",
-    "statValue": 66
+    "statValue": 84
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "passCompletionsOpponent",
-    "statValue": 63
+    "statValue": 73
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "passesIntercepted",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
-    "statName": "passingTDs",
-    "statValue": 6
-  },
-  {
-    "season": 2025,
-    "team": "BYU",
-    "conference": "Big 12",
-    "statName": "passingTDsOpponent",
+    "statName": "passesInterceptedOpponent",
     "statValue": 1
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
+    "statName": "passingTDs",
+    "statValue": 7
+  },
+  {
+    "season": 2025,
+    "team": "BYU",
+    "conference": "Big 12",
+    "statName": "passingTDsOpponent",
+    "statValue": 2
+  },
+  {
+    "season": 2025,
+    "team": "BYU",
+    "conference": "Big 12",
     "statName": "penalties",
-    "statValue": 25
+    "statValue": 35
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "penaltiesOpponent",
-    "statValue": 27
+    "statValue": 30
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "penaltyYards",
-    "statValue": 225
+    "statValue": 292
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "penaltyYardsOpponent",
-    "statValue": 208
+    "statValue": 234
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "possessionTime",
-    "statValue": 8072
+    "statValue": 10002
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "possessionTimeOpponent",
-    "statValue": 6328
+    "statValue": 7998
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "puntReturns",
-    "statValue": 13
+    "statValue": 15
   },
   {
     "season": 2025,
@@ -7277,7 +7298,7 @@
     "team": "BYU",
     "conference": "Big 12",
     "statName": "puntReturnYards",
-    "statValue": 155
+    "statValue": 158
   },
   {
     "season": 2025,
@@ -7291,42 +7312,42 @@
     "team": "BYU",
     "conference": "Big 12",
     "statName": "rushingAttempts",
-    "statValue": 157
+    "statValue": 199
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 118
+    "statValue": 165
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "rushingTDs",
-    "statValue": 10
+    "statValue": 14
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "rushingTDsOpponent",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "rushingYards",
-    "statValue": 1014
+    "statValue": 1179
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "rushingYardsOpponent",
-    "statValue": 307
+    "statValue": 463
   },
   {
     "season": 2025,
@@ -7347,70 +7368,70 @@
     "team": "BYU",
     "conference": "Big 12",
     "statName": "tacklesForLoss",
-    "statValue": 27
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "tacklesForLossOpponent",
-    "statValue": 19
+    "statValue": 22
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "thirdDownConversions",
-    "statValue": 21
+    "statValue": 25
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 12
+    "statValue": 19
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "thirdDowns",
-    "statValue": 49
+    "statValue": 61
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "thirdDownsOpponent",
-    "statValue": 50
+    "statValue": 65
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "totalYards",
-    "statValue": 1752
+    "statValue": 2268
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "totalYardsOpponent",
-    "statValue": 909
+    "statValue": 1200
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "turnovers",
-    "statValue": 1
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "BYU",
     "conference": "Big 12",
     "statName": "turnoversOpponent",
-    "statValue": 7
+    "statValue": 9
   },
   {
     "season": 2025,
@@ -8299,14 +8320,14 @@
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "firstDowns",
-    "statValue": 87
+    "statValue": 102
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "firstDownsOpponent",
-    "statValue": 92
+    "statValue": 128
   },
   {
     "season": 2025,
@@ -8320,7 +8341,7 @@
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -8334,55 +8355,62 @@
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "fourthDownsOpponent",
-    "statValue": 8
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "fumblesLost",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "fumblesLostOpponent",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "fumblesRecovered",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "fumblesRecoveredOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "games",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "interceptions",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "interceptionsOpponent",
+    "statValue": 2
+  },
+  {
+    "season": 2025,
+    "team": "Charlotte",
+    "conference": "American Athletic",
+    "statName": "interceptionTDs",
     "statValue": 0
   },
   {
@@ -8396,22 +8424,29 @@
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
+    "statName": "interceptionYards",
+    "statValue": 61
+  },
+  {
+    "season": 2025,
+    "team": "Charlotte",
+    "conference": "American Athletic",
     "statName": "interceptionYardsOpponent",
-    "statValue": 34
+    "statValue": 67
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "kickReturns",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "kickReturnsOpponent",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -8432,133 +8467,140 @@
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "kickReturnYards",
-    "statValue": 123
+    "statValue": 151
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 29
+    "statValue": 46
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "netPassingYards",
-    "statValue": 1033
+    "statValue": 1182
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "netPassingYardsOpponent",
-    "statValue": 1067
+    "statValue": 1291
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "passAttempts",
-    "statValue": 140
+    "statValue": 169
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "passAttemptsOpponent",
-    "statValue": 136
+    "statValue": 171
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "passCompletions",
-    "statValue": 87
+    "statValue": 103
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "passCompletionsOpponent",
-    "statValue": 95
+    "statValue": 115
+  },
+  {
+    "season": 2025,
+    "team": "Charlotte",
+    "conference": "American Athletic",
+    "statName": "passesIntercepted",
+    "statValue": 2
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "passesInterceptedOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "passingTDs",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "passingTDsOpponent",
-    "statValue": 9
+    "statValue": 13
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "penalties",
-    "statValue": 28
+    "statValue": 40
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "penaltiesOpponent",
-    "statValue": 27
+    "statValue": 33
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "penaltyYards",
-    "statValue": 243
+    "statValue": 323
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "penaltyYardsOpponent",
-    "statValue": 300
+    "statValue": 360
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "possessionTime",
-    "statValue": 7160
+    "statValue": 8859
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "possessionTimeOpponent",
-    "statValue": 7240
+    "statValue": 9141
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "puntReturns",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "puntReturnsOpponent",
-    "statValue": 7
+    "statValue": 9
   },
   {
     "season": 2025,
@@ -8579,56 +8621,56 @@
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "puntReturnYards",
-    "statValue": 69
+    "statValue": 83
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "puntReturnYardsOpponent",
-    "statValue": 14
+    "statValue": 27
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "rushingAttempts",
-    "statValue": 131
+    "statValue": 164
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 140
+    "statValue": 202
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "rushingTDs",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "rushingTDsOpponent",
-    "statValue": 6
+    "statValue": 9
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "rushingYards",
-    "statValue": 354
+    "statValue": 484
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "rushingYardsOpponent",
-    "statValue": 633
+    "statValue": 1040
   },
   {
     "season": 2025,
@@ -8642,7 +8684,7 @@
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "sacksOpponent",
-    "statValue": 8
+    "statValue": 9
   },
   {
     "season": 2025,
@@ -8656,63 +8698,63 @@
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "tacklesForLossOpponent",
-    "statValue": 24
+    "statValue": 25
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "thirdDownConversions",
-    "statValue": 27
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 22
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "thirdDowns",
-    "statValue": 60
+    "statValue": 72
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "thirdDownsOpponent",
-    "statValue": 54
+    "statValue": 71
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "totalYards",
-    "statValue": 1387
+    "statValue": 1666
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "totalYardsOpponent",
-    "statValue": 1700
+    "statValue": 2331
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "turnovers",
-    "statValue": 8
+    "statValue": 12
   },
   {
     "season": 2025,
     "team": "Charlotte",
     "conference": "American Athletic",
     "statName": "turnoversOpponent",
-    "statValue": 1
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -10462,42 +10504,42 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "firstDowns",
-    "statValue": 84
+    "statValue": 106
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "firstDownsOpponent",
-    "statValue": 75
+    "statValue": 99
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "fourthDownConversions",
-    "statValue": 5
+    "statValue": 8
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "fourthDowns",
-    "statValue": 12
+    "statValue": 16
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "fourthDownsOpponent",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -10532,7 +10574,7 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "games",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -10581,14 +10623,14 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "kickReturns",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "kickReturnsOpponent",
-    "statValue": 5
+    "statValue": 8
   },
   {
     "season": 2025,
@@ -10609,56 +10651,56 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "kickReturnYards",
-    "statValue": 105
+    "statValue": 135
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 131
+    "statValue": 204
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "netPassingYards",
-    "statValue": 763
+    "statValue": 969
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "netPassingYardsOpponent",
-    "statValue": 748
+    "statValue": 1007
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "passAttempts",
-    "statValue": 125
+    "statValue": 155
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "passAttemptsOpponent",
-    "statValue": 107
+    "statValue": 125
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "passCompletions",
-    "statValue": 74
+    "statValue": 92
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "passCompletionsOpponent",
-    "statValue": 65
+    "statValue": 79
   },
   {
     "season": 2025,
@@ -10679,56 +10721,56 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "passingTDs",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "passingTDsOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "penalties",
-    "statValue": 33
+    "statValue": 34
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "penaltiesOpponent",
-    "statValue": 24
+    "statValue": 33
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "penaltyYards",
-    "statValue": 289
+    "statValue": 294
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "penaltyYardsOpponent",
-    "statValue": 198
+    "statValue": 285
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "possessionTime",
-    "statValue": 6963
+    "statValue": 8521
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "possessionTimeOpponent",
-    "statValue": 7437
+    "statValue": 9479
   },
   {
     "season": 2025,
@@ -10742,7 +10784,7 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "puntReturnsOpponent",
-    "statValue": 9
+    "statValue": 11
   },
   {
     "season": 2025,
@@ -10770,49 +10812,49 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "puntReturnYardsOpponent",
-    "statValue": 65
+    "statValue": 66
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "rushingAttempts",
-    "statValue": 147
+    "statValue": 182
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 151
+    "statValue": 199
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "rushingTDs",
-    "statValue": 6
-  },
-  {
-    "season": 2025,
-    "team": "Colorado State",
-    "conference": "Mountain West",
-    "statName": "rushingTDsOpponent",
     "statValue": 7
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
+    "statName": "rushingTDsOpponent",
+    "statValue": 11
+  },
+  {
+    "season": 2025,
+    "team": "Colorado State",
+    "conference": "Mountain West",
     "statName": "rushingYards",
-    "statValue": 614
+    "statValue": 763
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "rushingYardsOpponent",
-    "statValue": 676
+    "statValue": 957
   },
   {
     "season": 2025,
@@ -10826,63 +10868,63 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "sacksOpponent",
-    "statValue": 10
+    "statValue": 14
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "tacklesForLoss",
-    "statValue": 19
-  },
-  {
-    "season": 2025,
-    "team": "Colorado State",
-    "conference": "Mountain West",
-    "statName": "tacklesForLossOpponent",
-    "statValue": 24
-  },
-  {
-    "season": 2025,
-    "team": "Colorado State",
-    "conference": "Mountain West",
-    "statName": "thirdDownConversions",
     "statValue": 20
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
+    "statName": "tacklesForLossOpponent",
+    "statValue": 32
+  },
+  {
+    "season": 2025,
+    "team": "Colorado State",
+    "conference": "Mountain West",
+    "statName": "thirdDownConversions",
+    "statValue": 24
+  },
+  {
+    "season": 2025,
+    "team": "Colorado State",
+    "conference": "Mountain West",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 22
+    "statValue": 29
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "thirdDowns",
-    "statValue": 54
+    "statValue": 68
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "thirdDownsOpponent",
-    "statValue": 55
+    "statValue": 66
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "totalYards",
-    "statValue": 1377
+    "statValue": 1732
   },
   {
     "season": 2025,
     "team": "Colorado State",
     "conference": "Mountain West",
     "statName": "totalYardsOpponent",
-    "statValue": 1424
+    "statValue": 1964
   },
   {
     "season": 2025,
@@ -10903,21 +10945,21 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "firstDowns",
-    "statValue": 97
+    "statValue": 126
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "firstDownsOpponent",
-    "statValue": 83
+    "statValue": 99
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "fourthDownConversions",
-    "statValue": 7
+    "statValue": 9
   },
   {
     "season": 2025,
@@ -10931,7 +10973,7 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "fourthDowns",
-    "statValue": 10
+    "statValue": 13
   },
   {
     "season": 2025,
@@ -10945,42 +10987,42 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "fumblesLost",
-    "statValue": 2
-  },
-  {
-    "season": 2025,
-    "team": "Delaware",
-    "conference": "Conference USA",
-    "statName": "fumblesLostOpponent",
-    "statValue": 0
-  },
-  {
-    "season": 2025,
-    "team": "Delaware",
-    "conference": "Conference USA",
-    "statName": "fumblesRecovered",
-    "statValue": 0
-  },
-  {
-    "season": 2025,
-    "team": "Delaware",
-    "conference": "Conference USA",
-    "statName": "fumblesRecoveredOpponent",
     "statValue": 3
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
-    "statName": "games",
+    "statName": "fumblesLostOpponent",
+    "statValue": 1
+  },
+  {
+    "season": 2025,
+    "team": "Delaware",
+    "conference": "Conference USA",
+    "statName": "fumblesRecovered",
+    "statValue": 1
+  },
+  {
+    "season": 2025,
+    "team": "Delaware",
+    "conference": "Conference USA",
+    "statName": "fumblesRecoveredOpponent",
     "statValue": 4
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
+    "statName": "games",
+    "statValue": 5
+  },
+  {
+    "season": 2025,
+    "team": "Delaware",
+    "conference": "Conference USA",
     "statName": "interceptions",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -11001,7 +11043,7 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "interceptionTDsOpponent",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -11015,21 +11057,21 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "interceptionYardsOpponent",
-    "statValue": 7
+    "statValue": 32
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "kickReturns",
-    "statValue": 8
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "kickReturnsOpponent",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
@@ -11050,56 +11092,56 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "kickReturnYards",
-    "statValue": 215
+    "statValue": 295
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 95
+    "statValue": 150
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "netPassingYards",
-    "statValue": 1067
+    "statValue": 1381
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "netPassingYardsOpponent",
-    "statValue": 965
+    "statValue": 1195
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "passAttempts",
-    "statValue": 149
+    "statValue": 197
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "passAttemptsOpponent",
-    "statValue": 130
+    "statValue": 161
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "passCompletions",
-    "statValue": 95
+    "statValue": 123
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "passCompletionsOpponent",
-    "statValue": 85
+    "statValue": 108
   },
   {
     "season": 2025,
@@ -11113,7 +11155,7 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "passesInterceptedOpponent",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
@@ -11127,56 +11169,56 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "passingTDsOpponent",
-    "statValue": 6
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "penalties",
-    "statValue": 17
+    "statValue": 18
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "penaltiesOpponent",
-    "statValue": 31
+    "statValue": 39
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "penaltyYards",
-    "statValue": 156
+    "statValue": 171
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "penaltyYardsOpponent",
-    "statValue": 284
+    "statValue": 374
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "possessionTime",
-    "statValue": 7086
+    "statValue": 9040
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "possessionTimeOpponent",
-    "statValue": 7314
+    "statValue": 8960
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "puntReturns",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -11218,49 +11260,49 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "rushingAttempts",
-    "statValue": 131
+    "statValue": 165
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 143
+    "statValue": 169
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "rushingTDs",
-    "statValue": 7
+    "statValue": 10
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "rushingTDsOpponent",
-    "statValue": 7
+    "statValue": 8
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "rushingYards",
-    "statValue": 609
+    "statValue": 730
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "rushingYardsOpponent",
-    "statValue": 670
+    "statValue": 778
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "sacks",
-    "statValue": 10
+    "statValue": 11
   },
   {
     "season": 2025,
@@ -11274,70 +11316,70 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "tacklesForLoss",
-    "statValue": 26
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "tacklesForLossOpponent",
-    "statValue": 21
+    "statValue": 28
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "thirdDownConversions",
-    "statValue": 27
+    "statValue": 36
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 22
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "thirdDowns",
-    "statValue": 54
+    "statValue": 70
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "thirdDownsOpponent",
-    "statValue": 60
+    "statValue": 74
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "totalYards",
-    "statValue": 1676
+    "statValue": 2111
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "totalYardsOpponent",
-    "statValue": 1635
+    "statValue": 1973
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "turnovers",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "Delaware",
     "conference": "Conference USA",
     "statName": "turnoversOpponent",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -32008,42 +32050,42 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "firstDowns",
-    "statValue": 87
+    "statValue": 116
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "firstDownsOpponent",
-    "statValue": 72
+    "statValue": 96
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "fourthDownConversions",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "fourthDowns",
-    "statValue": 11
+    "statValue": 13
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "fourthDownsOpponent",
-    "statValue": 6
+    "statValue": 7
   },
   {
     "season": 2025,
@@ -32078,14 +32120,14 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "games",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "interceptions",
-    "statValue": 3
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -32120,21 +32162,21 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "interceptionYardsOpponent",
-    "statValue": 0
-  },
-  {
-    "season": 2025,
-    "team": "New Mexico",
-    "conference": "Mountain West",
-    "statName": "kickReturns",
     "statValue": 9
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
+    "statName": "kickReturns",
+    "statValue": 13
+  },
+  {
+    "season": 2025,
+    "team": "New Mexico",
+    "conference": "Mountain West",
     "statName": "kickReturnsOpponent",
-    "statValue": 6
+    "statValue": 9
   },
   {
     "season": 2025,
@@ -32155,56 +32197,56 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "kickReturnYards",
-    "statValue": 154
+    "statValue": 229
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 116
+    "statValue": 157
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "netPassingYards",
-    "statValue": 868
+    "statValue": 1212
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "netPassingYardsOpponent",
-    "statValue": 1022
+    "statValue": 1356
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "passAttempts",
-    "statValue": 117
+    "statValue": 157
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "passAttemptsOpponent",
-    "statValue": 142
+    "statValue": 172
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "passCompletions",
-    "statValue": 81
+    "statValue": 109
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "passCompletionsOpponent",
-    "statValue": 92
+    "statValue": 118
   },
   {
     "season": 2025,
@@ -32218,7 +32260,7 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "passesInterceptedOpponent",
-    "statValue": 3
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -32232,49 +32274,49 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "passingTDsOpponent",
-    "statValue": 4
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "penalties",
-    "statValue": 15
+    "statValue": 21
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "penaltiesOpponent",
-    "statValue": 39
+    "statValue": 47
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "penaltyYards",
-    "statValue": 102
+    "statValue": 150
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "penaltyYardsOpponent",
-    "statValue": 374
+    "statValue": 457
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "possessionTime",
-    "statValue": 7874
+    "statValue": 9467
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "possessionTimeOpponent",
-    "statValue": 6526
+    "statValue": 8533
   },
   {
     "season": 2025,
@@ -32323,42 +32365,42 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "rushingAttempts",
-    "statValue": 149
+    "statValue": 176
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 115
+    "statValue": 151
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "rushingTDs",
-    "statValue": 7
+    "statValue": 10
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "rushingTDsOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "rushingYards",
-    "statValue": 699
+    "statValue": 775
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "rushingYardsOpponent",
-    "statValue": 446
+    "statValue": 599
   },
   {
     "season": 2025,
@@ -32372,70 +32414,70 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "sacksOpponent",
-    "statValue": 5
+    "statValue": 9
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "tacklesForLoss",
-    "statValue": 18
+    "statValue": 20
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "tacklesForLossOpponent",
-    "statValue": 15
+    "statValue": 19
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "thirdDownConversions",
-    "statValue": 22
+    "statValue": 28
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 23
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "thirdDowns",
-    "statValue": 51
+    "statValue": 61
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "thirdDownsOpponent",
-    "statValue": 56
+    "statValue": 68
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "totalYards",
-    "statValue": 1567
+    "statValue": 1987
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "totalYardsOpponent",
-    "statValue": 1468
+    "statValue": 1955
   },
   {
     "season": 2025,
     "team": "New Mexico",
     "conference": "Mountain West",
     "statName": "turnovers",
-    "statValue": 8
+    "statValue": 11
   },
   {
     "season": 2025,
@@ -41206,42 +41248,42 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "firstDowns",
-    "statValue": 68
+    "statValue": 92
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "firstDownsOpponent",
-    "statValue": 52
+    "statValue": 74
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "fourthDownConversions",
-    "statValue": 5
-  },
-  {
-    "season": 2025,
-    "team": "San Diego State",
-    "conference": "Mountain West",
-    "statName": "fourthDownConversionsOpponent",
     "statValue": 6
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
+    "statName": "fourthDownConversionsOpponent",
+    "statValue": 9
+  },
+  {
+    "season": 2025,
+    "team": "San Diego State",
+    "conference": "Mountain West",
     "statName": "fourthDowns",
-    "statValue": 11
+    "statValue": 12
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "fourthDownsOpponent",
-    "statValue": 11
+    "statValue": 15
   },
   {
     "season": 2025,
@@ -41276,7 +41318,7 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "games",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -41325,14 +41367,14 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "kickReturns",
-    "statValue": 1
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "kickReturnsOpponent",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -41353,56 +41395,56 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "kickReturnYards",
-    "statValue": 16
+    "statValue": 89
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 94
-  },
-  {
-    "season": 2025,
-    "team": "San Diego State",
-    "conference": "Mountain West",
-    "statName": "netPassingYards",
-    "statValue": 673
-  },
-  {
-    "season": 2025,
-    "team": "San Diego State",
-    "conference": "Mountain West",
-    "statName": "netPassingYardsOpponent",
-    "statValue": 584
-  },
-  {
-    "season": 2025,
-    "team": "San Diego State",
-    "conference": "Mountain West",
-    "statName": "passAttempts",
-    "statValue": 99
-  },
-  {
-    "season": 2025,
-    "team": "San Diego State",
-    "conference": "Mountain West",
-    "statName": "passAttemptsOpponent",
     "statValue": 124
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
+    "statName": "netPassingYards",
+    "statValue": 932
+  },
+  {
+    "season": 2025,
+    "team": "San Diego State",
+    "conference": "Mountain West",
+    "statName": "netPassingYardsOpponent",
+    "statValue": 790
+  },
+  {
+    "season": 2025,
+    "team": "San Diego State",
+    "conference": "Mountain West",
+    "statName": "passAttempts",
+    "statValue": 117
+  },
+  {
+    "season": 2025,
+    "team": "San Diego State",
+    "conference": "Mountain West",
+    "statName": "passAttemptsOpponent",
+    "statValue": 154
+  },
+  {
+    "season": 2025,
+    "team": "San Diego State",
+    "conference": "Mountain West",
     "statName": "passCompletions",
-    "statValue": 60
+    "statValue": 74
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "passCompletionsOpponent",
-    "statValue": 62
+    "statValue": 80
   },
   {
     "season": 2025,
@@ -41423,63 +41465,63 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "passingTDs",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "passingTDsOpponent",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "penalties",
-    "statValue": 25
+    "statValue": 34
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "penaltiesOpponent",
-    "statValue": 25
+    "statValue": 26
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "penaltyYards",
-    "statValue": 228
+    "statValue": 315
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "penaltyYardsOpponent",
-    "statValue": 183
+    "statValue": 188
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "possessionTime",
-    "statValue": 7435
+    "statValue": 9477
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "possessionTimeOpponent",
-    "statValue": 6965
+    "statValue": 8523
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "puntReturns",
-    "statValue": 15
+    "statValue": 17
   },
   {
     "season": 2025,
@@ -41507,7 +41549,7 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "puntReturnYards",
-    "statValue": 114
+    "statValue": 115
   },
   {
     "season": 2025,
@@ -41521,49 +41563,49 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "rushingAttempts",
-    "statValue": 158
+    "statValue": 206
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 132
+    "statValue": 167
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "rushingTDs",
-    "statValue": 6
+    "statValue": 10
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "rushingTDsOpponent",
-    "statValue": 1
+    "statValue": 2
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "rushingYards",
-    "statValue": 596
+    "statValue": 877
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "rushingYardsOpponent",
-    "statValue": 372
+    "statValue": 521
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "sacks",
-    "statValue": 9
+    "statValue": 13
   },
   {
     "season": 2025,
@@ -41577,56 +41619,56 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "tacklesForLoss",
-    "statValue": 17
+    "statValue": 25
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "tacklesForLossOpponent",
-    "statValue": 21
+    "statValue": 22
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "thirdDownConversions",
-    "statValue": 19
+    "statValue": 26
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 17
+    "statValue": 21
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "thirdDowns",
-    "statValue": 57
+    "statValue": 68
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "thirdDownsOpponent",
-    "statValue": 65
+    "statValue": 79
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "totalYards",
-    "statValue": 1258
+    "statValue": 1798
   },
   {
     "season": 2025,
     "team": "San Diego State",
     "conference": "Mountain West",
     "statName": "totalYardsOpponent",
-    "statValue": 956
+    "statValue": 1311
   },
   {
     "season": 2025,
@@ -41647,42 +41689,42 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "firstDowns",
-    "statValue": 77
+    "statValue": 101
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "firstDownsOpponent",
-    "statValue": 83
+    "statValue": 112
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "fourthDownConversions",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 10
+    "statValue": 12
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "fourthDowns",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "fourthDownsOpponent",
-    "statValue": 12
+    "statValue": 14
   },
   {
     "season": 2025,
@@ -41717,7 +41759,7 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "games",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -41731,7 +41773,7 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "interceptionsOpponent",
-    "statValue": 1
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -41752,7 +41794,7 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "interceptionYards",
-    "statValue": 41
+    "statValue": 50
   },
   {
     "season": 2025,
@@ -41766,14 +41808,14 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "kickReturns",
-    "statValue": 7
+    "statValue": 10
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "kickReturnsOpponent",
-    "statValue": 7
+    "statValue": 11
   },
   {
     "season": 2025,
@@ -41794,63 +41836,63 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "kickReturnYards",
-    "statValue": 104
+    "statValue": 145
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 116
+    "statValue": 191
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "netPassingYards",
-    "statValue": 1191
+    "statValue": 1525
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "netPassingYardsOpponent",
-    "statValue": 1108
+    "statValue": 1452
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "passAttempts",
-    "statValue": 165
+    "statValue": 195
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "passAttemptsOpponent",
-    "statValue": 121
+    "statValue": 161
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "passCompletions",
-    "statValue": 94
+    "statValue": 120
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "passCompletionsOpponent",
-    "statValue": 76
+    "statValue": 104
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "passesIntercepted",
-    "statValue": 1
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -41864,7 +41906,7 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "passingTDs",
-    "statValue": 6
+    "statValue": 9
   },
   {
     "season": 2025,
@@ -41878,42 +41920,42 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "penalties",
-    "statValue": 19
+    "statValue": 27
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "penaltiesOpponent",
-    "statValue": 39
+    "statValue": 45
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "penaltyYards",
-    "statValue": 158
+    "statValue": 241
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "penaltyYardsOpponent",
-    "statValue": 306
+    "statValue": 354
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "possessionTime",
-    "statValue": 6472
+    "statValue": 8479
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "possessionTimeOpponent",
-    "statValue": 7928
+    "statValue": 9521
   },
   {
     "season": 2025,
@@ -41962,49 +42004,49 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "rushingAttempts",
-    "statValue": 92
+    "statValue": 128
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 151
+    "statValue": 178
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "rushingTDs",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "rushingTDsOpponent",
-    "statValue": 6
+    "statValue": 9
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "rushingYards",
-    "statValue": 410
+    "statValue": 563
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "rushingYardsOpponent",
-    "statValue": 591
+    "statValue": 667
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "sacks",
-    "statValue": 6
+    "statValue": 10
   },
   {
     "season": 2025,
@@ -42018,56 +42060,56 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "tacklesForLoss",
-    "statValue": 16
+    "statValue": 20
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "tacklesForLossOpponent",
-    "statValue": 12
+    "statValue": 14
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "thirdDownConversions",
-    "statValue": 23
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 16
+    "statValue": 22
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "thirdDowns",
-    "statValue": 53
+    "statValue": 65
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "thirdDownsOpponent",
-    "statValue": 56
+    "statValue": 66
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "totalYards",
-    "statValue": 1601
+    "statValue": 2088
   },
   {
     "season": 2025,
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "totalYardsOpponent",
-    "statValue": 1699
+    "statValue": 2119
   },
   {
     "season": 2025,
@@ -42081,7 +42123,7 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "statName": "turnoversOpponent",
-    "statValue": 4
+    "statValue": 7
   },
   {
     "season": 2025,
@@ -43852,21 +43894,21 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "firstDowns",
-    "statValue": 70
+    "statValue": 106
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "firstDownsOpponent",
-    "statValue": 92
+    "statValue": 107
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "fourthDownConversions",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -43880,7 +43922,7 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "fourthDowns",
-    "statValue": 7
+    "statValue": 10
   },
   {
     "season": 2025,
@@ -43894,49 +43936,49 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "fumblesLost",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "fumblesLostOpponent",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "fumblesRecovered",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "fumblesRecoveredOpponent",
-    "statValue": 1
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "games",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "interceptions",
-    "statValue": 2
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "interceptionsOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -43957,28 +43999,28 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "interceptionYards",
-    "statValue": 120
+    "statValue": 153
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "interceptionYardsOpponent",
-    "statValue": 0
+    "statValue": 61
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "kickReturns",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "kickReturnsOpponent",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -43999,140 +44041,140 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "kickReturnYards",
-    "statValue": 108
+    "statValue": 125
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 39
+    "statValue": 67
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "netPassingYards",
-    "statValue": 1062
+    "statValue": 1286
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "netPassingYardsOpponent",
-    "statValue": 1084
+    "statValue": 1233
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "passAttempts",
-    "statValue": 128
+    "statValue": 163
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "passAttemptsOpponent",
-    "statValue": 153
+    "statValue": 182
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "passCompletions",
-    "statValue": 82
+    "statValue": 102
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "passCompletionsOpponent",
-    "statValue": 100
+    "statValue": 116
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "passesIntercepted",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "passesInterceptedOpponent",
-    "statValue": 2
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "passingTDs",
-    "statValue": 7
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "passingTDsOpponent",
-    "statValue": 5
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "penalties",
-    "statValue": 26
+    "statValue": 32
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "penaltiesOpponent",
-    "statValue": 37
+    "statValue": 49
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "penaltyYards",
-    "statValue": 226
+    "statValue": 286
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "penaltyYardsOpponent",
-    "statValue": 284
+    "statValue": 364
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "possessionTime",
-    "statValue": 5418
+    "statValue": 7319
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "possessionTimeOpponent",
-    "statValue": 8982
+    "statValue": 10681
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "puntReturns",
-    "statValue": 9
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "puntReturnsOpponent",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -44153,63 +44195,63 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "puntReturnYards",
-    "statValue": 155
+    "statValue": 168
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "puntReturnYardsOpponent",
-    "statValue": 58
+    "statValue": 72
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "rushingAttempts",
-    "statValue": 112
+    "statValue": 174
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 145
+    "statValue": 178
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "rushingTDs",
-    "statValue": 6
+    "statValue": 9
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "rushingTDsOpponent",
-    "statValue": 6
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "rushingYards",
-    "statValue": 537
+    "statValue": 944
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "rushingYardsOpponent",
-    "statValue": 530
+    "statValue": 660
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "sacks",
-    "statValue": 8
+    "statValue": 9
   },
   {
     "season": 2025,
@@ -44223,7 +44265,7 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "tacklesForLoss",
-    "statValue": 24
+    "statValue": 25
   },
   {
     "season": 2025,
@@ -44237,56 +44279,56 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "thirdDownConversions",
-    "statValue": 22
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 24
+    "statValue": 28
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "thirdDowns",
-    "statValue": 59
+    "statValue": 76
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "thirdDownsOpponent",
-    "statValue": 58
+    "statValue": 70
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "totalYards",
-    "statValue": 1599
+    "statValue": 2230
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "totalYardsOpponent",
-    "statValue": 1614
+    "statValue": 1893
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "turnovers",
-    "statValue": 3
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "South Florida",
     "conference": "American Athletic",
     "statName": "turnoversOpponent",
-    "statValue": 7
+    "statValue": 11
   },
   {
     "season": 2025,
@@ -57397,14 +57439,14 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "firstDowns",
-    "statValue": 117
+    "statValue": 133
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "firstDownsOpponent",
-    "statValue": 95
+    "statValue": 124
   },
   {
     "season": 2025,
@@ -57418,7 +57460,7 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 3
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -57432,42 +57474,42 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "fourthDownsOpponent",
-    "statValue": 11
+    "statValue": 14
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "fumblesLost",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "fumblesLostOpponent",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "fumblesRecovered",
-    "statValue": 2
+    "statValue": 3
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "fumblesRecoveredOpponent",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "games",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -57481,14 +57523,14 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "interceptionsOpponent",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "interceptionTDs",
-    "statValue": 0
+    "statValue": 1
   },
   {
     "season": 2025,
@@ -57502,7 +57544,7 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "interceptionYards",
-    "statValue": 18
+    "statValue": 43
   },
   {
     "season": 2025,
@@ -57516,14 +57558,14 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "kickReturns",
-    "statValue": 8
+    "statValue": 10
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "kickReturnsOpponent",
-    "statValue": 6
+    "statValue": 9
   },
   {
     "season": 2025,
@@ -57544,63 +57586,63 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "kickReturnYards",
-    "statValue": 197
+    "statValue": 252
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 92
+    "statValue": 172
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "netPassingYards",
-    "statValue": 1607
+    "statValue": 1837
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "netPassingYardsOpponent",
-    "statValue": 880
+    "statValue": 1194
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "passAttempts",
-    "statValue": 201
+    "statValue": 232
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "passAttemptsOpponent",
-    "statValue": 151
+    "statValue": 199
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "passCompletions",
-    "statValue": 135
+    "statValue": 158
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "passCompletionsOpponent",
-    "statValue": 78
+    "statValue": 106
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "passesIntercepted",
-    "statValue": 4
+    "statValue": 5
   },
   {
     "season": 2025,
@@ -57614,7 +57656,7 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "passingTDs",
-    "statValue": 12
+    "statValue": 13
   },
   {
     "season": 2025,
@@ -57628,42 +57670,42 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "penalties",
-    "statValue": 35
+    "statValue": 43
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "penaltiesOpponent",
-    "statValue": 37
+    "statValue": 38
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "penaltyYards",
-    "statValue": 371
+    "statValue": 461
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "penaltyYardsOpponent",
-    "statValue": 339
+    "statValue": 354
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "possessionTime",
-    "statValue": 8934
+    "statValue": 10580
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "possessionTimeOpponent",
-    "statValue": 9072
+    "statValue": 11026
   },
   {
     "season": 2025,
@@ -57677,7 +57719,7 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "puntReturnsOpponent",
-    "statValue": 10
+    "statValue": 11
   },
   {
     "season": 2025,
@@ -57712,42 +57754,42 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "rushingAttempts",
-    "statValue": 157
-  },
-  {
-    "season": 2025,
-    "team": "Western Kentucky",
-    "conference": "Conference USA",
-    "statName": "rushingAttemptsOpponent",
     "statValue": 183
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
+    "statName": "rushingAttemptsOpponent",
+    "statValue": 217
+  },
+  {
+    "season": 2025,
+    "team": "Western Kentucky",
+    "conference": "Conference USA",
     "statName": "rushingTDs",
-    "statValue": 9
+    "statValue": 10
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "rushingTDsOpponent",
-    "statValue": 6
+    "statValue": 9
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "rushingYards",
-    "statValue": 633
+    "statValue": 741
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "rushingYardsOpponent",
-    "statValue": 1054
+    "statValue": 1175
   },
   {
     "season": 2025,
@@ -57761,77 +57803,77 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "sacksOpponent",
-    "statValue": 8
+    "statValue": 9
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "tacklesForLoss",
-    "statValue": 28
+    "statValue": 35
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "tacklesForLossOpponent",
-    "statValue": 22
+    "statValue": 27
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "thirdDownConversions",
-    "statValue": 31
+    "statValue": 40
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 19
+    "statValue": 28
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "thirdDowns",
-    "statValue": 69
+    "statValue": 83
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "thirdDownsOpponent",
-    "statValue": 71
+    "statValue": 87
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "totalYards",
-    "statValue": 2240
+    "statValue": 2578
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "totalYardsOpponent",
-    "statValue": 1934
+    "statValue": 2369
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "turnovers",
-    "statValue": 6
+    "statValue": 7
   },
   {
     "season": 2025,
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "statName": "turnoversOpponent",
-    "statValue": 6
+    "statValue": 8
   },
   {
     "season": 2025,
@@ -58279,14 +58321,14 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "firstDowns",
-    "statValue": 99
+    "statValue": 117
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "firstDownsOpponent",
-    "statValue": 99
+    "statValue": 122
   },
   {
     "season": 2025,
@@ -58300,21 +58342,21 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "fourthDownConversionsOpponent",
-    "statValue": 6
+    "statValue": 10
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "fourthDowns",
-    "statValue": 15
+    "statValue": 17
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "fourthDownsOpponent",
-    "statValue": 10
+    "statValue": 14
   },
   {
     "season": 2025,
@@ -58328,14 +58370,14 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "fumblesLostOpponent",
-    "statValue": 2
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "fumblesRecovered",
-    "statValue": 2
+    "statValue": 4
   },
   {
     "season": 2025,
@@ -58349,21 +58391,21 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "games",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "interceptions",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "interceptionsOpponent",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
@@ -58384,14 +58426,14 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "interceptionYards",
-    "statValue": 47
+    "statValue": 66
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "interceptionYardsOpponent",
-    "statValue": 75
+    "statValue": 122
   },
   {
     "season": 2025,
@@ -58405,7 +58447,7 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "kickReturnsOpponent",
-    "statValue": 10
+    "statValue": 13
   },
   {
     "season": 2025,
@@ -58433,119 +58475,119 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "kickReturnYardsOpponent",
-    "statValue": 230
+    "statValue": 308
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "netPassingYards",
-    "statValue": 897
+    "statValue": 1032
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "netPassingYardsOpponent",
-    "statValue": 1056
+    "statValue": 1407
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "passAttempts",
-    "statValue": 127
+    "statValue": 145
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "passAttemptsOpponent",
-    "statValue": 147
+    "statValue": 172
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "passCompletions",
-    "statValue": 78
+    "statValue": 88
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "passCompletionsOpponent",
-    "statValue": 89
+    "statValue": 107
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "passesIntercepted",
-    "statValue": 5
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "passesInterceptedOpponent",
-    "statValue": 4
+    "statValue": 6
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "passingTDs",
-    "statValue": 3
+    "statValue": 4
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "passingTDsOpponent",
-    "statValue": 10
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "penalties",
-    "statValue": 34
-  },
-  {
-    "season": 2025,
-    "team": "West Virginia",
-    "conference": "Big 12",
-    "statName": "penaltiesOpponent",
     "statValue": 37
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
+    "statName": "penaltiesOpponent",
+    "statValue": 47
+  },
+  {
+    "season": 2025,
+    "team": "West Virginia",
+    "conference": "Big 12",
     "statName": "penaltyYards",
-    "statValue": 314
+    "statValue": 340
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "penaltyYardsOpponent",
-    "statValue": 293
+    "statValue": 360
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "possessionTime",
-    "statValue": 7596
+    "statValue": 9266
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "possessionTimeOpponent",
-    "statValue": 10219
+    "statValue": 12149
   },
   {
     "season": 2025,
@@ -58559,7 +58601,7 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "puntReturnsOpponent",
-    "statValue": 11
+    "statValue": 13
   },
   {
     "season": 2025,
@@ -58587,49 +58629,49 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "puntReturnYardsOpponent",
-    "statValue": 65
+    "statValue": 68
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "rushingAttempts",
-    "statValue": 228
+    "statValue": 275
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "rushingAttemptsOpponent",
-    "statValue": 203
+    "statValue": 245
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "rushingTDs",
-    "statValue": 11
+    "statValue": 13
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "rushingTDsOpponent",
-    "statValue": 4
+    "statValue": 8
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "rushingYards",
-    "statValue": 1082
+    "statValue": 1238
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "rushingYardsOpponent",
-    "statValue": 783
+    "statValue": 948
   },
   {
     "season": 2025,
@@ -58650,70 +58692,70 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "tacklesForLoss",
-    "statValue": 28
+    "statValue": 31
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "tacklesForLossOpponent",
-    "statValue": 28
+    "statValue": 32
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "thirdDownConversions",
-    "statValue": 19
+    "statValue": 26
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "thirdDownConversionsOpponent",
-    "statValue": 25
+    "statValue": 29
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "thirdDowns",
-    "statValue": 70
+    "statValue": 85
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "thirdDownsOpponent",
-    "statValue": 73
+    "statValue": 85
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "totalYards",
-    "statValue": 1979
+    "statValue": 2270
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "totalYardsOpponent",
-    "statValue": 1839
+    "statValue": 2355
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "turnovers",
-    "statValue": 9
+    "statValue": 11
   },
   {
     "season": 2025,
     "team": "West Virginia",
     "conference": "Big 12",
     "statName": "turnoversOpponent",
-    "statValue": 7
+    "statValue": 10
   },
   {
     "season": 2025,

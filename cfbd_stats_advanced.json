@@ -1796,110 +1796,110 @@
     "team": "BYU",
     "conference": "Big 12",
     "offense": {
-      "plays": 258,
-      "drives": 42,
-      "ppa": 0.3360803454050315,
-      "totalPPA": 86.70872911449813,
-      "successRate": 0.4844961240310077,
-      "explosiveness": 1.2696477463009932,
-      "powerSuccess": 0.8125,
-      "stuffRate": 0.15483870967741936,
-      "lineYards": 3.432903225806452,
-      "lineYardsTotal": 532,
-      "secondLevelYards": 1.5096774193548388,
-      "secondLevelYardsTotal": 234,
-      "openFieldYards": 2.264516129032258,
-      "openFieldYardsTotal": 351,
-      "totalOpportunies": 32,
-      "pointsPerOpportunity": 4.125,
+      "plays": 325,
+      "drives": 54,
+      "ppa": 0.3627454969347668,
+      "totalPPA": 117.89228650379921,
+      "successRate": 0.49846153846153846,
+      "explosiveness": 1.2550081423642345,
+      "powerSuccess": 0.8888888888888888,
+      "stuffRate": 0.1414141414141414,
+      "lineYards": 3.2696969696969695,
+      "lineYardsTotal": 647,
+      "secondLevelYards": 1.3888888888888888,
+      "secondLevelYardsTotal": 275,
+      "openFieldYards": 1.9292929292929293,
+      "openFieldYardsTotal": 382,
+      "totalOpportunies": 40,
+      "pointsPerOpportunity": 4.075,
       "fieldPosition": {
-        "averageStart": 67.8,
-        "averagePredictedPoints": 1.641
+        "averageStart": 69.9,
+        "averagePredictedPoints": 1.503
       },
       "havoc": {
-        "total": 0.12,
-        "frontSeven": 0.081,
-        "db": 0.039
+        "total": 0.122,
+        "frontSeven": 0.085,
+        "db": 0.037
       },
       "standardDowns": {
-        "rate": 0.7131782945736435,
-        "ppa": 0.3404415800446813,
-        "successRate": 0.5597826086956522,
-        "explosiveness": 1.1413921918799375
+        "rate": 0.7107692307692308,
+        "ppa": 0.35739841169194825,
+        "successRate": 0.5844155844155844,
+        "explosiveness": 1.0983937088794073
       },
       "passingDowns": {
-        "rate": 0.2868217054263566,
-        "ppa": 0.3252361944091456,
-        "successRate": 0.2972972972972973,
-        "explosiveness": 1.8701169329086633
+        "rate": 0.28923076923076924,
+        "ppa": 0.37588567449956556,
+        "successRate": 0.2872340425531915,
+        "explosiveness": 2.03808030978837
       },
       "rushingPlays": {
-        "rate": 0.6007751937984496,
-        "ppa": 0.3337616141056664,
-        "totalPPA": 51.73305018637829,
-        "successRate": 0.4838709677419355,
-        "explosiveness": 1.1896701487347021
+        "rate": 0.6092307692307692,
+        "ppa": 0.3334081763147413,
+        "totalPPA": 66.01481891031878,
+        "successRate": 0.5,
+        "explosiveness": 1.0897075891621006
       },
       "passingPlays": {
-        "rate": 0.3992248062015504,
-        "ppa": 0.33956969833126055,
-        "totalPPA": 34.975678928119834,
-        "successRate": 0.4854368932038835,
-        "explosiveness": 1.3896141426504298
+        "rate": 0.39076923076923076,
+        "ppa": 0.4084839967990585,
+        "totalPPA": 51.87746759348043,
+        "successRate": 0.49606299212598426,
+        "explosiveness": 1.514766154539016
       }
     },
     "defense": {
-      "plays": 230,
-      "drives": 47,
-      "ppa": -0.06300171245759004,
-      "totalPPA": -14.490393865245707,
-      "successRate": 0.3652173913043478,
-      "explosiveness": 0.9460311825193354,
-      "powerSuccess": 0.7368421052631579,
-      "stuffRate": 0.2702702702702703,
-      "lineYards": 2.1171171171171173,
-      "lineYardsTotal": 235,
-      "secondLevelYards": 0.7927927927927928,
-      "secondLevelYardsTotal": 88,
-      "openFieldYards": 0.6936936936936937,
+      "plays": 293,
+      "drives": 59,
+      "ppa": -0.03800415923125273,
+      "totalPPA": -11.135218654757049,
+      "successRate": 0.3651877133105802,
+      "explosiveness": 1.0194664929748194,
+      "powerSuccess": 0.6923076923076923,
+      "stuffRate": 0.25477707006369427,
+      "lineYards": 2.3025477707006368,
+      "lineYardsTotal": 362,
+      "secondLevelYards": 0.7388535031847133,
+      "secondLevelYardsTotal": 116,
+      "openFieldYards": 0.5796178343949044,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 14,
-      "pointsPerOpportunity": 2.642857142857143,
+      "totalOpportunies": 19,
+      "pointsPerOpportunity": 3.210526315789474,
       "fieldPosition": {
-        "averageStart": 76.4,
-        "averagePredictedPoints": -0.982
+        "averageStart": 74.5,
+        "averagePredictedPoints": -1.087
       },
       "havoc": {
-        "total": 0.191,
-        "frontSeven": 0.139,
-        "db": 0.052
+        "total": 0.177,
+        "frontSeven": 0.123,
+        "db": 0.055
       },
       "standardDowns": {
-        "rate": 0.6434782608695652,
-        "ppa": -0.10719246851672776,
-        "successRate": 0.4594594594594595,
-        "explosiveness": 0.8125591167704623
+        "rate": 0.6655290102389079,
+        "ppa": -0.11789766735274718,
+        "successRate": 0.4358974358974359,
+        "explosiveness": 0.8387075426834172
       },
       "passingDowns": {
-        "rate": 0.3565217391304348,
-        "ppa": 0.01675721311256099,
-        "totalPPA": -9.371108952611364,
-        "successRate": 0.1951219512195122,
-        "explosiveness": 1.5132874619520456
+        "rate": 0.33447098976109213,
+        "ppa": 0.12096761713294542,
+        "totalPPA": -3.5264272879655607,
+        "successRate": 0.22448979591836735,
+        "explosiveness": 1.7178533463734185
       },
       "rushingPlays": {
-        "rate": 0.4826086956521739,
-        "ppa": -0.046119683897606706,
-        "totalPPA": -5.1192849126343445,
-        "successRate": 0.38738738738738737,
-        "explosiveness": 0.6599241637295493
+        "rate": 0.5358361774744027,
+        "ppa": -0.048463639278926676,
+        "totalPPA": -7.608791366791488,
+        "successRate": 0.37579617834394907,
+        "explosiveness": 0.7407558699105123
       },
       "passingPlays": {
-        "rate": 0.5173913043478261,
-        "ppa": -0.07874881472782659,
-        "totalPPA": -9.371108952611364,
-        "successRate": 0.3445378151260504,
-        "explosiveness": 1.2460946412500866
+        "rate": 0.4641638225255973,
+        "ppa": -0.025929612411511475,
+        "totalPPA": -3.5264272879655607,
+        "successRate": 0.35294117647058826,
+        "explosiveness": 1.3620483004913633
       }
     }
   },
@@ -2132,110 +2132,110 @@
     "team": "Charlotte",
     "conference": "American Athletic",
     "offense": {
-      "plays": 278,
-      "drives": 46,
-      "ppa": 0.11664022182622674,
-      "totalPPA": 32.42598166769103,
-      "successRate": 0.39568345323741005,
-      "explosiveness": 1.3248701246170633,
-      "powerSuccess": 0.8235294117647058,
-      "stuffRate": 0.20634920634920634,
-      "lineYards": 1.9603174603174602,
-      "lineYardsTotal": 247,
-      "secondLevelYards": 0.8888888888888888,
-      "secondLevelYardsTotal": 112,
-      "openFieldYards": 0.5238095238095238,
-      "openFieldYardsTotal": 66,
-      "totalOpportunies": 25,
-      "pointsPerOpportunity": 2.84,
+      "plays": 340,
+      "drives": 63,
+      "ppa": 0.08694096907233992,
+      "totalPPA": 29.559929484595575,
+      "successRate": 0.38823529411764707,
+      "explosiveness": 1.2442797733927118,
+      "powerSuccess": 0.8421052631578947,
+      "stuffRate": 0.20125786163522014,
+      "lineYards": 2.148427672955975,
+      "lineYardsTotal": 342,
+      "secondLevelYards": 0.9433962264150944,
+      "secondLevelYardsTotal": 150,
+      "openFieldYards": 0.6037735849056604,
+      "openFieldYardsTotal": 96,
+      "totalOpportunies": 30,
+      "pointsPerOpportunity": 3.1666666666666665,
       "fieldPosition": {
-        "averageStart": 71.7,
-        "averagePredictedPoints": 1.28
+        "averageStart": 71.4,
+        "averagePredictedPoints": 1.308
       },
       "havoc": {
-        "total": 0.194,
-        "frontSeven": 0.108,
-        "db": 0.086
+        "total": 0.179,
+        "frontSeven": 0.097,
+        "db": 0.082
       },
       "standardDowns": {
-        "rate": 0.6474820143884892,
-        "ppa": -0.011195584371792234,
-        "successRate": 0.4388888888888889,
-        "explosiveness": 1.0412682766868169
+        "rate": 0.6470588235294118,
+        "ppa": -0.026227835156741906,
+        "successRate": 0.4318181818181818,
+        "explosiveness": 1.0067280609685305
       },
       "passingDowns": {
-        "rate": 0.35251798561151076,
-        "ppa": 0.35144068218993507,
-        "successRate": 0.3163265306122449,
-        "explosiveness": 2.0475974145038207
+        "rate": 0.35294117647058826,
+        "ppa": 0.2944171101589899,
+        "successRate": 0.30833333333333335,
+        "explosiveness": 1.8542098458331775
       },
       "rushingPlays": {
-        "rate": 0.45323741007194246,
-        "ppa": -0.07487913684907371,
-        "totalPPA": -9.434771242983288,
-        "successRate": 0.373015873015873,
-        "explosiveness": 0.8230564077967955
+        "rate": 0.4676470588235294,
+        "ppa": -0.08871713851356709,
+        "totalPPA": -14.106025023657168,
+        "successRate": 0.3710691823899371,
+        "explosiveness": 0.7348417922652563
       },
       "passingPlays": {
-        "rate": 0.5431654676258992,
-        "ppa": 0.2933711900571855,
-        "totalPPA": 44.29904969863501,
-        "successRate": 0.41721854304635764,
-        "explosiveness": 1.6992390879591681
+        "rate": 0.5294117647058824,
+        "ppa": 0.2561347294234079,
+        "totalPPA": 46.10425129621343,
+        "successRate": 0.40555555555555556,
+        "explosiveness": 1.6560173197833952
       }
     },
     "defense": {
-      "plays": 269,
-      "drives": 44,
-      "ppa": 0.22813159335213304,
-      "totalPPA": 61.367398611723786,
-      "successRate": 0.48698884758364314,
-      "explosiveness": 1.130952464917865,
-      "powerSuccess": 0.7368421052631579,
-      "stuffRate": 0.16279069767441862,
-      "lineYards": 3.0193798449612403,
-      "lineYardsTotal": 390,
-      "secondLevelYards": 1.186046511627907,
-      "secondLevelYardsTotal": 153,
-      "openFieldYards": 1.1705426356589148,
+      "plays": 366,
+      "drives": 60,
+      "ppa": 0.23074696377828702,
+      "totalPPA": 84.45338874285305,
+      "successRate": 0.4890710382513661,
+      "explosiveness": 1.1257563190838724,
+      "powerSuccess": 0.7692307692307693,
+      "stuffRate": 0.1518324607329843,
+      "lineYards": 3.326178010471204,
+      "lineYardsTotal": 635,
+      "secondLevelYards": 1.4031413612565444,
+      "secondLevelYardsTotal": 268,
+      "openFieldYards": 1.3298429319371727,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 23,
-      "pointsPerOpportunity": 4.478260869565218,
+      "totalOpportunies": 35,
+      "pointsPerOpportunity": 4.428571428571429,
       "fieldPosition": {
-        "averageStart": 72.2,
-        "averagePredictedPoints": -1.24
+        "averageStart": 70.2,
+        "averagePredictedPoints": -1.384
       },
       "havoc": {
-        "total": 0.097,
-        "frontSeven": 0.071,
-        "db": 0.026
+        "total": 0.09,
+        "frontSeven": 0.06,
+        "db": 0.03
       },
       "standardDowns": {
-        "rate": 0.6951672862453532,
-        "ppa": 0.22061264533620614,
-        "successRate": 0.5668449197860963,
-        "explosiveness": 0.9462178836891789
+        "rate": 0.6939890710382514,
+        "ppa": 0.17848778168419616,
+        "successRate": 0.5590551181102362,
+        "explosiveness": 0.889338173494797
       },
       "passingDowns": {
-        "rate": 0.3048327137546468,
-        "ppa": 0.2452784626079663,
-        "totalPPA": 50.102794072999345,
-        "successRate": 0.3048780487804878,
-        "explosiveness": 1.9142270893274949
+        "rate": 0.30601092896174864,
+        "ppa": 0.3492633231702431,
+        "totalPPA": 54.11690638226305,
+        "successRate": 0.33035714285714285,
+        "explosiveness": 2.0330908237770804
       },
       "rushingPlays": {
-        "rate": 0.4795539033457249,
-        "ppa": 0.08732251580406543,
-        "totalPPA": 11.26460453872444,
-        "successRate": 0.4728682170542636,
-        "explosiveness": 0.7833799957010373
+        "rate": 0.5218579234972678,
+        "ppa": 0.1588297505790052,
+        "totalPPA": 30.336482360589994,
+        "successRate": 0.4973821989528796,
+        "explosiveness": 0.8479271666152934
       },
       "passingPlays": {
-        "rate": 0.5204460966542751,
-        "ppa": 0.3578771005214239,
-        "totalPPA": 50.102794072999345,
-        "successRate": 0.5,
-        "explosiveness": 1.4338370452353866
+        "rate": 0.4781420765027322,
+        "ppa": 0.3092394650415032,
+        "totalPPA": 54.11690638226305,
+        "successRate": 0.48,
+        "explosiveness": 1.4399678605661939
       }
     }
   },
@@ -2692,110 +2692,110 @@
     "team": "Colorado State",
     "conference": "Mountain West",
     "offense": {
-      "plays": 270,
-      "drives": 42,
-      "ppa": 0.13663230311578672,
-      "totalPPA": 36.89072184126242,
-      "successRate": 0.44074074074074077,
-      "explosiveness": 1.0701912637191398,
-      "powerSuccess": 0.6470588235294118,
-      "stuffRate": 0.1678832116788321,
-      "lineYards": 3.215328467153285,
-      "lineYardsTotal": 441,
-      "secondLevelYards": 1.2262773722627738,
-      "secondLevelYardsTotal": 168,
-      "openFieldYards": 0.8686131386861314,
-      "openFieldYardsTotal": 119,
-      "totalOpportunies": 18,
-      "pointsPerOpportunity": 3.444444444444444,
+      "plays": 334,
+      "drives": 52,
+      "ppa": 0.15519948417525659,
+      "totalPPA": 51.8366277145357,
+      "successRate": 0.44011976047904194,
+      "explosiveness": 1.118817119717876,
+      "powerSuccess": 0.6666666666666666,
+      "stuffRate": 0.16167664670658682,
+      "lineYards": 3.2694610778443116,
+      "lineYardsTotal": 546,
+      "secondLevelYards": 1.25748502994012,
+      "secondLevelYardsTotal": 210,
+      "openFieldYards": 0.9401197604790419,
+      "openFieldYardsTotal": 157,
+      "totalOpportunies": 22,
+      "pointsPerOpportunity": 3.590909090909091,
       "fieldPosition": {
-        "averageStart": 72.8,
-        "averagePredictedPoints": 1.164
+        "averageStart": 73.8,
+        "averagePredictedPoints": 1.095
       },
       "havoc": {
-        "total": 0.178,
-        "frontSeven": 0.119,
-        "db": 0.059
+        "total": 0.177,
+        "frontSeven": 0.12,
+        "db": 0.057
       },
       "standardDowns": {
-        "rate": 0.6407407407407407,
-        "ppa": 0.08856024721122734,
-        "successRate": 0.5375722543352601,
-        "explosiveness": 0.7816869432393472
+        "rate": 0.6467065868263473,
+        "ppa": 0.11480098977498883,
+        "successRate": 0.5370370370370371,
+        "explosiveness": 0.8473255895124636
       },
       "passingDowns": {
-        "rate": 0.3592592592592593,
-        "ppa": 0.22236906261567102,
-        "successRate": 0.26804123711340205,
-        "explosiveness": 2.1021490254353212
+        "rate": 0.3532934131736527,
+        "ppa": 0.22914927053506876,
+        "successRate": 0.2627118644067797,
+        "explosiveness": 2.134720910163936
       },
       "rushingPlays": {
-        "rate": 0.5074074074074074,
-        "ppa": 0.09675845604624575,
-        "totalPPA": 13.255908478335668,
-        "successRate": 0.5109489051094891,
-        "explosiveness": 0.747084460363184
+        "rate": 0.5,
+        "ppa": 0.1420719796532693,
+        "totalPPA": 23.72602060209597,
+        "successRate": 0.5089820359281437,
+        "explosiveness": 0.809365240977714
       },
       "passingPlays": {
-        "rate": 0.48518518518518516,
-        "ppa": 0.21081037515045498,
-        "totalPPA": 27.616159144709602,
-        "successRate": 0.37404580152671757,
-        "explosiveness": 1.5317724113705053
+        "rate": 0.4940119760479042,
+        "ppa": 0.1944966842074096,
+        "totalPPA": 32.09195289422259,
+        "successRate": 0.37575757575757573,
+        "explosiveness": 1.5430656631519692
       }
     },
     "defense": {
-      "plays": 257,
-      "drives": 46,
-      "ppa": 0.1280337907299655,
-      "totalPPA": 32.90468421760114,
-      "successRate": 0.4163424124513619,
-      "explosiveness": 1.1864572084264857,
-      "powerSuccess": 0.7391304347826086,
-      "stuffRate": 0.23129251700680273,
-      "lineYards": 2.5993197278911566,
-      "lineYardsTotal": 382,
-      "secondLevelYards": 0.8231292517006803,
-      "secondLevelYardsTotal": 121,
-      "openFieldYards": 1.5238095238095237,
+      "plays": 322,
+      "drives": 56,
+      "ppa": 0.21401012038837433,
+      "totalPPA": 68.91125876505653,
+      "successRate": 0.4440993788819876,
+      "explosiveness": 1.2360389976978736,
+      "powerSuccess": 0.7857142857142857,
+      "stuffRate": 0.21025641025641026,
+      "lineYards": 2.8779487179487178,
+      "lineYardsTotal": 561,
+      "secondLevelYards": 0.9487179487179487,
+      "secondLevelYardsTotal": 185,
+      "openFieldYards": 1.4512820512820512,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 24,
-      "pointsPerOpportunity": 3.25,
+      "totalOpportunies": 30,
+      "pointsPerOpportunity": 3.6333333333333333,
       "fieldPosition": {
-        "averageStart": 68.6,
-        "averagePredictedPoints": -1.569
+        "averageStart": 68.9,
+        "averagePredictedPoints": -1.524
       },
       "havoc": {
-        "total": 0.179,
-        "frontSeven": 0.086,
-        "db": 0.093
+        "total": 0.152,
+        "frontSeven": 0.071,
+        "db": 0.081
       },
       "standardDowns": {
-        "rate": 0.708171206225681,
-        "ppa": 0.12889454023740235,
-        "successRate": 0.4835164835164835,
-        "explosiveness": 0.9682219007697314
+        "rate": 0.7204968944099379,
+        "ppa": 0.21361712160554025,
+        "successRate": 0.5086206896551724,
+        "explosiveness": 1.0380207214491464
       },
       "passingDowns": {
-        "rate": 0.2918287937743191,
-        "ppa": 0.1259450385919188,
-        "totalPPA": 27.881877866099884,
-        "successRate": 0.25333333333333335,
-        "explosiveness": 2.1972312649419794
+        "rate": 0.2795031055900621,
+        "ppa": 0.2150231839174577,
+        "totalPPA": 49.25267487699354,
+        "successRate": 0.2777777777777778,
+        "explosiveness": 2.1706852615918653
       },
       "rushingPlays": {
-        "rate": 0.5719844357976653,
-        "ppa": 0.03416875069048471,
-        "totalPPA": 5.022806351501252,
-        "successRate": 0.41496598639455784,
-        "explosiveness": 0.8737124579823783
+        "rate": 0.6055900621118012,
+        "ppa": 0.10081325070801533,
+        "totalPPA": 19.658583888062992,
+        "successRate": 0.4358974358974359,
+        "explosiveness": 0.9295723414658276
       },
       "passingPlays": {
-        "rate": 0.4280155642023346,
-        "ppa": 0.2534716169645444,
-        "totalPPA": 27.881877866099884,
-        "successRate": 0.41818181818181815,
-        "explosiveness": 1.601183942711063
+        "rate": 0.3944099378881988,
+        "ppa": 0.3878163376141224,
+        "totalPPA": 49.25267487699354,
+        "successRate": 0.4566929133858268,
+        "explosiveness": 1.685171166313803
       }
     }
   },
@@ -2804,110 +2804,110 @@
     "team": "Delaware",
     "conference": "Conference USA",
     "offense": {
-      "plays": 273,
-      "drives": 40,
-      "ppa": 0.2942890065007601,
-      "totalPPA": 80.34089877470751,
-      "successRate": 0.4652014652014652,
-      "explosiveness": 1.3199301234781222,
-      "powerSuccess": 0.8333333333333334,
-      "stuffRate": 0.14166666666666666,
-      "lineYards": 3.4916666666666667,
-      "lineYardsTotal": 419,
-      "secondLevelYards": 1.325,
-      "secondLevelYardsTotal": 159,
-      "openFieldYards": 2.091666666666667,
-      "openFieldYardsTotal": 251,
-      "totalOpportunies": 19,
-      "pointsPerOpportunity": 4,
+      "plays": 355,
+      "drives": 50,
+      "ppa": 0.25231061774528374,
+      "totalPPA": 89.57026929957573,
+      "successRate": 0.476056338028169,
+      "explosiveness": 1.2207736207078146,
+      "powerSuccess": 0.7586206896551724,
+      "stuffRate": 0.17532467532467533,
+      "lineYards": 3.2448051948051946,
+      "lineYardsTotal": 500,
+      "secondLevelYards": 1.2077922077922079,
+      "secondLevelYardsTotal": 186,
+      "openFieldYards": 1.7597402597402596,
+      "openFieldYardsTotal": 271,
+      "totalOpportunies": 26,
+      "pointsPerOpportunity": 3.8461538461538463,
       "fieldPosition": {
-        "averageStart": 74.2,
-        "averagePredictedPoints": 1.127
+        "averageStart": 74.4,
+        "averagePredictedPoints": 1.124
       },
       "havoc": {
-        "total": 0.165,
-        "frontSeven": 0.088,
-        "db": 0.077
+        "total": 0.163,
+        "frontSeven": 0.09,
+        "db": 0.073
       },
       "standardDowns": {
-        "rate": 0.663003663003663,
-        "ppa": 0.18657541980138023,
-        "successRate": 0.5303867403314917,
-        "explosiveness": 1.0010487468775195
+        "rate": 0.6845070422535211,
+        "ppa": 0.1648719477499137,
+        "successRate": 0.5390946502057613,
+        "explosiveness": 0.930811956212908
       },
       "passingDowns": {
-        "rate": 0.336996336996337,
-        "ppa": 0.5062037803332357,
-        "successRate": 0.33695652173913043,
-        "explosiveness": 2.307433741338053
+        "rate": 0.3154929577464789,
+        "ppa": 0.4420213035388098,
+        "successRate": 0.3392857142857143,
+        "explosiveness": 2.220378306203413
       },
       "rushingPlays": {
-        "rate": 0.43956043956043955,
-        "ppa": 0.2975357367937591,
-        "totalPPA": 35.70428841525109,
-        "successRate": 0.5083333333333333,
-        "explosiveness": 1.084721311670883
+        "rate": 0.43380281690140843,
+        "ppa": 0.22604267406532788,
+        "totalPPA": 34.810571806060494,
+        "successRate": 0.512987012987013,
+        "explosiveness": 0.9907538318069443
       },
       "passingPlays": {
-        "rate": 0.5604395604395604,
-        "ppa": 0.2917425513689962,
-        "totalPPA": 44.63661035945641,
-        "successRate": 0.43137254901960786,
-        "explosiveness": 1.5373200859060252
+        "rate": 0.5661971830985916,
+        "ppa": 0.27243630593788676,
+        "totalPPA": 54.75969749351524,
+        "successRate": 0.44776119402985076,
+        "explosiveness": 1.422679879854134
       }
     },
     "defense": {
-      "plays": 264,
-      "drives": 42,
-      "ppa": 0.2246946589228581,
-      "totalPPA": 59.319389955634534,
-      "successRate": 0.4356060606060606,
-      "explosiveness": 1.3915478975850026,
-      "powerSuccess": 0.7647058823529411,
-      "stuffRate": 0.24615384615384617,
-      "lineYards": 2.7815384615384615,
-      "lineYardsTotal": 362,
-      "secondLevelYards": 1.0307692307692309,
-      "secondLevelYardsTotal": 134,
-      "openFieldYards": 1.9923076923076923,
+      "plays": 321,
+      "drives": 50,
+      "ppa": 0.23837710605669396,
+      "totalPPA": 76.51905104419876,
+      "successRate": 0.43613707165109034,
+      "explosiveness": 1.3856790595129578,
+      "powerSuccess": 0.7777777777777778,
+      "stuffRate": 0.23717948717948717,
+      "lineYards": 2.8602564102564103,
+      "lineYardsTotal": 446,
+      "secondLevelYards": 1.0256410256410255,
+      "secondLevelYardsTotal": 160,
+      "openFieldYards": 1.7820512820512822,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 23,
-      "pointsPerOpportunity": 3.869565217391304,
+      "totalOpportunies": 28,
+      "pointsPerOpportunity": 3.892857142857143,
       "fieldPosition": {
-        "averageStart": 73.8,
-        "averagePredictedPoints": -1.116
+        "averageStart": 73.3,
+        "averagePredictedPoints": -1.152
       },
       "havoc": {
-        "total": 0.17,
-        "frontSeven": 0.114,
-        "db": 0.057
+        "total": 0.162,
+        "frontSeven": 0.112,
+        "db": 0.05
       },
       "standardDowns": {
-        "rate": 0.6742424242424242,
-        "ppa": 0.07887528633865111,
-        "successRate": 0.47191011235955055,
-        "explosiveness": 1.0307712500495827
+        "rate": 0.660436137071651,
+        "ppa": 0.08358865198479705,
+        "successRate": 0.4716981132075472,
+        "explosiveness": 1.0167031308146663
       },
       "passingDowns": {
-        "rate": 0.32575757575757575,
-        "ppa": 0.5265068486901702,
-        "totalPPA": 32.98305264182532,
-        "successRate": 0.36046511627906974,
-        "explosiveness": 2.3691362328422696
+        "rate": 0.3395638629283489,
+        "ppa": 0.539433548838732,
+        "totalPPA": 47.32407982977583,
+        "successRate": 0.3669724770642202,
+        "explosiveness": 2.3081188812586864
       },
       "rushingPlays": {
-        "rate": 0.49242424242424243,
-        "ppa": 0.20258721010622477,
-        "totalPPA": 26.33633731380922,
-        "successRate": 0.3769230769230769,
-        "explosiveness": 1.2983767649070381
+        "rate": 0.48598130841121495,
+        "ppa": 0.18714725137450594,
+        "totalPPA": 29.194971214422928,
+        "successRate": 0.3782051282051282,
+        "explosiveness": 1.2408209837029294
       },
       "passingPlays": {
-        "rate": 0.5075757575757576,
-        "ppa": 0.24614218389421877,
-        "totalPPA": 32.98305264182532,
-        "successRate": 0.4925373134328358,
-        "explosiveness": 1.4607204051792488
+        "rate": 0.514018691588785,
+        "ppa": 0.2868126050289444,
+        "totalPPA": 47.32407982977583,
+        "successRate": 0.4909090909090909,
+        "explosiveness": 1.4911929665844599
       }
     }
   },
@@ -8180,110 +8180,110 @@
     "team": "New Mexico",
     "conference": "Mountain West",
     "offense": {
-      "plays": 285,
-      "drives": 48,
-      "ppa": 0.15711459029289276,
-      "totalPPA": 44.77765823347443,
-      "successRate": 0.42105263157894735,
-      "explosiveness": 1.1633641058009718,
-      "powerSuccess": 0.7727272727272727,
-      "stuffRate": 0.11464968152866242,
-      "lineYards": 3.1305732484076434,
-      "lineYardsTotal": 492,
-      "secondLevelYards": 0.8853503184713376,
-      "secondLevelYardsTotal": 139,
-      "openFieldYards": 1.3821656050955413,
-      "openFieldYardsTotal": 217,
-      "totalOpportunies": 24,
-      "pointsPerOpportunity": 4.458333333333333,
+      "plays": 352,
+      "drives": 57,
+      "ppa": 0.1752673841261821,
+      "totalPPA": 61.6941192124161,
+      "successRate": 0.45170454545454547,
+      "explosiveness": 1.1271924262633062,
+      "powerSuccess": 0.8076923076923077,
+      "stuffRate": 0.10555555555555556,
+      "lineYards": 3.1694444444444443,
+      "lineYardsTotal": 571,
+      "secondLevelYards": 0.8611111111111112,
+      "secondLevelYardsTotal": 155,
+      "openFieldYards": 1.2333333333333334,
+      "openFieldYardsTotal": 222,
+      "totalOpportunies": 31,
+      "pointsPerOpportunity": 4.32258064516129,
       "fieldPosition": {
-        "averageStart": 69.4,
-        "averagePredictedPoints": 1.459
+        "averageStart": 71.2,
+        "averagePredictedPoints": 1.332
       },
       "havoc": {
-        "total": 0.112,
-        "frontSeven": 0.074,
-        "db": 0.039
+        "total": 0.114,
+        "frontSeven": 0.071,
+        "db": 0.043
       },
       "standardDowns": {
-        "rate": 0.7228070175438597,
-        "ppa": 0.09264481612292713,
-        "successRate": 0.470873786407767,
-        "explosiveness": 0.9827413388716428
+        "rate": 0.7386363636363636,
+        "ppa": 0.11627614849473804,
+        "successRate": 0.5038461538461538,
+        "explosiveness": 0.9591798723686354
       },
       "passingDowns": {
-        "rate": 0.2771929824561403,
-        "ppa": 0.3252256469892588,
-        "successRate": 0.2911392405063291,
-        "explosiveness": 1.925120992415968
+        "rate": 0.26136363636363635,
+        "ppa": 0.3419817456933066,
+        "successRate": 0.30434782608695654,
+        "explosiveness": 1.9132511605562301
       },
       "rushingPlays": {
-        "rate": 0.5508771929824562,
-        "ppa": 0.030530261488806654,
-        "totalPPA": 4.793251053742645,
-        "successRate": 0.40764331210191085,
-        "explosiveness": 0.8072797917459017
+        "rate": 0.5113636363636364,
+        "ppa": 0.08880058882456805,
+        "totalPPA": 15.98410598842225,
+        "successRate": 0.4388888888888889,
+        "explosiveness": 0.8392892275857352
       },
       "passingPlays": {
-        "rate": 0.43859649122807015,
-        "ppa": 0.38552141441878734,
-        "totalPPA": 48.19017680234842,
-        "successRate": 0.448,
-        "explosiveness": 1.5703176075781948
+        "rate": 0.48011363636363635,
+        "ppa": 0.3190283008675176,
+        "totalPPA": 53.915782846610476,
+        "successRate": 0.47337278106508873,
+        "explosiveness": 1.4114968349574075
       }
     },
     "defense": {
-      "plays": 281,
-      "drives": 46,
-      "ppa": 0.07994636075631906,
-      "totalPPA": 22.464927372525654,
-      "successRate": 0.4092526690391459,
-      "explosiveness": 1.151857608807948,
-      "powerSuccess": 0.9583333333333334,
-      "stuffRate": 0.17094017094017094,
-      "lineYards": 2.917948717948718,
-      "lineYardsTotal": 341,
-      "secondLevelYards": 0.9230769230769231,
-      "secondLevelYardsTotal": 108,
-      "openFieldYards": 1.0854700854700856,
+      "plays": 346,
+      "drives": 55,
+      "ppa": 0.1541167724743927,
+      "totalPPA": 53.324403276139876,
+      "successRate": 0.430635838150289,
+      "explosiveness": 1.1923352860031569,
+      "powerSuccess": 0.9666666666666667,
+      "stuffRate": 0.19078947368421054,
+      "lineYards": 2.919078947368421,
+      "lineYardsTotal": 444,
+      "secondLevelYards": 1.006578947368421,
+      "secondLevelYardsTotal": 153,
+      "openFieldYards": 0.9013157894736842,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 23,
-      "pointsPerOpportunity": 2.5652173913043477,
+      "totalOpportunies": 28,
+      "pointsPerOpportunity": 3.107142857142857,
       "fieldPosition": {
-        "averageStart": 71.9,
-        "averagePredictedPoints": -1.276
+        "averageStart": 72.6,
+        "averagePredictedPoints": -1.211
       },
       "havoc": {
-        "total": 0.167,
-        "frontSeven": 0.082,
-        "db": 0.085
+        "total": 0.145,
+        "frontSeven": 0.072,
+        "db": 0.072
       },
       "standardDowns": {
-        "rate": 0.6690391459074733,
-        "ppa": -0.09491978127350495,
-        "successRate": 0.46808510638297873,
-        "explosiveness": 0.8281175984428842
+        "rate": 0.6763005780346821,
+        "ppa": -0.005236678262157435,
+        "successRate": 0.48717948717948717,
+        "explosiveness": 0.8881651810192973
       },
       "passingDowns": {
-        "rate": 0.3309608540925267,
-        "ppa": 0.43343920701015687,
-        "totalPPA": 24.919034488607732,
-        "successRate": 0.2903225806451613,
-        "explosiveness": 2.207010235182971
+        "rate": 0.3236994219653179,
+        "ppa": 0.48705166062039923,
+        "totalPPA": 48.56742677376863,
+        "successRate": 0.3125,
+        "explosiveness": 2.183060770807728
       },
       "rushingPlays": {
-        "rate": 0.41637010676156583,
-        "ppa": 0.09836284733196363,
-        "totalPPA": 11.508453137839744,
-        "successRate": 0.452991452991453,
-        "explosiveness": 0.7953682431028557
+        "rate": 0.4393063583815029,
+        "ppa": 0.12315484708087543,
+        "totalPPA": 18.719536756293063,
+        "successRate": 0.46710526315789475,
+        "explosiveness": 0.8619319767650677
       },
       "passingPlays": {
-        "rate": 0.5729537366548043,
-        "ppa": 0.15477661173048282,
-        "totalPPA": 24.919034488607732,
-        "successRate": 0.38509316770186336,
-        "explosiveness": 1.4565985182010108
+        "rate": 0.5520231213872833,
+        "ppa": 0.2542797213286316,
+        "totalPPA": 48.56742677376863,
+        "successRate": 0.4083769633507853,
+        "explosiveness": 1.4930870162070586
       }
     }
   },
@@ -10532,110 +10532,110 @@
     "team": "San Diego State",
     "conference": "Mountain West",
     "offense": {
-      "plays": 277,
-      "drives": 48,
-      "ppa": 0.1030980347204744,
-      "totalPPA": 28.55815561757141,
-      "successRate": 0.3862815884476534,
-      "explosiveness": 1.1369568748342789,
-      "powerSuccess": 0.6551724137931034,
-      "stuffRate": 0.15151515151515152,
-      "lineYards": 3.1933333333333334,
-      "lineYardsTotal": 527,
-      "secondLevelYards": 0.9515151515151515,
-      "secondLevelYardsTotal": 157,
-      "openFieldYards": 0.45454545454545453,
-      "openFieldYardsTotal": 75,
-      "totalOpportunies": 18,
-      "pointsPerOpportunity": 4.111111111111111,
+      "plays": 342,
+      "drives": 58,
+      "ppa": 0.18878576071645264,
+      "totalPPA": 64.5647301650268,
+      "successRate": 0.41812865497076024,
+      "explosiveness": 1.1990002865484601,
+      "powerSuccess": 0.7058823529411765,
+      "stuffRate": 0.15023474178403756,
+      "lineYards": 3.3145539906103285,
+      "lineYardsTotal": 706,
+      "secondLevelYards": 1.0375586854460095,
+      "secondLevelYardsTotal": 221,
+      "openFieldYards": 0.6291079812206573,
+      "openFieldYardsTotal": 134,
+      "totalOpportunies": 24,
+      "pointsPerOpportunity": 4.375,
       "fieldPosition": {
-        "averageStart": 68.7,
-        "averagePredictedPoints": 1.528
+        "averageStart": 69,
+        "averagePredictedPoints": 1.492
       },
       "havoc": {
-        "total": 0.152,
-        "frontSeven": 0.083,
-        "db": 0.069
+        "total": 0.132,
+        "frontSeven": 0.07,
+        "db": 0.061
       },
       "standardDowns": {
-        "rate": 0.6895306859205776,
-        "ppa": 0.027360664383745563,
-        "successRate": 0.4397905759162304,
-        "explosiveness": 0.9251776704030458
+        "rate": 0.7046783625730995,
+        "ppa": 0.12998445139657058,
+        "successRate": 0.4730290456431535,
+        "explosiveness": 1.0087530015536732
       },
       "passingDowns": {
-        "rate": 0.3104693140794224,
-        "ppa": 0.2713054502357675,
-        "successRate": 0.26744186046511625,
-        "explosiveness": 1.9104113605831305
+        "rate": 0.2953216374269006,
+        "ppa": 0.3290938354302306,
+        "successRate": 0.2871287128712871,
+        "explosiveness": 1.9468689241141737
       },
       "rushingPlays": {
-        "rate": 0.5956678700361011,
-        "ppa": 0.11426803335943245,
-        "totalPPA": 18.854225504306353,
-        "successRate": 0.42424242424242425,
-        "explosiveness": 0.838207195789942
+        "rate": 0.6228070175438597,
+        "ppa": 0.15723006122473282,
+        "totalPPA": 33.49000304086809,
+        "successRate": 0.4413145539906103,
+        "explosiveness": 0.8977839658826192
       },
       "passingPlays": {
-        "rate": 0.4007220216606498,
-        "ppa": 0.10392347398711763,
-        "totalPPA": 11.535505612570056,
-        "successRate": 0.3333333333333333,
-        "explosiveness": 1.7021589703235651
+        "rate": 0.3742690058479532,
+        "ppa": 0.25708048924581023,
+        "totalPPA": 32.90630262346371,
+        "successRate": 0.3828125,
+        "explosiveness": 1.7768438404788487
       }
     },
     "defense": {
-      "plays": 271,
-      "drives": 50,
-      "ppa": -0.11979287179255188,
-      "totalPPA": -32.46386825578156,
-      "successRate": 0.2952029520295203,
-      "explosiveness": 1.0758637903318455,
-      "powerSuccess": 0.6086956521739131,
-      "stuffRate": 0.18382352941176472,
-      "lineYards": 2.7301470588235293,
-      "lineYardsTotal": 371,
-      "secondLevelYards": 0.6397058823529411,
-      "secondLevelYardsTotal": 87,
-      "openFieldYards": 0.5294117647058824,
+      "plays": 335,
+      "drives": 60,
+      "ppa": -0.05229242502241277,
+      "totalPPA": -17.517962382508276,
+      "successRate": 0.32238805970149254,
+      "explosiveness": 1.1405783281712758,
+      "powerSuccess": 0.6296296296296297,
+      "stuffRate": 0.1746987951807229,
+      "lineYards": 2.872289156626506,
+      "lineYardsTotal": 477,
+      "secondLevelYards": 0.7771084337349398,
+      "secondLevelYardsTotal": 129,
+      "openFieldYards": 0.6626506024096386,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 15,
-      "pointsPerOpportunity": 2,
+      "totalOpportunies": 19,
+      "pointsPerOpportunity": 2.473684210526316,
       "fieldPosition": {
-        "averageStart": 74.4,
-        "averagePredictedPoints": -1.112
+        "averageStart": 75.1,
+        "averagePredictedPoints": -1.06
       },
       "havoc": {
-        "total": 0.148,
-        "frontSeven": 0.074,
-        "db": 0.074
+        "total": 0.152,
+        "frontSeven": 0.084,
+        "db": 0.069
       },
       "standardDowns": {
-        "rate": 0.6420664206642066,
-        "ppa": -0.21993180895903686,
-        "successRate": 0.3563218390804598,
-        "explosiveness": 0.8863324880716748
+        "rate": 0.6477611940298508,
+        "ppa": -0.13268222919362743,
+        "successRate": 0.391705069124424,
+        "explosiveness": 0.9475940814427096
       },
       "passingDowns": {
-        "rate": 0.35793357933579334,
-        "ppa": 0.05983779900093661,
-        "totalPPA": -18.370009306039428,
-        "successRate": 0.18556701030927836,
-        "explosiveness": 1.7286938314502116
+        "rate": 0.3522388059701492,
+        "ppa": 0.09554306230939726,
+        "totalPPA": -13.894215556526449,
+        "successRate": 0.19491525423728814,
+        "explosiveness": 1.8537809791246727
       },
       "rushingPlays": {
-        "rate": 0.5018450184501845,
-        "ppa": -0.10363131580692743,
-        "totalPPA": -14.093858949742131,
-        "successRate": 0.3088235294117647,
-        "explosiveness": 0.7965147457290053
+        "rate": 0.4955223880597015,
+        "ppa": -0.021829800156517032,
+        "totalPPA": -3.6237468259818275,
+        "successRate": 0.3433734939759036,
+        "explosiveness": 0.8763816241807199
       },
       "passingPlays": {
-        "rate": 0.4981549815498155,
-        "ppa": -0.1360741430076995,
-        "totalPPA": -18.370009306039428,
-        "successRate": 0.2814814814814815,
-        "explosiveness": 1.3846179975244586
+        "rate": 0.5044776119402985,
+        "ppa": -0.08221429323388432,
+        "totalPPA": -13.894215556526449,
+        "successRate": 0.30177514792899407,
+        "explosiveness": 1.4358569973371913
       }
     }
   },
@@ -10644,110 +10644,110 @@
     "team": "San Jos\u00e9 State",
     "conference": "Mountain West",
     "offense": {
-      "plays": 259,
-      "drives": 49,
-      "ppa": 0.17164102711260557,
-      "totalPPA": 44.455026022164844,
-      "successRate": 0.4362934362934363,
-      "explosiveness": 1.209060900766268,
-      "powerSuccess": 0.5833333333333334,
-      "stuffRate": 0.21739130434782608,
-      "lineYards": 2.889130434782609,
-      "lineYardsTotal": 266,
-      "secondLevelYards": 1.108695652173913,
-      "secondLevelYardsTotal": 102,
-      "openFieldYards": 1.391304347826087,
-      "openFieldYardsTotal": 128,
-      "totalOpportunies": 23,
-      "pointsPerOpportunity": 2.9565217391304346,
+      "plays": 324,
+      "drives": 58,
+      "ppa": 0.2324521664375897,
+      "totalPPA": 75.31450192577906,
+      "successRate": 0.4537037037037037,
+      "explosiveness": 1.2368586012798954,
+      "powerSuccess": 0.7222222222222222,
+      "stuffRate": 0.2283464566929134,
+      "lineYards": 2.898425196850394,
+      "lineYardsTotal": 368,
+      "secondLevelYards": 1.1574803149606299,
+      "secondLevelYardsTotal": 147,
+      "openFieldYards": 1.0866141732283465,
+      "openFieldYardsTotal": 138,
+      "totalOpportunies": 28,
+      "pointsPerOpportunity": 3.4285714285714284,
       "fieldPosition": {
-        "averageStart": 72.4,
-        "averagePredictedPoints": 1.215
+        "averageStart": 73,
+        "averagePredictedPoints": 1.166
       },
       "havoc": {
-        "total": 0.178,
-        "frontSeven": 0.073,
-        "db": 0.104
+        "total": 0.151,
+        "frontSeven": 0.065,
+        "db": 0.086
       },
       "standardDowns": {
-        "rate": 0.6640926640926641,
-        "ppa": 0.18449117733743914,
-        "successRate": 0.4941860465116279,
-        "explosiveness": 1.1353929854060358
+        "rate": 0.6728395061728395,
+        "ppa": 0.2217982507711634,
+        "successRate": 0.5091743119266054,
+        "explosiveness": 1.1250890606553074
       },
       "passingDowns": {
-        "rate": 0.3359073359073359,
-        "ppa": 0.14623613241523348,
-        "successRate": 0.3218390804597701,
-        "explosiveness": 1.4326956438241156
+        "rate": 0.3271604938271605,
+        "ppa": 0.25436304960061734,
+        "successRate": 0.33962264150943394,
+        "explosiveness": 1.581481351539042
       },
       "rushingPlays": {
-        "rate": 0.3552123552123552,
-        "ppa": 0.06358253808518968,
-        "totalPPA": 5.8495935038374505,
-        "successRate": 0.45652173913043476,
-        "explosiveness": 0.8409453399580369
+        "rate": 0.39197530864197533,
+        "ppa": 0.10283997734087222,
+        "totalPPA": 13.060677122290771,
+        "successRate": 0.47244094488188976,
+        "explosiveness": 0.9060392957351
       },
       "passingPlays": {
-        "rate": 0.637065637065637,
-        "ppa": 0.26530585407151114,
-        "totalPPA": 43.775465921799345,
-        "successRate": 0.4303030303030303,
-        "explosiveness": 1.4268194015260667
+        "rate": 0.6018518518518519,
+        "ppa": 0.34576337542030894,
+        "totalPPA": 67.42385820696023,
+        "successRate": 0.4461538461538462,
+        "explosiveness": 1.4650098464832026
       }
     },
     "defense": {
-      "plays": 273,
-      "drives": 46,
-      "ppa": 0.24006380445949652,
-      "totalPPA": 65.53741861744255,
-      "successRate": 0.4175824175824176,
-      "explosiveness": 1.3007316367500226,
-      "powerSuccess": 0.7391304347826086,
-      "stuffRate": 0.14965986394557823,
-      "lineYards": 2.9761904761904763,
-      "lineYardsTotal": 438,
-      "secondLevelYards": 0.9319727891156463,
-      "secondLevelYardsTotal": 137,
-      "openFieldYards": 0.7414965986394558,
+      "plays": 340,
+      "drives": 55,
+      "ppa": 0.24251141057760062,
+      "totalPPA": 82.45387959638421,
+      "successRate": 0.45,
+      "explosiveness": 1.2281262069885728,
+      "powerSuccess": 0.7777777777777778,
+      "stuffRate": 0.13529411764705881,
+      "lineYards": 3.038235294117647,
+      "lineYardsTotal": 517,
+      "secondLevelYards": 0.9,
+      "secondLevelYardsTotal": 153,
+      "openFieldYards": 0.6705882352941176,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 26,
-      "pointsPerOpportunity": 4.076923076923077,
+      "totalOpportunies": 33,
+      "pointsPerOpportunity": 4.03030303030303,
       "fieldPosition": {
-        "averageStart": 70.5,
-        "averagePredictedPoints": -1.348
+        "averageStart": 72,
+        "averagePredictedPoints": -1.241
       },
       "havoc": {
-        "total": 0.132,
-        "frontSeven": 0.073,
+        "total": 0.129,
+        "frontSeven": 0.071,
         "db": 0.059
       },
       "standardDowns": {
-        "rate": 0.652014652014652,
-        "ppa": 0.17880745099254486,
-        "successRate": 0.4943820224719101,
-        "explosiveness": 1.0936314804575986
+        "rate": 0.6823529411764706,
+        "ppa": 0.18523574467233572,
+        "successRate": 0.5258620689655172,
+        "explosiveness": 1.0374280630328734
       },
       "passingDowns": {
-        "rate": 0.34798534798534797,
-        "ppa": 0.3548388667449428,
-        "totalPPA": 57.853314096696145,
-        "successRate": 0.2736842105263158,
-        "explosiveness": 2.0016860118936113
+        "rate": 0.3176470588235294,
+        "ppa": 0.36554802622594745,
+        "totalPPA": 63.5789201409582,
+        "successRate": 0.28703703703703703,
+        "explosiveness": 1.9786156767497123
       },
       "rushingPlays": {
-        "rate": 0.5384615384615384,
-        "ppa": 0.052272819869023164,
-        "totalPPA": 7.684104520746405,
-        "successRate": 0.40816326530612246,
-        "explosiveness": 0.7877385269802581
+        "rate": 0.5,
+        "ppa": 0.11102917326721183,
+        "totalPPA": 18.874959455426012,
+        "successRate": 0.4411764705882353,
+        "explosiveness": 0.825363385684678
       },
       "passingPlays": {
-        "rate": 0.46153846153846156,
-        "ppa": 0.45915328648171544,
-        "totalPPA": 57.853314096696145,
-        "successRate": 0.42857142857142855,
-        "explosiveness": 1.8707239809386498
+        "rate": 0.5,
+        "ppa": 0.37399364788798944,
+        "totalPPA": 63.5789201409582,
+        "successRate": 0.4588235294117647,
+        "explosiveness": 1.6153981505500101
       }
     }
   },
@@ -11204,110 +11204,110 @@
     "team": "South Florida",
     "conference": "American Athletic",
     "offense": {
-      "plays": 240,
-      "drives": 48,
-      "ppa": 0.2375184055981439,
-      "totalPPA": 57.004417343554536,
-      "successRate": 0.375,
-      "explosiveness": 1.4963631106229658,
-      "powerSuccess": 0.75,
-      "stuffRate": 0.1523809523809524,
-      "lineYards": 2.899047619047619,
-      "lineYardsTotal": 304,
-      "secondLevelYards": 0.9809523809523809,
-      "secondLevelYardsTotal": 103,
-      "openFieldYards": 2.066666666666667,
-      "openFieldYardsTotal": 217,
-      "totalOpportunies": 20,
-      "pointsPerOpportunity": 4.2,
+      "plays": 337,
+      "drives": 64,
+      "ppa": 0.23765699547383917,
+      "totalPPA": 80.0904074746838,
+      "successRate": 0.4094955489614243,
+      "explosiveness": 1.3625238273031866,
+      "powerSuccess": 0.782608695652174,
+      "stuffRate": 0.1437125748502994,
+      "lineYards": 3.294610778443114,
+      "lineYardsTotal": 550,
+      "secondLevelYards": 1.3053892215568863,
+      "secondLevelYardsTotal": 218,
+      "openFieldYards": 1.9161676646706587,
+      "openFieldYardsTotal": 320,
+      "totalOpportunies": 32,
+      "pointsPerOpportunity": 4.25,
       "fieldPosition": {
-        "averageStart": 72.3,
-        "averagePredictedPoints": 1.251
+        "averageStart": 70.4,
+        "averagePredictedPoints": 1.384
       },
       "havoc": {
-        "total": 0.154,
-        "frontSeven": 0.079,
-        "db": 0.075
+        "total": 0.131,
+        "frontSeven": 0.065,
+        "db": 0.065
       },
       "standardDowns": {
-        "rate": 0.6458333333333334,
-        "ppa": 0.20790343933381042,
-        "successRate": 0.45806451612903226,
-        "explosiveness": 1.2309242862650167
+        "rate": 0.658753709198813,
+        "ppa": 0.163542184534486,
+        "successRate": 0.481981981981982,
+        "explosiveness": 1.059649993364714
       },
       "passingDowns": {
-        "rate": 0.3541666666666667,
-        "ppa": 0.29152216760957556,
-        "successRate": 0.2235294117647059,
-        "explosiveness": 2.488266085855301
+        "rate": 0.34124629080118696,
+        "ppa": 0.380730804417634,
+        "successRate": 0.26956521739130435,
+        "explosiveness": 2.4079270605746874
       },
       "rushingPlays": {
-        "rate": 0.4375,
-        "ppa": 0.12927883329701462,
-        "totalPPA": 13.574277496186534,
-        "successRate": 0.3523809523809524,
-        "explosiveness": 1.3435231825910245
+        "rate": 0.49554896142433236,
+        "ppa": 0.19548595998833584,
+        "totalPPA": 32.64615531805209,
+        "successRate": 0.4251497005988024,
+        "explosiveness": 1.1616515330501058
       },
       "passingPlays": {
-        "rate": 0.5625,
-        "ppa": 0.32170473961013335,
-        "totalPPA": 43.430139847368004,
-        "successRate": 0.3925925925925926,
-        "explosiveness": 1.6030626830226227
+        "rate": 0.5044510385756676,
+        "ppa": 0.27908383621548066,
+        "totalPPA": 47.44425215663172,
+        "successRate": 0.3941176470588235,
+        "explosiveness": 1.5753884973325705
       }
     },
     "defense": {
-      "plays": 296,
-      "drives": 49,
-      "ppa": 0.06122701896735573,
-      "totalPPA": 18.123197614337297,
-      "successRate": 0.4155405405405405,
-      "explosiveness": 1.1842647745712294,
-      "powerSuccess": 0.6470588235294118,
-      "stuffRate": 0.27941176470588236,
-      "lineYards": 2.7323529411764707,
-      "lineYardsTotal": 372,
-      "secondLevelYards": 1.0882352941176472,
-      "secondLevelYardsTotal": 148,
-      "openFieldYards": 0.75,
+      "plays": 358,
+      "drives": 66,
+      "ppa": 0.04261772466827328,
+      "totalPPA": 15.257145431241835,
+      "successRate": 0.40502793296089384,
+      "explosiveness": 1.1322329907049806,
+      "powerSuccess": 0.6842105263157895,
+      "stuffRate": 0.2603550295857988,
+      "lineYards": 2.7585798816568046,
+      "lineYardsTotal": 466,
+      "secondLevelYards": 1.1005917159763314,
+      "secondLevelYardsTotal": 186,
+      "openFieldYards": 0.7810650887573964,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 23,
-      "pointsPerOpportunity": 3.4347826086956523,
+      "totalOpportunies": 28,
+      "pointsPerOpportunity": 3.6785714285714284,
       "fieldPosition": {
-        "averageStart": 71.8,
-        "averagePredictedPoints": -1.244
+        "averageStart": 71.5,
+        "averagePredictedPoints": -1.279
       },
       "havoc": {
-        "total": 0.149,
-        "frontSeven": 0.098,
-        "db": 0.051
+        "total": 0.142,
+        "frontSeven": 0.089,
+        "db": 0.053
       },
       "standardDowns": {
-        "rate": 0.6925675675675675,
-        "ppa": 0.0017350528827977222,
-        "successRate": 0.45365853658536587,
-        "explosiveness": 1.0216711607150655
+        "rate": 0.6843575418994413,
+        "ppa": -0.013874419210559529,
+        "successRate": 0.4448979591836735,
+        "explosiveness": 0.9944439438555318
       },
       "passingDowns": {
-        "rate": 0.30743243243243246,
-        "ppa": 0.19524738212487652,
-        "totalPPA": 26.948688685665417,
-        "successRate": 0.32967032967032966,
-        "explosiveness": 1.6883049775253371
+        "rate": 0.31564245810055863,
+        "ppa": 0.16510069148521167,
+        "totalPPA": 28.753890283243834,
+        "successRate": 0.3185840707964602,
+        "explosiveness": 1.549427604776923
       },
       "rushingPlays": {
-        "rate": 0.4594594594594595,
-        "ppa": 0.01584172469175236,
-        "totalPPA": 2.1544745580783213,
-        "successRate": 0.4338235294117647,
-        "explosiveness": 0.8144340624704608
+        "rate": 0.4720670391061452,
+        "ppa": -0.014892184749086152,
+        "totalPPA": -2.51677922259556,
+        "successRate": 0.42011834319526625,
+        "explosiveness": 0.7425862572247595
       },
       "passingPlays": {
-        "rate": 0.5304054054054054,
-        "ppa": 0.17164769863481158,
-        "totalPPA": 26.948688685665417,
-        "successRate": 0.40764331210191085,
-        "explosiveness": 1.5252024622891254
+        "rate": 0.5195530726256983,
+        "ppa": 0.15459080797442923,
+        "totalPPA": 28.753890283243834,
+        "successRate": 0.3978494623655914,
+        "explosiveness": 1.5060832349900577
       }
     }
   },
@@ -14676,110 +14676,110 @@
     "team": "Western Kentucky",
     "conference": "Conference USA",
     "offense": {
-      "plays": 356,
-      "drives": 65,
-      "ppa": 0.21949186465725115,
-      "totalPPA": 78.13910381798141,
-      "successRate": 0.46629213483146065,
-      "explosiveness": 1.1932780863952628,
-      "powerSuccess": 0.8421052631578947,
-      "stuffRate": 0.17333333333333334,
-      "lineYards": 3.098666666666667,
-      "lineYardsTotal": 465,
-      "secondLevelYards": 1.0933333333333333,
-      "secondLevelYardsTotal": 164,
-      "openFieldYards": 1.0666666666666667,
-      "openFieldYardsTotal": 160,
-      "totalOpportunies": 34,
-      "pointsPerOpportunity": 4.735294117647059,
+      "plays": 413,
+      "drives": 73,
+      "ppa": 0.2308444670860669,
+      "totalPPA": 95.33876490654562,
+      "successRate": 0.46246973365617433,
+      "explosiveness": 1.2149278662364,
+      "powerSuccess": 0.85,
+      "stuffRate": 0.17613636363636365,
+      "lineYards": 3.121590909090909,
+      "lineYardsTotal": 549,
+      "secondLevelYards": 1.0795454545454546,
+      "secondLevelYardsTotal": 190,
+      "openFieldYards": 1.0170454545454546,
+      "openFieldYardsTotal": 179,
+      "totalOpportunies": 39,
+      "pointsPerOpportunity": 4.641025641025641,
       "fieldPosition": {
-        "averageStart": 72.8,
-        "averagePredictedPoints": 1.172
+        "averageStart": 72.6,
+        "averagePredictedPoints": 1.191
       },
       "havoc": {
         "total": 0.126,
-        "frontSeven": 0.073,
-        "db": 0.053
+        "frontSeven": 0.077,
+        "db": 0.048
       },
       "standardDowns": {
-        "rate": 0.699438202247191,
-        "ppa": 0.2271406072678955,
-        "successRate": 0.5261044176706827,
-        "explosiveness": 1.0400226411576257
+        "rate": 0.6852300242130751,
+        "ppa": 0.21285867301131822,
+        "successRate": 0.519434628975265,
+        "explosiveness": 1.029445537884018
       },
       "passingDowns": {
-        "rate": 0.300561797752809,
-        "ppa": 0.20169245428294788,
-        "successRate": 0.32710280373831774,
-        "explosiveness": 1.7668913242847046
+        "rate": 0.31476997578692495,
+        "ppa": 0.2699981572641736,
+        "successRate": 0.3384615384615385,
+        "explosiveness": 1.8346074632318583
       },
       "rushingPlays": {
-        "rate": 0.42134831460674155,
-        "ppa": 0.08497581144071295,
-        "totalPPA": 12.746371716106943,
-        "successRate": 0.46,
-        "explosiveness": 0.8212259245107263
+        "rate": 0.4261501210653753,
+        "ppa": 0.08866480464045823,
+        "totalPPA": 15.605005616720648,
+        "successRate": 0.44886363636363635,
+        "explosiveness": 0.8386400677122541
       },
       "passingPlays": {
-        "rate": 0.5786516853932584,
-        "ppa": 0.31744044709647795,
-        "totalPPA": 65.39273210187446,
-        "successRate": 0.470873786407767,
-        "explosiveness": 1.457933747941995
+        "rate": 0.5738498789346247,
+        "ppa": 0.3364293640920885,
+        "totalPPA": 79.73375928982497,
+        "successRate": 0.47257383966244726,
+        "explosiveness": 1.480345152695396
       }
     },
     "defense": {
-      "plays": 334,
-      "drives": 64,
-      "ppa": 0.11395242578247962,
-      "totalPPA": 38.060110211348196,
-      "successRate": 0.344311377245509,
-      "explosiveness": 1.3607936029672278,
-      "powerSuccess": 0.6428571428571429,
-      "stuffRate": 0.1751412429378531,
-      "lineYards": 3.0649717514124295,
-      "lineYardsTotal": 543,
-      "secondLevelYards": 1.288135593220339,
-      "secondLevelYardsTotal": 228,
-      "openFieldYards": 2.3163841807909606,
+      "plays": 416,
+      "drives": 74,
+      "ppa": 0.11367663638513563,
+      "totalPPA": 47.28948073621642,
+      "successRate": 0.37740384615384615,
+      "explosiveness": 1.2431266277651614,
+      "powerSuccess": 0.64,
+      "stuffRate": 0.1943127962085308,
+      "lineYards": 2.953554502369668,
+      "lineYardsTotal": 623,
+      "secondLevelYards": 1.2085308056872037,
+      "secondLevelYardsTotal": 255,
+      "openFieldYards": 2.037914691943128,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 27,
-      "pointsPerOpportunity": 2.925925925925926,
+      "totalOpportunies": 34,
+      "pointsPerOpportunity": 3.0294117647058822,
       "fieldPosition": {
-        "averageStart": 73.1,
-        "averagePredictedPoints": -1.171
+        "averageStart": 73.4,
+        "averagePredictedPoints": -1.163
       },
       "havoc": {
-        "total": 0.165,
-        "frontSeven": 0.093,
-        "db": 0.072
+        "total": 0.163,
+        "frontSeven": 0.094,
+        "db": 0.07
       },
       "standardDowns": {
-        "rate": 0.6646706586826348,
-        "ppa": 0.13272791574367412,
-        "successRate": 0.4189189189189189,
-        "explosiveness": 1.2496088949135524
+        "rate": 0.6826923076923077,
+        "ppa": 0.12591313244462982,
+        "successRate": 0.4507042253521127,
+        "explosiveness": 1.1097602639891362
       },
       "passingDowns": {
-        "rate": 0.33532934131736525,
-        "ppa": 0.07673672246654052,
-        "totalPPA": 4.705669480204729,
-        "successRate": 0.19642857142857142,
-        "explosiveness": 1.8308016870123107
+        "rate": 0.3173076923076923,
+        "ppa": 0.08734962971167845,
+        "totalPPA": 14.828756614263554,
+        "successRate": 0.2196969696969697,
+        "explosiveness": 1.831778164431755
       },
       "rushingPlays": {
-        "rate": 0.5299401197604791,
-        "ppa": 0.181134084254226,
-        "totalPPA": 32.060732912998006,
-        "successRate": 0.3728813559322034,
-        "explosiveness": 1.253689676640139
+        "rate": 0.5072115384615384,
+        "ppa": 0.14771097774316305,
+        "totalPPA": 31.167016303807404,
+        "successRate": 0.3981042654028436,
+        "explosiveness": 1.1291079923699276
       },
       "passingPlays": {
-        "rate": 0.46407185628742514,
-        "ppa": 0.0303591579368047,
-        "totalPPA": 4.705669480204729,
-        "successRate": 0.3096774193548387,
-        "explosiveness": 1.480936078647398
+        "rate": 0.4879807692307692,
+        "ppa": 0.07304806213922933,
+        "totalPPA": 14.828756614263554,
+        "successRate": 0.35467980295566504,
+        "explosiveness": 1.356430490168743
       }
     }
   },
@@ -14900,110 +14900,110 @@
     "team": "West Virginia",
     "conference": "Big 12",
     "offense": {
-      "plays": 350,
-      "drives": 68,
-      "ppa": 0.13422229676419467,
-      "totalPPA": 46.97780386746813,
-      "successRate": 0.4085714285714286,
-      "explosiveness": 1.146233075193413,
-      "powerSuccess": 0.7027027027027027,
-      "stuffRate": 0.18009478672985782,
-      "lineYards": 3.0928909952606634,
-      "lineYardsTotal": 653,
-      "secondLevelYards": 1.2037914691943128,
-      "secondLevelYardsTotal": 254,
-      "openFieldYards": 1.6350710900473935,
-      "openFieldYardsTotal": 345,
-      "totalOpportunies": 22,
-      "pointsPerOpportunity": 4.045454545454546,
+      "plays": 413,
+      "drives": 80,
+      "ppa": 0.12187162004347891,
+      "totalPPA": 50.33297907795679,
+      "successRate": 0.4019370460048426,
+      "explosiveness": 1.165829067285178,
+      "powerSuccess": 0.6818181818181818,
+      "stuffRate": 0.1867704280155642,
+      "lineYards": 3.0315175097276263,
+      "lineYardsTotal": 779,
+      "secondLevelYards": 1.0972762645914398,
+      "secondLevelYardsTotal": 282,
+      "openFieldYards": 1.3968871595330739,
+      "openFieldYardsTotal": 359,
+      "totalOpportunies": 27,
+      "pointsPerOpportunity": 4.185185185185185,
       "fieldPosition": {
-        "averageStart": 72.9,
-        "averagePredictedPoints": 1.21
+        "averageStart": 72,
+        "averagePredictedPoints": 1.255
       },
       "havoc": {
-        "total": 0.157,
-        "frontSeven": 0.103,
-        "db": 0.054
+        "total": 0.153,
+        "frontSeven": 0.097,
+        "db": 0.056
       },
       "standardDowns": {
-        "rate": 0.7,
-        "ppa": 0.05030321902625804,
-        "successRate": 0.46938775510204084,
-        "explosiveness": 0.9337282025784348
+        "rate": 0.7070217917675545,
+        "ppa": 0.017803865986723382,
+        "successRate": 0.4520547945205479,
+        "explosiveness": 0.9349610945774168
       },
       "passingDowns": {
-        "rate": 0.3,
-        "ppa": 0.33003347815271344,
-        "successRate": 0.26666666666666666,
-        "explosiveness": 2.0190209448620737
+        "rate": 0.2929782082324455,
+        "ppa": 0.3730103323126741,
+        "successRate": 0.2809917355371901,
+        "explosiveness": 2.062140020150604
       },
       "rushingPlays": {
-        "rate": 0.6028571428571429,
-        "ppa": 0.1796700021552956,
-        "totalPPA": 37.910370454767374,
-        "successRate": 0.45023696682464454,
-        "explosiveness": 1.0041993106788545
+        "rate": 0.6222760290556901,
+        "ppa": 0.13782437354323046,
+        "totalPPA": 35.42086400061023,
+        "successRate": 0.43190661478599224,
+        "explosiveness": 0.9975386648544214
       },
       "passingPlays": {
-        "rate": 0.39714285714285713,
-        "ppa": 0.065233333904322,
-        "totalPPA": 9.067433412700758,
-        "successRate": 0.34532374100719426,
-        "explosiveness": 1.4273415674618104
+        "rate": 0.37772397094430993,
+        "ppa": 0.09559048126504205,
+        "totalPPA": 14.912115077346561,
+        "successRate": 0.3525641025641026,
+        "explosiveness": 1.5054696976454325
       }
     },
     "defense": {
-      "plays": 347,
-      "drives": 65,
-      "ppa": 0.09983177086791882,
-      "totalPPA": 34.641624491167825,
-      "successRate": 0.37752161383285304,
-      "explosiveness": 1.260656621789118,
-      "powerSuccess": 0.6086956521739131,
-      "stuffRate": 0.18461538461538463,
-      "lineYards": 2.7056410256410257,
-      "lineYardsTotal": 528,
-      "secondLevelYards": 0.9846153846153847,
-      "secondLevelYardsTotal": 192,
-      "openFieldYards": 0.9538461538461539,
+      "plays": 414,
+      "drives": 77,
+      "ppa": 0.15899802386586692,
+      "totalPPA": 65.8251818804689,
+      "successRate": 0.4057971014492754,
+      "explosiveness": 1.2485200489866446,
+      "powerSuccess": 0.7352941176470589,
+      "stuffRate": 0.16806722689075632,
+      "lineYards": 2.701260504201681,
+      "lineYardsTotal": 643,
+      "secondLevelYards": 0.9789915966386554,
+      "secondLevelYardsTotal": 233,
+      "openFieldYards": 0.9117647058823529,
       "openFieldYardsTotal": 0,
-      "totalOpportunies": 30,
-      "pointsPerOpportunity": 3.7,
+      "totalOpportunies": 38,
+      "pointsPerOpportunity": 3.736842105263158,
       "fieldPosition": {
-        "averageStart": 68.2,
-        "averagePredictedPoints": -1.534
+        "averageStart": 69.6,
+        "averagePredictedPoints": -1.457
       },
       "havoc": {
-        "total": 0.156,
-        "frontSeven": 0.104,
-        "db": 0.052
+        "total": 0.151,
+        "frontSeven": 0.103,
+        "db": 0.048
       },
       "standardDowns": {
-        "rate": 0.6887608069164265,
-        "ppa": -0.0026545805936281537,
-        "successRate": 0.39748953974895396,
-        "explosiveness": 1.101414831355598
+        "rate": 0.6908212560386473,
+        "ppa": 0.06742425738021525,
+        "successRate": 0.44405594405594406,
+        "explosiveness": 1.065780818219435
       },
       "passingDowns": {
-        "rate": 0.3112391930835735,
-        "ppa": 0.3266302708615274,
-        "totalPPA": 33.71717719434907,
-        "successRate": 0.3333333333333333,
-        "explosiveness": 1.6808780132109065
+        "rate": 0.30917874396135264,
+        "ppa": 0.3636081583572449,
+        "totalPPA": 50.61896585970966,
+        "successRate": 0.3203125,
+        "explosiveness": 1.8145659589240983
       },
       "rushingPlays": {
-        "rate": 0.5619596541786743,
-        "ppa": 0.014030850428848511,
-        "totalPPA": 2.73601583362546,
-        "successRate": 0.36923076923076925,
-        "explosiveness": 0.9756520033774349
+        "rate": 0.5748792270531401,
+        "ppa": 0.07150329646036112,
+        "totalPPA": 17.017784557565946,
+        "successRate": 0.40336134453781514,
+        "explosiveness": 0.9260701501575065
       },
       "passingPlays": {
-        "rate": 0.43515850144092216,
-        "ppa": 0.2232925642009872,
-        "totalPPA": 33.71717719434907,
-        "successRate": 0.39072847682119205,
-        "explosiveness": 1.608458867986426
+        "rate": 0.4227053140096618,
+        "ppa": 0.28925123348405524,
+        "totalPPA": 50.61896585970966,
+        "successRate": 0.4114285714285714,
+        "explosiveness": 1.6784532474254954
       }
     }
   },
