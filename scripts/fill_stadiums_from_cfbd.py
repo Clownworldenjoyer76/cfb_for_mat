@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Fill missing lat/lon/timezone/altitude_m in a stadiums CSV using CFBD Venues.
-# Plain ASCII, preserves existing non-null values, creates helper columns before use.
+# Adds a fallback to derive timezone from lat/lon when CFBD lacks it.
 
 import argparse
 import os
@@ -13,6 +13,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 from rapidfuzz import fuzz, process
+from timezonefinder import TimezoneFinder  # new: fallback tz from lat/lon
 
 VENUES_URL = "https://api.collegefootballdata.com/venues"
 
@@ -22,6 +23,12 @@ REQ_COLS = [
     "is_neutral_site", "notes",
 ]
 
+# words to strip from venue names to improve matching
+VENUE_STOPWORDS = [
+    "stadium", "field", "memorial", "arena", "coliseum", "stadium at",
+    "the", "of", "and"
+]
+
 def norm(s):
     if s is None or (isinstance(s, float) and math.isnan(s)):
         return ""
@@ -29,6 +36,10 @@ def norm(s):
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii")
     s = s.lower()
     s = re.sub(r"[^a-z0-9\s\-]", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    # remove common venue stopwords at word boundaries
+    for w in VENUE_STOPWORDS:
+        s = re.sub(rf"\b{re.escape(w)}\b", " ", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
 
@@ -83,10 +94,25 @@ def fuzzy_pick(row, cfbd, min_fuzzy):
     label, score, idx = best
     return idx if score >= min_fuzzy else None
 
+def backfill_timezone_from_latlon(df: pd.DataFrame) -> pd.DataFrame:
+    """When lat/lon exist but timezone is blank, derive tz using timezonefinder."""
+    tf = TimezoneFinder()
+    mask = df["timezone"].isna() & df["lat"].notna() & df["lon"].notna()
+    if not mask.any():
+        return df
+    for i in df.index[mask]:
+        try:
+            tz = tf.timezone_at(lng=float(df.at[i, "lon"]), lat=float(df.at[i, "lat"]))
+            if tz:
+                df.at[i, "timezone"] = tz
+        except Exception:
+            pass
+    return df
+
 def main():
     ap = argparse.ArgumentParser(description="Fill missing stadium metadata from CFBD venues")
     ap.add_argument("--stadiums", type=Path, required=True, help="Path to data/reference/stadiums.csv")
-    ap.add_argument("--min-fuzzy", type=int, default=90, help="Minimum fuzzy score for venue name match (0-100)")
+    ap.add_argument("--min-fuzzy", type=int, default=80, help="Minimum fuzzy score for venue name match (0-100)")
     args = ap.parse_args()
 
     if not args.stadiums.exists():
@@ -131,7 +157,6 @@ def main():
     # 2) City+state join for those still missing latitude
     still_mask = exact["latitude"].isna()
     if still_mask.any():
-        # Build a frame with same row order as the still-missing slice
         to_loc = exact.loc[still_mask, ["team", "city_n", "state_n"]].copy()
         by_loc = to_loc.merge(
             cfbd,
@@ -139,11 +164,11 @@ def main():
             how="left",
             suffixes=("", "_loc"),
         )
-        # Align series by the exact.loc index to avoid ndarray TypeError
+        # Align series by index to avoid ndarray TypeError
         idx = exact.index[still_mask]
         for col in ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]:
-            aligned_series = pd.Series(by_loc[col].values, index=idx)
-            exact.loc[still_mask, col] = exact.loc[still_mask, col].fillna(aligned_series)
+            aligned = pd.Series(by_loc[col].values, index=idx)
+            exact.loc[still_mask, col] = exact.loc[still_mask, col].fillna(aligned)
 
     # 3) Fuzzy fallback on venue name
     remain_idx = exact.index[exact["latitude"].isna()].tolist()
@@ -174,6 +199,9 @@ def main():
         updated[c] = pd.to_numeric(updated[c], errors="coerce")
     if "is_neutral_site" in updated.columns:
         updated["is_neutral_site"] = pd.to_numeric(updated["is_neutral_site"], errors="coerce").fillna(0).astype(int)
+
+    # Fallback: derive timezone from lat/lon where still missing
+    updated = backfill_timezone_from_latlon(updated)
 
     # Drop helpers
     for helper in ["venue_n", "city_n", "state_n", "name_n"]:
