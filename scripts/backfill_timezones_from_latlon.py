@@ -1,28 +1,21 @@
 #!/usr/bin/env python3
-# Fill empty timezone cells using IANA tz from lat/lon in a stadiums CSV.
+# Recompute timezone for EVERY row using IANA tz from lat/lon in stadiums.csv (row-by-row).
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
 import pandas as pd
 from timezonefinder import TimezoneFinder
 
-def is_missing_tz(x):
-    if x is None:
-        return True
-    s = str(x).strip()
-    return s == "" or s.lower() == "none" or pd.isna(x)
-
-def coerce_float(s):
+def coerce_float(x):
     try:
-        return float(s)
+        return float(x)
     except Exception:
         return None
 
 def main():
-    ap = argparse.ArgumentParser(description="Backfill timezone from lat/lon with IANA strings.")
+    ap = argparse.ArgumentParser(description="Recompute timezone for every row from lat/lon (IANA strings).")
     ap.add_argument("--stadiums", type=Path, required=True, help="Path to data/reference/stadiums.csv")
     ap.add_argument("--out", type=Path, default=None, help="Optional output path (defaults to overwrite input)")
     args = ap.parse_args()
@@ -36,42 +29,41 @@ def main():
 
     df = pd.read_csv(src)
 
-    # Ensure required columns exist
+    # Ensure columns exist
     for c in ["lat", "lon", "timezone"]:
         if c not in df.columns:
             df[c] = pd.NA
 
-    # Normalize types
+    # Normalize numeric types
     df["lat"] = pd.to_numeric(df["lat"], errors="coerce")
     df["lon"] = pd.to_numeric(df["lon"], errors="coerce")
 
-    # Rows eligible for backfill: tz missing and lat/lon present
-    mask = df.apply(lambda r: is_missing_tz(r.get("timezone")) and pd.notna(r.get("lat")) and pd.notna(r.get("lon")), axis=1)
+    tf = TimezoneFinder()
 
-    if mask.any():
-        tf = TimezoneFinder()
-        for i in df.index[mask]:
-            lat = coerce_float(df.at[i, "lat"])
-            lon = coerce_float(df.at[i, "lon"])
-            if lat is None or lon is None:
-                continue
+    updated = 0
+    for i in df.index:
+        lat = coerce_float(df.at[i, "lat"])
+        lon = coerce_float(df.at[i, "lon"])
+        if lat is None or lon is None:
+            # leave timezone as-is if coordinates are missing/invalid
+            continue
+
+        tz = None
+        try:
+            tz = tf.timezone_at(lat=lat, lng=lon)
+            if tz is None:
+                tz = tf.closest_timezone_at(lat=lat, lng=lon)
+        except Exception:
             tz = None
-            try:
-                tz = tf.timezone_at(lat=lat, lng=lon)
-                if tz is None:
-                    tz = tf.closest_timezone_at(lat=lat, lng=lon)
-            except Exception:
-                tz = None
-            if tz and isinstance(tz, str) and tz.strip():
-                df.at[i, "timezone"] = tz
 
-    # Write file
+        if tz and isinstance(tz, str) and tz.strip():
+            if df.at[i, "timezone"] != tz:
+                df.at[i, "timezone"] = tz
+                updated += 1
+
     dst.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(dst, index=False)
-
-    # Basic output
-    remaining = df["timezone"].isna().sum() + sum(str(x).strip().lower() == "none" for x in df["timezone"].fillna(""))
-    print("[tz] Done. Rows updated: %d, remaining blank/None timezones: %d" % (mask.sum(), remaining))
+    print("[tz] Done. Rows recalculated: %d" % updated)
 
 if __name__ == "__main__":
     main()
