@@ -71,6 +71,9 @@ Thumbs.db
 *.log
 *.txt
 
+# Always keep Python scripts in /scripts
+!scripts/*.py
+
 # Explicitly keep pipeline artifacts
 !weather_enriched.csv
 !logs_weather_openmeteo.txt
