@@ -2,6 +2,7 @@
 # Fill missing lat/lon/timezone/altitude_m in a stadiums CSV using CFBD Venues.
 # Plain ASCII. Creates helper columns before merges. Collapses multi-matches to
 # single rows so fills are always scalars. City+state join is deduped (1:1).
+# Also applies manual overrides and runs timezone fallback at the very end.
 
 import argparse
 import os
@@ -121,6 +122,20 @@ def first_notna(series):
             return v
     return pd.NA
 
+def apply_manual_overrides(df):
+    # Set altitude for Western Kentucky / Houchens–Smith Stadium / Cape Girardeau, MO to 371 feet.
+    # 371 ft -> meters
+    target_m = feet_to_meters(371)
+    mask = (
+        df["team"].astype(str).str.strip().str.lower().eq("western kentucky") &
+        df["venue"].astype(str).str.strip().str.lower().eq("houchens–smith stadium") &
+        df["city"].astype(str).str.strip().str.lower().eq("cape girardeau") &
+        df["state"].astype(str).str.strip().str.upper().eq("MO")
+    )
+    if mask.any():
+        df.loc[mask, "altitude_m"] = target_m
+    return df
+
 def main():
     ap = argparse.ArgumentParser(description="Fill missing stadium metadata from CFBD venues")
     ap.add_argument("--stadiums", type=Path, required=True, help="Path to data/reference/stadiums.csv")
@@ -149,11 +164,15 @@ def main():
     needs = stad.loc[needs_mask].copy()
 
     if needs.empty:
+        # Manual overrides even if nothing else to fill
+        stad = apply_manual_overrides(stad)
+        # Final timezone fallback at the very end
+        stad = backfill_timezone_from_latlon(stad)
         for helper in ["venue_n", "city_n", "state_n"]:
             if helper in stad.columns:
                 stad.drop(columns=[helper], inplace=True)
         stad.to_csv(args.stadiums, index=False)
-        print("[fill] Nothing to fill; all rows complete.")
+        print("[fill] Nothing to fill; applied overrides and tz fallback.")
         return
 
     # 1) Exact normalized venue name join
@@ -216,10 +235,13 @@ def main():
     if "is_neutral_site" in updated.columns:
         updated["is_neutral_site"] = pd.to_numeric(updated["is_neutral_site"], errors="coerce").fillna(0).astype(int)
 
-    # Fallback: derive timezone from lat/lon where still missing
+    # Manual overrides (Western Kentucky altitude)
+    updated = apply_manual_overrides(updated)
+
+    # Final timezone fallback at the VERY END (after all fills and overrides)
     updated = backfill_timezone_from_latlon(updated)
 
-    # Drop helper columns
+    # Drop helper columns and save
     for helper in ["venue_n", "city_n", "state_n", "name_n"]:
         if helper in updated.columns:
             updated.drop(columns=[helper], inplace=True)
