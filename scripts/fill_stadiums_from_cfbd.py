@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # Fill missing lat/lon/timezone/altitude_m in a stadiums CSV using CFBD Venues.
-# Plain ASCII. Creates helper columns before merges. Collapses multi-matches to
-# single rows so fills are always scalars. City+state join is deduped (1:1).
-# Applies manual overrides, removes placeholder/duplicate coordinates, and runs
-# timezone fallback at the very end.
+# Plain ASCII only. Removes placeholder/duplicate coordinates, applies overrides,
+# and runs timezone fallback at the very end.
 
 import argparse
 import os
@@ -31,9 +30,8 @@ VENUE_STOPWORDS = [
     "the", "of", "and"
 ]
 
-# Known bad placeholder coordinate(s)
+# Known bad placeholder coordinates
 BAD_COORDS = {(39.474686, -87.366960)}
-# Frequency threshold to treat a lat/lon pair as suspicious and blank it
 DUP_COORD_THRESHOLD = 25
 
 def norm(s):
@@ -42,11 +40,11 @@ def norm(s):
     s = str(s)
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii")
     s = s.lower()
-    s = re.sub(r"[^a-z0-9\s\-]", " ", s)
-    s = re.sub(r"\s+", " ", s).strip()
+    s = re.sub(r"[^a-z0-9\\s\\-]", " ", s)
+    s = re.sub(r"\\s+", " ", s).strip()
     for w in VENUE_STOPWORDS:
-        s = re.sub(r"\b" + re.escape(w) + r"\b", " ", s)
-    s = re.sub(r"\s+", " ", s).strip()
+        s = re.sub(r"\\b" + re.escape(w) + r"\\b", " ", s)
+    s = re.sub(r"\\s+", " ", s).strip()
     return s
 
 def feet_to_meters(x):
@@ -63,11 +61,9 @@ def pull_cfbd(api_key):
     r.raise_for_status()
     js = r.json()
     df = pd.DataFrame(js)
-
     for c in ["name", "city", "state", "country", "timezone", "latitude", "longitude", "elevation"]:
         if c not in df.columns:
             df[c] = pd.NA
-
     df["name_n"] = df["name"].map(norm)
     df["city_n"] = df["city"].map(norm)
     df["state_n"] = df["state"].map(norm)
@@ -131,11 +127,11 @@ def first_notna(series):
     return pd.NA
 
 def apply_manual_overrides(df):
-    # Western Kentucky / Houchens–Smith Stadium / Cape Girardeau, MO -> 371 ft
+    # Western Kentucky / Houchens-Smith Stadium / Cape Girardeau, MO -> 371 ft
     target_m = feet_to_meters(371)
     mask = (
         df["team"].astype(str).str.strip().str.lower().eq("western kentucky") &
-        df["venue"].astype(str).str.strip().str.lower().eq("houchens–smith stadium") &
+        df["venue"].astype(str).str.strip().str.lower().eq("houchens-smith stadium") &
         df["city"].astype(str).str.strip().str.lower().eq("cape girardeau") &
         df["state"].astype(str).str.strip().str.upper().eq("MO")
     )
@@ -144,7 +140,6 @@ def apply_manual_overrides(df):
     return df
 
 def blank_placeholder_and_dupe_coords(df):
-    # Ensure numeric
     df["lat"] = pd.to_numeric(df["lat"], errors="coerce")
     df["lon"] = pd.to_numeric(df["lon"], errors="coerce")
 
@@ -157,17 +152,22 @@ def blank_placeholder_and_dupe_coords(df):
         if not isinstance(bad_mask, bool):
             df.loc[bad_mask, ["lat", "lon"]] = pd.NA
 
-    # Blank overly-common duplicate coordinates (no reliance on 'n' column after merge)
+    # Blank overly-common duplicate coordinates
     grp = df.groupby(["lat", "lon"], dropna=True).size().reset_index(name="n")
     if not grp.empty:
         too_common = grp[grp["n"] > DUP_COORD_THRESHOLD][["lat", "lon"]]
         if not too_common.empty:
-            # Build an index-of-tuples for fast membership
             common_index = set(zip(too_common["lat"], too_common["lon"]))
-            mask = df.apply(lambda r: (pd.notna(r["lat"]) and pd.notna(r["lon"]) and (float(r["lat"]), float(r["lon"])) in common_index), axis=1)
+            mask = df.apply(
+                lambda r: (
+                    pd.notna(r["lat"])
+                    and pd.notna(r["lon"])
+                    and (float(r["lat"]), float(r["lon"])) in common_index
+                ),
+                axis=1,
+            )
             if mask.any():
                 df.loc[mask, ["lat", "lon"]] = pd.NA
-
     return df
 
 def main():
@@ -181,15 +181,11 @@ def main():
         sys.exit(1)
 
     stad = pd.read_csv(args.stadiums)
-
     for c in REQ_COLS:
         if c not in stad.columns:
             stad[c] = pd.NA
 
-    # PRE-CLEAN: remove placeholder and overly-common coords before any fill
     stad = blank_placeholder_and_dupe_coords(stad)
-
-    # Helper columns BEFORE any merge
     stad["venue_n"] = stad["venue"].map(norm)
     stad["city_n"] = stad["city"].map(norm)
     stad["state_n"] = stad["state"].map(norm)
@@ -200,10 +196,8 @@ def main():
     needs_mask = stad[["lat", "lon", "timezone", "altitude_m"]].isna().any(axis=1)
     needs = stad.loc[needs_mask].copy()
 
-    if needs.empty():
-        # Manual overrides
+    if needs.empty:
         stad = apply_manual_overrides(stad)
-        # POST-CLEAN (paranoid) and timezone fallback at the very end
         stad = blank_placeholder_and_dupe_coords(stad)
         stad = backfill_timezone_from_latlon(stad)
         for helper in ["venue_n", "city_n", "state_n"]:
@@ -213,36 +207,26 @@ def main():
         print("[fill] Nothing to fill; applied overrides, cleaned coords, and tz fallback.")
         return
 
-    # 1) Exact normalized venue name join
     exact = needs.merge(
         cfbd,
         left_on="venue_n",
         right_on="name_n",
         how="left",
         suffixes=("", "_cfbd"),
-        indicator=True
+        indicator=True,
     )
 
-    # 2) City+state join (dedup CFBD to 1 row per location to guarantee 1:1)
     still_mask = exact["latitude"].isna()
     if still_mask.any():
         cols_cs = ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]
         agg_map = {c: first_notna for c in cols_cs}
         cfbd_loc = cfbd.groupby(["city_n", "state_n"], as_index=False).agg(agg_map)
-
         missing = exact.loc[still_mask].copy()
         missing["__idx__"] = missing.index
-        by_loc = missing.merge(
-            cfbd_loc,
-            on=["city_n", "state_n"],
-            how="left",
-            suffixes=("", "_loc")
-        ).set_index("__idx__")
-
+        by_loc = missing.merge(cfbd_loc, on=["city_n", "state_n"], how="left").set_index("__idx__")
         for col in cols_cs:
             exact.loc[by_loc.index, col] = exact.loc[by_loc.index, col].fillna(by_loc[col])
 
-    # 3) Fuzzy fallback on venue name
     remain_idx = exact.index[exact["latitude"].isna()].tolist()
     for i in remain_idx:
         row = exact.loc[i]
@@ -253,11 +237,9 @@ def main():
                 if pd.isna(exact.at[i, col]):
                     exact.at[i, col] = v.get(col)
 
-    # Collapse to a single row per team (first non-null per column)
     cols_from_cfbd = ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]
     best = exact.groupby("team", as_index=True).agg({c: first_notna for c in cols_from_cfbd})
 
-    # Apply fills back into main DataFrame using only scalars
     updated = stad.copy().set_index("team")
     for t in best.index:
         if t in updated.index:
@@ -267,22 +249,15 @@ def main():
             updated.loc[t] = row
     updated = updated.reset_index(drop=False)
 
-    # Normalize numeric types
     for c in ["lat", "lon", "altitude_m"]:
         updated[c] = pd.to_numeric(updated[c], errors="coerce")
     if "is_neutral_site" in updated.columns:
         updated["is_neutral_site"] = pd.to_numeric(updated["is_neutral_site"], errors="coerce").fillna(0).astype(int)
 
-    # Manual overrides
     updated = apply_manual_overrides(updated)
-
-    # POST-CLEAN AGAIN: remove placeholder and overly-common coords before tz fallback
     updated = blank_placeholder_and_dupe_coords(updated)
-
-    # Final timezone fallback at the VERY END (after all fills/overrides/cleans)
     updated = backfill_timezone_from_latlon(updated)
 
-    # Drop helper columns and save
     for helper in ["venue_n", "city_n", "state_n", "name_n"]:
         if helper in updated.columns:
             updated.drop(columns=[helper], inplace=True)
