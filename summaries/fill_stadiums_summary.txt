@@ -1,25 +1,25 @@
-[2025-10-04T12:41:27.219935Z] Fill Diagnostics
+[2025-10-05T16:57:35.363405Z] Fill Diagnostics
 File: data/reference/stadiums.csv
 Total rows: 731
 
 Missing after fill:
-  lat: 0
-  lon: 0
-  timezone: 606
+  lat: 605
+  lon: 605
+  timezone: 0
   altitude_m: 0
 
 Rows still missing (up to 200):
-                            team venue city  ...       lon  timezone  altitude_m
-0              Abilene Christian   NaN  NaN  ... -87.36696       NaN        47.4
-4                  Anderson (Sc)   NaN  NaN  ... -87.36696       NaN        47.4
-5                      App State   NaN  NaN  ... -87.36696       NaN        47.4
-13                Augustana (IL)   NaN  NaN  ... -87.36696       NaN        47.4
-14     Augustana University (SD)   NaN  NaN  ... -87.36696       NaN        47.4
-..                           ...   ...  ...  ...       ...       ...         ...
-320                      findlay   NaN  NaN  ... -87.36696       NaN        47.4
-321              fitchburg state   NaN  NaN  ... -87.36696       NaN        47.4
-322                florida aandm   NaN  NaN  ... -87.36696       NaN        47.4
-323  florida memorial university   NaN  NaN  ... -87.36696       NaN        47.4
-324                      fordham   NaN  NaN  ... -87.36696       NaN        47.4
+                            team venue city  ... lon          timezone  altitude_m
+0              Abilene Christian   NaN  NaN  ... NaN  America/New_York        47.4
+4                  Anderson (Sc)   NaN  NaN  ... NaN  America/New_York        47.4
+5                      App State   NaN  NaN  ... NaN  America/New_York        47.4
+13                Augustana (IL)   NaN  NaN  ... NaN  America/New_York        47.4
+14     Augustana University (SD)   NaN  NaN  ... NaN  America/New_York        47.4
+..                           ...   ...  ...  ...  ..               ...         ...
+321              fitchburg state   NaN  NaN  ... NaN  America/New_York        47.4
+322                florida aandm   NaN  NaN  ... NaN  America/New_York        47.4
+323  florida memorial university   NaN  NaN  ... NaN  America/New_York        47.4
+324                      fordham   NaN  NaN  ... NaN  America/New_York        47.4
+325              fort hays state   NaN  NaN  ... NaN  America/New_York        47.4
 
 [200 rows x 8 columns]
