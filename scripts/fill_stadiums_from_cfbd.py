@@ -152,18 +152,21 @@ def blank_placeholder_and_dupe_coords(df):
     if BAD_COORDS:
         bad_mask = False
         for (blat, blon) in BAD_COORDS:
-            bad_mask = bad_mask | ((df["lat"] == blat) & (df["lon"] == blon))
-        df.loc[bad_mask, ["lat", "lon"]] = pd.NA
+            this_bad = (df["lat"] == blat) & (df["lon"] == blon)
+            bad_mask = this_bad if isinstance(bad_mask, bool) else (bad_mask | this_bad)
+        if not isinstance(bad_mask, bool):
+            df.loc[bad_mask, ["lat", "lon"]] = pd.NA
 
-    # Blank overly-common duplicate coordinates
+    # Blank overly-common duplicate coordinates (no reliance on 'n' column after merge)
     grp = df.groupby(["lat", "lon"], dropna=True).size().reset_index(name="n")
     if not grp.empty:
         too_common = grp[grp["n"] > DUP_COORD_THRESHOLD][["lat", "lon"]]
         if not too_common.empty:
-            m = df.merge(too_common, on=["lat", "lon"], how="left", indicator=False)
-            hit = m["n"].notna()
-            idx = m.index[hit]
-            df.loc[idx, ["lat", "lon"]] = pd.NA
+            # Build an index-of-tuples for fast membership
+            common_index = set(zip(too_common["lat"], too_common["lon"]))
+            mask = df.apply(lambda r: (pd.notna(r["lat"]) and pd.notna(r["lon"]) and (float(r["lat"]), float(r["lon"])) in common_index), axis=1)
+            if mask.any():
+                df.loc[mask, ["lat", "lon"]] = pd.NA
 
     return df
 
@@ -197,7 +200,7 @@ def main():
     needs_mask = stad[["lat", "lon", "timezone", "altitude_m"]].isna().any(axis=1)
     needs = stad.loc[needs_mask].copy()
 
-    if needs.empty:
+    if needs.empty():
         # Manual overrides
         stad = apply_manual_overrides(stad)
         # POST-CLEAN (paranoid) and timezone fallback at the very end
