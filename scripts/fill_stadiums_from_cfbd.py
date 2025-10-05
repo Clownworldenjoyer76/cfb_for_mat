@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Fill missing lat/lon/timezone/altitude_m in a stadiums CSV using CFBD Venues.
-# Plain ASCII only. Removes placeholder/duplicate coordinates, applies overrides,
-# and runs timezone fallback at the very end.
+# Plain ASCII only. Uses repo columns: lat/lon/timezone/altitude_m.
+# CFBD columns may be latitude/longitude/elevation/timezone; we normalize/guard.
 
 import argparse
 import os
@@ -34,18 +34,20 @@ VENUE_STOPWORDS = [
 BAD_COORDS = {(39.474686, -87.366960)}
 DUP_COORD_THRESHOLD = 25
 
+
 def norm(s):
     if s is None or (isinstance(s, float) and math.isnan(s)):
         return ""
     s = str(s)
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii")
     s = s.lower()
-    s = re.sub(r"[^a-z0-9\\s\\-]", " ", s)
-    s = re.sub(r"\\s+", " ", s).strip()
+    s = re.sub(r"[^a-z0-9\s\-]", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
     for w in VENUE_STOPWORDS:
-        s = re.sub(r"\\b" + re.escape(w) + r"\\b", " ", s)
-    s = re.sub(r"\\s+", " ", s).strip()
+        s = re.sub(r"\b" + re.escape(w) + r"\b", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
     return s
+
 
 def feet_to_meters(x):
     try:
@@ -55,19 +57,24 @@ def feet_to_meters(x):
     except Exception:
         return None
 
+
 def pull_cfbd(api_key):
     headers = {"Authorization": "Bearer " + api_key} if api_key else {}
     r = requests.get(VENUES_URL, headers=headers, timeout=60)
     r.raise_for_status()
     js = r.json()
     df = pd.DataFrame(js)
+
+    # Ensure expected CFBD columns exist (some responses omit them)
     for c in ["name", "city", "state", "country", "timezone", "latitude", "longitude", "elevation"]:
         if c not in df.columns:
             df[c] = pd.NA
+
     df["name_n"] = df["name"].map(norm)
     df["city_n"] = df["city"].map(norm)
     df["state_n"] = df["state"].map(norm)
     return df
+
 
 def fill_missing_fields(row, src):
     def maybe_set(k_row, k_src, transform=None):
@@ -76,6 +83,7 @@ def fill_missing_fields(row, src):
         if not is_blank:
             return
         val = src.get(k_src, None)
+        # only accept scalar-like values
         if isinstance(val, (dict, list, tuple, pd.Series)):
             return
         if transform:
@@ -84,14 +92,17 @@ def fill_missing_fields(row, src):
             except Exception:
                 val = None
         row[k_row] = val
+
+    # map CFBD -> repo columns
     maybe_set("lat", "latitude", float)
     maybe_set("lon", "longitude", float)
-    maybe_set("timezone", "timezone", None)
+    maybe_set("timezone", "timezone", None)  # leave None as missing (do not coerce to "None")
     maybe_set("altitude_m", "elevation", feet_to_meters)
     maybe_set("city", "city", str)
     maybe_set("state", "state", str)
     maybe_set("country", "country", str)
     return row
+
 
 def fuzzy_pick(row, cfbd, min_fuzzy):
     target = norm(row.get("venue", ""))
@@ -103,6 +114,7 @@ def fuzzy_pick(row, cfbd, min_fuzzy):
         return None
     label, score, idx = best
     return idx if score >= min_fuzzy else None
+
 
 def backfill_timezone_from_latlon(df):
     tf = TimezoneFinder()
@@ -120,11 +132,13 @@ def backfill_timezone_from_latlon(df):
             pass
     return df
 
+
 def first_notna(series):
     for v in series:
         if pd.notna(v):
             return v
     return pd.NA
+
 
 def apply_manual_overrides(df):
     # Western Kentucky / Houchens-Smith Stadium / Cape Girardeau, MO -> 371 ft
@@ -138,6 +152,7 @@ def apply_manual_overrides(df):
     if mask.any():
         df.loc[mask, "altitude_m"] = target_m
     return df
+
 
 def blank_placeholder_and_dupe_coords(df):
     df["lat"] = pd.to_numeric(df["lat"], errors="coerce")
@@ -170,6 +185,22 @@ def blank_placeholder_and_dupe_coords(df):
                 df.loc[mask, ["lat", "lon"]] = pd.NA
     return df
 
+
+def ensure_cfbd_cols_present(exact_df):
+    """
+    After merges, make sure the CFBD columns we rely on exist with base names.
+    If only *_cfbd exists, rename it back; otherwise create as NA.
+    """
+    for base in ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]:
+        cf = base + "_cfbd"
+        if base not in exact_df.columns:
+            if cf in exact_df.columns:
+                exact_df.rename(columns={cf: base}, inplace=True)
+            else:
+                exact_df[base] = pd.NA
+    return exact_df
+
+
 def main():
     ap = argparse.ArgumentParser(description="Fill missing stadium metadata from CFBD venues")
     ap.add_argument("--stadiums", type=Path, required=True, help="Path to data/reference/stadiums.csv")
@@ -185,7 +216,13 @@ def main():
         if c not in stad.columns:
             stad[c] = pd.NA
 
+    # Our repo uses lat/lon — keep those canonical
+    stad.rename(columns={"latitude": "lat", "longitude": "lon"}, inplace=True)
+
+    # Clean placeholders before any fill
     stad = blank_placeholder_and_dupe_coords(stad)
+
+    # Helper columns BEFORE any merge
     stad["venue_n"] = stad["venue"].map(norm)
     stad["city_n"] = stad["city"].map(norm)
     stad["state_n"] = stad["state"].map(norm)
@@ -196,7 +233,7 @@ def main():
     needs_mask = stad[["lat", "lon", "timezone", "altitude_m"]].isna().any(axis=1)
     needs = stad.loc[needs_mask].copy()
 
-    if needs.empty:
+    if needs.empty():
         stad = apply_manual_overrides(stad)
         stad = blank_placeholder_and_dupe_coords(stad)
         stad = backfill_timezone_from_latlon(stad)
@@ -207,6 +244,7 @@ def main():
         print("[fill] Nothing to fill; applied overrides, cleaned coords, and tz fallback.")
         return
 
+    # 1) Exact normalized venue name join (bring CFBD columns into 'exact')
     exact = needs.merge(
         cfbd,
         left_on="venue_n",
@@ -215,18 +253,24 @@ def main():
         suffixes=("", "_cfbd"),
         indicator=True,
     )
+    exact = ensure_cfbd_cols_present(exact)
 
+    # 2) City+state join (dedup CFBD to 1 row per location)
     still_mask = exact["latitude"].isna()
     if still_mask.any():
         cols_cs = ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]
         agg_map = {c: first_notna for c in cols_cs}
         cfbd_loc = cfbd.groupby(["city_n", "state_n"], as_index=False).agg(agg_map)
+
         missing = exact.loc[still_mask].copy()
         missing["__idx__"] = missing.index
         by_loc = missing.merge(cfbd_loc, on=["city_n", "state_n"], how="left").set_index("__idx__")
+        by_loc = ensure_cfbd_cols_present(by_loc)
+
         for col in cols_cs:
             exact.loc[by_loc.index, col] = exact.loc[by_loc.index, col].fillna(by_loc[col])
 
+    # 3) Fuzzy fallback on venue name
     remain_idx = exact.index[exact["latitude"].isna()].tolist()
     for i in remain_idx:
         row = exact.loc[i]
@@ -237,33 +281,41 @@ def main():
                 if pd.isna(exact.at[i, col]):
                     exact.at[i, col] = v.get(col)
 
+    # Collapse to one row per team (first non-null values from CFBD)
     cols_from_cfbd = ["latitude", "longitude", "elevation", "timezone", "city", "state", "country"]
     best = exact.groupby("team", as_index=True).agg({c: first_notna for c in cols_from_cfbd})
 
+    # Apply fills back into main DataFrame using repo column names
     updated = stad.copy().set_index("team")
     for t in best.index:
         if t in updated.index:
             src = best.loc[t].to_dict()
             row = updated.loc[t]
-            row = fill_missing_fields(row, src)
+            row = fill_missing_fields(row, src)  # maps latitude->lat, longitude->lon, elevation->altitude_m
             updated.loc[t] = row
     updated = updated.reset_index(drop=False)
 
+    # Normalize numeric types
     for c in ["lat", "lon", "altitude_m"]:
         updated[c] = pd.to_numeric(updated[c], errors="coerce")
     if "is_neutral_site" in updated.columns:
         updated["is_neutral_site"] = pd.to_numeric(updated["is_neutral_site"], errors="coerce").fillna(0).astype(int)
 
+    # Manual overrides and cleanup
     updated = apply_manual_overrides(updated)
     updated = blank_placeholder_and_dupe_coords(updated)
+
+    # Final timezone fallback at the very end
     updated = backfill_timezone_from_latlon(updated)
 
+    # Drop helper columns and save
     for helper in ["venue_n", "city_n", "state_n", "name_n"]:
         if helper in updated.columns:
             updated.drop(columns=[helper], inplace=True)
 
     updated.to_csv(args.stadiums, index=False)
     print("[fill] OK")
+
 
 if __name__ == "__main__":
     try:
