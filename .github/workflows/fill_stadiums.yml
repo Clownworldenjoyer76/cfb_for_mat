@@ -2,11 +2,7 @@ name: Fill Stadiums Metadata
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "scripts/fill_stadiums_from_cfbd.py"
-      - "data/reference/stadiums.csv"
-
+  
 permissions:
   contents: write
 
