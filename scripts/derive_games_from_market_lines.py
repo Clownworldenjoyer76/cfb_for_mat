@@ -5,7 +5,8 @@
 from pathlib import Path
 import pandas as pd
 
-SRC = Path("data/reference/market_lines.csv")  # adjust if your file lives elsewhere
+# Updated path: file lives at repo root
+SRC = Path("market_lines.csv")
 OUT = Path("data/raw/games.csv")
 
 def main():
@@ -22,11 +23,9 @@ def main():
         raise SystemExit(f"[derive] market_lines missing required cols: {missing}")
 
     # Deduplicate by game_id: keep earliest kickoff_utc
-    # Parse kickoff_utc to datetime; drop invalid
     df["kickoff_utc"] = pd.to_datetime(df["kickoff_utc"], errors="coerce", utc=True)
     df = df.dropna(subset=["kickoff_utc"])
 
-    # Sort so groupby().first() keeps earliest
     df = df.sort_values(["game_id", "kickoff_utc"], ascending=[True, True])
 
     keep_cols = ["year", "season_type", "week", "game_id", "kickoff_utc", "home_team", "away_team"]
