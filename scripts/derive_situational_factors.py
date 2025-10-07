@@ -163,4 +163,4 @@ with open(log_path, "w") as f:
 
 print("[derive] situational_factors.csv written.")
 for k, v in summary.items():
-    print(f"  {k}: {v}") in
+    print(f"  {k}: {v}")
