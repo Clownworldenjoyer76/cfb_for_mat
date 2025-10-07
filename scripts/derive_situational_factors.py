@@ -22,20 +22,17 @@ def haversine_km(lat1, lon1, lat2, lon2):
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 def tz_offset_hours(tz_str, on_date):
-    if not tz_str or pd.isna(tz_str):
+    """Return UTC offset (hours) for tz on the given calendar date."""
+    if not tz_str or pd.isna(tz_str) or on_date is None or pd.isna(on_date):
         return float("nan")
     try:
+        if hasattr(on_date, "date"):  # pandas Timestamp
+            on_date = on_date.date()
         tz = ZoneInfo(tz_str)
         dt = datetime.combine(on_date, time(12, 0)).replace(tzinfo=tz)
         return dt.utcoffset().total_seconds() / 3600.0
     except Exception:
         return float("nan")
-
-def parse_date(x):
-    try:
-        return pd.to_datetime(x).date()
-    except Exception:
-        return None
 
 # ---------- paths ----------
 
@@ -61,7 +58,8 @@ stad["altitude_m"] = pd.to_numeric(stad["altitude_m"], errors="coerce")
 
 # ---------- prep games ----------
 
-games["game_date"] = games["date"].apply(parse_date)
+# Ensure true datetime dtype for later .dt operations
+games["game_date"] = pd.to_datetime(games["date"], errors="coerce")
 games["neutral_site"] = games["neutral_site"].fillna(0).astype(int)
 
 # ---------- join stadiums for home/away teams ----------
@@ -102,32 +100,57 @@ away_rows["team"] = away_rows["away_team"]
 away_rows["opponent"] = away_rows["home_team"]
 away_rows["is_home"] = 0
 away_rows["is_away"] = 1
-away_rows["is_neutral"] = home_rows["neutral_site"]
+away_rows["is_neutral"] = df["neutral_site"]
 
 tg = pd.concat([home_rows, away_rows], ignore_index=True)
 
 # ---------- compute travel_km ----------
+# For campus games (neutral_site==0), venue is home team's stadium.
+# Distance = great-circle(team_home -> venue). Home rows -> 0.
 
-tg["travel_km"] = tg.apply(lambda r: (
-    0.0 if r["is_home"] == 1 and r["is_neutral"] == 0
-    else haversine_km(r.get("home_lat", r.get("away_lat")), r.get("home_lon", r.get("away_lon")),
-                      r.get("away_lat", r.get("home_lat")), r.get("away_lon", r.get("home_lon")))
-), axis=1)
+def travel_row(r):
+    if r["is_neutral"] == 0:
+        # venue = home team's stadium
+        venue_lat, venue_lon = r["home_lat"], r["home_lon"]
+    else:
+        # If you later add neutral venues, plug them here.
+        venue_lat, venue_lon = r["home_lat"], r["home_lon"]  # fallback
+
+    team_lat = r["home_lat"] if r["is_home"] == 1 else r["away_lat"]
+    team_lon = r["home_lon"] if r["is_home"] == 1 else r["away_lon"]
+
+    if r["is_home"] == 1 and r["is_neutral"] == 0:
+        return 0.0
+    return haversine_km(team_lat, team_lon, venue_lat, venue_lon)
+
+tg["travel_km"] = tg.apply(travel_row, axis=1)
 
 # ---------- compute rest days ----------
 
 tg = tg.sort_values(["team", "game_date"])
 tg["prev_date"] = tg.groupby("team")["game_date"].shift(1)
+
+# Ensure datetime dtype before using .dt
+tg["game_date"] = pd.to_datetime(tg["game_date"], errors="coerce")
+tg["prev_date"] = pd.to_datetime(tg["prev_date"], errors="coerce")
+
 tg["rest_days"] = (tg["game_date"] - tg["prev_date"]).dt.days
-tg["bye_week"] = (tg["rest_days"] >= 13).astype(int)
+tg["bye_week"] = (tg["rest_days"] >= 13).fillna(False).astype(int)
 
 # ---------- compute timezone and altitude differences ----------
+# Venue tz = home_tz (campus games assumption). Team tz = home_tz for home rows, away_tz for away rows.
 
-tg["tz_home_offset"] = tg.apply(lambda r: tz_offset_hours(r.get("home_tz"), r["game_date"]), axis=1)
-tg["tz_away_offset"] = tg.apply(lambda r: tz_offset_hours(r.get("away_tz"), r["game_date"]), axis=1)
-tg["tz_diff_from_home"] = tg["tz_away_offset"] - tg["tz_home_offset"]
+tg["venue_offset"] = tg.apply(lambda r: tz_offset_hours(r.get("home_tz"), r["game_date"]), axis=1)
+tg["team_home_offset"] = tg.apply(
+    lambda r: tz_offset_hours(r.get("home_tz") if r["is_home"] == 1 else r.get("away_tz"), r["game_date"]),
+    axis=1
+)
+tg["tz_diff_from_home"] = tg["venue_offset"] - tg["team_home_offset"]
 
-tg["altitude_diff_m"] = tg["away_alt_m"] - tg["home_alt_m"]
+# Altitude: venue altitude - team home altitude
+team_alt = tg["home_alt_m"].where(tg["is_home"] == 1, tg["away_alt_m"])
+venue_alt = tg["home_alt_m"]  # campus venue assumption
+tg["altitude_diff_m"] = venue_alt - team_alt
 
 # ---------- select outputs ----------
 
@@ -151,8 +174,8 @@ summary = {
     "total_rows": len(out),
     "teams": out["team"].nunique(),
     "games": out["game_id"].nunique(),
-    "avg_travel_km": round(out["travel_km"].mean(), 2),
-    "avg_rest_days": round(out["rest_days"].dropna().mean(), 2),
+    "avg_travel_km": round(out["travel_km"].mean(skipna=True), 2),
+    "avg_rest_days": round(out["rest_days"].dropna().mean() if out["rest_days"].notna().any() else 0, 2),
     "bye_weeks": int(out["bye_week"].sum())
 }
 
