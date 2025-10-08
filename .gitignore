@@ -93,3 +93,5 @@ Thumbs.db
 # Keep derived games output
 !data/raw/games.csv
 !summaries/derive_games_summary.txt
+!data/processed/tempo_metrics.csv
+!summaries/tempo_metrics_summary.txt
