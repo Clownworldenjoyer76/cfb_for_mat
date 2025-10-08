@@ -1,0 +1,26 @@
+name: Map CFBD IDs
+on: workflow_dispatch
+permissions: { contents: write }
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests
+      - name: Map games to CFBD IDs
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python scripts/map_games_to_cfbd_ids.py
+      - name: Commit updated games.csv
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/raw/games.csv
+          git add -f data/raw/games_backup_before_cfbd_id.csv
+          git diff --staged --quiet || git commit -m "map: add cfbd_game_id to games.csv [skip ci]" || echo "No changes"
+          git push
