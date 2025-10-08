@@ -1,0 +1,29 @@
+name: Backfill Games Venue
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  backfill-venue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests
+      - name: Backfill venue fields from CFBD
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          python scripts/backfill_games_venue_from_cfbd.py
+      - name: Commit updated games.csv and summary
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/raw/games.csv
+          git add -f summaries/backfill_games_venue_summary.txt
+          git diff --staged --quiet || git commit -m "backfill: games venue fields from CFBD [skip ci]" || echo "No changes"
+          git push
