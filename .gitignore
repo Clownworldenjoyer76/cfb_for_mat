@@ -74,16 +74,16 @@ Thumbs.db
 # Always keep Python scripts in /scripts
 !scripts/*.py
 
-# Keep raw/derived data we intentionally track
+# Keep RAW inputs we track
 !data/raw/games.csv
 
-# Keep processed outputs the site reads
+# Keep PROCESSED outputs the site reads
 !data/processed/situational_factors.csv
 !summaries/situational_factors_summary.txt
 !data/processed/tempo_metrics.csv
 !summaries/tempo_metrics_summary.txt
 
-# Explicitly keep other pipeline artifacts (from earlier steps)
+# Explicitly keep other artifacts used earlier
 !weather_enriched.csv
 !logs_weather_openmeteo.txt
 !situational_factors.csv
@@ -98,6 +98,4 @@ Thumbs.db
 !summaries/sync_stadiums_summary.txt
 !summaries/fill_stadiums_summary.txt
 !summaries/backfill_timezones_summary.txt
-
-# Keep games-derivation logs (if used)
 !summaries/derive_games_summary.txt
