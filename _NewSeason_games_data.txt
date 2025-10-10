@@ -1,0 +1,16 @@
+### ⚠️ data/raw/games.csv — Manual File Notice
+
+This file (`data/raw/games.csv`) is a **manually generated static dataset** containing game schedule, teams, and venue information for the current season.
+
+Because the original automated workflows (`map_cfbd_ids`, `backfill_games_venue`, etc.) were deprecated, this file **is not automatically refreshed**.
+
+#### When to Regenerate
+- **Annually** at the start of each new season (or when the schedule changes).
+- You can regenerate it by:
+  1. Exporting the new season’s schedule from CFBD or another verified data source.
+  2. Merging it with the current `data/reference/stadiums.csv` to populate venue info.
+  3. Saving it again here as `data/raw/games.csv`.
+
+#### Why Manual
+Automated mapping via the CFBD API proved inconsistent due to team name variations and data gaps.  
+This static file ensures stable, reproducible inputs for all downstream processes (situational factors, tempo metrics, etc.).
