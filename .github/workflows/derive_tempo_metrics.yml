@@ -29,11 +29,14 @@ jobs:
         run: |
           python scripts/derive_tempo_from_cfbd.py
 
-      - name: Commit outputs
+      - name: Commit outputs (force-add)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/processed/tempo_metrics.csv
+
+          # Always stage processed outputs and summaries
+          git add -f data/processed/tempo_metrics.csv
           git add -f summaries/tempo_metrics_summary.txt
-          git diff --staged --quiet || git commit -m "derive: tempo metrics [skip ci]" || echo "No changes"
-          git push
+
+          git diff --staged --quiet || git commit -m "derive: tempo metrics [skip ci]" || true
+          git push || true
