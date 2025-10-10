@@ -27,11 +27,15 @@ jobs:
         run: |
           python scripts/derive_situational_factors.py
 
-      - name: Commit outputs
+      - name: Commit outputs (force-add)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/processed/situational_factors.csv
+
+          # Always stage processed outputs and summaries (even if *.csv is ignored)
+          git add -f data/processed/situational_factors.csv
           git add -f summaries/situational_factors_summary.txt
-          git diff --staged --quiet || git commit -m "derive: situational factors [skip ci]" || echo "No changes"
-          git push
+
+          # Commit only if there are changes
+          git diff --staged --quiet || git commit -m "derive: situational factors [skip ci]" || true
+          git push || true
