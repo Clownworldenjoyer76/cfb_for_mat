@@ -40,29 +40,29 @@
       "conference": "Mid-American",
       "team": "Akron",
       "offense": {
-        "overall": 0.05,
-        "passing": 0.15,
-        "rushing": -0.03,
-        "firstDown": -0.08,
-        "secondDown": 0.11,
-        "thirdDown": 0.18,
+        "overall": 0.07,
+        "passing": 0.18,
+        "rushing": 0,
+        "firstDown": -0.05,
+        "secondDown": 0.14,
+        "thirdDown": 0.21,
         "cumulative": {
-          "total": 30.5,
-          "passing": 47.74,
-          "rushing": -7.7
+          "total": 51,
+          "passing": 61.25,
+          "rushing": -0.4
         }
       },
       "defense": {
-        "overall": 0.19,
-        "passing": 0.23,
+        "overall": 0.17,
+        "passing": 0.2,
         "rushing": 0.16,
-        "firstDown": 0.01,
-        "secondDown": 0.37,
-        "thirdDown": 0.5,
+        "firstDown": -0.01,
+        "secondDown": 0.39,
+        "thirdDown": 0.44,
         "cumulative": {
-          "total": 114.1,
-          "passing": 660.6,
-          "rushing": 51.6
+          "total": 116.7,
+          "passing": 647.1,
+          "rushing": 55.6
         }
       }
     },
@@ -1807,29 +1807,29 @@
       "conference": "Mid-American",
       "team": "Massachusetts",
       "offense": {
-        "overall": -0.05,
+        "overall": -0.04,
         "passing": -0.04,
-        "rushing": -0.03,
+        "rushing": -0.01,
         "firstDown": -0.18,
-        "secondDown": 0.04,
-        "thirdDown": 0.24,
+        "secondDown": 0.09,
+        "thirdDown": 0.2,
         "cumulative": {
-          "total": -25.5,
-          "passing": -11.5,
-          "rushing": -6
+          "total": -22.9,
+          "passing": -12.85,
+          "rushing": -2.1
         }
       },
       "defense": {
         "overall": 0.23,
-        "passing": 0.41,
-        "rushing": 0.08,
-        "firstDown": 0.08,
-        "secondDown": 0.28,
+        "passing": 0.42,
+        "rushing": 0.09,
+        "firstDown": 0.09,
+        "secondDown": 0.3,
         "thirdDown": 0.46,
         "cumulative": {
-          "total": 134.5,
-          "passing": 1137.2,
-          "rushing": 26.2
+          "total": 155.1,
+          "passing": 1272.3,
+          "rushing": 33.5
         }
       }
     },
