@@ -1094,29 +1094,29 @@
       "conference": "Sun Belt",
       "team": "Georgia Southern",
       "offense": {
-        "overall": 0.18,
-        "passing": 0.21,
-        "rushing": 0.17,
-        "firstDown": 0,
-        "secondDown": 0.23,
-        "thirdDown": 0.56,
+        "overall": 0.2,
+        "passing": 0.25,
+        "rushing": 0.18,
+        "firstDown": 0.02,
+        "secondDown": 0.24,
+        "thirdDown": 0.58,
         "cumulative": {
-          "total": 112.1,
-          "passing": 64.84,
-          "rushing": 51.3
+          "total": 123.4,
+          "passing": 75.29,
+          "rushing": 52.1
         }
       },
       "defense": {
-        "overall": 0.3,
-        "passing": 0.36,
+        "overall": 0.29,
+        "passing": 0.35,
         "rushing": 0.29,
-        "firstDown": 0.12,
-        "secondDown": 0.28,
-        "thirdDown": 0.82,
+        "firstDown": 0.1,
+        "secondDown": 0.3,
+        "thirdDown": 0.8,
         "cumulative": {
-          "total": 196.8,
-          "passing": 1087,
-          "rushing": 104.7
+          "total": 190.7,
+          "passing": 1038.8,
+          "rushing": 99.7
         }
       }
     },
@@ -2614,28 +2614,28 @@
       "team": "Old Dominion",
       "offense": {
         "overall": 0.25,
-        "passing": 0.45,
-        "rushing": 0.12,
-        "firstDown": 0.16,
-        "secondDown": 0.29,
-        "thirdDown": 0.49,
+        "passing": 0.43,
+        "rushing": 0.13,
+        "firstDown": 0.18,
+        "secondDown": 0.3,
+        "thirdDown": 0.48,
         "cumulative": {
-          "total": 146.8,
-          "passing": 113.57,
-          "rushing": 38.2
+          "total": 164.5,
+          "passing": 118.85,
+          "rushing": 49.6
         }
       },
       "defense": {
-        "overall": 0.07,
-        "passing": 0.15,
-        "rushing": 0.04,
-        "firstDown": -0.11,
-        "secondDown": 0.11,
-        "thirdDown": 0.44,
+        "overall": 0.03,
+        "passing": 0.09,
+        "rushing": 0.02,
+        "firstDown": -0.15,
+        "secondDown": 0.09,
+        "thirdDown": 0.38,
         "cumulative": {
-          "total": 44.6,
-          "passing": 415.8,
-          "rushing": 14.4
+          "total": 18.8,
+          "passing": 269.9,
+          "rushing": 6.8
         }
       }
     },
@@ -3450,29 +3450,29 @@
       "conference": "Sun Belt",
       "team": "Troy",
       "offense": {
-        "overall": 0.14,
-        "passing": 0.22,
-        "rushing": 0.06,
-        "firstDown": 0.01,
-        "secondDown": -0.07,
-        "thirdDown": 0.61,
+        "overall": 0.09,
+        "passing": 0.15,
+        "rushing": 0.03,
+        "firstDown": -0.04,
+        "secondDown": -0.08,
+        "thirdDown": 0.54,
         "cumulative": {
-          "total": 85.8,
-          "passing": 63.08,
-          "rushing": 18.5
+          "total": 59.9,
+          "passing": 48.49,
+          "rushing": 10.9
         }
       },
       "defense": {
-        "overall": 0.13,
+        "overall": 0.15,
         "passing": 0.21,
-        "rushing": 0.09,
-        "firstDown": -0.04,
-        "secondDown": 0.1,
-        "thirdDown": 0.49,
+        "rushing": 0.11,
+        "firstDown": 0.01,
+        "secondDown": 0.13,
+        "thirdDown": 0.47,
         "cumulative": {
-          "total": 77.8,
-          "passing": 519.7,
-          "rushing": 30.4
+          "total": 95.5,
+          "passing": 572.5,
+          "rushing": 41.7
         }
       }
     },
@@ -3731,27 +3731,27 @@
       "offense": {
         "overall": 0.43,
         "passing": 0.55,
-        "rushing": 0.32,
-        "firstDown": 0.3,
-        "secondDown": 0.21,
-        "thirdDown": 1.05,
+        "rushing": 0.31,
+        "firstDown": 0.29,
+        "secondDown": 0.24,
+        "thirdDown": 1.03,
         "cumulative": {
-          "total": 258.3,
-          "passing": 160.38,
-          "rushing": 97.7
+          "total": 252.2,
+          "passing": 155.57,
+          "rushing": 92.6
         }
       },
       "defense": {
-        "overall": 0.09,
-        "passing": 0.07,
-        "rushing": 0.11,
-        "firstDown": -0.12,
-        "secondDown": 0.26,
-        "thirdDown": 0.23,
+        "overall": 0.11,
+        "passing": 0.11,
+        "rushing": 0.12,
+        "firstDown": -0.1,
+        "secondDown": 0.27,
+        "thirdDown": 0.25,
         "cumulative": {
-          "total": 48.8,
-          "passing": 212.8,
-          "rushing": 30.3
+          "total": 60.1,
+          "passing": 317.2,
+          "rushing": 31
         }
       }
     },
