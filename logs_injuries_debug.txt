@@ -1,23 +1,754 @@
-/injuries year=2025 status=500 rows=0
-/games year=2025 seasonType=regular status=500 rows=0
-/teams/fbs year=2025 status=500 rows=0
-/injuries year=2025 week=1 status=500 rows=0
-/injuries year=2025 week=2 status=500 rows=0
-/injuries year=2025 week=3 status=500 rows=0
-/injuries year=2025 week=4 status=500 rows=0
-/injuries year=2025 week=5 status=500 rows=0
-/injuries year=2025 week=6 status=500 rows=0
-/injuries year=2025 week=7 status=500 rows=0
-/injuries year=2025 week=8 status=500 rows=0
-/injuries year=2025 week=9 status=500 rows=0
-/injuries year=2025 week=10 status=500 rows=0
-/injuries year=2025 week=11 status=500 rows=0
-/injuries year=2025 week=12 status=500 rows=0
-/injuries year=2025 week=13 status=500 rows=0
-/injuries year=2025 week=14 status=500 rows=0
-/injuries year=2025 week=15 status=500 rows=0
-/injuries year=2025 week=16 status=500 rows=0
-/injuries year=2025 week=17 status=500 rows=0
-/injuries year=2025 week=18 status=500 rows=0
-/injuries year=2025 week=19 status=500 rows=0
-/injuries year=2025 week=20 status=500 rows=0
+/injuries year=2025 status=200 rows=0
+/games year=2025 seasonType=regular status=200 rows=3665
+/teams/fbs year=2025 status=200 rows=136
+/injuries year=2025 week=1 status=200 rows=0
+/injuries year=2025 week=2 status=200 rows=0
+/injuries year=2025 week=3 status=200 rows=0
+/injuries year=2025 week=4 status=200 rows=0
+/injuries year=2025 week=5 status=200 rows=0
+/injuries year=2025 week=6 status=200 rows=0
+/injuries year=2025 week=7 status=200 rows=0
+/injuries year=2025 week=8 status=200 rows=0
+/injuries year=2025 week=9 status=200 rows=0
+/injuries year=2025 week=10 status=200 rows=0
+/injuries year=2025 week=11 status=200 rows=0
+/injuries year=2025 week=12 status=200 rows=0
+/injuries year=2025 week=13 status=200 rows=0
+/injuries year=2025 week=14 status=200 rows=0
+/injuries year=2025 week=16 status=200 rows=0
+/injuries year=2025 team=Air Force status=200 rows=0
+/injuries year=2025 team=Akron status=200 rows=0
+/injuries year=2025 team=Alabama status=200 rows=0
+/injuries year=2025 team=App State status=200 rows=0
+/injuries year=2025 team=Arizona status=200 rows=0
+/injuries year=2025 team=Arizona State status=200 rows=0
+/injuries year=2025 team=Arkansas status=200 rows=0
+/injuries year=2025 team=Arkansas State status=200 rows=0
+/injuries year=2025 team=Army status=200 rows=0
+/injuries year=2025 team=Auburn status=200 rows=0
+/injuries year=2025 team=BYU status=200 rows=0
+/injuries year=2025 team=Ball State status=200 rows=0
+/injuries year=2025 team=Baylor status=200 rows=0
+/injuries year=2025 team=Boise State status=200 rows=0
+/injuries year=2025 team=Boston College status=200 rows=0
+/injuries year=2025 team=Bowling Green status=200 rows=0
+/injuries year=2025 team=Buffalo status=200 rows=0
+/injuries year=2025 team=California status=200 rows=0
+/injuries year=2025 team=Central Michigan status=200 rows=0
+/injuries year=2025 team=Charlotte status=200 rows=0
+/injuries year=2025 team=Cincinnati status=200 rows=0
+/injuries year=2025 team=Clemson status=200 rows=0
+/injuries year=2025 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 team=Colorado status=200 rows=0
+/injuries year=2025 team=Colorado State status=200 rows=0
+/injuries year=2025 team=Delaware status=200 rows=0
+/injuries year=2025 team=Duke status=200 rows=0
+/injuries year=2025 team=East Carolina status=200 rows=0
+/injuries year=2025 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 team=Florida status=200 rows=0
+/injuries year=2025 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 team=Florida International status=200 rows=0
+/injuries year=2025 team=Florida State status=200 rows=0
+/injuries year=2025 team=Fresno State status=200 rows=0
+/injuries year=2025 team=Georgia status=200 rows=0
+/injuries year=2025 team=Georgia Southern status=200 rows=0
+/injuries year=2025 team=Georgia State status=200 rows=0
+/injuries year=2025 team=Georgia Tech status=200 rows=0
+/injuries year=2025 team=Hawai'i status=200 rows=0
+/injuries year=2025 team=Houston status=200 rows=0
+/injuries year=2025 team=Illinois status=200 rows=0
+/injuries year=2025 team=Indiana status=200 rows=0
+/injuries year=2025 team=Iowa status=200 rows=0
+/injuries year=2025 team=Iowa State status=200 rows=0
+/injuries year=2025 team=Jacksonville State status=200 rows=0
+/injuries year=2025 team=James Madison status=200 rows=0
+/injuries year=2025 team=Kansas status=200 rows=0
+/injuries year=2025 team=Kansas State status=200 rows=0
+/injuries year=2025 team=Kennesaw State status=200 rows=0
+/injuries year=2025 team=Kent State status=200 rows=0
+/injuries year=2025 team=Kentucky status=200 rows=0
+/injuries year=2025 team=LSU status=200 rows=0
+/injuries year=2025 team=Liberty status=200 rows=0
+/injuries year=2025 team=Louisiana status=200 rows=0
+/injuries year=2025 team=Louisiana Tech status=200 rows=0
+/injuries year=2025 team=Louisville status=200 rows=0
+/injuries year=2025 team=Marshall status=200 rows=0
+/injuries year=2025 team=Maryland status=200 rows=0
+/injuries year=2025 team=Massachusetts status=200 rows=0
+/injuries year=2025 team=Memphis status=200 rows=0
+/injuries year=2025 team=Miami status=200 rows=0
+/injuries year=2025 team=Miami (OH) status=200 rows=0
+/injuries year=2025 team=Michigan status=200 rows=0
+/injuries year=2025 team=Michigan State status=200 rows=0
+/injuries year=2025 team=Middle Tennessee status=200 rows=0
+/injuries year=2025 team=Minnesota status=200 rows=0
+/injuries year=2025 team=Mississippi State status=200 rows=0
+/injuries year=2025 team=Missouri status=200 rows=0
+/injuries year=2025 team=Missouri State status=200 rows=0
+/injuries year=2025 team=NC State status=200 rows=0
+/injuries year=2025 team=Navy status=200 rows=0
+/injuries year=2025 team=Nebraska status=200 rows=0
+/injuries year=2025 team=Nevada status=200 rows=0
+/injuries year=2025 team=New Mexico status=200 rows=0
+/injuries year=2025 team=New Mexico State status=200 rows=0
+/injuries year=2025 team=North Carolina status=200 rows=0
+/injuries year=2025 team=North Texas status=200 rows=0
+/injuries year=2025 team=Northern Illinois status=200 rows=0
+/injuries year=2025 team=Northwestern status=200 rows=0
+/injuries year=2025 team=Notre Dame status=200 rows=0
+/injuries year=2025 team=Ohio status=200 rows=0
+/injuries year=2025 team=Ohio State status=200 rows=0
+/injuries year=2025 team=Oklahoma status=200 rows=0
+/injuries year=2025 team=Oklahoma State status=200 rows=0
+/injuries year=2025 team=Old Dominion status=200 rows=0
+/injuries year=2025 team=Ole Miss status=200 rows=0
+/injuries year=2025 team=Oregon status=200 rows=0
+/injuries year=2025 team=Oregon State status=200 rows=0
+/injuries year=2025 team=Penn State status=200 rows=0
+/injuries year=2025 team=Pittsburgh status=200 rows=0
+/injuries year=2025 team=Purdue status=200 rows=0
+/injuries year=2025 team=Rice status=200 rows=0
+/injuries year=2025 team=Rutgers status=200 rows=0
+/injuries year=2025 team=SMU status=200 rows=0
+/injuries year=2025 team=Sam Houston status=200 rows=0
+/injuries year=2025 team=San Diego State status=200 rows=0
+/injuries year=2025 team=San José State status=200 rows=0
+/injuries year=2025 team=South Alabama status=200 rows=0
+/injuries year=2025 team=South Carolina status=200 rows=0
+/injuries year=2025 team=South Florida status=200 rows=0
+/injuries year=2025 team=Southern Miss status=200 rows=0
+/injuries year=2025 team=Stanford status=200 rows=0
+/injuries year=2025 team=Syracuse status=200 rows=0
+/injuries year=2025 team=TCU status=200 rows=0
+/injuries year=2025 team=Temple status=200 rows=0
+/injuries year=2025 team=Tennessee status=200 rows=0
+/injuries year=2025 team=Texas status=200 rows=0
+/injuries year=2025 team=Texas A&M status=200 rows=0
+/injuries year=2025 team=Texas State status=200 rows=0
+/injuries year=2025 team=Texas Tech status=200 rows=0
+/injuries year=2025 team=Toledo status=200 rows=0
+/injuries year=2025 team=Troy status=200 rows=0
+/injuries year=2025 team=Tulane status=200 rows=0
+/injuries year=2025 team=Tulsa status=200 rows=0
+/injuries year=2025 team=UAB status=200 rows=0
+/injuries year=2025 team=UCF status=200 rows=0
+/injuries year=2025 team=UCLA status=200 rows=0
+/injuries year=2025 team=UConn status=200 rows=0
+/injuries year=2025 team=UL Monroe status=200 rows=0
+/injuries year=2025 team=UNLV status=200 rows=0
+/injuries year=2025 team=USC status=200 rows=0
+/injuries year=2025 team=UTEP status=200 rows=0
+/injuries year=2025 team=UTSA status=200 rows=0
+/injuries year=2025 team=Utah status=200 rows=0
+/injuries year=2025 team=Utah State status=200 rows=0
+/injuries year=2025 team=Vanderbilt status=200 rows=0
+/injuries year=2025 team=Virginia status=200 rows=0
+/injuries year=2025 team=Virginia Tech status=200 rows=0
+/injuries year=2025 team=Wake Forest status=200 rows=0
+/injuries year=2025 team=Washington status=200 rows=0
+/injuries year=2025 team=Washington State status=200 rows=0
+/injuries year=2025 team=West Virginia status=200 rows=0
+/injuries year=2025 team=Western Kentucky status=200 rows=0
+/injuries year=2025 team=Western Michigan status=200 rows=0
+/injuries year=2025 team=Wisconsin status=200 rows=0
+/injuries year=2025 team=Wyoming status=200 rows=0
+/injuries year=2025 week=1 team=Air Force status=200 rows=0
+/injuries year=2025 week=1 team=Akron status=200 rows=0
+/injuries year=2025 week=1 team=Alabama status=200 rows=0
+/injuries year=2025 week=1 team=App State status=200 rows=0
+/injuries year=2025 week=1 team=Arizona status=200 rows=0
+/injuries year=2025 week=1 team=Arizona State status=200 rows=0
+/injuries year=2025 week=1 team=Arkansas status=200 rows=0
+/injuries year=2025 week=1 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=1 team=Army status=200 rows=0
+/injuries year=2025 week=1 team=Auburn status=200 rows=0
+/injuries year=2025 week=1 team=BYU status=200 rows=0
+/injuries year=2025 week=1 team=Ball State status=200 rows=0
+/injuries year=2025 week=1 team=Baylor status=200 rows=0
+/injuries year=2025 week=1 team=Boise State status=200 rows=0
+/injuries year=2025 week=1 team=Boston College status=200 rows=0
+/injuries year=2025 week=1 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=1 team=Buffalo status=200 rows=0
+/injuries year=2025 week=1 team=California status=200 rows=0
+/injuries year=2025 week=1 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=1 team=Charlotte status=200 rows=0
+/injuries year=2025 week=1 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=1 team=Clemson status=200 rows=0
+/injuries year=2025 week=1 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=1 team=Colorado status=200 rows=0
+/injuries year=2025 week=1 team=Colorado State status=200 rows=0
+/injuries year=2025 week=1 team=Delaware status=200 rows=0
+/injuries year=2025 week=1 team=Duke status=200 rows=0
+/injuries year=2025 week=1 team=East Carolina status=200 rows=0
+/injuries year=2025 week=1 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=1 team=Florida status=200 rows=0
+/injuries year=2025 week=1 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=1 team=Florida International status=200 rows=0
+/injuries year=2025 week=1 team=Florida State status=200 rows=0
+/injuries year=2025 week=1 team=Fresno State status=200 rows=0
+/injuries year=2025 week=1 team=Georgia status=200 rows=0
+/injuries year=2025 week=1 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=1 team=Georgia State status=200 rows=0
+/injuries year=2025 week=1 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=1 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=1 team=Houston status=200 rows=0
+/injuries year=2025 week=2 team=Air Force status=200 rows=0
+/injuries year=2025 week=2 team=Akron status=200 rows=0
+/injuries year=2025 week=2 team=Alabama status=200 rows=0
+/injuries year=2025 week=2 team=App State status=200 rows=0
+/injuries year=2025 week=2 team=Arizona status=200 rows=0
+/injuries year=2025 week=2 team=Arizona State status=200 rows=0
+/injuries year=2025 week=2 team=Arkansas status=200 rows=0
+/injuries year=2025 week=2 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=2 team=Army status=200 rows=0
+/injuries year=2025 week=2 team=Auburn status=200 rows=0
+/injuries year=2025 week=2 team=BYU status=200 rows=0
+/injuries year=2025 week=2 team=Ball State status=200 rows=0
+/injuries year=2025 week=2 team=Baylor status=200 rows=0
+/injuries year=2025 week=2 team=Boise State status=200 rows=0
+/injuries year=2025 week=2 team=Boston College status=200 rows=0
+/injuries year=2025 week=2 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=2 team=Buffalo status=200 rows=0
+/injuries year=2025 week=2 team=California status=200 rows=0
+/injuries year=2025 week=2 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=2 team=Charlotte status=200 rows=0
+/injuries year=2025 week=2 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=2 team=Clemson status=200 rows=0
+/injuries year=2025 week=2 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=2 team=Colorado status=200 rows=0
+/injuries year=2025 week=2 team=Colorado State status=200 rows=0
+/injuries year=2025 week=2 team=Delaware status=200 rows=0
+/injuries year=2025 week=2 team=Duke status=200 rows=0
+/injuries year=2025 week=2 team=East Carolina status=200 rows=0
+/injuries year=2025 week=2 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=2 team=Florida status=200 rows=0
+/injuries year=2025 week=2 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=2 team=Florida International status=200 rows=0
+/injuries year=2025 week=2 team=Florida State status=200 rows=0
+/injuries year=2025 week=2 team=Fresno State status=200 rows=0
+/injuries year=2025 week=2 team=Georgia status=200 rows=0
+/injuries year=2025 week=2 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=2 team=Georgia State status=200 rows=0
+/injuries year=2025 week=2 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=2 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=2 team=Houston status=200 rows=0
+/injuries year=2025 week=3 team=Air Force status=200 rows=0
+/injuries year=2025 week=3 team=Akron status=200 rows=0
+/injuries year=2025 week=3 team=Alabama status=200 rows=0
+/injuries year=2025 week=3 team=App State status=200 rows=0
+/injuries year=2025 week=3 team=Arizona status=200 rows=0
+/injuries year=2025 week=3 team=Arizona State status=200 rows=0
+/injuries year=2025 week=3 team=Arkansas status=200 rows=0
+/injuries year=2025 week=3 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=3 team=Army status=200 rows=0
+/injuries year=2025 week=3 team=Auburn status=200 rows=0
+/injuries year=2025 week=3 team=BYU status=200 rows=0
+/injuries year=2025 week=3 team=Ball State status=200 rows=0
+/injuries year=2025 week=3 team=Baylor status=200 rows=0
+/injuries year=2025 week=3 team=Boise State status=200 rows=0
+/injuries year=2025 week=3 team=Boston College status=200 rows=0
+/injuries year=2025 week=3 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=3 team=Buffalo status=200 rows=0
+/injuries year=2025 week=3 team=California status=200 rows=0
+/injuries year=2025 week=3 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=3 team=Charlotte status=200 rows=0
+/injuries year=2025 week=3 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=3 team=Clemson status=200 rows=0
+/injuries year=2025 week=3 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=3 team=Colorado status=200 rows=0
+/injuries year=2025 week=3 team=Colorado State status=200 rows=0
+/injuries year=2025 week=3 team=Delaware status=200 rows=0
+/injuries year=2025 week=3 team=Duke status=200 rows=0
+/injuries year=2025 week=3 team=East Carolina status=200 rows=0
+/injuries year=2025 week=3 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=3 team=Florida status=200 rows=0
+/injuries year=2025 week=3 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=3 team=Florida International status=200 rows=0
+/injuries year=2025 week=3 team=Florida State status=200 rows=0
+/injuries year=2025 week=3 team=Fresno State status=200 rows=0
+/injuries year=2025 week=3 team=Georgia status=200 rows=0
+/injuries year=2025 week=3 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=3 team=Georgia State status=200 rows=0
+/injuries year=2025 week=3 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=3 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=3 team=Houston status=200 rows=0
+/injuries year=2025 week=4 team=Air Force status=200 rows=0
+/injuries year=2025 week=4 team=Akron status=200 rows=0
+/injuries year=2025 week=4 team=Alabama status=200 rows=0
+/injuries year=2025 week=4 team=App State status=200 rows=0
+/injuries year=2025 week=4 team=Arizona status=200 rows=0
+/injuries year=2025 week=4 team=Arizona State status=200 rows=0
+/injuries year=2025 week=4 team=Arkansas status=200 rows=0
+/injuries year=2025 week=4 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=4 team=Army status=200 rows=0
+/injuries year=2025 week=4 team=Auburn status=200 rows=0
+/injuries year=2025 week=4 team=BYU status=200 rows=0
+/injuries year=2025 week=4 team=Ball State status=200 rows=0
+/injuries year=2025 week=4 team=Baylor status=200 rows=0
+/injuries year=2025 week=4 team=Boise State status=200 rows=0
+/injuries year=2025 week=4 team=Boston College status=200 rows=0
+/injuries year=2025 week=4 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=4 team=Buffalo status=200 rows=0
+/injuries year=2025 week=4 team=California status=200 rows=0
+/injuries year=2025 week=4 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=4 team=Charlotte status=200 rows=0
+/injuries year=2025 week=4 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=4 team=Clemson status=200 rows=0
+/injuries year=2025 week=4 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=4 team=Colorado status=200 rows=0
+/injuries year=2025 week=4 team=Colorado State status=200 rows=0
+/injuries year=2025 week=4 team=Delaware status=200 rows=0
+/injuries year=2025 week=4 team=Duke status=200 rows=0
+/injuries year=2025 week=4 team=East Carolina status=200 rows=0
+/injuries year=2025 week=4 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=4 team=Florida status=200 rows=0
+/injuries year=2025 week=4 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=4 team=Florida International status=200 rows=0
+/injuries year=2025 week=4 team=Florida State status=200 rows=0
+/injuries year=2025 week=4 team=Fresno State status=200 rows=0
+/injuries year=2025 week=4 team=Georgia status=200 rows=0
+/injuries year=2025 week=4 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=4 team=Georgia State status=200 rows=0
+/injuries year=2025 week=4 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=4 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=4 team=Houston status=200 rows=0
+/injuries year=2025 week=5 team=Air Force status=200 rows=0
+/injuries year=2025 week=5 team=Akron status=200 rows=0
+/injuries year=2025 week=5 team=Alabama status=200 rows=0
+/injuries year=2025 week=5 team=App State status=200 rows=0
+/injuries year=2025 week=5 team=Arizona status=200 rows=0
+/injuries year=2025 week=5 team=Arizona State status=200 rows=0
+/injuries year=2025 week=5 team=Arkansas status=200 rows=0
+/injuries year=2025 week=5 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=5 team=Army status=200 rows=0
+/injuries year=2025 week=5 team=Auburn status=200 rows=0
+/injuries year=2025 week=5 team=BYU status=200 rows=0
+/injuries year=2025 week=5 team=Ball State status=200 rows=0
+/injuries year=2025 week=5 team=Baylor status=200 rows=0
+/injuries year=2025 week=5 team=Boise State status=200 rows=0
+/injuries year=2025 week=5 team=Boston College status=200 rows=0
+/injuries year=2025 week=5 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=5 team=Buffalo status=200 rows=0
+/injuries year=2025 week=5 team=California status=200 rows=0
+/injuries year=2025 week=5 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=5 team=Charlotte status=200 rows=0
+/injuries year=2025 week=5 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=5 team=Clemson status=200 rows=0
+/injuries year=2025 week=5 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=5 team=Colorado status=200 rows=0
+/injuries year=2025 week=5 team=Colorado State status=200 rows=0
+/injuries year=2025 week=5 team=Delaware status=200 rows=0
+/injuries year=2025 week=5 team=Duke status=200 rows=0
+/injuries year=2025 week=5 team=East Carolina status=200 rows=0
+/injuries year=2025 week=5 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=5 team=Florida status=200 rows=0
+/injuries year=2025 week=5 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=5 team=Florida International status=200 rows=0
+/injuries year=2025 week=5 team=Florida State status=200 rows=0
+/injuries year=2025 week=5 team=Fresno State status=200 rows=0
+/injuries year=2025 week=5 team=Georgia status=200 rows=0
+/injuries year=2025 week=5 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=5 team=Georgia State status=200 rows=0
+/injuries year=2025 week=5 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=5 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=5 team=Houston status=200 rows=0
+/injuries year=2025 week=6 team=Air Force status=200 rows=0
+/injuries year=2025 week=6 team=Akron status=200 rows=0
+/injuries year=2025 week=6 team=Alabama status=200 rows=0
+/injuries year=2025 week=6 team=App State status=200 rows=0
+/injuries year=2025 week=6 team=Arizona status=200 rows=0
+/injuries year=2025 week=6 team=Arizona State status=200 rows=0
+/injuries year=2025 week=6 team=Arkansas status=200 rows=0
+/injuries year=2025 week=6 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=6 team=Army status=200 rows=0
+/injuries year=2025 week=6 team=Auburn status=200 rows=0
+/injuries year=2025 week=6 team=BYU status=200 rows=0
+/injuries year=2025 week=6 team=Ball State status=200 rows=0
+/injuries year=2025 week=6 team=Baylor status=200 rows=0
+/injuries year=2025 week=6 team=Boise State status=200 rows=0
+/injuries year=2025 week=6 team=Boston College status=200 rows=0
+/injuries year=2025 week=6 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=6 team=Buffalo status=200 rows=0
+/injuries year=2025 week=6 team=California status=200 rows=0
+/injuries year=2025 week=6 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=6 team=Charlotte status=200 rows=0
+/injuries year=2025 week=6 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=6 team=Clemson status=200 rows=0
+/injuries year=2025 week=6 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=6 team=Colorado status=200 rows=0
+/injuries year=2025 week=6 team=Colorado State status=200 rows=0
+/injuries year=2025 week=6 team=Delaware status=200 rows=0
+/injuries year=2025 week=6 team=Duke status=200 rows=0
+/injuries year=2025 week=6 team=East Carolina status=200 rows=0
+/injuries year=2025 week=6 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=6 team=Florida status=200 rows=0
+/injuries year=2025 week=6 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=6 team=Florida International status=200 rows=0
+/injuries year=2025 week=6 team=Florida State status=200 rows=0
+/injuries year=2025 week=6 team=Fresno State status=200 rows=0
+/injuries year=2025 week=6 team=Georgia status=200 rows=0
+/injuries year=2025 week=6 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=6 team=Georgia State status=200 rows=0
+/injuries year=2025 week=6 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=6 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=6 team=Houston status=200 rows=0
+/injuries year=2025 week=7 team=Air Force status=200 rows=0
+/injuries year=2025 week=7 team=Akron status=200 rows=0
+/injuries year=2025 week=7 team=Alabama status=200 rows=0
+/injuries year=2025 week=7 team=App State status=200 rows=0
+/injuries year=2025 week=7 team=Arizona status=200 rows=0
+/injuries year=2025 week=7 team=Arizona State status=200 rows=0
+/injuries year=2025 week=7 team=Arkansas status=200 rows=0
+/injuries year=2025 week=7 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=7 team=Army status=200 rows=0
+/injuries year=2025 week=7 team=Auburn status=200 rows=0
+/injuries year=2025 week=7 team=BYU status=200 rows=0
+/injuries year=2025 week=7 team=Ball State status=200 rows=0
+/injuries year=2025 week=7 team=Baylor status=200 rows=0
+/injuries year=2025 week=7 team=Boise State status=200 rows=0
+/injuries year=2025 week=7 team=Boston College status=200 rows=0
+/injuries year=2025 week=7 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=7 team=Buffalo status=200 rows=0
+/injuries year=2025 week=7 team=California status=200 rows=0
+/injuries year=2025 week=7 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=7 team=Charlotte status=200 rows=0
+/injuries year=2025 week=7 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=7 team=Clemson status=200 rows=0
+/injuries year=2025 week=7 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=7 team=Colorado status=200 rows=0
+/injuries year=2025 week=7 team=Colorado State status=200 rows=0
+/injuries year=2025 week=7 team=Delaware status=200 rows=0
+/injuries year=2025 week=7 team=Duke status=200 rows=0
+/injuries year=2025 week=7 team=East Carolina status=200 rows=0
+/injuries year=2025 week=7 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=7 team=Florida status=200 rows=0
+/injuries year=2025 week=7 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=7 team=Florida International status=200 rows=0
+/injuries year=2025 week=7 team=Florida State status=200 rows=0
+/injuries year=2025 week=7 team=Fresno State status=200 rows=0
+/injuries year=2025 week=7 team=Georgia status=200 rows=0
+/injuries year=2025 week=7 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=7 team=Georgia State status=200 rows=0
+/injuries year=2025 week=7 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=7 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=7 team=Houston status=200 rows=0
+/injuries year=2025 week=8 team=Air Force status=200 rows=0
+/injuries year=2025 week=8 team=Akron status=200 rows=0
+/injuries year=2025 week=8 team=Alabama status=200 rows=0
+/injuries year=2025 week=8 team=App State status=200 rows=0
+/injuries year=2025 week=8 team=Arizona status=200 rows=0
+/injuries year=2025 week=8 team=Arizona State status=200 rows=0
+/injuries year=2025 week=8 team=Arkansas status=200 rows=0
+/injuries year=2025 week=8 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=8 team=Army status=200 rows=0
+/injuries year=2025 week=8 team=Auburn status=200 rows=0
+/injuries year=2025 week=8 team=BYU status=200 rows=0
+/injuries year=2025 week=8 team=Ball State status=200 rows=0
+/injuries year=2025 week=8 team=Baylor status=200 rows=0
+/injuries year=2025 week=8 team=Boise State status=200 rows=0
+/injuries year=2025 week=8 team=Boston College status=200 rows=0
+/injuries year=2025 week=8 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=8 team=Buffalo status=200 rows=0
+/injuries year=2025 week=8 team=California status=200 rows=0
+/injuries year=2025 week=8 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=8 team=Charlotte status=200 rows=0
+/injuries year=2025 week=8 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=8 team=Clemson status=200 rows=0
+/injuries year=2025 week=8 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=8 team=Colorado status=200 rows=0
+/injuries year=2025 week=8 team=Colorado State status=200 rows=0
+/injuries year=2025 week=8 team=Delaware status=200 rows=0
+/injuries year=2025 week=8 team=Duke status=200 rows=0
+/injuries year=2025 week=8 team=East Carolina status=200 rows=0
+/injuries year=2025 week=8 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=8 team=Florida status=200 rows=0
+/injuries year=2025 week=8 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=8 team=Florida International status=200 rows=0
+/injuries year=2025 week=8 team=Florida State status=200 rows=0
+/injuries year=2025 week=8 team=Fresno State status=200 rows=0
+/injuries year=2025 week=8 team=Georgia status=200 rows=0
+/injuries year=2025 week=8 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=8 team=Georgia State status=200 rows=0
+/injuries year=2025 week=8 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=8 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=8 team=Houston status=200 rows=0
+/injuries year=2025 week=9 team=Air Force status=200 rows=0
+/injuries year=2025 week=9 team=Akron status=200 rows=0
+/injuries year=2025 week=9 team=Alabama status=200 rows=0
+/injuries year=2025 week=9 team=App State status=200 rows=0
+/injuries year=2025 week=9 team=Arizona status=200 rows=0
+/injuries year=2025 week=9 team=Arizona State status=200 rows=0
+/injuries year=2025 week=9 team=Arkansas status=200 rows=0
+/injuries year=2025 week=9 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=9 team=Army status=200 rows=0
+/injuries year=2025 week=9 team=Auburn status=200 rows=0
+/injuries year=2025 week=9 team=BYU status=200 rows=0
+/injuries year=2025 week=9 team=Ball State status=200 rows=0
+/injuries year=2025 week=9 team=Baylor status=200 rows=0
+/injuries year=2025 week=9 team=Boise State status=200 rows=0
+/injuries year=2025 week=9 team=Boston College status=200 rows=0
+/injuries year=2025 week=9 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=9 team=Buffalo status=200 rows=0
+/injuries year=2025 week=9 team=California status=200 rows=0
+/injuries year=2025 week=9 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=9 team=Charlotte status=200 rows=0
+/injuries year=2025 week=9 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=9 team=Clemson status=200 rows=0
+/injuries year=2025 week=9 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=9 team=Colorado status=200 rows=0
+/injuries year=2025 week=9 team=Colorado State status=200 rows=0
+/injuries year=2025 week=9 team=Delaware status=200 rows=0
+/injuries year=2025 week=9 team=Duke status=200 rows=0
+/injuries year=2025 week=9 team=East Carolina status=200 rows=0
+/injuries year=2025 week=9 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=9 team=Florida status=200 rows=0
+/injuries year=2025 week=9 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=9 team=Florida International status=200 rows=0
+/injuries year=2025 week=9 team=Florida State status=200 rows=0
+/injuries year=2025 week=9 team=Fresno State status=200 rows=0
+/injuries year=2025 week=9 team=Georgia status=200 rows=0
+/injuries year=2025 week=9 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=9 team=Georgia State status=200 rows=0
+/injuries year=2025 week=9 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=9 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=9 team=Houston status=200 rows=0
+/injuries year=2025 week=10 team=Air Force status=200 rows=0
+/injuries year=2025 week=10 team=Akron status=200 rows=0
+/injuries year=2025 week=10 team=Alabama status=200 rows=0
+/injuries year=2025 week=10 team=App State status=200 rows=0
+/injuries year=2025 week=10 team=Arizona status=200 rows=0
+/injuries year=2025 week=10 team=Arizona State status=200 rows=0
+/injuries year=2025 week=10 team=Arkansas status=200 rows=0
+/injuries year=2025 week=10 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=10 team=Army status=200 rows=0
+/injuries year=2025 week=10 team=Auburn status=200 rows=0
+/injuries year=2025 week=10 team=BYU status=200 rows=0
+/injuries year=2025 week=10 team=Ball State status=200 rows=0
+/injuries year=2025 week=10 team=Baylor status=200 rows=0
+/injuries year=2025 week=10 team=Boise State status=200 rows=0
+/injuries year=2025 week=10 team=Boston College status=200 rows=0
+/injuries year=2025 week=10 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=10 team=Buffalo status=200 rows=0
+/injuries year=2025 week=10 team=California status=200 rows=0
+/injuries year=2025 week=10 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=10 team=Charlotte status=200 rows=0
+/injuries year=2025 week=10 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=10 team=Clemson status=200 rows=0
+/injuries year=2025 week=10 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=10 team=Colorado status=200 rows=0
+/injuries year=2025 week=10 team=Colorado State status=200 rows=0
+/injuries year=2025 week=10 team=Delaware status=200 rows=0
+/injuries year=2025 week=10 team=Duke status=200 rows=0
+/injuries year=2025 week=10 team=East Carolina status=200 rows=0
+/injuries year=2025 week=10 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=10 team=Florida status=200 rows=0
+/injuries year=2025 week=10 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=10 team=Florida International status=200 rows=0
+/injuries year=2025 week=10 team=Florida State status=200 rows=0
+/injuries year=2025 week=10 team=Fresno State status=200 rows=0
+/injuries year=2025 week=10 team=Georgia status=200 rows=0
+/injuries year=2025 week=10 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=10 team=Georgia State status=200 rows=0
+/injuries year=2025 week=10 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=10 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=10 team=Houston status=200 rows=0
+/injuries year=2025 week=11 team=Air Force status=200 rows=0
+/injuries year=2025 week=11 team=Akron status=200 rows=0
+/injuries year=2025 week=11 team=Alabama status=200 rows=0
+/injuries year=2025 week=11 team=App State status=200 rows=0
+/injuries year=2025 week=11 team=Arizona status=200 rows=0
+/injuries year=2025 week=11 team=Arizona State status=200 rows=0
+/injuries year=2025 week=11 team=Arkansas status=200 rows=0
+/injuries year=2025 week=11 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=11 team=Army status=200 rows=0
+/injuries year=2025 week=11 team=Auburn status=200 rows=0
+/injuries year=2025 week=11 team=BYU status=200 rows=0
+/injuries year=2025 week=11 team=Ball State status=200 rows=0
+/injuries year=2025 week=11 team=Baylor status=200 rows=0
+/injuries year=2025 week=11 team=Boise State status=200 rows=0
+/injuries year=2025 week=11 team=Boston College status=200 rows=0
+/injuries year=2025 week=11 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=11 team=Buffalo status=200 rows=0
+/injuries year=2025 week=11 team=California status=200 rows=0
+/injuries year=2025 week=11 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=11 team=Charlotte status=200 rows=0
+/injuries year=2025 week=11 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=11 team=Clemson status=200 rows=0
+/injuries year=2025 week=11 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=11 team=Colorado status=200 rows=0
+/injuries year=2025 week=11 team=Colorado State status=200 rows=0
+/injuries year=2025 week=11 team=Delaware status=200 rows=0
+/injuries year=2025 week=11 team=Duke status=200 rows=0
+/injuries year=2025 week=11 team=East Carolina status=200 rows=0
+/injuries year=2025 week=11 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=11 team=Florida status=200 rows=0
+/injuries year=2025 week=11 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=11 team=Florida International status=200 rows=0
+/injuries year=2025 week=11 team=Florida State status=200 rows=0
+/injuries year=2025 week=11 team=Fresno State status=200 rows=0
+/injuries year=2025 week=11 team=Georgia status=200 rows=0
+/injuries year=2025 week=11 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=11 team=Georgia State status=200 rows=0
+/injuries year=2025 week=11 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=11 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=11 team=Houston status=200 rows=0
+/injuries year=2025 week=12 team=Air Force status=200 rows=0
+/injuries year=2025 week=12 team=Akron status=200 rows=0
+/injuries year=2025 week=12 team=Alabama status=200 rows=0
+/injuries year=2025 week=12 team=App State status=200 rows=0
+/injuries year=2025 week=12 team=Arizona status=200 rows=0
+/injuries year=2025 week=12 team=Arizona State status=200 rows=0
+/injuries year=2025 week=12 team=Arkansas status=200 rows=0
+/injuries year=2025 week=12 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=12 team=Army status=200 rows=0
+/injuries year=2025 week=12 team=Auburn status=200 rows=0
+/injuries year=2025 week=12 team=BYU status=200 rows=0
+/injuries year=2025 week=12 team=Ball State status=200 rows=0
+/injuries year=2025 week=12 team=Baylor status=200 rows=0
+/injuries year=2025 week=12 team=Boise State status=200 rows=0
+/injuries year=2025 week=12 team=Boston College status=200 rows=0
+/injuries year=2025 week=12 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=12 team=Buffalo status=200 rows=0
+/injuries year=2025 week=12 team=California status=200 rows=0
+/injuries year=2025 week=12 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=12 team=Charlotte status=200 rows=0
+/injuries year=2025 week=12 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=12 team=Clemson status=200 rows=0
+/injuries year=2025 week=12 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=12 team=Colorado status=200 rows=0
+/injuries year=2025 week=12 team=Colorado State status=200 rows=0
+/injuries year=2025 week=12 team=Delaware status=200 rows=0
+/injuries year=2025 week=12 team=Duke status=200 rows=0
+/injuries year=2025 week=12 team=East Carolina status=200 rows=0
+/injuries year=2025 week=12 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=12 team=Florida status=200 rows=0
+/injuries year=2025 week=12 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=12 team=Florida International status=200 rows=0
+/injuries year=2025 week=12 team=Florida State status=200 rows=0
+/injuries year=2025 week=12 team=Fresno State status=200 rows=0
+/injuries year=2025 week=12 team=Georgia status=200 rows=0
+/injuries year=2025 week=12 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=12 team=Georgia State status=200 rows=0
+/injuries year=2025 week=12 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=12 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=12 team=Houston status=200 rows=0
+/injuries year=2025 week=13 team=Air Force status=200 rows=0
+/injuries year=2025 week=13 team=Akron status=200 rows=0
+/injuries year=2025 week=13 team=Alabama status=200 rows=0
+/injuries year=2025 week=13 team=App State status=200 rows=0
+/injuries year=2025 week=13 team=Arizona status=200 rows=0
+/injuries year=2025 week=13 team=Arizona State status=200 rows=0
+/injuries year=2025 week=13 team=Arkansas status=200 rows=0
+/injuries year=2025 week=13 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=13 team=Army status=200 rows=0
+/injuries year=2025 week=13 team=Auburn status=200 rows=0
+/injuries year=2025 week=13 team=BYU status=200 rows=0
+/injuries year=2025 week=13 team=Ball State status=200 rows=0
+/injuries year=2025 week=13 team=Baylor status=200 rows=0
+/injuries year=2025 week=13 team=Boise State status=200 rows=0
+/injuries year=2025 week=13 team=Boston College status=200 rows=0
+/injuries year=2025 week=13 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=13 team=Buffalo status=200 rows=0
+/injuries year=2025 week=13 team=California status=200 rows=0
+/injuries year=2025 week=13 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=13 team=Charlotte status=200 rows=0
+/injuries year=2025 week=13 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=13 team=Clemson status=200 rows=0
+/injuries year=2025 week=13 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=13 team=Colorado status=200 rows=0
+/injuries year=2025 week=13 team=Colorado State status=200 rows=0
+/injuries year=2025 week=13 team=Delaware status=200 rows=0
+/injuries year=2025 week=13 team=Duke status=200 rows=0
+/injuries year=2025 week=13 team=East Carolina status=200 rows=0
+/injuries year=2025 week=13 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=13 team=Florida status=200 rows=0
+/injuries year=2025 week=13 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=13 team=Florida International status=200 rows=0
+/injuries year=2025 week=13 team=Florida State status=200 rows=0
+/injuries year=2025 week=13 team=Fresno State status=200 rows=0
+/injuries year=2025 week=13 team=Georgia status=200 rows=0
+/injuries year=2025 week=13 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=13 team=Georgia State status=200 rows=0
+/injuries year=2025 week=13 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=13 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=13 team=Houston status=200 rows=0
+/injuries year=2025 week=14 team=Air Force status=200 rows=0
+/injuries year=2025 week=14 team=Akron status=200 rows=0
+/injuries year=2025 week=14 team=Alabama status=200 rows=0
+/injuries year=2025 week=14 team=App State status=200 rows=0
+/injuries year=2025 week=14 team=Arizona status=200 rows=0
+/injuries year=2025 week=14 team=Arizona State status=200 rows=0
+/injuries year=2025 week=14 team=Arkansas status=200 rows=0
+/injuries year=2025 week=14 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=14 team=Army status=200 rows=0
+/injuries year=2025 week=14 team=Auburn status=200 rows=0
+/injuries year=2025 week=14 team=BYU status=200 rows=0
+/injuries year=2025 week=14 team=Ball State status=200 rows=0
+/injuries year=2025 week=14 team=Baylor status=200 rows=0
+/injuries year=2025 week=14 team=Boise State status=200 rows=0
+/injuries year=2025 week=14 team=Boston College status=200 rows=0
+/injuries year=2025 week=14 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=14 team=Buffalo status=200 rows=0
+/injuries year=2025 week=14 team=California status=200 rows=0
+/injuries year=2025 week=14 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=14 team=Charlotte status=200 rows=0
+/injuries year=2025 week=14 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=14 team=Clemson status=200 rows=0
+/injuries year=2025 week=14 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=14 team=Colorado status=200 rows=0
+/injuries year=2025 week=14 team=Colorado State status=200 rows=0
+/injuries year=2025 week=14 team=Delaware status=200 rows=0
+/injuries year=2025 week=14 team=Duke status=200 rows=0
+/injuries year=2025 week=14 team=East Carolina status=200 rows=0
+/injuries year=2025 week=14 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=14 team=Florida status=200 rows=0
+/injuries year=2025 week=14 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=14 team=Florida International status=200 rows=0
+/injuries year=2025 week=14 team=Florida State status=200 rows=0
+/injuries year=2025 week=14 team=Fresno State status=200 rows=0
+/injuries year=2025 week=14 team=Georgia status=200 rows=0
+/injuries year=2025 week=14 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=14 team=Georgia State status=200 rows=0
+/injuries year=2025 week=14 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=14 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=14 team=Houston status=200 rows=0
+/injuries year=2025 week=16 team=Air Force status=200 rows=0
+/injuries year=2025 week=16 team=Akron status=200 rows=0
+/injuries year=2025 week=16 team=Alabama status=200 rows=0
+/injuries year=2025 week=16 team=App State status=200 rows=0
+/injuries year=2025 week=16 team=Arizona status=200 rows=0
+/injuries year=2025 week=16 team=Arizona State status=200 rows=0
+/injuries year=2025 week=16 team=Arkansas status=200 rows=0
+/injuries year=2025 week=16 team=Arkansas State status=200 rows=0
+/injuries year=2025 week=16 team=Army status=200 rows=0
+/injuries year=2025 week=16 team=Auburn status=200 rows=0
+/injuries year=2025 week=16 team=BYU status=200 rows=0
+/injuries year=2025 week=16 team=Ball State status=200 rows=0
+/injuries year=2025 week=16 team=Baylor status=200 rows=0
+/injuries year=2025 week=16 team=Boise State status=200 rows=0
+/injuries year=2025 week=16 team=Boston College status=200 rows=0
+/injuries year=2025 week=16 team=Bowling Green status=200 rows=0
+/injuries year=2025 week=16 team=Buffalo status=200 rows=0
+/injuries year=2025 week=16 team=California status=200 rows=0
+/injuries year=2025 week=16 team=Central Michigan status=200 rows=0
+/injuries year=2025 week=16 team=Charlotte status=200 rows=0
+/injuries year=2025 week=16 team=Cincinnati status=200 rows=0
+/injuries year=2025 week=16 team=Clemson status=200 rows=0
+/injuries year=2025 week=16 team=Coastal Carolina status=200 rows=0
+/injuries year=2025 week=16 team=Colorado status=200 rows=0
+/injuries year=2025 week=16 team=Colorado State status=200 rows=0
+/injuries year=2025 week=16 team=Delaware status=200 rows=0
+/injuries year=2025 week=16 team=Duke status=200 rows=0
+/injuries year=2025 week=16 team=East Carolina status=200 rows=0
+/injuries year=2025 week=16 team=Eastern Michigan status=200 rows=0
+/injuries year=2025 week=16 team=Florida status=200 rows=0
+/injuries year=2025 week=16 team=Florida Atlantic status=200 rows=0
+/injuries year=2025 week=16 team=Florida International status=200 rows=0
+/injuries year=2025 week=16 team=Florida State status=200 rows=0
+/injuries year=2025 week=16 team=Fresno State status=200 rows=0
+/injuries year=2025 week=16 team=Georgia status=200 rows=0
+/injuries year=2025 week=16 team=Georgia Southern status=200 rows=0
+/injuries year=2025 week=16 team=Georgia State status=200 rows=0
+/injuries year=2025 week=16 team=Georgia Tech status=200 rows=0
+/injuries year=2025 week=16 team=Hawai'i status=200 rows=0
+/injuries year=2025 week=16 team=Houston status=200 rows=0
