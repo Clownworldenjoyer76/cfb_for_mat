@@ -1001,29 +1001,29 @@
       "conference": "ACC",
       "team": "Florida State",
       "offense": {
-        "overall": 0.32,
-        "passing": 0.38,
+        "overall": 0.31,
+        "passing": 0.35,
         "rushing": 0.29,
-        "firstDown": 0.16,
-        "secondDown": 0.14,
-        "thirdDown": 0.97,
+        "firstDown": 0.14,
+        "secondDown": 0.15,
+        "thirdDown": 0.94,
         "cumulative": {
-          "total": 228.5,
-          "passing": 112.31,
-          "rushing": 120.8
+          "total": 240.3,
+          "passing": 112.87,
+          "rushing": 130.5
         }
       },
       "defense": {
-        "overall": 0.13,
-        "passing": 0.21,
-        "rushing": 0.06,
-        "firstDown": -0.09,
-        "secondDown": 0.16,
-        "thirdDown": 0.41,
+        "overall": 0.12,
+        "passing": 0.19,
+        "rushing": 0.07,
+        "firstDown": -0.1,
+        "secondDown": 0.18,
+        "thirdDown": 0.37,
         "cumulative": {
-          "total": 84,
-          "passing": 627.9,
-          "rushing": 22
+          "total": 89.4,
+          "passing": 629.7,
+          "rushing": 26.8
         }
       }
     },
@@ -1187,29 +1187,29 @@
       "conference": "Mountain West",
       "team": "Hawai'i",
       "offense": {
-        "overall": 0.16,
-        "passing": 0.26,
+        "overall": 0.15,
+        "passing": 0.25,
         "rushing": 0.02,
-        "firstDown": -0.07,
-        "secondDown": 0.11,
-        "thirdDown": 0.6,
+        "firstDown": -0.06,
+        "secondDown": 0.1,
+        "thirdDown": 0.57,
         "cumulative": {
-          "total": 116.9,
-          "passing": 121.26,
-          "rushing": 6.5
+          "total": 120.5,
+          "passing": 124.67,
+          "rushing": 5.6
         }
       },
       "defense": {
-        "overall": 0.13,
-        "passing": 0.18,
-        "rushing": 0.1,
-        "firstDown": 0,
-        "secondDown": 0.23,
-        "thirdDown": 0.41,
+        "overall": 0.16,
+        "passing": 0.22,
+        "rushing": 0.11,
+        "firstDown": 0.04,
+        "secondDown": 0.24,
+        "thirdDown": 0.45,
         "cumulative": {
-          "total": 81,
-          "passing": 547.5,
-          "rushing": 29.3
+          "total": 105.6,
+          "passing": 726.4,
+          "rushing": 36
         }
       }
     },
@@ -2179,29 +2179,29 @@
       "conference": "ACC",
       "team": "NC State",
       "offense": {
-        "overall": 0.26,
-        "passing": 0.4,
+        "overall": 0.24,
+        "passing": 0.37,
         "rushing": 0.13,
-        "firstDown": 0.1,
-        "secondDown": 0.29,
-        "thirdDown": 0.68,
+        "firstDown": 0.07,
+        "secondDown": 0.3,
+        "thirdDown": 0.59,
         "cumulative": {
-          "total": 165.3,
-          "passing": 135.85,
-          "rushing": 36.7
+          "total": 170.7,
+          "passing": 136.02,
+          "rushing": 41.5
         }
       },
       "defense": {
         "overall": 0.23,
-        "passing": 0.35,
-        "rushing": 0.11,
-        "firstDown": 0.07,
-        "secondDown": 0.14,
-        "thirdDown": 0.79,
+        "passing": 0.33,
+        "rushing": 0.13,
+        "firstDown": 0.06,
+        "secondDown": 0.15,
+        "thirdDown": 0.77,
         "cumulative": {
-          "total": 162.5,
-          "passing": 1338.1,
-          "rushing": 34.9
+          "total": 174.3,
+          "passing": 1343.6,
+          "rushing": 44.7
         }
       }
     },
@@ -3699,28 +3699,28 @@
       "team": "UNLV",
       "offense": {
         "overall": 0.3,
-        "passing": 0.34,
-        "rushing": 0.28,
-        "firstDown": 0.22,
-        "secondDown": 0.2,
-        "thirdDown": 0.63,
+        "passing": 0.36,
+        "rushing": 0.27,
+        "firstDown": 0.23,
+        "secondDown": 0.21,
+        "thirdDown": 0.66,
         "cumulative": {
-          "total": 198.7,
-          "passing": 108.5,
-          "rushing": 93.7
+          "total": 223.2,
+          "passing": 126.39,
+          "rushing": 100.4
         }
       },
       "defense": {
-        "overall": 0.24,
-        "passing": 0.27,
-        "rushing": 0.25,
+        "overall": 0.22,
+        "passing": 0.26,
+        "rushing": 0.23,
         "firstDown": 0.14,
-        "secondDown": 0.16,
-        "thirdDown": 0.46,
+        "secondDown": 0.14,
+        "thirdDown": 0.44,
         "cumulative": {
-          "total": 163,
-          "passing": 967.4,
-          "rushing": 80.4
+          "total": 166.5,
+          "passing": 1001.5,
+          "rushing": 79.5
         }
       }
     },
