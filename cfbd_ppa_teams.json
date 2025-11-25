@@ -16,22 +16,22 @@
         "secondDown": 0.31,
         "thirdDown": 0.56,
         "cumulative": {
-          "total": 203.2,
-          "passing": 80.49,
+          "total": 203,
+          "passing": 80.32,
           "rushing": 126.3
         }
       },
       "defense": {
-        "overall": 0.39,
+        "overall": 0.4,
         "passing": 0.51,
-        "rushing": 0.28,
-        "firstDown": 0.23,
+        "rushing": 0.29,
+        "firstDown": 0.24,
         "secondDown": 0.32,
-        "thirdDown": 0.8,
+        "thirdDown": 0.83,
         "cumulative": {
-          "total": 255.3,
+          "total": 259.8,
           "passing": 1586.5,
-          "rushing": 93.2
+          "rushing": 97.7
         }
       }
     },
@@ -43,13 +43,13 @@
         "overall": 0.07,
         "passing": 0.17,
         "rushing": 0.01,
-        "firstDown": -0.07,
+        "firstDown": -0.06,
         "secondDown": 0.1,
         "thirdDown": 0.27,
         "cumulative": {
-          "total": 59.2,
+          "total": 59.5,
           "passing": 72.03,
-          "rushing": 3.1
+          "rushing": 4.8
         }
       },
       "defense": {
@@ -57,10 +57,10 @@
         "passing": 0.23,
         "rushing": 0.1,
         "firstDown": -0.02,
-        "secondDown": 0.29,
+        "secondDown": 0.27,
         "thirdDown": 0.44,
         "cumulative": {
-          "total": 118.9,
+          "total": 115.2,
           "passing": 853.8,
           "rushing": 40.1
         }
@@ -78,22 +78,22 @@
         "secondDown": 0.23,
         "thirdDown": 0.69,
         "cumulative": {
-          "total": 210.3,
-          "passing": 184.67,
-          "rushing": 34.1
+          "total": 212.2,
+          "passing": 186.63,
+          "rushing": 34
         }
       },
       "defense": {
-        "overall": 0.05,
+        "overall": 0.04,
         "passing": 0.06,
         "rushing": 0.08,
         "firstDown": -0.16,
         "secondDown": 0.05,
         "thirdDown": 0.34,
         "cumulative": {
-          "total": 28.9,
+          "total": 27.5,
           "passing": 162.2,
-          "rushing": 26.5
+          "rushing": 25.6
         }
       }
     },
@@ -146,16 +146,16 @@
         }
       },
       "defense": {
-        "overall": 0.08,
+        "overall": 0.07,
         "passing": 0.08,
         "rushing": 0.12,
-        "firstDown": -0.11,
-        "secondDown": 0.06,
-        "thirdDown": 0.3,
+        "firstDown": -0.12,
+        "secondDown": 0.05,
+        "thirdDown": 0.32,
         "cumulative": {
-          "total": 56,
-          "passing": 285.7,
-          "rushing": 45.3
+          "total": 54.7,
+          "passing": 260.2,
+          "rushing": 48.4
         }
       }
     },
@@ -171,7 +171,7 @@
         "secondDown": 0.14,
         "thirdDown": 0.48,
         "cumulative": {
-          "total": 126.5,
+          "total": 126.6,
           "passing": 79.9,
           "rushing": 66.2
         }
@@ -195,16 +195,16 @@
       "conference": "SEC",
       "team": "Arkansas",
       "offense": {
-        "overall": 0.33,
+        "overall": 0.32,
         "passing": 0.39,
         "rushing": 0.29,
         "firstDown": 0.17,
-        "secondDown": 0.35,
+        "secondDown": 0.34,
         "thirdDown": 0.7,
         "cumulative": {
-          "total": 238.5,
-          "passing": 143.68,
-          "rushing": 104.8
+          "total": 238.2,
+          "passing": 144.17,
+          "rushing": 104
         }
       },
       "defense": {
@@ -233,21 +233,21 @@
         "secondDown": 0.02,
         "thirdDown": 0.48,
         "cumulative": {
-          "total": 64.1,
-          "passing": 90.12,
+          "total": 67.1,
+          "passing": 93.05,
           "rushing": -5.9
         }
       },
       "defense": {
         "overall": 0.19,
-        "passing": 0.29,
+        "passing": 0.28,
         "rushing": 0.14,
-        "firstDown": 0.04,
+        "firstDown": 0.05,
         "secondDown": 0.18,
-        "thirdDown": 0.57,
+        "thirdDown": 0.54,
         "cumulative": {
-          "total": 147,
-          "passing": 999.6,
+          "total": 143.6,
+          "passing": 965.5,
           "rushing": 55.1
         }
       }
@@ -257,16 +257,16 @@
       "conference": "American Athletic",
       "team": "Army",
       "offense": {
-        "overall": 0.16,
-        "passing": 0.4,
+        "overall": 0.17,
+        "passing": 0.39,
         "rushing": 0.13,
         "firstDown": -0.07,
         "secondDown": 0.13,
         "thirdDown": 0.4,
         "cumulative": {
-          "total": 113.8,
-          "passing": 37.53,
-          "rushing": 76.3
+          "total": 116.1,
+          "passing": 36.83,
+          "rushing": 79.3
         }
       },
       "defense": {
@@ -319,29 +319,29 @@
       "conference": "Mid-American",
       "team": "Ball State",
       "offense": {
-        "overall": 0.01,
-        "passing": -0.04,
-        "rushing": 0.06,
+        "overall": 0,
+        "passing": -0.05,
+        "rushing": 0.05,
         "firstDown": -0.2,
-        "secondDown": 0.03,
+        "secondDown": 0.02,
         "thirdDown": 0.29,
         "cumulative": {
-          "total": 4.2,
-          "passing": -10.67,
-          "rushing": 20.5
+          "total": 0.2,
+          "passing": -14.43,
+          "rushing": 20.3
         }
       },
       "defense": {
-        "overall": 0.18,
+        "overall": 0.17,
         "passing": 0.3,
-        "rushing": 0.15,
-        "firstDown": 0,
+        "rushing": 0.14,
+        "firstDown": -0.01,
         "secondDown": 0.16,
         "thirdDown": 0.56,
         "cumulative": {
-          "total": 129.4,
+          "total": 128.3,
           "passing": 1029.4,
-          "rushing": 56
+          "rushing": 55.5
         }
       }
     },
@@ -350,16 +350,16 @@
       "conference": "Big 12",
       "team": "Baylor",
       "offense": {
-        "overall": 0.21,
-        "passing": 0.27,
+        "overall": 0.2,
+        "passing": 0.26,
         "rushing": 0.16,
-        "firstDown": 0.06,
-        "secondDown": 0.25,
-        "thirdDown": 0.42,
+        "firstDown": 0.05,
+        "secondDown": 0.24,
+        "thirdDown": 0.44,
         "cumulative": {
-          "total": 175.1,
-          "passing": 129.41,
-          "rushing": 54.1
+          "total": 173.7,
+          "passing": 126.86,
+          "rushing": 57.2
         }
       },
       "defense": {
@@ -381,29 +381,29 @@
       "conference": "Mountain West",
       "team": "Boise State",
       "offense": {
-        "overall": 0.21,
+        "overall": 0.2,
         "passing": 0.28,
         "rushing": 0.16,
-        "firstDown": 0,
+        "firstDown": -0.01,
         "secondDown": 0.19,
         "thirdDown": 0.68,
         "cumulative": {
-          "total": 164,
-          "passing": 102.63,
-          "rushing": 67
+          "total": 162.5,
+          "passing": 102.87,
+          "rushing": 66.1
         }
       },
       "defense": {
         "overall": 0.08,
-        "passing": -0.01,
+        "passing": 0,
         "rushing": 0.19,
         "firstDown": -0.07,
         "secondDown": 0.13,
-        "thirdDown": 0.36,
+        "thirdDown": 0.38,
         "cumulative": {
-          "total": 53,
-          "passing": -28.9,
-          "rushing": 68
+          "total": 56.5,
+          "passing": -6.8,
+          "rushing": 68.1
         }
       }
     },
@@ -447,10 +447,10 @@
         "passing": 0.01,
         "rushing": 0.02,
         "firstDown": -0.18,
-        "secondDown": -0.05,
+        "secondDown": -0.06,
         "thirdDown": 0.43,
         "cumulative": {
-          "total": 0.7,
+          "total": -3,
           "passing": 2.56,
           "rushing": 8.3
         }
@@ -463,9 +463,9 @@
         "secondDown": 0.12,
         "thirdDown": 0.46,
         "cumulative": {
-          "total": 99.1,
+          "total": 99.4,
           "passing": 827.8,
-          "rushing": 21.3
+          "rushing": 22.9
         }
       }
     },
@@ -474,16 +474,16 @@
       "conference": "Mid-American",
       "team": "Buffalo",
       "offense": {
-        "overall": 0.06,
+        "overall": 0.07,
         "passing": 0.15,
-        "rushing": -0.01,
-        "firstDown": -0.07,
+        "rushing": 0,
+        "firstDown": -0.06,
         "secondDown": 0.1,
         "thirdDown": 0.34,
         "cumulative": {
-          "total": 49.4,
+          "total": 50.8,
           "passing": 59.97,
-          "rushing": -2.2
+          "rushing": -0.9
         }
       },
       "defense": {
@@ -543,9 +543,9 @@
         "secondDown": 0.17,
         "thirdDown": 0.47,
         "cumulative": {
-          "total": 60.6,
-          "passing": 78.88,
-          "rushing": -18.3
+          "total": 61.4,
+          "passing": 79.58,
+          "rushing": -18.2
         }
       },
       "defense": {
@@ -556,7 +556,7 @@
         "secondDown": 0.09,
         "thirdDown": 0.42,
         "cumulative": {
-          "total": 94.9,
+          "total": 93.7,
           "passing": 334.3,
           "rushing": 58.5
         }
@@ -667,8 +667,8 @@
         "secondDown": 0.21,
         "thirdDown": 0.35,
         "cumulative": {
-          "total": 153,
-          "passing": 116.68,
+          "total": 153.1,
+          "passing": 116.79,
           "rushing": 36
         }
       },
@@ -705,15 +705,15 @@
       },
       "defense": {
         "overall": 0.2,
-        "passing": 0.28,
-        "rushing": 0.19,
+        "passing": 0.27,
+        "rushing": 0.2,
         "firstDown": 0.08,
         "secondDown": 0.29,
-        "thirdDown": 0.43,
+        "thirdDown": 0.44,
         "cumulative": {
-          "total": 159.2,
-          "passing": 1042.4,
-          "rushing": 80.8
+          "total": 163.4,
+          "passing": 1031.3,
+          "rushing": 84.2
         }
       }
     },
@@ -742,9 +742,9 @@
         "secondDown": 0.16,
         "thirdDown": 0.36,
         "cumulative": {
-          "total": 143.1,
+          "total": 143.2,
           "passing": 1000,
-          "rushing": 57.1
+          "rushing": 57.2
         }
       }
     },
@@ -753,16 +753,16 @@
       "conference": "Mountain West",
       "team": "Colorado State",
       "offense": {
-        "overall": 0.09,
-        "passing": 0.16,
+        "overall": 0.1,
+        "passing": 0.17,
         "rushing": 0.07,
         "firstDown": -0.06,
         "secondDown": 0.14,
-        "thirdDown": 0.33,
+        "thirdDown": 0.36,
         "cumulative": {
-          "total": 66.7,
-          "passing": 61.83,
-          "rushing": 23.2
+          "total": 70.2,
+          "passing": 64.04,
+          "rushing": 23.3
         }
       },
       "defense": {
@@ -773,9 +773,9 @@
         "secondDown": 0.32,
         "thirdDown": 0.55,
         "cumulative": {
-          "total": 164.7,
-          "passing": 1125.2,
-          "rushing": 61.9
+          "total": 163.2,
+          "passing": 1127.7,
+          "rushing": 61
         }
       }
     },
@@ -928,9 +928,9 @@
         "secondDown": 0.02,
         "thirdDown": 0.68,
         "cumulative": {
-          "total": 119.6,
-          "passing": 856.7,
-          "rushing": 34.3
+          "total": 120.5,
+          "passing": 858.5,
+          "rushing": 35
         }
       }
     },
@@ -946,7 +946,7 @@
         "secondDown": 0.09,
         "thirdDown": 0.48,
         "cumulative": {
-          "total": 164.8,
+          "total": 164.4,
           "passing": 166.56,
           "rushing": 19
         }
@@ -959,9 +959,9 @@
         "secondDown": 0.14,
         "thirdDown": 0.58,
         "cumulative": {
-          "total": 161.6,
+          "total": 161.5,
           "passing": 813.5,
-          "rushing": 86.3
+          "rushing": 86.2
         }
       }
     },
@@ -990,8 +990,8 @@
         "secondDown": 0.15,
         "thirdDown": 0.49,
         "cumulative": {
-          "total": 109.2,
-          "passing": 880.6,
+          "total": 109.3,
+          "passing": 881.2,
           "rushing": 37.9
         }
       }
@@ -1001,15 +1001,15 @@
       "conference": "ACC",
       "team": "Florida State",
       "offense": {
-        "overall": 0.31,
-        "passing": 0.35,
+        "overall": 0.3,
+        "passing": 0.34,
         "rushing": 0.29,
         "firstDown": 0.14,
-        "secondDown": 0.15,
+        "secondDown": 0.13,
         "thirdDown": 0.94,
         "cumulative": {
-          "total": 240.3,
-          "passing": 112.87,
+          "total": 238.4,
+          "passing": 111.96,
           "rushing": 130.5
         }
       },
@@ -1021,8 +1021,8 @@
         "secondDown": 0.18,
         "thirdDown": 0.37,
         "cumulative": {
-          "total": 89.4,
-          "passing": 629.7,
+          "total": 89.3,
+          "passing": 628.6,
           "rushing": 26.8
         }
       }
@@ -1033,28 +1033,28 @@
       "team": "Fresno State",
       "offense": {
         "overall": 0.11,
-        "passing": 0.25,
+        "passing": 0.24,
         "rushing": 0.03,
-        "firstDown": -0.04,
-        "secondDown": 0.22,
+        "firstDown": -0.05,
+        "secondDown": 0.21,
         "thirdDown": 0.32,
         "cumulative": {
-          "total": 78,
-          "passing": 82.56,
-          "rushing": 9.4
+          "total": 76.3,
+          "passing": 80.92,
+          "rushing": 9.2
         }
       },
       "defense": {
-        "overall": 0.13,
+        "overall": 0.12,
         "passing": 0.2,
-        "rushing": 0.08,
-        "firstDown": -0.02,
+        "rushing": 0.06,
+        "firstDown": -0.03,
         "secondDown": 0.05,
-        "thirdDown": 0.44,
+        "thirdDown": 0.41,
         "cumulative": {
-          "total": 91.6,
-          "passing": 686,
-          "rushing": 27.3
+          "total": 85.5,
+          "passing": 675.8,
+          "rushing": 23.5
         }
       }
     },
@@ -1107,16 +1107,16 @@
         }
       },
       "defense": {
-        "overall": 0.29,
+        "overall": 0.3,
         "passing": 0.36,
         "rushing": 0.29,
         "firstDown": 0.13,
-        "secondDown": 0.27,
+        "secondDown": 0.28,
         "thirdDown": 0.78,
         "cumulative": {
-          "total": 238.1,
+          "total": 239.8,
           "passing": 1258.5,
-          "rushing": 126.6
+          "rushing": 128.3
         }
       }
     },
@@ -1139,14 +1139,14 @@
       },
       "defense": {
         "overall": 0.29,
-        "passing": 0.44,
+        "passing": 0.45,
         "rushing": 0.2,
-        "firstDown": 0.12,
+        "firstDown": 0.13,
         "secondDown": 0.34,
-        "thirdDown": 0.6,
+        "thirdDown": 0.61,
         "cumulative": {
-          "total": 222,
-          "passing": 1463,
+          "total": 225.3,
+          "passing": 1496.6,
           "rushing": 85.9
         }
       }
@@ -1156,15 +1156,15 @@
       "conference": "ACC",
       "team": "Georgia Tech",
       "offense": {
-        "overall": 0.3,
-        "passing": 0.45,
+        "overall": 0.29,
+        "passing": 0.44,
         "rushing": 0.21,
         "firstDown": 0.23,
         "secondDown": 0.2,
-        "thirdDown": 0.71,
+        "thirdDown": 0.69,
         "cumulative": {
-          "total": 218.2,
-          "passing": 147.17,
+          "total": 216.7,
+          "passing": 145.66,
           "rushing": 81.6
         }
       },
@@ -1176,8 +1176,8 @@
         "secondDown": 0.07,
         "thirdDown": 0.48,
         "cumulative": {
-          "total": 142.2,
-          "passing": 1042.5,
+          "total": 142.1,
+          "passing": 1041.9,
           "rushing": 37.8
         }
       }
@@ -1207,9 +1207,9 @@
         "secondDown": 0.24,
         "thirdDown": 0.45,
         "cumulative": {
-          "total": 105.6,
+          "total": 106.2,
           "passing": 726.4,
-          "rushing": 36
+          "rushing": 36.6
         }
       }
     },
@@ -1269,9 +1269,9 @@
         "secondDown": 0.15,
         "thirdDown": 0.61,
         "cumulative": {
-          "total": 155,
+          "total": 155.1,
           "passing": 1261.6,
-          "rushing": 28.7
+          "rushing": 28.9
         }
       }
     },
@@ -1311,29 +1311,29 @@
       "conference": "Big Ten",
       "team": "Iowa",
       "offense": {
-        "overall": 0.14,
+        "overall": 0.13,
         "passing": 0.16,
         "rushing": 0.16,
         "firstDown": -0.01,
-        "secondDown": 0.15,
+        "secondDown": 0.13,
         "thirdDown": 0.36,
         "cumulative": {
-          "total": 91.6,
+          "total": 87.4,
           "passing": 42.13,
           "rushing": 66.1
         }
       },
       "defense": {
-        "overall": 0.04,
+        "overall": 0.03,
         "passing": 0.13,
-        "rushing": 0.03,
-        "firstDown": -0.03,
+        "rushing": 0.02,
+        "firstDown": -0.04,
         "secondDown": 0.05,
         "thirdDown": 0.29,
         "cumulative": {
-          "total": 26,
+          "total": 23.2,
           "passing": 432.9,
-          "rushing": 8.4
+          "rushing": 5.6
         }
       }
     },
@@ -1359,12 +1359,12 @@
         "passing": 0.24,
         "rushing": 0.04,
         "firstDown": -0.05,
-        "secondDown": 0.07,
-        "thirdDown": 0.53,
+        "secondDown": 0.06,
+        "thirdDown": 0.54,
         "cumulative": {
-          "total": 71.1,
-          "passing": 860.1,
-          "rushing": 12
+          "total": 70.3,
+          "passing": 843.8,
+          "rushing": 13.8
         }
       }
     },
@@ -1381,7 +1381,7 @@
         "thirdDown": 0.47,
         "cumulative": {
           "total": 158.9,
-          "passing": 39.7,
+          "passing": 39.77,
           "rushing": 117.5
         }
       },
@@ -1408,12 +1408,12 @@
         "passing": 0.32,
         "rushing": 0.22,
         "firstDown": 0.1,
-        "secondDown": 0.13,
-        "thirdDown": 0.83,
+        "secondDown": 0.12,
+        "thirdDown": 0.8,
         "cumulative": {
-          "total": 177.8,
+          "total": 174.5,
           "passing": 92.9,
-          "rushing": 101.8
+          "rushing": 99.8
         }
       },
       "defense": {
@@ -1436,15 +1436,15 @@
       "team": "Kansas",
       "offense": {
         "overall": 0.23,
-        "passing": 0.35,
-        "rushing": 0.16,
+        "passing": 0.34,
+        "rushing": 0.17,
         "firstDown": 0.13,
-        "secondDown": 0.23,
-        "thirdDown": 0.43,
+        "secondDown": 0.22,
+        "thirdDown": 0.44,
         "cumulative": {
-          "total": 164.5,
-          "passing": 113.08,
-          "rushing": 59.5
+          "total": 163.7,
+          "passing": 111.44,
+          "rushing": 61.3
         }
       },
       "defense": {
@@ -1466,15 +1466,15 @@
       "conference": "Big 12",
       "team": "Kansas State",
       "offense": {
-        "overall": 0.21,
-        "passing": 0.25,
+        "overall": 0.2,
+        "passing": 0.24,
         "rushing": 0.17,
         "firstDown": 0,
-        "secondDown": 0.17,
+        "secondDown": 0.16,
         "thirdDown": 0.52,
         "cumulative": {
-          "total": 143.8,
-          "passing": 82.54,
+          "total": 143.4,
+          "passing": 82.32,
           "rushing": 61.1
         }
       },
@@ -1483,12 +1483,12 @@
         "passing": 0.16,
         "rushing": 0.13,
         "firstDown": -0.04,
-        "secondDown": 0.07,
+        "secondDown": 0.08,
         "thirdDown": 0.49,
         "cumulative": {
-          "total": 103.4,
+          "total": 105.8,
           "passing": 606.3,
-          "rushing": 52.1
+          "rushing": 54.5
         }
       }
     },
@@ -1497,29 +1497,29 @@
       "conference": "Conference USA",
       "team": "Kennesaw State",
       "offense": {
-        "overall": 0.14,
-        "passing": 0.23,
+        "overall": 0.17,
+        "passing": 0.28,
         "rushing": 0.13,
         "firstDown": -0.07,
-        "secondDown": 0.17,
-        "thirdDown": 0.5,
+        "secondDown": 0.21,
+        "thirdDown": 0.54,
         "cumulative": {
-          "total": 95.6,
-          "passing": 70.2,
-          "rushing": 48
+          "total": 127.2,
+          "passing": 95.64,
+          "rushing": 55
         }
       },
       "defense": {
-        "overall": 0.14,
-        "passing": 0.21,
+        "overall": 0.16,
+        "passing": 0.22,
         "rushing": 0.11,
-        "firstDown": 0.04,
-        "secondDown": 0.1,
-        "thirdDown": 0.4,
+        "firstDown": 0.08,
+        "secondDown": 0.12,
+        "thirdDown": 0.36,
         "cumulative": {
-          "total": 103.5,
-          "passing": 725.9,
-          "rushing": 38.4
+          "total": 121.8,
+          "passing": 863.6,
+          "rushing": 43.2
         }
       }
     },
@@ -1576,12 +1576,12 @@
         "passing": 0.28,
         "rushing": 0.06,
         "firstDown": 0,
-        "secondDown": 0.23,
+        "secondDown": 0.22,
         "thirdDown": 0.46,
         "cumulative": {
-          "total": 120,
+          "total": 118.8,
           "passing": 979.2,
-          "rushing": 22.3
+          "rushing": 21.2
         }
       }
     },
@@ -1610,9 +1610,9 @@
         "secondDown": 0.09,
         "thirdDown": 0.54,
         "cumulative": {
-          "total": 127.6,
+          "total": 127.9,
           "passing": 660,
-          "rushing": 69.9
+          "rushing": 70.3
         }
       }
     },
@@ -1622,14 +1622,14 @@
       "team": "Louisiana",
       "offense": {
         "overall": 0.13,
-        "passing": 0.15,
+        "passing": 0.14,
         "rushing": 0.15,
-        "firstDown": 0.03,
+        "firstDown": 0.04,
         "secondDown": -0.07,
-        "thirdDown": 0.59,
+        "thirdDown": 0.56,
         "cumulative": {
-          "total": 92.4,
-          "passing": 41.01,
+          "total": 89,
+          "passing": 37.61,
           "rushing": 60.8
         }
       },
@@ -1641,8 +1641,8 @@
         "secondDown": 0.14,
         "thirdDown": 0.55,
         "cumulative": {
-          "total": 146.8,
-          "passing": 860.1,
+          "total": 149.7,
+          "passing": 889.5,
           "rushing": 82.8
         }
       }
@@ -1659,9 +1659,9 @@
         "secondDown": 0.01,
         "thirdDown": 0.48,
         "cumulative": {
-          "total": 95.9,
+          "total": 96.3,
           "passing": 52.94,
-          "rushing": 56.2
+          "rushing": 56.5
         }
       },
       "defense": {
@@ -1734,9 +1734,9 @@
         "secondDown": 0.12,
         "thirdDown": 0.29,
         "cumulative": {
-          "total": 48.7,
+          "total": 48.5,
           "passing": 380.8,
-          "rushing": 23.5
+          "rushing": 23.3
         }
       }
     },
@@ -1776,16 +1776,16 @@
       "conference": "Big Ten",
       "team": "Maryland",
       "offense": {
-        "overall": 0.07,
+        "overall": 0.09,
         "passing": 0.17,
-        "rushing": -0.05,
-        "firstDown": -0.09,
+        "rushing": -0.01,
+        "firstDown": -0.04,
         "secondDown": 0.16,
         "thirdDown": 0.32,
         "cumulative": {
-          "total": 50.4,
-          "passing": 72.15,
-          "rushing": -13
+          "total": 64.4,
+          "passing": 74.93,
+          "rushing": -1.8
         }
       },
       "defense": {
@@ -1827,9 +1827,9 @@
         "secondDown": 0.31,
         "thirdDown": 0.48,
         "cumulative": {
-          "total": 201,
+          "total": 200.7,
           "passing": 1314.4,
-          "rushing": 76.7
+          "rushing": 75.7
         }
       }
     },
@@ -1883,14 +1883,14 @@
       },
       "defense": {
         "overall": 0.01,
-        "passing": 0.12,
+        "passing": 0.13,
         "rushing": -0.05,
         "firstDown": -0.17,
         "secondDown": 0.14,
-        "thirdDown": 0.17,
+        "thirdDown": 0.19,
         "cumulative": {
-          "total": 6.1,
-          "passing": 457.1,
+          "total": 9.2,
+          "passing": 488.5,
           "rushing": -16.2
         }
       }
@@ -1920,9 +1920,9 @@
         "secondDown": 0,
         "thirdDown": 0.65,
         "cumulative": {
-          "total": 72.7,
+          "total": 74.1,
           "passing": 682.3,
-          "rushing": 29.1
+          "rushing": 30.3
         }
       }
     },
@@ -1944,16 +1944,16 @@
         }
       },
       "defense": {
-        "overall": 0.05,
+        "overall": 0.07,
         "passing": 0.16,
-        "rushing": -0.02,
-        "firstDown": -0.13,
+        "rushing": 0.02,
+        "firstDown": -0.09,
         "secondDown": 0.02,
         "thirdDown": 0.38,
         "cumulative": {
-          "total": 38.9,
-          "passing": 605.2,
-          "rushing": -5.4
+          "total": 52.9,
+          "passing": 633.1,
+          "rushing": 5.8
         }
       }
     },
@@ -1962,27 +1962,27 @@
       "conference": "Big Ten",
       "team": "Michigan State",
       "offense": {
-        "overall": 0.12,
+        "overall": 0.11,
         "passing": 0.22,
-        "rushing": 0.07,
-        "firstDown": 0,
+        "rushing": 0.06,
+        "firstDown": -0.01,
         "secondDown": 0.17,
         "thirdDown": 0.41,
         "cumulative": {
-          "total": 84.2,
+          "total": 81.4,
           "passing": 80.14,
-          "rushing": 24.1
+          "rushing": 21.3
         }
       },
       "defense": {
-        "overall": 0.19,
+        "overall": 0.18,
         "passing": 0.28,
         "rushing": 0.15,
         "firstDown": 0.05,
-        "secondDown": 0.24,
+        "secondDown": 0.22,
         "thirdDown": 0.42,
         "cumulative": {
-          "total": 131.4,
+          "total": 127.2,
           "passing": 892.9,
           "rushing": 56.3
         }
@@ -2000,8 +2000,8 @@
         "secondDown": 0.16,
         "thirdDown": 0.39,
         "cumulative": {
-          "total": 106.1,
-          "passing": 84.32,
+          "total": 106.2,
+          "passing": 84.46,
           "rushing": 23
         }
       },
@@ -2087,28 +2087,28 @@
       "team": "Missouri",
       "offense": {
         "overall": 0.24,
-        "passing": 0.24,
+        "passing": 0.23,
         "rushing": 0.25,
         "firstDown": 0.04,
-        "secondDown": 0.29,
-        "thirdDown": 0.54,
+        "secondDown": 0.28,
+        "thirdDown": 0.55,
         "cumulative": {
-          "total": 192.7,
-          "passing": 84.01,
+          "total": 190.5,
+          "passing": 81.86,
           "rushing": 111.4
         }
       },
       "defense": {
         "overall": 0.03,
         "passing": 0.03,
-        "rushing": 0.05,
-        "firstDown": -0.12,
+        "rushing": 0.04,
+        "firstDown": -0.13,
         "secondDown": 0,
         "thirdDown": 0.37,
         "cumulative": {
-          "total": 21.3,
+          "total": 19,
           "passing": 105,
-          "rushing": 15.2
+          "rushing": 14.1
         }
       }
     },
@@ -2117,29 +2117,29 @@
       "conference": "Conference USA",
       "team": "Missouri State",
       "offense": {
-        "overall": 0.15,
-        "passing": 0.31,
-        "rushing": 0,
-        "firstDown": 0.03,
-        "secondDown": 0.11,
-        "thirdDown": 0.4,
+        "overall": 0.16,
+        "passing": 0.32,
+        "rushing": 0.01,
+        "firstDown": 0.07,
+        "secondDown": 0.13,
+        "thirdDown": 0.35,
         "cumulative": {
-          "total": 97.2,
-          "passing": 112.68,
-          "rushing": -1.2
+          "total": 115.5,
+          "passing": 126.44,
+          "rushing": 3.6
         }
       },
       "defense": {
-        "overall": 0.22,
-        "passing": 0.29,
+        "overall": 0.24,
+        "passing": 0.32,
         "rushing": 0.18,
-        "firstDown": 0.15,
-        "secondDown": 0.11,
-        "thirdDown": 0.55,
+        "firstDown": 0.13,
+        "secondDown": 0.16,
+        "thirdDown": 0.59,
         "cumulative": {
-          "total": 144.6,
-          "passing": 958,
-          "rushing": 54.6
+          "total": 176.2,
+          "passing": 1212.4,
+          "rushing": 61.7
         }
       }
     },
@@ -2186,21 +2186,21 @@
         "secondDown": 0.3,
         "thirdDown": 0.59,
         "cumulative": {
-          "total": 170.7,
-          "passing": 136.02,
+          "total": 170.6,
+          "passing": 135.91,
           "rushing": 41.5
         }
       },
       "defense": {
         "overall": 0.23,
-        "passing": 0.33,
+        "passing": 0.32,
         "rushing": 0.13,
-        "firstDown": 0.06,
-        "secondDown": 0.15,
+        "firstDown": 0.07,
+        "secondDown": 0.13,
         "thirdDown": 0.77,
         "cumulative": {
-          "total": 174.3,
-          "passing": 1343.6,
+          "total": 172.4,
+          "passing": 1334.6,
           "rushing": 44.7
         }
       }
@@ -2210,29 +2210,29 @@
       "conference": "Big Ten",
       "team": "Nebraska",
       "offense": {
-        "overall": 0.2,
+        "overall": 0.19,
         "passing": 0.29,
         "rushing": 0.12,
         "firstDown": 0.07,
         "secondDown": 0.19,
-        "thirdDown": 0.7,
+        "thirdDown": 0.69,
         "cumulative": {
-          "total": 140.5,
-          "passing": 102.73,
+          "total": 139.1,
+          "passing": 101.33,
           "rushing": 43.1
         }
       },
       "defense": {
-        "overall": 0.16,
+        "overall": 0.15,
         "passing": 0.1,
         "rushing": 0.22,
-        "firstDown": 0.08,
+        "firstDown": 0.07,
         "secondDown": 0.04,
         "thirdDown": 0.42,
         "cumulative": {
-          "total": 101.1,
+          "total": 98.3,
           "passing": 277.4,
-          "rushing": 80
+          "rushing": 78.6
         }
       }
     },
@@ -2274,14 +2274,14 @@
       "offense": {
         "overall": 0.2,
         "passing": 0.31,
-        "rushing": 0.13,
+        "rushing": 0.14,
         "firstDown": 0.03,
         "secondDown": 0.13,
-        "thirdDown": 0.58,
+        "thirdDown": 0.61,
         "cumulative": {
-          "total": 140.1,
+          "total": 144.6,
           "passing": 99.19,
-          "rushing": 49.5
+          "rushing": 54
         }
       },
       "defense": {
@@ -2292,8 +2292,8 @@
         "secondDown": 0.08,
         "thirdDown": 0.53,
         "cumulative": {
-          "total": 92.5,
-          "passing": 1034.7,
+          "total": 92.4,
+          "passing": 1033.1,
           "rushing": 13.2
         }
       }
@@ -2305,14 +2305,14 @@
       "offense": {
         "overall": 0.03,
         "passing": 0.12,
-        "rushing": -0.06,
+        "rushing": -0.07,
         "firstDown": -0.19,
         "secondDown": -0.03,
         "thirdDown": 0.51,
         "cumulative": {
-          "total": 24.6,
+          "total": 23.6,
           "passing": 57.75,
-          "rushing": -20.1
+          "rushing": -21.2
         }
       },
       "defense": {
@@ -2323,7 +2323,7 @@
         "secondDown": 0.04,
         "thirdDown": 0.38,
         "cumulative": {
-          "total": 76,
+          "total": 75.9,
           "passing": 920.9,
           "rushing": 1.8
         }
@@ -2382,12 +2382,12 @@
         "passing": 0.2,
         "rushing": 0.15,
         "firstDown": -0.02,
-        "secondDown": 0.18,
+        "secondDown": 0.17,
         "thirdDown": 0.55,
         "cumulative": {
-          "total": 130.3,
+          "total": 129.6,
           "passing": 598.1,
-          "rushing": 63.9
+          "rushing": 63.6
         }
       }
     },
@@ -2471,15 +2471,15 @@
         }
       },
       "defense": {
-        "overall": 0.02,
-        "passing": 0.05,
+        "overall": 0.01,
+        "passing": 0.03,
         "rushing": 0.04,
         "firstDown": -0.22,
         "secondDown": 0.13,
-        "thirdDown": 0.43,
+        "thirdDown": 0.39,
         "cumulative": {
-          "total": 16.8,
-          "passing": 183.1,
+          "total": 8.9,
+          "passing": 104,
           "rushing": 15.3
         }
       }
@@ -2491,14 +2491,14 @@
       "offense": {
         "overall": 0.21,
         "passing": 0.27,
-        "rushing": 0.22,
+        "rushing": 0.21,
         "firstDown": 0.04,
         "secondDown": 0.28,
         "thirdDown": 0.56,
         "cumulative": {
-          "total": 157.3,
+          "total": 157,
           "passing": 77.02,
-          "rushing": 95.4
+          "rushing": 94.4
         }
       },
       "defense": {
@@ -2520,16 +2520,16 @@
       "conference": "Big Ten",
       "team": "Ohio State",
       "offense": {
-        "overall": 0.39,
+        "overall": 0.37,
         "passing": 0.62,
-        "rushing": 0.2,
-        "firstDown": 0.26,
-        "secondDown": 0.35,
+        "rushing": 0.18,
+        "firstDown": 0.25,
+        "secondDown": 0.34,
         "thirdDown": 0.8,
         "cumulative": {
-          "total": 268.5,
+          "total": 260.6,
           "passing": 198.66,
-          "rushing": 73.3
+          "rushing": 66.7
         }
       },
       "defense": {
@@ -2554,13 +2554,13 @@
         "overall": 0.13,
         "passing": 0.2,
         "rushing": 0.08,
-        "firstDown": -0.02,
+        "firstDown": -0.03,
         "secondDown": 0.08,
         "thirdDown": 0.49,
         "cumulative": {
-          "total": 94.3,
+          "total": 92.1,
           "passing": 71.95,
-          "rushing": 27.5
+          "rushing": 26.4
         }
       },
       "defense": {
@@ -2568,11 +2568,11 @@
         "passing": 0.07,
         "rushing": -0.06,
         "firstDown": -0.24,
-        "secondDown": 0.05,
+        "secondDown": 0.04,
         "thirdDown": 0.32,
         "cumulative": {
-          "total": 1.2,
-          "passing": 275.9,
+          "total": -0.9,
+          "passing": 254.4,
           "rushing": -19.2
         }
       }
@@ -2602,9 +2602,9 @@
         "secondDown": 0.15,
         "thirdDown": 0.6,
         "cumulative": {
-          "total": 198.8,
+          "total": 198.9,
           "passing": 1583.5,
-          "rushing": 46.4
+          "rushing": 46.5
         }
       }
     },
@@ -2615,14 +2615,14 @@
       "offense": {
         "overall": 0.26,
         "passing": 0.43,
-        "rushing": 0.16,
+        "rushing": 0.17,
         "firstDown": 0.18,
-        "secondDown": 0.3,
+        "secondDown": 0.31,
         "thirdDown": 0.52,
         "cumulative": {
-          "total": 191.9,
+          "total": 193.7,
           "passing": 126.26,
-          "rushing": 71
+          "rushing": 72.8
         }
       },
       "defense": {
@@ -2693,11 +2693,11 @@
         "rushing": 0.02,
         "firstDown": -0.21,
         "secondDown": -0.06,
-        "thirdDown": 0.3,
+        "thirdDown": 0.31,
         "cumulative": {
-          "total": -6.6,
+          "total": -6.1,
           "passing": 117.9,
-          "rushing": 7.2
+          "rushing": 7.8
         }
       }
     },
@@ -2740,25 +2740,25 @@
         "overall": 0.23,
         "passing": 0.28,
         "rushing": 0.21,
-        "firstDown": 0.21,
+        "firstDown": 0.2,
         "secondDown": 0.11,
         "thirdDown": 0.46,
         "cumulative": {
-          "total": 157.1,
+          "total": 154.2,
           "passing": 79.37,
-          "rushing": 81.4
+          "rushing": 80
         }
       },
       "defense": {
         "overall": 0.1,
-        "passing": 0.14,
+        "passing": 0.13,
         "rushing": 0.13,
         "firstDown": -0.06,
-        "secondDown": 0.08,
-        "thirdDown": 0.49,
+        "secondDown": 0.09,
+        "thirdDown": 0.48,
         "cumulative": {
-          "total": 67.5,
-          "passing": 421,
+          "total": 66.1,
+          "passing": 407,
           "rushing": 46.7
         }
       }
@@ -2776,20 +2776,20 @@
         "thirdDown": 0.44,
         "cumulative": {
           "total": 144.8,
-          "passing": 135.65,
+          "passing": 135.6,
           "rushing": 27.7
         }
       },
       "defense": {
         "overall": 0.08,
-        "passing": 0.19,
+        "passing": 0.18,
         "rushing": -0.03,
         "firstDown": -0.07,
         "secondDown": 0.05,
-        "thirdDown": 0.37,
+        "thirdDown": 0.36,
         "cumulative": {
-          "total": 59.6,
-          "passing": 744.8,
+          "total": 58,
+          "passing": 729.6,
           "rushing": -11.8
         }
       }
@@ -2874,16 +2874,16 @@
         }
       },
       "defense": {
-        "overall": 0.31,
+        "overall": 0.3,
         "passing": 0.41,
-        "rushing": 0.28,
-        "firstDown": 0.17,
-        "secondDown": 0.39,
+        "rushing": 0.26,
+        "firstDown": 0.15,
+        "secondDown": 0.38,
         "thirdDown": 0.66,
         "cumulative": {
-          "total": 202.8,
+          "total": 194.9,
           "passing": 1278,
-          "rushing": 94.9
+          "rushing": 88.3
         }
       }
     },
@@ -2912,8 +2912,8 @@
         "secondDown": 0.23,
         "thirdDown": 0.42,
         "cumulative": {
-          "total": 165.9,
-          "passing": 1241.8,
+          "total": 166,
+          "passing": 1243.2,
           "rushing": 64.6
         }
       }
@@ -3047,16 +3047,16 @@
       "conference": "SEC",
       "team": "South Carolina",
       "offense": {
-        "overall": 0.11,
-        "passing": 0.2,
-        "rushing": 0.1,
+        "overall": 0.12,
+        "passing": 0.19,
+        "rushing": 0.11,
         "firstDown": -0.03,
-        "secondDown": 0.07,
-        "thirdDown": 0.41,
+        "secondDown": 0.08,
+        "thirdDown": 0.42,
         "cumulative": {
-          "total": 76.3,
-          "passing": 64.33,
-          "rushing": 35.4
+          "total": 80.5,
+          "passing": 63.23,
+          "rushing": 38.9
         }
       },
       "defense": {
@@ -3147,7 +3147,7 @@
         "secondDown": 0,
         "thirdDown": 0.38,
         "cumulative": {
-          "total": 41.5,
+          "total": 40.3,
           "passing": 65.6,
           "rushing": -5.2
         }
@@ -3156,13 +3156,13 @@
         "overall": 0.15,
         "passing": 0.32,
         "rushing": -0.04,
-        "firstDown": 0,
+        "firstDown": 0.01,
         "secondDown": 0.15,
         "thirdDown": 0.51,
         "cumulative": {
-          "total": 114.2,
-          "passing": 1370.7,
-          "rushing": -13
+          "total": 115,
+          "passing": 1377.6,
+          "rushing": -12.9
         }
       }
     },
@@ -3171,15 +3171,15 @@
       "conference": "ACC",
       "team": "Syracuse",
       "offense": {
-        "overall": 0.06,
-        "passing": 0.13,
+        "overall": 0.05,
+        "passing": 0.11,
         "rushing": 0.01,
         "firstDown": -0.09,
         "secondDown": 0.16,
-        "thirdDown": 0.27,
+        "thirdDown": 0.23,
         "cumulative": {
-          "total": 47.7,
-          "passing": 54.25,
+          "total": 39.8,
+          "passing": 46.34,
           "rushing": 5
         }
       },
@@ -3234,14 +3234,14 @@
       "team": "Temple",
       "offense": {
         "overall": 0.19,
-        "passing": 0.38,
+        "passing": 0.37,
         "rushing": 0.04,
         "firstDown": 0.07,
-        "secondDown": 0.21,
+        "secondDown": 0.2,
         "thirdDown": 0.36,
         "cumulative": {
-          "total": 120.8,
-          "passing": 115.1,
+          "total": 120,
+          "passing": 114.34,
           "rushing": 12.2
         }
       },
@@ -3250,12 +3250,12 @@
         "passing": 0.29,
         "rushing": 0.2,
         "firstDown": 0,
-        "secondDown": 0.23,
+        "secondDown": 0.24,
         "thirdDown": 0.47,
         "cumulative": {
-          "total": 149.6,
-          "passing": 778.2,
-          "rushing": 79.5
+          "total": 150.4,
+          "passing": 794.5,
+          "rushing": 78.7
         }
       }
     },
@@ -3271,9 +3271,9 @@
         "secondDown": 0.32,
         "thirdDown": 0.68,
         "cumulative": {
-          "total": 268.2,
-          "passing": 168.42,
-          "rushing": 100.4
+          "total": 269,
+          "passing": 168.6,
+          "rushing": 101
         }
       },
       "defense": {
@@ -3312,12 +3312,12 @@
         "passing": 0.22,
         "rushing": -0.02,
         "firstDown": 0.04,
-        "secondDown": 0.08,
+        "secondDown": 0.07,
         "thirdDown": 0.39,
         "cumulative": {
-          "total": 77.3,
-          "passing": 898.4,
-          "rushing": -6.7
+          "total": 77,
+          "passing": 903.3,
+          "rushing": -7.5
         }
       }
     },
@@ -3340,14 +3340,14 @@
       },
       "defense": {
         "overall": 0.12,
-        "passing": 0.11,
+        "passing": 0.12,
         "rushing": 0.13,
         "firstDown": -0.03,
         "secondDown": 0.19,
         "thirdDown": 0.29,
         "cumulative": {
-          "total": 80.7,
-          "passing": 413.6,
+          "total": 81.4,
+          "passing": 420.5,
           "rushing": 40
         }
       }
@@ -3422,26 +3422,26 @@
         "overall": 0.22,
         "passing": 0.38,
         "rushing": 0.12,
-        "firstDown": 0.18,
+        "firstDown": 0.17,
         "secondDown": 0.2,
         "thirdDown": 0.52,
         "cumulative": {
-          "total": 165.4,
+          "total": 164.4,
           "passing": 131.18,
-          "rushing": 45.5
+          "rushing": 44.9
         }
       },
       "defense": {
-        "overall": -0.09,
-        "passing": -0.1,
+        "overall": -0.1,
+        "passing": -0.11,
         "rushing": -0.03,
         "firstDown": -0.22,
-        "secondDown": -0.03,
+        "secondDown": -0.04,
         "thirdDown": 0.13,
         "cumulative": {
-          "total": -64.7,
-          "passing": -310.9,
-          "rushing": -9.4
+          "total": -68.7,
+          "passing": -348.5,
+          "rushing": -9.6
         }
       }
     },
@@ -3450,15 +3450,15 @@
       "conference": "Sun Belt",
       "team": "Troy",
       "offense": {
-        "overall": 0.09,
-        "passing": 0.18,
+        "overall": 0.1,
+        "passing": 0.19,
         "rushing": 0.01,
         "firstDown": -0.06,
         "secondDown": -0.08,
-        "thirdDown": 0.56,
+        "thirdDown": 0.57,
         "cumulative": {
-          "total": 67.9,
-          "passing": 65.53,
+          "total": 71.3,
+          "passing": 68.88,
           "rushing": 3.4
         }
       },
@@ -3485,24 +3485,24 @@
         "passing": 0.4,
         "rushing": 0.11,
         "firstDown": 0.19,
-        "secondDown": 0.09,
+        "secondDown": 0.1,
         "thirdDown": 0.52,
         "cumulative": {
-          "total": 166.5,
-          "passing": 133.78,
-          "rushing": 41.2
+          "total": 167.3,
+          "passing": 135.42,
+          "rushing": 40.4
         }
       },
       "defense": {
-        "overall": 0.17,
+        "overall": 0.16,
         "passing": 0.27,
         "rushing": 0.1,
         "firstDown": 0.02,
-        "secondDown": 0.11,
+        "secondDown": 0.1,
         "thirdDown": 0.66,
         "cumulative": {
-          "total": 129.7,
-          "passing": 1090.6,
+          "total": 129,
+          "passing": 1083,
           "rushing": 37.4
         }
       }
@@ -3527,14 +3527,14 @@
       "defense": {
         "overall": 0.15,
         "passing": 0.27,
-        "rushing": 0.05,
+        "rushing": 0.06,
         "firstDown": 0.04,
         "secondDown": 0.07,
         "thirdDown": 0.5,
         "cumulative": {
-          "total": 120.6,
-          "passing": 1011.8,
-          "rushing": 23.2
+          "total": 122.9,
+          "passing": 1004.8,
+          "rushing": 26.1
         }
       }
     },
@@ -3581,9 +3581,9 @@
         "secondDown": 0.15,
         "thirdDown": 0.36,
         "cumulative": {
-          "total": 114.9,
+          "total": 115.1,
           "passing": 60.77,
-          "rushing": 54.8
+          "rushing": 54.9
         }
       },
       "defense": {
@@ -3612,9 +3612,9 @@
         "secondDown": 0.14,
         "thirdDown": 0.37,
         "cumulative": {
-          "total": 79.8,
+          "total": 79.6,
           "passing": 34.4,
-          "rushing": 65.7
+          "rushing": 65.5
         }
       },
       "defense": {
@@ -3643,20 +3643,20 @@
         "secondDown": 0.29,
         "thirdDown": 0.73,
         "cumulative": {
-          "total": 263.7,
+          "total": 263.6,
           "passing": 201.92,
-          "rushing": 72.9
+          "rushing": 72.8
         }
       },
       "defense": {
-        "overall": 0.19,
+        "overall": 0.18,
         "passing": 0.24,
         "rushing": 0.16,
         "firstDown": 0.09,
         "secondDown": 0.14,
         "thirdDown": 0.37,
         "cumulative": {
-          "total": 162.5,
+          "total": 162.2,
           "passing": 963.5,
           "rushing": 74.5
         }
@@ -3705,9 +3705,9 @@
         "secondDown": 0.21,
         "thirdDown": 0.66,
         "cumulative": {
-          "total": 223.2,
+          "total": 223.8,
           "passing": 126.39,
-          "rushing": 100.4
+          "rushing": 101
         }
       },
       "defense": {
@@ -3734,11 +3734,11 @@
         "rushing": 0.24,
         "firstDown": 0.23,
         "secondDown": 0.2,
-        "thirdDown": 0.95,
+        "thirdDown": 0.96,
         "cumulative": {
-          "total": 261,
+          "total": 261.6,
           "passing": 184.64,
-          "rushing": 83.8
+          "rushing": 84.4
         }
       },
       "defense": {
@@ -3760,16 +3760,16 @@
       "conference": "Big 12",
       "team": "Utah",
       "offense": {
-        "overall": 0.34,
+        "overall": 0.35,
         "passing": 0.34,
         "rushing": 0.37,
         "firstDown": 0.12,
         "secondDown": 0.32,
         "thirdDown": 0.85,
         "cumulative": {
-          "total": 279.8,
+          "total": 282.2,
           "passing": 110.51,
-          "rushing": 176.8
+          "rushing": 179.1
         }
       },
       "defense": {
@@ -3780,8 +3780,8 @@
         "secondDown": -0.01,
         "thirdDown": 0.34,
         "cumulative": {
-          "total": 46.2,
-          "passing": -69.1,
+          "total": 45.8,
+          "passing": -71.3,
           "rushing": 61.3
         }
       }
@@ -3791,29 +3791,29 @@
       "conference": "Mountain West",
       "team": "Utah State",
       "offense": {
-        "overall": 0.24,
+        "overall": 0.23,
         "passing": 0.29,
-        "rushing": 0.21,
-        "firstDown": 0.1,
-        "secondDown": 0.23,
-        "thirdDown": 0.53,
+        "rushing": 0.19,
+        "firstDown": 0.09,
+        "secondDown": 0.22,
+        "thirdDown": 0.5,
         "cumulative": {
-          "total": 177.6,
-          "passing": 111.11,
-          "rushing": 73.4
+          "total": 171.6,
+          "passing": 110.1,
+          "rushing": 69.6
         }
       },
       "defense": {
-        "overall": 0.21,
-        "passing": 0.2,
+        "overall": 0.2,
+        "passing": 0.19,
         "rushing": 0.22,
         "firstDown": 0.07,
         "secondDown": 0.19,
         "thirdDown": 0.45,
         "cumulative": {
-          "total": 161.7,
-          "passing": 782.6,
-          "rushing": 84.6
+          "total": 159.9,
+          "passing": 766.2,
+          "rushing": 84.5
         }
       }
     },
@@ -3829,7 +3829,7 @@
         "secondDown": -0.02,
         "thirdDown": 0.26,
         "cumulative": {
-          "total": 7,
+          "total": 6.8,
           "passing": -10.92,
           "rushing": 32.2
         }
@@ -3839,12 +3839,12 @@
         "passing": 0.2,
         "rushing": 0,
         "firstDown": 0.03,
-        "secondDown": 0.15,
+        "secondDown": 0.14,
         "thirdDown": 0.16,
         "cumulative": {
-          "total": 65.4,
+          "total": 64.3,
           "passing": 722,
-          "rushing": 0.3
+          "rushing": -0.7
         }
       }
     },
@@ -3886,14 +3886,14 @@
       "offense": {
         "overall": 0.41,
         "passing": 0.55,
-        "rushing": 0.29,
+        "rushing": 0.28,
         "firstDown": 0.26,
         "secondDown": 0.44,
         "thirdDown": 0.77,
         "cumulative": {
-          "total": 280.6,
+          "total": 279.4,
           "passing": 189.9,
-          "rushing": 94.6
+          "rushing": 93.4
         }
       },
       "defense": {
@@ -3947,14 +3947,14 @@
       "team": "Virginia Tech",
       "offense": {
         "overall": 0.18,
-        "passing": 0.17,
+        "passing": 0.18,
         "rushing": 0.2,
         "firstDown": 0.06,
         "secondDown": 0.15,
-        "thirdDown": 0.47,
+        "thirdDown": 0.49,
         "cumulative": {
-          "total": 128.5,
-          "passing": 52.96,
+          "total": 131.6,
+          "passing": 56.1,
           "rushing": 78.1
         }
       },
@@ -4028,9 +4028,9 @@
         "secondDown": 0.14,
         "thirdDown": 0.48,
         "cumulative": {
-          "total": 48.4,
+          "total": 48.1,
           "passing": 660,
-          "rushing": -2.2
+          "rushing": -2.4
         }
       }
     },
@@ -4052,16 +4052,16 @@
         }
       },
       "defense": {
-        "overall": 0.13,
+        "overall": 0.12,
         "passing": 0.17,
-        "rushing": 0.11,
+        "rushing": 0.1,
         "firstDown": 0.12,
-        "secondDown": 0.04,
-        "thirdDown": 0.39,
+        "secondDown": 0.03,
+        "thirdDown": 0.37,
         "cumulative": {
-          "total": 86.3,
+          "total": 83,
           "passing": 515.7,
-          "rushing": 38.8
+          "rushing": 36.7
         }
       }
     },
@@ -4077,9 +4077,9 @@
         "secondDown": 0.21,
         "thirdDown": 0.4,
         "cumulative": {
-          "total": 132.6,
+          "total": 132.3,
           "passing": 117.98,
-          "rushing": 17.8
+          "rushing": 17.6
         }
       },
       "defense": {
@@ -4105,12 +4105,12 @@
         "passing": 0.07,
         "rushing": 0.11,
         "firstDown": -0.04,
-        "secondDown": 0.14,
+        "secondDown": 0.13,
         "thirdDown": 0.42,
         "cumulative": {
-          "total": 67,
+          "total": 66.3,
           "passing": 20.41,
-          "rushing": 52.1
+          "rushing": 51.8
         }
       },
       "defense": {
@@ -4170,9 +4170,9 @@
         "secondDown": 0.04,
         "thirdDown": 0.23,
         "cumulative": {
-          "total": 15,
+          "total": 15.2,
           "passing": 6.47,
-          "rushing": 24.6
+          "rushing": 24.7
         }
       },
       "defense": {
