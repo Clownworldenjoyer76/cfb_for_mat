@@ -443,29 +443,29 @@
       "conference": "Mid-American",
       "team": "Bowling Green",
       "offense": {
-        "overall": 0,
-        "passing": 0.01,
-        "rushing": 0.02,
-        "firstDown": -0.18,
-        "secondDown": -0.06,
+        "overall": 0.03,
+        "passing": 0.05,
+        "rushing": 0.05,
+        "firstDown": -0.17,
+        "secondDown": 0.01,
         "thirdDown": 0.43,
         "cumulative": {
-          "total": -3,
-          "passing": 2.56,
-          "rushing": 8.3
+          "total": 20.6,
+          "passing": 14.91,
+          "rushing": 20.1
         }
       },
       "defense": {
         "overall": 0.15,
-        "passing": 0.28,
+        "passing": 0.27,
         "rushing": 0.06,
         "firstDown": 0.02,
-        "secondDown": 0.12,
-        "thirdDown": 0.46,
+        "secondDown": 0.14,
+        "thirdDown": 0.44,
         "cumulative": {
-          "total": 99.4,
-          "passing": 827.8,
-          "rushing": 22.9
+          "total": 107.2,
+          "passing": 895.8,
+          "rushing": 22.1
         }
       }
     },
@@ -878,28 +878,28 @@
       "team": "Eastern Michigan",
       "offense": {
         "overall": 0.2,
-        "passing": 0.28,
-        "rushing": 0.14,
-        "firstDown": 0.06,
-        "secondDown": 0.08,
-        "thirdDown": 0.58,
+        "passing": 0.29,
+        "rushing": 0.13,
+        "firstDown": 0.05,
+        "secondDown": 0.13,
+        "thirdDown": 0.53,
         "cumulative": {
-          "total": 151.1,
-          "passing": 106.91,
-          "rushing": 50.6
+          "total": 163.5,
+          "passing": 123.34,
+          "rushing": 51.4
         }
       },
       "defense": {
         "overall": 0.25,
-        "passing": 0.36,
-        "rushing": 0.19,
-        "firstDown": 0.16,
-        "secondDown": 0.16,
-        "thirdDown": 0.61,
+        "passing": 0.35,
+        "rushing": 0.21,
+        "firstDown": 0.15,
+        "secondDown": 0.19,
+        "thirdDown": 0.6,
         "cumulative": {
-          "total": 190.9,
-          "passing": 1085.5,
-          "rushing": 88.3
+          "total": 209.2,
+          "passing": 1101.5,
+          "rushing": 104.9
         }
       }
     },
@@ -1807,29 +1807,29 @@
       "conference": "Mid-American",
       "team": "Massachusetts",
       "offense": {
-        "overall": -0.04,
-        "passing": -0.03,
+        "overall": -0.03,
+        "passing": -0.01,
         "rushing": -0.04,
-        "firstDown": -0.21,
-        "secondDown": 0.05,
+        "firstDown": -0.2,
+        "secondDown": 0.07,
         "thirdDown": 0.26,
         "cumulative": {
-          "total": -32.4,
-          "passing": -11.88,
-          "rushing": -13.7
+          "total": -24.7,
+          "passing": -5.08,
+          "rushing": -14.6
         }
       },
       "defense": {
-        "overall": 0.25,
-        "passing": 0.41,
-        "rushing": 0.16,
-        "firstDown": 0.09,
-        "secondDown": 0.31,
+        "overall": 0.26,
+        "passing": 0.44,
+        "rushing": 0.17,
+        "firstDown": 0.07,
+        "secondDown": 0.35,
         "thirdDown": 0.48,
         "cumulative": {
-          "total": 200.7,
-          "passing": 1314.4,
-          "rushing": 75.7
+          "total": 224.3,
+          "passing": 1437.9,
+          "rushing": 87.5
         }
       }
     },
@@ -4101,29 +4101,29 @@
       "conference": "Mid-American",
       "team": "Western Michigan",
       "offense": {
-        "overall": 0.09,
-        "passing": 0.07,
-        "rushing": 0.11,
+        "overall": 0.1,
+        "passing": 0.08,
+        "rushing": 0.13,
         "firstDown": -0.04,
-        "secondDown": 0.13,
-        "thirdDown": 0.42,
+        "secondDown": 0.17,
+        "thirdDown": 0.43,
         "cumulative": {
-          "total": 66.3,
-          "passing": 20.41,
-          "rushing": 51.8
+          "total": 84.6,
+          "passing": 22.02,
+          "rushing": 68.4
         }
       },
       "defense": {
-        "overall": 0.07,
-        "passing": 0.05,
+        "overall": 0.08,
+        "passing": 0.09,
         "rushing": 0.09,
-        "firstDown": 0,
-        "secondDown": 0.09,
-        "thirdDown": 0.19,
+        "firstDown": -0.01,
+        "secondDown": 0.14,
+        "thirdDown": 0.16,
         "cumulative": {
-          "total": 48.8,
-          "passing": 164.8,
-          "rushing": 33
+          "total": 61.1,
+          "passing": 329.1,
+          "rushing": 33.8
         }
       }
     },
