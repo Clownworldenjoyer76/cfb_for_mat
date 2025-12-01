@@ -1,13 +1,53 @@
 [
   {
+    "game_id": "401777352",
+    "kickoff_utc": "2025-12-06T00:00:00.000Z",
+    "home": "James Madison",
+    "away": "Troy",
+    "total": 47.5,
+    "home_spread": -22.5,
+    "home_pred": 35.0,
+    "away_pred": 12.5
+  },
+  {
+    "game_id": "401777325",
+    "kickoff_utc": "2025-12-06T00:00:00.000Z",
+    "home": "Jacksonville State",
+    "away": "Kennesaw State",
+    "total": 58.0,
+    "home_spread": -1.5,
+    "home_pred": 29.8,
+    "away_pred": 28.2
+  },
+  {
+    "game_id": "401777324",
+    "kickoff_utc": "2025-12-06T01:00:00.000Z",
+    "home": "Tulane",
+    "away": "North Texas",
+    "total": 67.5,
+    "home_spread": 2.5,
+    "home_pred": 32.5,
+    "away_pred": 35.0
+  },
+  {
+    "game_id": "401777326",
+    "kickoff_utc": "2025-12-06T01:00:00.000Z",
+    "home": "Boise State",
+    "away": "UNLV",
+    "total": 57.5,
+    "home_spread": -3.5,
+    "home_pred": 30.5,
+    "away_pred": 27.0
+  },
+  {
     "game_id": "401777327",
     "kickoff_utc": "2025-12-06T17:00:00.000Z",
     "home": "Texas Tech",
     "away": "BYU",
     "total": 50.5,
-    "home_spread": -12.5,
-    "home_pred": 31.5,
-    "away_pred": 19.0
+    "home_spread": -13.5,
+    "home_pred": 32.0,
+    "away_pred": 18.5
   },
   {
     "game_id": "401777329",
@@ -18,6 +58,26 @@
     "home_spread": -2.5,
     "home_pred": 23.0,
     "away_pred": 20.5
+  },
+  {
+    "game_id": "401777351",
+    "kickoff_utc": "2025-12-06T21:00:00.000Z",
+    "home": "Alabama",
+    "away": "Georgia",
+    "total": 47.5,
+    "home_spread": 2.5,
+    "home_pred": 22.5,
+    "away_pred": 25.0
+  },
+  {
+    "game_id": "401777328",
+    "kickoff_utc": "2025-12-07T01:00:00.000Z",
+    "home": "Virginia",
+    "away": "Duke",
+    "total": 57.0,
+    "home_spread": -3.0,
+    "home_pred": 30.0,
+    "away_pred": 27.0
   },
   {
     "game_id": "401777353",
