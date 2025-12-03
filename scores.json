@@ -1,15 +1,5 @@
 [
   {
-    "game_id": "401777352",
-    "kickoff_utc": "2025-12-06T00:00:00.000Z",
-    "home": "James Madison",
-    "away": "Troy",
-    "total": 47.5,
-    "home_spread": -23.0,
-    "home_pred": 35.2,
-    "away_pred": 12.2
-  },
-  {
     "game_id": "401777325",
     "kickoff_utc": "2025-12-06T00:00:00.000Z",
     "home": "Jacksonville State",
@@ -18,6 +8,26 @@
     "home_spread": 2.5,
     "home_pred": 28.5,
     "away_pred": 31.0
+  },
+  {
+    "game_id": "401777352",
+    "kickoff_utc": "2025-12-06T00:00:00.000Z",
+    "home": "James Madison",
+    "away": "Troy",
+    "total": 47.5,
+    "home_spread": -23.5,
+    "home_pred": 35.5,
+    "away_pred": 12.0
+  },
+  {
+    "game_id": "401777326",
+    "kickoff_utc": "2025-12-06T01:00:00.000Z",
+    "home": "Boise State",
+    "away": "UNLV",
+    "total": 58.5,
+    "home_spread": -4.0,
+    "home_pred": 31.2,
+    "away_pred": 27.2
   },
   {
     "game_id": "401777324",
@@ -30,26 +40,6 @@
     "away_pred": 34.5
   },
   {
-    "game_id": "401777326",
-    "kickoff_utc": "2025-12-06T01:00:00.000Z",
-    "home": "Boise State",
-    "away": "UNLV",
-    "total": 58.5,
-    "home_spread": -3.5,
-    "home_pred": 31.0,
-    "away_pred": 27.5
-  },
-  {
-    "game_id": "401777327",
-    "kickoff_utc": "2025-12-06T17:00:00.000Z",
-    "home": "Texas Tech",
-    "away": "BYU",
-    "total": 50.5,
-    "home_spread": -13.0,
-    "home_pred": 31.8,
-    "away_pred": 18.8
-  },
-  {
     "game_id": "401777329",
     "kickoff_utc": "2025-12-06T17:00:00.000Z",
     "home": "Western Michigan",
@@ -58,6 +48,16 @@
     "home_spread": -2.5,
     "home_pred": 23.0,
     "away_pred": 20.5
+  },
+  {
+    "game_id": "401777327",
+    "kickoff_utc": "2025-12-06T17:00:00.000Z",
+    "home": "Texas Tech",
+    "away": "BYU",
+    "total": 49.5,
+    "home_spread": -12.5,
+    "home_pred": 31.0,
+    "away_pred": 18.5
   },
   {
     "game_id": "401777351",
@@ -74,10 +74,10 @@
     "kickoff_utc": "2025-12-07T01:00:00.000Z",
     "home": "Virginia",
     "away": "Duke",
-    "total": 57.0,
+    "total": 58.0,
     "home_spread": -3.5,
-    "home_pred": 30.2,
-    "away_pred": 26.8
+    "home_pred": 30.8,
+    "away_pred": 27.2
   },
   {
     "game_id": "401777353",
