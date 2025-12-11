@@ -659,24 +659,24 @@
       "awayScore": null,
       "lines": [
         {
-          "provider": "Bovada",
+          "provider": "DraftKings",
           "spread": -6.5,
           "formattedSpread": "Navy -6.5",
-          "spreadOpen": -4.5,
-          "overUnder": 38,
-          "overUnderOpen": 37.5,
-          "homeMoneyline": -200,
-          "awayMoneyline": 170
-        },
-        {
-          "provider": "DraftKings",
-          "spread": -6,
-          "formattedSpread": "Navy -6",
           "spreadOpen": null,
           "overUnder": 38.5,
           "overUnderOpen": null,
-          "homeMoneyline": -245,
-          "awayMoneyline": 200
+          "homeMoneyline": -258,
+          "awayMoneyline": 210
+        },
+        {
+          "provider": "Bovada",
+          "spread": -6,
+          "formattedSpread": "Navy -6.0",
+          "spreadOpen": -4.5,
+          "overUnder": 38.5,
+          "overUnderOpen": 37.5,
+          "homeMoneyline": -200,
+          "awayMoneyline": 170
         },
         {
           "provider": "ESPN Bet",
