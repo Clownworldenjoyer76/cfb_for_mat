@@ -360,55 +360,6 @@
       ]
     },
     {
-      "id": 401762521,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 16,
-      "startDate": "2025-12-13T20:00:00.000Z",
-      "homeTeamId": 2426,
-      "homeTeam": "Navy",
-      "homeConference": "American Athletic",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 349,
-      "awayTeam": "Army",
-      "awayConference": "American Athletic",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "DraftKings",
-          "spread": -6,
-          "formattedSpread": "Navy -6",
-          "spreadOpen": null,
-          "overUnder": 38.5,
-          "overUnderOpen": null,
-          "homeMoneyline": -245,
-          "awayMoneyline": 200
-        },
-        {
-          "provider": "Bovada",
-          "spread": -6,
-          "formattedSpread": "Navy -6.0",
-          "spreadOpen": -4.5,
-          "overUnder": 38,
-          "overUnderOpen": 37.5,
-          "homeMoneyline": -200,
-          "awayMoneyline": 170
-        },
-        {
-          "provider": "ESPN Bet",
-          "spread": -3.5,
-          "formattedSpread": "Navy -3.5",
-          "spreadOpen": -3.5,
-          "overUnder": 39.5,
-          "overUnderOpen": 39.5,
-          "homeMoneyline": -145,
-          "awayMoneyline": 125
-        }
-      ]
-    },
-    {
       "id": 401756961,
       "season": 2025,
       "seasonType": "regular",
@@ -687,6 +638,55 @@
           "overUnderOpen": null,
           "homeMoneyline": null,
           "awayMoneyline": null
+        }
+      ]
+    },
+    {
+      "id": 401762521,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 16,
+      "startDate": "2025-12-13T20:00:00.000Z",
+      "homeTeamId": 2426,
+      "homeTeam": "Navy",
+      "homeConference": "American Athletic",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 349,
+      "awayTeam": "Army",
+      "awayConference": "American Athletic",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": -6.5,
+          "formattedSpread": "Navy -6.5",
+          "spreadOpen": null,
+          "overUnder": 38.5,
+          "overUnderOpen": null,
+          "homeMoneyline": -265,
+          "awayMoneyline": 215
+        },
+        {
+          "provider": "Bovada",
+          "spread": -6,
+          "formattedSpread": "Navy -6.0",
+          "spreadOpen": -4.5,
+          "overUnder": 38,
+          "overUnderOpen": 37.5,
+          "homeMoneyline": -200,
+          "awayMoneyline": 170
+        },
+        {
+          "provider": "ESPN Bet",
+          "spread": -3.5,
+          "formattedSpread": "Navy -3.5",
+          "spreadOpen": -3.5,
+          "overUnder": 39.5,
+          "overUnderOpen": 39.5,
+          "homeMoneyline": -145,
+          "awayMoneyline": 125
         }
       ]
     },
