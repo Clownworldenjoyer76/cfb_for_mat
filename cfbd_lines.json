@@ -3,7 +3,7 @@
   "year": 2025,
   "season_type": "regular",
   "week": null,
-  "count": 1543,
+  "count": 1546,
   "data": [
     {
       "id": 401777329,
@@ -651,22 +651,22 @@
       "homeTeam": "Navy",
       "homeConference": "American Athletic",
       "homeClassification": "fbs",
-      "homeScore": null,
+      "homeScore": 17,
       "awayTeamId": 349,
       "awayTeam": "Army",
       "awayConference": "American Athletic",
       "awayClassification": "fbs",
-      "awayScore": null,
+      "awayScore": 16,
       "lines": [
         {
           "provider": "DraftKings",
           "spread": -6.5,
           "formattedSpread": "Navy -6.5",
           "spreadOpen": null,
-          "overUnder": 38.5,
+          "overUnder": 37.5,
           "overUnderOpen": null,
-          "homeMoneyline": -265,
-          "awayMoneyline": 215
+          "homeMoneyline": -250,
+          "awayMoneyline": 205
         },
         {
           "provider": "Bovada",
@@ -677,6 +677,16 @@
           "overUnderOpen": 37.5,
           "homeMoneyline": -200,
           "awayMoneyline": 170
+        },
+        {
+          "provider": "Draft Kings",
+          "spread": -6,
+          "formattedSpread": "Navy -6",
+          "spreadOpen": null,
+          "overUnder": 37.5,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
         },
         {
           "provider": "ESPN Bet",
@@ -6915,6 +6925,35 @@
       ]
     },
     {
+      "id": 401833986,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 16,
+      "startDate": "2025-12-13T17:00:00.000Z",
+      "homeTeamId": 2627,
+      "homeTeam": "Tarleton State",
+      "homeConference": "UAC",
+      "homeClassification": "fcs",
+      "homeScore": 21,
+      "awayTeamId": 222,
+      "awayTeam": "Villanova",
+      "awayConference": "CAA",
+      "awayClassification": "fcs",
+      "awayScore": 26,
+      "lines": [
+        {
+          "provider": "Draft Kings",
+          "spread": -14.5,
+          "formattedSpread": "Tarleton State -14.5",
+          "spreadOpen": null,
+          "overUnder": 54.5,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
+        }
+      ]
+    },
+    {
       "id": 401756880,
       "season": 2025,
       "seasonType": "regular",
@@ -7097,6 +7136,64 @@
           "overUnderOpen": 52.5,
           "homeMoneyline": -900,
           "awayMoneyline": 575
+        }
+      ]
+    },
+    {
+      "id": 401833987,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 16,
+      "startDate": "2025-12-13T20:30:00.000Z",
+      "homeTeamId": 149,
+      "homeTeam": "Montana",
+      "homeConference": "Big Sky",
+      "homeClassification": "fcs",
+      "homeScore": 52,
+      "awayTeamId": 233,
+      "awayTeam": "South Dakota",
+      "awayConference": "MVFC",
+      "awayClassification": "fcs",
+      "awayScore": 22,
+      "lines": [
+        {
+          "provider": "Draft Kings",
+          "spread": -7.5,
+          "formattedSpread": "Montana -7.5",
+          "spreadOpen": null,
+          "overUnder": 59.5,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
+        }
+      ]
+    },
+    {
+      "id": 401836219,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 16,
+      "startDate": "2025-12-13T22:00:00.000Z",
+      "homeTeamId": 302,
+      "homeTeam": "UC Davis",
+      "homeConference": "Big Sky",
+      "homeClassification": "fcs",
+      "homeScore": 31,
+      "awayTeamId": 2287,
+      "awayTeam": "Illinois State",
+      "awayConference": "MVFC",
+      "awayClassification": "fcs",
+      "awayScore": 42,
+      "lines": [
+        {
+          "provider": "Draft Kings",
+          "spread": -3,
+          "formattedSpread": "UC Davis -3",
+          "spreadOpen": null,
+          "overUnder": 57.5,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
         }
       ]
     },
