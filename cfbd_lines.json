@@ -3,7 +3,7 @@
   "year": 2025,
   "season_type": "regular",
   "week": null,
-  "count": 1546,
+  "count": 1547,
   "data": [
     {
       "id": 401777329,
@@ -6925,35 +6925,6 @@
       ]
     },
     {
-      "id": 401833986,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 16,
-      "startDate": "2025-12-13T17:00:00.000Z",
-      "homeTeamId": 2627,
-      "homeTeam": "Tarleton State",
-      "homeConference": "UAC",
-      "homeClassification": "fcs",
-      "homeScore": 21,
-      "awayTeamId": 222,
-      "awayTeam": "Villanova",
-      "awayConference": "CAA",
-      "awayClassification": "fcs",
-      "awayScore": 26,
-      "lines": [
-        {
-          "provider": "Draft Kings",
-          "spread": -14.5,
-          "formattedSpread": "Tarleton State -14.5",
-          "spreadOpen": null,
-          "overUnder": 54.5,
-          "overUnderOpen": null,
-          "homeMoneyline": null,
-          "awayMoneyline": null
-        }
-      ]
-    },
-    {
       "id": 401756880,
       "season": 2025,
       "seasonType": "regular",
@@ -7140,64 +7111,6 @@
       ]
     },
     {
-      "id": 401833987,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 16,
-      "startDate": "2025-12-13T20:30:00.000Z",
-      "homeTeamId": 149,
-      "homeTeam": "Montana",
-      "homeConference": "Big Sky",
-      "homeClassification": "fcs",
-      "homeScore": 52,
-      "awayTeamId": 233,
-      "awayTeam": "South Dakota",
-      "awayConference": "MVFC",
-      "awayClassification": "fcs",
-      "awayScore": 22,
-      "lines": [
-        {
-          "provider": "Draft Kings",
-          "spread": -7.5,
-          "formattedSpread": "Montana -7.5",
-          "spreadOpen": null,
-          "overUnder": 59.5,
-          "overUnderOpen": null,
-          "homeMoneyline": null,
-          "awayMoneyline": null
-        }
-      ]
-    },
-    {
-      "id": 401836219,
-      "season": 2025,
-      "seasonType": "regular",
-      "week": 16,
-      "startDate": "2025-12-13T22:00:00.000Z",
-      "homeTeamId": 302,
-      "homeTeam": "UC Davis",
-      "homeConference": "Big Sky",
-      "homeClassification": "fcs",
-      "homeScore": 31,
-      "awayTeamId": 2287,
-      "awayTeam": "Illinois State",
-      "awayConference": "MVFC",
-      "awayClassification": "fcs",
-      "awayScore": 42,
-      "lines": [
-        {
-          "provider": "Draft Kings",
-          "spread": -3,
-          "formattedSpread": "UC Davis -3",
-          "spreadOpen": null,
-          "overUnder": 57.5,
-          "overUnderOpen": null,
-          "homeMoneyline": null,
-          "awayMoneyline": null
-        }
-      ]
-    },
-    {
       "id": 401754520,
       "season": 2025,
       "seasonType": "regular",
@@ -7309,6 +7222,122 @@
           "spreadOpen": -52.5,
           "overUnder": 63.5,
           "overUnderOpen": 62.5,
+          "homeMoneyline": null,
+          "awayMoneyline": null
+        }
+      ]
+    },
+    {
+      "id": 401833985,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 16,
+      "startDate": "2025-12-13T02:00:00.000Z",
+      "homeTeamId": 147,
+      "homeTeam": "Montana State",
+      "homeConference": "Big Sky",
+      "homeClassification": "fcs",
+      "homeScore": 44,
+      "awayTeamId": 2617,
+      "awayTeam": "Stephen F. Austin",
+      "awayConference": "Southland",
+      "awayClassification": "fcs",
+      "awayScore": 28,
+      "lines": [
+        {
+          "provider": "Draft Kings",
+          "spread": -15.5,
+          "formattedSpread": "Montana State -15.5",
+          "spreadOpen": null,
+          "overUnder": 56.5,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
+        }
+      ]
+    },
+    {
+      "id": 401833986,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 16,
+      "startDate": "2025-12-13T17:00:00.000Z",
+      "homeTeamId": 2627,
+      "homeTeam": "Tarleton State",
+      "homeConference": "UAC",
+      "homeClassification": "fcs",
+      "homeScore": 21,
+      "awayTeamId": 222,
+      "awayTeam": "Villanova",
+      "awayConference": "CAA",
+      "awayClassification": "fcs",
+      "awayScore": 26,
+      "lines": [
+        {
+          "provider": "Draft Kings",
+          "spread": -14.5,
+          "formattedSpread": "Tarleton State -14.5",
+          "spreadOpen": null,
+          "overUnder": 54.5,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
+        }
+      ]
+    },
+    {
+      "id": 401833987,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 16,
+      "startDate": "2025-12-13T20:30:00.000Z",
+      "homeTeamId": 149,
+      "homeTeam": "Montana",
+      "homeConference": "Big Sky",
+      "homeClassification": "fcs",
+      "homeScore": 52,
+      "awayTeamId": 233,
+      "awayTeam": "South Dakota",
+      "awayConference": "MVFC",
+      "awayClassification": "fcs",
+      "awayScore": 22,
+      "lines": [
+        {
+          "provider": "Draft Kings",
+          "spread": -7.5,
+          "formattedSpread": "Montana -7.5",
+          "spreadOpen": null,
+          "overUnder": 59.5,
+          "overUnderOpen": null,
+          "homeMoneyline": null,
+          "awayMoneyline": null
+        }
+      ]
+    },
+    {
+      "id": 401836219,
+      "season": 2025,
+      "seasonType": "regular",
+      "week": 16,
+      "startDate": "2025-12-13T22:00:00.000Z",
+      "homeTeamId": 302,
+      "homeTeam": "UC Davis",
+      "homeConference": "Big Sky",
+      "homeClassification": "fcs",
+      "homeScore": 31,
+      "awayTeamId": 2287,
+      "awayTeam": "Illinois State",
+      "awayConference": "MVFC",
+      "awayClassification": "fcs",
+      "awayScore": 42,
+      "lines": [
+        {
+          "provider": "Draft Kings",
+          "spread": -3,
+          "formattedSpread": "UC Davis -3",
+          "spreadOpen": null,
+          "overUnder": 57.5,
+          "overUnderOpen": null,
           "homeMoneyline": null,
           "awayMoneyline": null
         }
