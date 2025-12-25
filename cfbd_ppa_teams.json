@@ -536,29 +536,29 @@
       "conference": "ACC",
       "team": "California",
       "offense": {
-        "overall": 0.1,
-        "passing": 0.21,
-        "rushing": -0.06,
-        "firstDown": -0.14,
-        "secondDown": 0.2,
-        "thirdDown": 0.48,
+        "overall": 0.12,
+        "passing": 0.23,
+        "rushing": -0.04,
+        "firstDown": -0.11,
+        "secondDown": 0.22,
+        "thirdDown": 0.51,
         "cumulative": {
-          "total": 84.6,
-          "passing": 105.17,
-          "rushing": -21
+          "total": 112.2,
+          "passing": 124.83,
+          "rushing": -13.6
         }
       },
       "defense": {
-        "overall": 0.15,
-        "passing": 0.11,
+        "overall": 0.16,
+        "passing": 0.14,
         "rushing": 0.19,
-        "firstDown": 0,
-        "secondDown": 0.12,
-        "thirdDown": 0.46,
+        "firstDown": 0.02,
+        "secondDown": 0.1,
+        "thirdDown": 0.47,
         "cumulative": {
-          "total": 118.8,
-          "passing": 439.2,
-          "rushing": 75.1
+          "total": 141.4,
+          "passing": 629.5,
+          "rushing": 79.3
         }
       }
     },
@@ -1187,29 +1187,29 @@
       "conference": "Mountain West",
       "team": "Hawai'i",
       "offense": {
-        "overall": 0.16,
-        "passing": 0.27,
-        "rushing": 0.01,
-        "firstDown": -0.06,
-        "secondDown": 0.12,
+        "overall": 0.17,
+        "passing": 0.28,
+        "rushing": 0.02,
+        "firstDown": -0.03,
+        "secondDown": 0.11,
         "thirdDown": 0.55,
         "cumulative": {
-          "total": 130.8,
-          "passing": 137.81,
-          "rushing": 3.4
+          "total": 153.4,
+          "passing": 156.85,
+          "rushing": 7.6
         }
       },
       "defense": {
-        "overall": 0.14,
-        "passing": 0.21,
-        "rushing": 0.08,
-        "firstDown": 0.03,
-        "secondDown": 0.21,
-        "thirdDown": 0.4,
+        "overall": 0.16,
+        "passing": 0.24,
+        "rushing": 0.1,
+        "firstDown": 0.05,
+        "secondDown": 0.23,
+        "thirdDown": 0.44,
         "cumulative": {
-          "total": 101.5,
-          "passing": 777,
-          "rushing": 29.6
+          "total": 129,
+          "passing": 973.6,
+          "rushing": 37
         }
       }
     },
