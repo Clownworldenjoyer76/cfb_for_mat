@@ -102,29 +102,29 @@
       "conference": "Sun Belt",
       "team": "App State",
       "offense": {
-        "overall": 0.11,
-        "passing": 0.19,
-        "rushing": 0.06,
+        "overall": 0.1,
+        "passing": 0.18,
+        "rushing": 0.07,
         "firstDown": -0.06,
-        "secondDown": 0.15,
-        "thirdDown": 0.19,
+        "secondDown": 0.16,
+        "thirdDown": 0.18,
         "cumulative": {
-          "total": 92.5,
-          "passing": 95.13,
-          "rushing": 20.1
+          "total": 94.9,
+          "passing": 92.95,
+          "rushing": 27.7
         }
       },
       "defense": {
         "overall": 0.18,
         "passing": 0.3,
-        "rushing": 0.07,
-        "firstDown": -0.01,
+        "rushing": 0.09,
+        "firstDown": 0.02,
         "secondDown": 0.18,
-        "thirdDown": 0.58,
+        "thirdDown": 0.57,
         "cumulative": {
-          "total": 156.2,
-          "passing": 1372.3,
-          "rushing": 27.4
+          "total": 170.9,
+          "passing": 1449.6,
+          "rushing": 40.9
         }
       }
     },
@@ -1096,27 +1096,27 @@
       "offense": {
         "overall": 0.2,
         "passing": 0.26,
-        "rushing": 0.16,
-        "firstDown": 0.04,
-        "secondDown": 0.22,
-        "thirdDown": 0.59,
+        "rushing": 0.18,
+        "firstDown": 0.06,
+        "secondDown": 0.21,
+        "thirdDown": 0.58,
         "cumulative": {
-          "total": 166,
-          "passing": 110.86,
-          "rushing": 64.8
+          "total": 180.7,
+          "passing": 118.59,
+          "rushing": 78.3
         }
       },
       "defense": {
-        "overall": 0.29,
-        "passing": 0.35,
+        "overall": 0.27,
+        "passing": 0.33,
         "rushing": 0.27,
-        "firstDown": 0.15,
+        "firstDown": 0.13,
         "secondDown": 0.27,
-        "thirdDown": 0.73,
+        "thirdDown": 0.68,
         "cumulative": {
-          "total": 248,
-          "passing": 1374.7,
-          "rushing": 125
+          "total": 250.4,
+          "passing": 1352.9,
+          "rushing": 132.6
         }
       }
     },
