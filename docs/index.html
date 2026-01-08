@@ -10,7 +10,7 @@
     table { border-collapse: collapse; margin-top: 20px; width: 100%; }
     th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
     th { background: #f4f4f4; }
-    .error { color: red; font-weight: bold; }
+    .error { color: red; font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -122,10 +122,15 @@ async function commitCSV() {
     return;
   }
 
-  const timestamp = new Date().toISOString()
-    .replace(/[-:]/g, "")
-    .replace("T", "_")
-    .slice(0, 15);
+  // UTC timestamp: YYYYMMDD_HHMMSS
+  const now = new Date();
+  const timestamp =
+    now.getUTCFullYear().toString() +
+    String(now.getUTCMonth() + 1).padStart(2, "0") +
+    String(now.getUTCDate()).padStart(2, "0") + "_" +
+    String(now.getUTCHours()).padStart(2, "0") +
+    String(now.getUTCMinutes()).padStart(2, "0") +
+    String(now.getUTCSeconds()).padStart(2, "0");
 
   const path = `docs/win/win_probability_${timestamp}.csv`;
 
@@ -139,7 +144,7 @@ async function commitCSV() {
     content: btoa(csv)
   };
 
-  const repo = "<OWNER>/<REPO>"; // <-- CHANGE THIS
+  const repo = "clownworldenjoyer76.github.io/cfb_for_mat";
 
   const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
     method: "PUT",
