@@ -27,6 +27,9 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add docs/win/edge_*.csv
+
+          # force-add ignored CSV
+          git add -f docs/win/edge_*.csv
+
           git commit -m "Add edge CSV"
           git push
