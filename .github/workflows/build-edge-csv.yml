@@ -1,0 +1,32 @@
+name: Build Edge CSV
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-edge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run edge calculation
+        run: |
+          python scripts/build_edge_csv.py
+
+      - name: Commit generated CSV
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add docs/win/edge_*.csv
+          git commit -m "Add edge CSV"
+          git push
