@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Win Probability Ingest</title>
+  <title>Win Probability CSV Generator</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     textarea { width: 100%; height: 260px; }
@@ -24,7 +24,6 @@
 <button onclick="generatePreview()">Generate CSV Preview</button>
 
 <div id="error" class="error"></div>
-
 <div id="preview"></div>
 
 <hr/>
@@ -45,43 +44,78 @@ function generatePreview() {
   const lines = document.getElementById("input").value
     .split("\n")
     .map(l => l.trim())
-    .filter(l => l.length > 0);
-
-  if (lines.length % 6 !== 0) {
-    showError("Input does not divide evenly into 6-line blocks.");
-    return;
-  }
+    .filter(Boolean);
 
   try {
-    for (let i = 0; i < lines.length; i += 6) {
-      const dateRaw = lines[i];
-      const timeRaw = lines[i + 1];
-      const teamA = stripRecord(lines[i + 2]);
-      const teamB = stripRecord(lines[i + 3]);
-      const pA = percentToDecimal(lines[i + 4]);
-      const pB = percentToDecimal(lines[i + 5]);
+    let buffer = [];
+    for (const line of lines) {
+      buffer.push(line);
 
-      const dateISO = toISODate(dateRaw);
-      const time24 = to24Hour(timeRaw);
-
-      parsedRows.push([dateISO, time24, teamA, teamB, pA]);
-      parsedRows.push([dateISO, time24, teamB, teamA, pB]);
+      if (countPercents(buffer) === 2 && hasDate(buffer) && hasTime(buffer) && countTeams(buffer) === 2) {
+        parseBlock(buffer);
+        buffer = [];
+      }
     }
+
+    if (buffer.length > 0) {
+      throw new Error("Trailing incomplete game block detected.");
+    }
+
+    renderPreview();
   } catch (e) {
     showError(e.message);
-    return;
   }
+}
 
-  renderPreview();
+function parseBlock(block) {
+  const date = toISODate(block.find(isDate));
+  const time = to24Hour(block.find(isTime));
+
+  const teamLines = block.filter(l => l.match(/\(.+\)/));
+  if (teamLines.length !== 2) throw new Error("Expected exactly 2 team lines.");
+
+  const percents = extractPercents(block);
+  if (percents.length !== 2) throw new Error("Expected exactly 2 percentages.");
+
+  const teamA = stripRecord(teamLines[0]);
+  const teamB = stripRecord(teamLines[1]);
+
+  parsedRows.push([date, time, teamA, teamB, percents[0]]);
+  parsedRows.push([date, time, teamB, teamA, percents[1]]);
+}
+
+function countPercents(lines) {
+  return lines.join(" ").match(/\d+(\.\d+)?%/g)?.length || 0;
+}
+
+function extractPercents(lines) {
+  return lines.join(" ")
+    .match(/\d+(\.\d+)?%/g)
+    .map(p => (parseFloat(p.replace("%","")) / 100).toFixed(4));
+}
+
+function countTeams(lines) {
+  return lines.filter(l => l.match(/\(.+\)/)).length;
+}
+
+function hasDate(lines) {
+  return lines.some(isDate);
+}
+
+function hasTime(lines) {
+  return lines.some(isTime);
+}
+
+function isDate(l) {
+  return /^\d{2}\/\d{2}\/\d{4}$/.test(l);
+}
+
+function isTime(l) {
+  return /^\d{1,2}:\d{2}\s?(AM|PM)$/.test(l);
 }
 
 function stripRecord(team) {
   return team.replace(/\s*\([^)]*\)/g, "").trim();
-}
-
-function percentToDecimal(p) {
-  if (!p.endsWith("%")) throw new Error("Invalid percentage: " + p);
-  return (parseFloat(p.replace("%", "")) / 100).toFixed(4);
 }
 
 function toISODate(d) {
@@ -122,45 +156,37 @@ async function commitCSV() {
     return;
   }
 
-  // UTC timestamp: YYYYMMDD_HHMMSS
   const now = new Date();
-  const timestamp =
+  const ts =
     now.getUTCFullYear().toString() +
-    String(now.getUTCMonth() + 1).padStart(2, "0") +
-    String(now.getUTCDate()).padStart(2, "0") + "_" +
-    String(now.getUTCHours()).padStart(2, "0") +
-    String(now.getUTCMinutes()).padStart(2, "0") +
-    String(now.getUTCSeconds()).padStart(2, "0");
+    String(now.getUTCMonth() + 1).padStart(2,"0") +
+    String(now.getUTCDate()).padStart(2,"0") + "_" +
+    String(now.getUTCHours()).padStart(2,"0") +
+    String(now.getUTCMinutes()).padStart(2,"0") +
+    String(now.getUTCSeconds()).padStart(2,"0");
 
-  const path = `docs/win/win_probability_${timestamp}.csv`;
+  const path = `docs/win/win_probability_${ts}.csv`;
 
   let csv = "date,time,team,opponent,win_probability\n";
-  parsedRows.forEach(r => {
-    csv += r.join(",") + "\n";
-  });
+  parsedRows.forEach(r => csv += r.join(",") + "\n");
 
-  const body = {
-    message: `Add win_probability snapshot ${timestamp}`,
-    content: btoa(csv)
-  };
+  const res = await fetch(
+    `https://api.github.com/repos/clownworldenjoyer76.github.io/cfb_for_mat/contents/${path}`,
+    {
+      method: "PUT",
+      headers: {
+        "Authorization": `token ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: `Add win_probability snapshot ${ts}`,
+        content: btoa(csv)
+      })
+    }
+  );
 
-  const repo = "clownworldenjoyer76.github.io/cfb_for_mat";
-
-  const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
-    method: "PUT",
-    headers: {
-      "Authorization": `token ${token}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(body)
-  });
-
-  if (!res.ok) {
-    showError("GitHub commit failed.");
-    return;
-  }
-
-  alert("CSV committed successfully.");
+  if (!res.ok) showError("GitHub commit failed.");
+  else alert("CSV committed successfully.");
 }
 </script>
 
