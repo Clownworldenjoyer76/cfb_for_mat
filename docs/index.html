@@ -48,23 +48,38 @@ function generatePreview() {
 
   try {
     let buffer = [];
+
     for (const line of lines) {
       buffer.push(line);
 
-      if (countPercents(buffer) === 2 && hasDate(buffer) && hasTime(buffer) && countTeams(buffer) === 2) {
+      if (isCompleteBlock(buffer)) {
         parseBlock(buffer);
         buffer = [];
       }
     }
 
+    // 🔧 FIX: try to parse trailing buffer instead of erroring immediately
     if (buffer.length > 0) {
-      throw new Error("Trailing incomplete game block detected.");
+      if (isCompleteBlock(buffer)) {
+        parseBlock(buffer);
+      } else {
+        throw new Error("Trailing incomplete game block detected.");
+      }
     }
 
     renderPreview();
   } catch (e) {
     showError(e.message);
   }
+}
+
+function isCompleteBlock(block) {
+  return (
+    countPercents(block) === 2 &&
+    countTeams(block) === 2 &&
+    hasDate(block) &&
+    hasTime(block)
+  );
 }
 
 function parseBlock(block) {
