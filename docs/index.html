@@ -41,30 +41,24 @@ function generatePreview() {
   document.getElementById("error").innerText = "";
   parsedRows = [];
 
-  const lines = document.getElementById("input").value
+  let lines = document.getElementById("input").value
     .split("\n")
     .map(l => l.trim())
     .filter(Boolean);
 
   try {
-    let buffer = [];
+    while (true) {
+      const game = extractOneGame(lines);
+      if (!game) break;
 
-    for (const line of lines) {
-      buffer.push(line);
+      const { date, time, teamA, teamB, pA, pB } = game;
 
-      if (isCompleteBlock(buffer)) {
-        parseBlock(buffer);
-        buffer = [];
-      }
+      parsedRows.push([date, time, teamA, teamB, pA]);
+      parsedRows.push([date, time, teamB, teamA, pB]);
     }
 
-    // 🔧 FIX: try to parse trailing buffer instead of erroring immediately
-    if (buffer.length > 0) {
-      if (isCompleteBlock(buffer)) {
-        parseBlock(buffer);
-      } else {
-        throw new Error("Trailing incomplete game block detected.");
-      }
+    if (parsedRows.length === 0) {
+      throw new Error("No complete games found in input.");
     }
 
     renderPreview();
@@ -73,52 +67,45 @@ function generatePreview() {
   }
 }
 
-function isCompleteBlock(block) {
-  return (
-    countPercents(block) === 2 &&
-    countTeams(block) === 2 &&
-    hasDate(block) &&
-    hasTime(block)
+function extractOneGame(lines) {
+  const dateIdx = lines.findIndex(isDate);
+  const timeIdx = lines.findIndex(isTime);
+  const teamIdxs = lines
+    .map((l, i) => l.match(/\(.+\)/) ? i : -1)
+    .filter(i => i !== -1);
+
+  const percentMatches = lines
+    .map((l, i) => l.match(/\d+(\.\d+)?%/) ? i : -1)
+    .filter(i => i !== -1);
+
+  if (dateIdx === -1 || timeIdx === -1 || teamIdxs.length < 2 || percentMatches.length < 2) {
+    return null;
+  }
+
+  const teamA = stripRecord(lines[teamIdxs[0]]);
+  const teamB = stripRecord(lines[teamIdxs[1]]);
+
+  const percents = percentMatches.slice(0, 2).map(i =>
+    (parseFloat(lines[i].match(/\d+(\.\d+)?%/)[0].replace("%","")) / 100).toFixed(4)
   );
-}
 
-function parseBlock(block) {
-  const date = toISODate(block.find(isDate));
-  const time = to24Hour(block.find(isTime));
+  const date = toISODate(lines[dateIdx]);
+  const time = to24Hour(lines[timeIdx]);
 
-  const teamLines = block.filter(l => l.match(/\(.+\)/));
-  if (teamLines.length !== 2) throw new Error("Expected exactly 2 team lines.");
+  // remove used lines (highest index first)
+  const used = [dateIdx, timeIdx, teamIdxs[0], teamIdxs[1], percentMatches[0], percentMatches[1]]
+    .sort((a,b) => b - a);
 
-  const percents = extractPercents(block);
-  if (percents.length !== 2) throw new Error("Expected exactly 2 percentages.");
+  used.forEach(i => lines.splice(i, 1));
 
-  const teamA = stripRecord(teamLines[0]);
-  const teamB = stripRecord(teamLines[1]);
-
-  parsedRows.push([date, time, teamA, teamB, percents[0]]);
-  parsedRows.push([date, time, teamB, teamA, percents[1]]);
-}
-
-function countPercents(lines) {
-  return lines.join(" ").match(/\d+(\.\d+)?%/g)?.length || 0;
-}
-
-function extractPercents(lines) {
-  return lines.join(" ")
-    .match(/\d+(\.\d+)?%/g)
-    .map(p => (parseFloat(p.replace("%","")) / 100).toFixed(4));
-}
-
-function countTeams(lines) {
-  return lines.filter(l => l.match(/\(.+\)/)).length;
-}
-
-function hasDate(lines) {
-  return lines.some(isDate);
-}
-
-function hasTime(lines) {
-  return lines.some(isTime);
+  return {
+    date,
+    time,
+    teamA,
+    teamB,
+    pA: percents[0],
+    pB: percents[1]
+  };
 }
 
 function isDate(l) {
