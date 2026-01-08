@@ -1,132 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Commit Win Probability CSV</title>
+  <meta charset="UTF-8">
+  <title>Create CSV</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
-    textarea { width: 100%; height: 340px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    button { margin-top: 10px; padding: 10px 14px; }
-    .row { margin-top: 12px; }
-    .error { color: #b00020; font-weight: 700; margin-top: 10px; white-space: pre-wrap; }
-    .ok { color: #0a7a0a; font-weight: 700; margin-top: 10px; white-space: pre-wrap; }
-    label { display: block; margin-top: 10px; }
-    input { width: 100%; padding: 10px; box-sizing: border-box; }
-    small { color: #444; display: block; margin-top: 6px; }
+    textarea { width: 100%; height: 300px; font-family: monospace; }
+    button { margin-top: 10px; padding: 10px 16px; }
   </style>
 </head>
 <body>
 
-<h2>Commit Win Probability CSV</h2>
+<h3>Paste Data → Create CSV</h3>
 
-<div class="row">
-  <label for="csvInput">Paste content (committed verbatim)</label>
-  <textarea id="csvInput" placeholder="Paste your CSV here (any header is fine). Nothing is parsed or modified."></textarea>
-</div>
-
-<div class="row">
-  <label for="token">GitHub Token (fine-grained PAT, Contents: Read and write)</label>
-  <input type="password" id="token" autocomplete="off" inputmode="text" />
-  <small>Tip: Fine-grained token, repo: clownworldenjoyer76/cfb_for_mat, permission: Contents (read/write).</small>
-</div>
-
-<div class="row">
-  <button id="commitBtn" onclick="commitContent()">Commit to docs/win/</button>
-</div>
-
-<div id="statusError" class="error"></div>
-<div id="statusOk" class="ok"></div>
+<textarea id="input" placeholder="Paste your data here"></textarea>
+<br>
+<button onclick="createCSV()">Create CSV</button>
 
 <script>
-  function setError(msg) {
-    document.getElementById("statusOk").innerText = "";
-    document.getElementById("statusError").innerText = msg || "";
-  }
+function createCSV() {
+  const text = document.getElementById("input").value;
+  if (!text.trim()) return;
 
-  function setOk(msg) {
-    document.getElementById("statusError").innerText = "";
-    document.getElementById("statusOk").innerText = msg || "";
-  }
+  const blob = new Blob([text], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
 
-  function base64EncodeUnicode(str) {
-    // Handles non-ASCII safely
-    return btoa(unescape(encodeURIComponent(str)));
-  }
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "output.csv";
+  document.body.appendChild(a);
+  a.click();
 
-  async function commitContent() {
-    setError("");
-    setOk("");
-
-    const btn = document.getElementById("commitBtn");
-    btn.disabled = true;
-
-    try {
-      const contentText = document.getElementById("csvInput").value;
-      const token = document.getElementById("token").value;
-
-      if (!contentText || contentText.trim().length === 0) {
-        setError("Nothing to commit: input is empty.");
-        return;
-      }
-
-      if (!token || token.trim().length === 0) {
-        setError("GitHub token required.");
-        return;
-      }
-
-      // UTC timestamp: YYYYMMDD_HHMMSS
-      const now = new Date();
-      const ts =
-        now.getUTCFullYear().toString() +
-        String(now.getUTCMonth() + 1).padStart(2, "0") +
-        String(now.getUTCDate()).padStart(2, "0") + "_" +
-        String(now.getUTCHours()).padStart(2, "0") +
-        String(now.getUTCMinutes()).padStart(2, "0") +
-        String(now.getUTCSeconds()).padStart(2, "0");
-
-      const repo = "clownworldenjoyer76/cfb_for_mat";
-      const path = `docs/win/win_probability_${ts}.csv`;
-
-      const url = `https://api.github.com/repos/${repo}/contents/${encodeURIComponent(path)}`;
-
-      const body = {
-        message: `Add win_probability snapshot ${ts}`,
-        content: base64EncodeUnicode(contentText)
-      };
-
-      const res = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${token}`,
-          "Accept": "application/vnd.github+json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        const msg = [
-          "GitHub commit failed.",
-          `HTTP ${res.status} ${res.statusText}`,
-          data && data.message ? `Message: ${data.message}` : "",
-          data && data.errors ? `Errors: ${JSON.stringify(data.errors, null, 2)}` : ""
-        ].filter(Boolean).join("\n");
-        setError(msg);
-        return;
-      }
-
-      setOk(`Committed:\n${path}`);
-      // Optional: clear input after success
-      // document.getElementById("csvInput").value = "";
-    } catch (e) {
-      setError("Unexpected error:\n" + (e && e.message ? e.message : String(e)));
-    } finally {
-      btn.disabled = false;
-    }
-  }
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 </script>
 
 </body>
