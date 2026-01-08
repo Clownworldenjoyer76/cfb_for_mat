@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Win Probability Ingest</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    textarea { width: 100%; height: 260px; }
+    button { margin-top: 10px; padding: 8px 14px; }
+    table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    th { background: #f4f4f4; }
+    .error { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<h2>Win Probability CSV Generator</h2>
+
+<label>Paste raw probability data:</label>
+<textarea id="input"></textarea>
+
+<br/>
+<button onclick="generatePreview()">Generate CSV Preview</button>
+
+<div id="error" class="error"></div>
+
+<div id="preview"></div>
+
+<hr/>
+
+<label>GitHub Token (repo-scoped, contents:write):</label>
+<input type="password" id="token" style="width:100%;" />
+
+<br/>
+<button onclick="commitCSV()">Commit CSV to GitHub</button>
+
+<script>
+let parsedRows = [];
+
+function generatePreview() {
+  document.getElementById("error").innerText = "";
+  parsedRows = [];
+
+  const lines = document.getElementById("input").value
+    .split("\n")
+    .map(l => l.trim())
+    .filter(l => l.length > 0);
+
+  if (lines.length % 6 !== 0) {
+    showError("Input does not divide evenly into 6-line blocks.");
+    return;
+  }
+
+  try {
+    for (let i = 0; i < lines.length; i += 6) {
+      const dateRaw = lines[i];
+      const timeRaw = lines[i + 1];
+      const teamA = stripRecord(lines[i + 2]);
+      const teamB = stripRecord(lines[i + 3]);
+      const pA = percentToDecimal(lines[i + 4]);
+      const pB = percentToDecimal(lines[i + 5]);
+
+      const dateISO = toISODate(dateRaw);
+      const time24 = to24Hour(timeRaw);
+
+      parsedRows.push([dateISO, time24, teamA, teamB, pA]);
+      parsedRows.push([dateISO, time24, teamB, teamA, pB]);
+    }
+  } catch (e) {
+    showError(e.message);
+    return;
+  }
+
+  renderPreview();
+}
+
+function stripRecord(team) {
+  return team.replace(/\s*\([^)]*\)/g, "").trim();
+}
+
+function percentToDecimal(p) {
+  if (!p.endsWith("%")) throw new Error("Invalid percentage: " + p);
+  return (parseFloat(p.replace("%", "")) / 100).toFixed(4);
+}
+
+function toISODate(d) {
+  const [m, day, y] = d.split("/");
+  return `${y}-${m.padStart(2,"0")}-${day.padStart(2,"0")}`;
+}
+
+function to24Hour(t) {
+  let [time, meridian] = t.split(" ");
+  let [h, m] = time.split(":").map(Number);
+  if (meridian === "PM" && h !== 12) h += 12;
+  if (meridian === "AM" && h === 12) h = 0;
+  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+}
+
+function renderPreview() {
+  let html = "<table><tr><th>date</th><th>time</th><th>team</th><th>opponent</th><th>win_probability</th></tr>";
+  parsedRows.forEach(r => {
+    html += `<tr><td>${r.join("</td><td>")}</td></tr>`;
+  });
+  html += "</table>";
+  document.getElementById("preview").innerHTML = html;
+}
+
+function showError(msg) {
+  document.getElementById("error").innerText = msg;
+}
+
+async function commitCSV() {
+  if (parsedRows.length === 0) {
+    showError("No parsed data to commit.");
+    return;
+  }
+
+  const token = document.getElementById("token").value;
+  if (!token) {
+    showError("GitHub token required.");
+    return;
+  }
+
+  const timestamp = new Date().toISOString()
+    .replace(/[-:]/g, "")
+    .replace("T", "_")
+    .slice(0, 15);
+
+  const path = `docs/win/win_probability_${timestamp}.csv`;
+
+  let csv = "date,time,team,opponent,win_probability\n";
+  parsedRows.forEach(r => {
+    csv += r.join(",") + "\n";
+  });
+
+  const body = {
+    message: `Add win_probability snapshot ${timestamp}`,
+    content: btoa(csv)
+  };
+
+  const repo = "<OWNER>/<REPO>"; // <-- CHANGE THIS
+
+  const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+    method: "PUT",
+    headers: {
+      "Authorization": `token ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    showError("GitHub commit failed.");
+    return;
+  }
+
+  alert("CSV committed successfully.");
+}
+</script>
+
+</body>
+</html>
