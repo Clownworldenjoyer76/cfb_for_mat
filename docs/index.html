@@ -74,38 +74,29 @@ function extractOneGame(lines) {
     .map((l, i) => l.match(/\(.+\)/) ? i : -1)
     .filter(i => i !== -1);
 
-  const percentMatches = lines
+  const percentIdxs = lines
     .map((l, i) => l.match(/\d+(\.\d+)?%/) ? i : -1)
     .filter(i => i !== -1);
 
-  if (dateIdx === -1 || timeIdx === -1 || teamIdxs.length < 2 || percentMatches.length < 2) {
+  if (dateIdx === -1 || timeIdx === -1 || teamIdxs.length < 2 || percentIdxs.length < 2) {
     return null;
   }
 
   const teamA = stripRecord(lines[teamIdxs[0]]);
   const teamB = stripRecord(lines[teamIdxs[1]]);
 
-  const percents = percentMatches.slice(0, 2).map(i =>
-    (parseFloat(lines[i].match(/\d+(\.\d+)?%/)[0].replace("%","")) / 100).toFixed(4)
-  );
+  const pA = percentToDecimal(lines[percentIdxs[0]]);
+  const pB = percentToDecimal(lines[percentIdxs[1]]);
 
   const date = toISODate(lines[dateIdx]);
   const time = to24Hour(lines[timeIdx]);
 
-  // remove used lines (highest index first)
-  const used = [dateIdx, timeIdx, teamIdxs[0], teamIdxs[1], percentMatches[0], percentMatches[1]]
-    .sort((a,b) => b - a);
+  const used = [dateIdx, timeIdx, teamIdxs[0], teamIdxs[1], percentIdxs[0], percentIdxs[1]]
+    .sort((a, b) => b - a);
 
   used.forEach(i => lines.splice(i, 1));
 
-  return {
-    date,
-    time,
-    teamA,
-    teamB,
-    pA: percents[0],
-    pB: percents[1]
-  };
+  return { date, time, teamA, teamB, pA, pB };
 }
 
 function isDate(l) {
@@ -118,6 +109,10 @@ function isTime(l) {
 
 function stripRecord(team) {
   return team.replace(/\s*\([^)]*\)/g, "").trim();
+}
+
+function percentToDecimal(p) {
+  return (parseFloat(p.replace("%", "")) / 100).toFixed(4);
 }
 
 function toISODate(d) {
@@ -173,7 +168,7 @@ async function commitCSV() {
   parsedRows.forEach(r => csv += r.join(",") + "\n");
 
   const res = await fetch(
-    `https://api.github.com/repos/clownworldenjoyer76.github.io/cfb_for_mat/contents/${path}`,
+    `https://api.github.com/repos/clownworldenjoyer76/cfb_for_mat/contents/${path}`,
     {
       method: "PUT",
       headers: {
