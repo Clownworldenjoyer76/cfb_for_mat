@@ -2,120 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Win Probability CSV Generator</title>
+  <title>Commit Win Probability CSV</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
-    textarea { width: 100%; height: 300px; }
+    textarea { width: 100%; height: 320px; font-family: monospace; }
     button { margin-top: 10px; padding: 8px 14px; }
-    table { border-collapse: collapse; margin-top: 20px; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 6px; }
-    th { background: #f4f4f4; }
     .error { color: red; font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
 
-<h2>Win Probability CSV Generator</h2>
+<h2>Commit Win Probability CSV</h2>
 
-<textarea id="input" placeholder="Paste raw data here"></textarea>
-<br>
-<button onclick="generate()">Generate Preview</button>
+<p>Paste a <strong>complete CSV</strong> (including header row). Nothing is parsed or modified.</p>
+
+<textarea id="csvInput" placeholder="date,time,team,opponent,win_probability
+2026-01-08,17:00,Chicago State Cougars,Fairleigh Dickinson Knights,0.399
+..."></textarea>
 
 <div id="error" class="error"></div>
-<div id="preview"></div>
 
 <hr>
 
 <label>GitHub Token (contents:write):</label>
 <input type="password" id="token" style="width:100%;">
+
 <br>
-<button onclick="commit()">Commit CSV</button>
+<button onclick="commitCSV()">Commit CSV</button>
 
 <script>
-let rows = [];
-
-function generate() {
-  rows = [];
-  document.getElementById("error").innerText = "";
-
-  const text = document.getElementById("input").value;
-
-  const dates = [...text.matchAll(/\d{2}\/\d{2}\/\d{4}/g)].map(m => m[0]);
-  const times = [...text.matchAll(/\d{1,2}:\d{2}\s?(AM|PM)/g)].map(m => m[0]);
-  const teams = [...text.matchAll(/[A-Za-z .&'()-]+?\(\d+-\d+\)/g)]
-    .map(m => m[0].replace(/\s*\([^)]*\)/g, "").trim());
-  const probs = [...text.matchAll(/\d+(\.\d+)?%/g)]
-    .map(m => (parseFloat(m[0]) / 100).toFixed(4));
-
-  if (
-    dates.length !== times.length ||
-    teams.length !== probs.length ||
-    teams.length % 2 !== 0
-  ) {
-    document.getElementById("error").innerText =
-      "Input does not align: counts of dates, times, teams, or probabilities mismatch.";
-    return;
-  }
-
-  for (let i = 0; i < teams.length; i += 2) {
-    const g = i / 2;
-    const date = toISO(dates[g]);
-    const time = to24(times[g]);
-
-    rows.push([date, time, teams[i], teams[i + 1], probs[i]]);
-    rows.push([date, time, teams[i + 1], teams[i], probs[i + 1]]);
-  }
-
-  render();
-}
-
-function toISO(d) {
-  const [m, day, y] = d.split("/");
-  return `${y}-${m.padStart(2,"0")}-${day.padStart(2,"0")}`;
-}
-
-function to24(t) {
-  let [time, mer] = t.split(" ");
-  let [h, m] = time.split(":").map(Number);
-  if (mer === "PM" && h !== 12) h += 12;
-  if (mer === "AM" && h === 12) h = 0;
-  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
-}
-
-function render() {
-  let html = "<table><tr><th>date</th><th>time</th><th>team</th><th>opponent</th><th>win_probability</th></tr>";
-  rows.forEach(r => {
-    html += `<tr><td>${r.join("</td><td>")}</td></tr>`;
-  });
-  html += "</table>";
-  document.getElementById("preview").innerHTML = html;
-}
-
-async function commit() {
-  if (!rows.length) {
-    document.getElementById("error").innerText = "Nothing to commit.";
-    return;
-  }
-
+async function commitCSV() {
+  const csv = document.getElementById("csvInput").value.trim();
   const token = document.getElementById("token").value;
+  const error = document.getElementById("error");
+
+  error.innerText = "";
+
+  if (!csv) {
+    error.innerText = "CSV input is empty.";
+    return;
+  }
+
+  if (!csv.startsWith("date,time,team,opponent,win_probability")) {
+    error.innerText = "CSV must start with header: date,time,team,opponent,win_probability";
+    return;
+  }
+
   if (!token) {
-    document.getElementById("error").innerText = "GitHub token required.";
+    error.innerText = "GitHub token required.";
     return;
   }
 
   const now = new Date();
   const ts =
     now.getUTCFullYear() +
-    String(now.getUTCMonth()+1).padStart(2,"0") +
+    String(now.getUTCMonth() + 1).padStart(2,"0") +
     String(now.getUTCDate()).padStart(2,"0") + "_" +
     String(now.getUTCHours()).padStart(2,"0") +
     String(now.getUTCMinutes()).padStart(2,"0") +
     String(now.getUTCSeconds()).padStart(2,"0");
 
   const path = `docs/win/win_probability_${ts}.csv`;
-
-  let csv = "date,time,team,opponent,win_probability\n";
-  rows.forEach(r => csv += r.join(",") + "\n");
 
   const res = await fetch(
     `https://api.github.com/repos/clownworldenjoyer76/cfb_for_mat/contents/${path}`,
@@ -133,9 +80,10 @@ async function commit() {
   );
 
   if (!res.ok) {
-    document.getElementById("error").innerText = "GitHub commit failed.";
+    error.innerText = "GitHub commit failed.";
   } else {
     alert("CSV committed successfully.");
+    document.getElementById("csvInput").value = "";
   }
 }
 </script>
