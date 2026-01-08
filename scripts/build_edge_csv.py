@@ -9,11 +9,17 @@ OUTPUT_DIR = Path("docs/win")
 
 
 def decimal_to_american(decimal: float) -> int:
-    # decimal must be > 1.0
     if decimal >= 2.0:
         return int(round(100.0 * (decimal - 1.0)))
     else:
         return int(round(-100.0 / (decimal - 1.0)))
+
+
+def normalize_probability(raw: str) -> float:
+    p = float(raw)
+    if p > 1.0:
+        p = p / 100.0
+    return p
 
 
 def main():
@@ -41,11 +47,12 @@ def main():
         writer.writeheader()
 
         for row in reader:
-            p = float(row["win_probability"])
-            if not (0.0 < p < 1.0):
-                raise ValueError(f"Invalid win_probability (must be 0<p<1): {row['win_probability']}")
+            p = normalize_probability(row["win_probability"])
 
-            # Fair odds from probability
+            if not (0.0 < p < 1.0):
+                raise ValueError(f"Invalid win_probability after normalization: {row['win_probability']}")
+
+            # Fair odds
             fair_decimal = 1.0 / p
 
             # Acceptable odds = require better price than fair by EDGE
