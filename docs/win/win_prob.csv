@@ -1,21 +1,253 @@
 date,time,team,opponent,win_probability
-01/09/2026,07:10 PM,New Orleans Pelicans,Washington Wizards,0.571
-01/09/2026,07:10 PM,Washington Wizards,New Orleans Pelicans,0.429
-01/09/2026,07:10 PM,Philadelphia 76ers,Orlando Magic,0.522
-01/09/2026,07:10 PM,Orlando Magic,Philadelphia 76ers,0.478
-01/09/2026,07:10 PM,Toronto Raptors,Boston Celtics,0.267
-01/09/2026,07:10 PM,Boston Celtics,Toronto Raptors,0.733
-01/09/2026,07:40 PM,Los Angeles Clippers,Brooklyn Nets,0.555
-01/09/2026,07:40 PM,Brooklyn Nets,Los Angeles Clippers,0.445
-01/09/2026,08:10 PM,Oklahoma City Thunder,Memphis Grizzlies,0.613
-01/09/2026,08:10 PM,Memphis Grizzlies,Oklahoma City Thunder,0.387
-01/09/2026,09:10 PM,New York Knicks,Phoenix Suns,0.499
-01/09/2026,09:10 PM,Phoenix Suns,New York Knicks,0.501
-01/09/2026,09:10 PM,Atlanta Hawks,Denver Nuggets,0.503
-01/09/2026,09:10 PM,Denver Nuggets,Atlanta Hawks,0.497
-01/09/2026,10:10 PM,Houston Rockets,Portland Trail Blazers,0.697
-01/09/2026,10:10 PM,Portland Trail Blazers,Houston Rockets,0.303
-01/09/2026,10:10 PM,Sacramento Kings,Golden State Warriors,0.173
-01/09/2026,10:10 PM,Golden State Warriors,Sacramento Kings,0.827
-01/09/2026,10:40 PM,Milwaukee Bucks,Los Angeles Lakers,0.427
-01/09/2026,10:40 PM,Los Angeles Lakers,Milwaukee Bucks,0.573
+01/10/2026,02:00 PM,Syracuse Orange,Pitt Panthers,0.479
+01/10/2026,02:00 PM,Pitt Panthers,Syracuse Orange,0.521
+01/10/2026,02:00 PM,Brown Bears,Penn Quakers,0.249
+01/10/2026,02:00 PM,Penn Quakers,Brown Bears,0.751
+01/10/2026,02:00 PM,SMU Mustangs,Duke Blue Devils,0.063
+01/10/2026,02:00 PM,Duke Blue Devils,SMU Mustangs,0.937
+01/10/2026,02:00 PM,Winthrop Eagles,USC Upstate Spartans,0.696
+01/10/2026,02:00 PM,USC Upstate Spartans,Winthrop Eagles,0.304
+01/10/2026,02:00 PM,Wofford Terriers,Mercer Bears,0.376
+01/10/2026,02:00 PM,Mercer Bears,Wofford Terriers,0.624
+01/10/2026,02:00 PM,St. John's Red Storm,Creighton Bluejays,0.557
+01/10/2026,02:00 PM,Creighton Bluejays,St. John's Red Storm,0.443
+01/10/2026,02:00 PM,Dartmouth Big Green,Cornell Big Red,0.247
+01/10/2026,02:00 PM,Cornell Big Red,Dartmouth Big Green,0.753
+01/10/2026,02:00 PM,Yale Bulldogs,Princeton Tigers,0.907
+01/10/2026,02:00 PM,Princeton Tigers,Yale Bulldogs,0.093
+01/10/2026,02:00 PM,William & Mary Tribe,Drexel Dragons,0.692
+01/10/2026,02:00 PM,Drexel Dragons,William & Mary Tribe,0.308
+01/10/2026,02:00 PM,North Alabama Lions,Bellarmine Knights,0.366
+01/10/2026,02:00 PM,Bellarmine Knights,North Alabama Lions,0.634
+01/10/2026,02:00 PM,Bryant Bulldogs,Albany Great Danes,0.399
+01/10/2026,02:00 PM,Albany Great Danes,Bryant Bulldogs,0.601
+01/10/2026,02:00 PM,Queens Royals,North Florida Ospreys,0.901
+01/10/2026,02:00 PM,North Florida Ospreys,Queens Royals,0.099
+01/10/2026,02:00 PM,Chicago State Cougars,Stonehill Skyhawks,0.401
+01/10/2026,02:00 PM,Stonehill Skyhawks,Chicago State Cougars,0.599
+01/10/2026,02:00 PM,Maine Black Bears,NJIT Highlanders,0.502
+01/10/2026,02:00 PM,NJIT Highlanders,Maine Black Bears,0.498
+01/10/2026,02:00 PM,UMass Lowell River Hawks,Binghamton Bearcats,0.693
+01/10/2026,02:00 PM,Binghamton Bearcats,UMass Lowell River Hawks,0.307
+01/10/2026,02:00 PM,Rhode Island Rams,Davidson Wildcats,0.392
+01/10/2026,02:00 PM,Davidson Wildcats,Rhode Island Rams,0.608
+01/10/2026,02:00 PM,Towson Tigers,Northeastern Huskies,0.606
+01/10/2026,02:00 PM,Northeastern Huskies,Towson Tigers,0.394
+01/10/2026,02:00 PM,Buffalo Bulls,Ohio Bobcats,0.368
+01/10/2026,02:00 PM,Ohio Bobcats,Buffalo Bulls,0.632
+01/10/2026,02:00 PM,North Dakota State Bison,Omaha Mavericks,0.692
+01/10/2026,02:00 PM,Omaha Mavericks,North Dakota State Bison,0.308
+01/10/2026,02:00 PM,Harvard Crimson,Columbia Lions,0.262
+01/10/2026,02:00 PM,Columbia Lions,Harvard Crimson,0.738
+01/10/2026,02:00 PM,Georgia Bulldogs,South Carolina Gamecocks,0.696
+01/10/2026,02:00 PM,South Carolina Gamecocks,Georgia Bulldogs,0.304
+01/10/2026,02:00 PM,Denver Pioneers,South Dakota Coyotes,0.493
+01/10/2026,02:00 PM,South Dakota Coyotes,Denver Pioneers,0.507
+01/10/2026,02:00 PM,Austin Peay Governors,Stetson Hatters,0.795
+01/10/2026,02:00 PM,Stetson Hatters,Austin Peay Governors,0.205
+01/10/2026,02:00 PM,Lafayette Leopards,Navy Midshipmen,0.196
+01/10/2026,02:00 PM,Navy Midshipmen,Lafayette Leopards,0.804
+01/10/2026,02:00 PM,High Point Panthers,Charleston Southern Buccaneers,0.830
+01/10/2026,02:00 PM,Charleston Southern Buccaneers,High Point Panthers,0.170
+01/10/2026,02:00 PM,Lehigh Mountain Hawks,Colgate Raiders,0.194
+01/10/2026,02:00 PM,Colgate Raiders,Lehigh Mountain Hawks,0.806
+01/10/2026,02:00 PM,Monmouth Hawks,Hofstra Pride,0.198
+01/10/2026,02:00 PM,Hofstra Pride,Monmouth Hawks,0.802
+01/10/2026,02:00 PM,Penn State Nittany Lions,Purdue Boilermakers,0.008
+01/10/2026,02:00 PM,Purdue Boilermakers,Penn State Nittany Lions,0.992
+01/10/2026,02:00 PM,VMI Keydets,Furman Paladins,0.077
+01/10/2026,02:00 PM,Furman Paladins,VMI Keydets,0.923
+01/10/2026,02:00 PM,Georgia Southern Eagles,South Alabama Jaguars,0.389
+01/10/2026,02:00 PM,South Alabama Jaguars,Georgia Southern Eagles,0.611
+01/10/2026,02:15 PM,Stanford Cardinal,Virginia Cavaliers,0.178
+01/10/2026,02:15 PM,Virginia Cavaliers,Stanford Cardinal,0.822
+01/10/2026,02:30 PM,UNC Asheville Bulldogs,Radford Highlanders,0.359
+01/10/2026,02:30 PM,Radford Highlanders,UNC Asheville Bulldogs,0.641
+01/10/2026,02:30 PM,Villanova Wildcats,Marquette Golden Eagles,0.706
+01/10/2026,02:30 PM,Marquette Golden Eagles,Villanova Wildcats,0.294
+01/10/2026,03:00 PM,Presbyterian Blue Hose,Longwood Lancers,0.441
+01/10/2026,03:00 PM,Longwood Lancers,Presbyterian Blue Hose,0.559
+01/10/2026,03:00 PM,Texas State Bobcats,Arkansas State Red Wolves,0.165
+01/10/2026,03:00 PM,Arkansas State Red Wolves,Texas State Bobcats,0.835
+01/10/2026,03:00 PM,Delaware Fightin' Blue Hens,Louisiana Tech Bulldogs,0.300
+01/10/2026,03:00 PM,Louisiana Tech Bulldogs,Delaware Fightin' Blue Hens,0.700
+01/10/2026,03:00 PM,South Florida Bulls,Tulsa Golden Hurricane,0.413
+01/10/2026,03:00 PM,Tulsa Golden Hurricane,South Florida Bulls,0.587
+01/10/2026,03:00 PM,Kent State Golden Flashes,Central Michigan Chippewas,0.849
+01/10/2026,03:00 PM,Central Michigan Chippewas,Kent State Golden Flashes,0.151
+01/10/2026,03:00 PM,Abilene Christian Wildcats,UT Arlington Mavericks,0.395
+01/10/2026,03:00 PM,UT Arlington Mavericks,Abilene Christian Wildcats,0.605
+01/10/2026,03:00 PM,Loyola Chicago Ramblers,George Washington Colonials,0.082
+01/10/2026,03:00 PM,George Washington Colonials,Loyola Chicago Ramblers,0.918
+01/10/2026,03:00 PM,Kansas State Wildcats,Arizona State Sun Devils,0.523
+01/10/2026,03:00 PM,Arizona State Sun Devils,Kansas State Wildcats,0.477
+01/10/2026,03:00 PM,West Georgia Wolves,Jacksonville Dolphins,0.453
+01/10/2026,03:00 PM,Jacksonville Dolphins,West Georgia Wolves,0.547
+01/10/2026,03:00 PM,New Mexico Lobos,Air Force Falcons,0.958
+01/10/2026,03:00 PM,Air Force Falcons,New Mexico Lobos,0.042
+01/10/2026,03:00 PM,Louisiana Monroe Warhawks,Southern Miss Golden Eagles,0.046
+01/10/2026,03:00 PM,Southern Miss Golden Eagles,Louisiana Monroe Warhawks,0.954
+01/10/2026,03:30 PM,Oklahoma Sooners,Texas A&M Aggies,0.341
+01/10/2026,03:30 PM,Texas A&M Aggies,Oklahoma Sooners,0.659
+01/10/2026,03:30 PM,SE Missouri State Redhawks,Morehead State Eagles,0.663
+01/10/2026,03:30 PM,Morehead State Eagles,SE Missouri State Redhawks,0.337
+01/10/2026,03:30 PM,Liberty Flames,Sam Houston State Bearkats,0.523
+01/10/2026,03:30 PM,Sam Houston State Bearkats,Liberty Flames,0.477
+01/10/2026,03:30 PM,Ball State Cardinals,UMass Minutemen,0.115
+01/10/2026,03:30 PM,UMass Minutemen,Ball State Cardinals,0.885
+01/10/2026,04:00 PM,Old Dominion Monarchs,James Madison Dukes,0.291
+01/10/2026,04:00 PM,James Madison Dukes,Old Dominion Monarchs,0.709
+01/10/2026,04:00 PM,Holy Cross Crusaders,American University Eagles,0.169
+01/10/2026,04:00 PM,American University Eagles,Holy Cross Crusaders,0.831
+01/10/2026,04:00 PM,Lipscomb Bisons,Florida Gulf Coast Eagles,0.449
+01/10/2026,04:00 PM,Florida Gulf Coast Eagles,Lipscomb Bisons,0.551
+01/10/2026,04:00 PM,Central Arkansas Bears,Eastern Kentucky Colonels,0.490
+01/10/2026,04:00 PM,Eastern Kentucky Colonels,Central Arkansas Bears,0.510
+01/10/2026,04:00 PM,Marshall Thundering Herd,Georgia State Panthers,0.729
+01/10/2026,04:00 PM,Georgia State Panthers,Marshall Thundering Herd,0.271
+01/10/2026,04:00 PM,Western Kentucky Hilltoppers,UTEP Miners,0.628
+01/10/2026,04:00 PM,UTEP Miners,Western Kentucky Hilltoppers,0.372
+01/10/2026,04:00 PM,Oklahoma State Cowboys,Iowa State Cyclones,0.022
+01/10/2026,04:00 PM,Iowa State Cyclones,Oklahoma State Cowboys,0.978
+01/10/2026,04:00 PM,UNC Greensboro Spartans,ETSU Buccaneers,0.131
+01/10/2026,04:00 PM,ETSU Buccaneers,UNC Greensboro Spartans,0.869
+01/10/2026,04:00 PM,Arizona Wildcats,TCU Horned Frogs,0.838
+01/10/2026,04:00 PM,TCU Horned Frogs,Arizona Wildcats,0.162
+01/10/2026,04:00 PM,Utah Tech Trailblazers,Utah Valley Wolverines,0.118
+01/10/2026,04:00 PM,Utah Valley Wolverines,Utah Tech Trailblazers,0.882
+01/10/2026,04:00 PM,Saint Louis Billikens,La Salle Explorers,0.961
+01/10/2026,04:00 PM,La Salle Explorers,Saint Louis Billikens,0.039
+01/10/2026,04:00 PM,California Golden Bears,Virginia Tech Hokies,0.365
+01/10/2026,04:00 PM,Virginia Tech Hokies,California Golden Bears,0.635
+01/10/2026,04:00 PM,Providence Friars,Xavier Musketeers,0.533
+01/10/2026,04:00 PM,Xavier Musketeers,Providence Friars,0.467
+01/10/2026,04:00 PM,South Carolina State Bulldogs,Morgan State Bears,0.383
+01/10/2026,04:00 PM,Morgan State Bears,South Carolina State Bulldogs,0.617
+01/10/2026,04:00 PM,Jackson State Tigers,Alabama State Hornets,0.261
+01/10/2026,04:00 PM,Alabama State Hornets,Jackson State Tigers,0.739
+01/10/2026,04:00 PM,St. Francis Red Flash,LIU Sharks,0.062
+01/10/2026,04:00 PM,LIU Sharks,St. Francis Red Flash,0.938
+01/10/2026,04:00 PM,Valparaiso Beacons,Murray State Racers,0.103
+01/10/2026,04:00 PM,Murray State Racers,Valparaiso Beacons,0.897
+01/10/2026,04:30 PM,Norfolk State Spartans,Delaware State Hornets,0.631
+01/10/2026,04:30 PM,Delaware State Hornets,Norfolk State Spartans,0.369
+01/10/2026,04:30 PM,Tennessee Tech Golden Eagles,Western Illinois Leathernecks,0.558
+01/10/2026,04:30 PM,Western Illinois Leathernecks,Tennessee Tech Golden Eagles,0.442
+01/10/2026,04:30 PM,Tennessee State Tigers,Eastern Illinois Panthers,0.617
+01/10/2026,04:30 PM,Eastern Illinois Panthers,Tennessee State Tigers,0.383
+01/10/2026,04:30 PM,Little Rock Trojans,Lindenwood Lions,0.317
+01/10/2026,04:30 PM,Lindenwood Lions,Little Rock Trojans,0.683
+01/10/2026,04:30 PM,Samford Bulldogs,Chattanooga Mocs,0.505
+01/10/2026,04:30 PM,Chattanooga Mocs,Samford Bulldogs,0.495
+01/10/2026,04:30 PM,Howard Bison,MD E Shore Fighting Hawks,0.623
+01/10/2026,04:30 PM,MD E Shore Fighting Hawks,Howard Bison,0.377
+01/10/2026,04:30 PM,Texas A&M CC Islanders,Northwestern State Demons,0.624
+01/10/2026,04:30 PM,Northwestern State Demons,Texas A&M CC Islanders,0.376
+01/10/2026,04:30 PM,North Carolina Central Eagles,Coppin State Eagles,0.687
+01/10/2026,04:30 PM,Coppin State Eagles,North Carolina Central Eagles,0.313
+01/10/2026,05:00 PM,Jacksonville State Gamecocks,Kennesaw State Owls,0.314
+01/10/2026,05:00 PM,Kennesaw State Owls,Jacksonville State Gamecocks,0.686
+01/10/2026,05:00 PM,Hampton Pirates,Charleston Cougars,0.172
+01/10/2026,05:00 PM,Charleston Cougars,Hampton Pirates,0.828
+01/10/2026,05:00 PM,Washington State Cougars,Saint Mary's College Gaels,0.057
+01/10/2026,05:00 PM,Saint Mary's College Gaels,Washington State Cougars,0.943
+01/10/2026,05:00 PM,Loyola Maryland Greyhounds,Bucknell Bison,0.261
+01/10/2026,05:00 PM,Bucknell Bison,Loyola Maryland Greyhounds,0.739
+01/10/2026,05:00 PM,Ark Pine Bluff Golden Lions,Texas Southern Tigers,0.534
+01/10/2026,05:00 PM,Texas Southern Tigers,Ark Pine Bluff Golden Lions,0.466
+01/10/2026,05:00 PM,Montana State Bobcats,Idaho Vandals,0.472
+01/10/2026,05:00 PM,Idaho Vandals,Montana State Bobcats,0.528
+01/10/2026,05:00 PM,Montana Grizzlies,Eastern Washington Eagles,0.570
+01/10/2026,05:00 PM,Eastern Washington Eagles,Montana Grizzlies,0.430
+01/10/2026,05:00 PM,Tulane Green Wave,UTSA Roadrunners,0.750
+01/10/2026,05:00 PM,UTSA Roadrunners,Tulane Green Wave,0.250
+01/10/2026,05:00 PM,UC Davis Aggies,Cal Poly Mustangs,0.539
+01/10/2026,05:00 PM,Cal Poly Mustangs,UC Davis Aggies,0.461
+01/10/2026,05:00 PM,Southeastern Louisiana Lions,McNeese State Cowboys,0.037
+01/10/2026,05:00 PM,McNeese State Cowboys,Southeastern Louisiana Lions,0.963
+01/10/2026,05:00 PM,Sacramento State Hornets,Portland State Vikings,0.134
+01/10/2026,05:00 PM,Portland State Vikings,Sacramento State Hornets,0.866
+01/10/2026,05:00 PM,FIU Golden Panthers,Missouri State Bears,0.435
+01/10/2026,05:00 PM,Missouri State Bears,FIU Golden Panthers,0.565
+01/10/2026,05:00 PM,Alcorn State Braves,Alabama A&M Bulldogs,0.219
+01/10/2026,05:00 PM,Alabama A&M Bulldogs,Alcorn State Braves,0.781
+01/10/2026,05:00 PM,UIC Flames,Illinois State Redbirds,0.145
+01/10/2026,05:00 PM,Illinois State Redbirds,UIC Flames,0.855
+01/10/2026,05:30 PM,Grambling State Tigers,Bethune Cookman Wildcats,0.346
+01/10/2026,05:30 PM,Bethune Cookman Wildcats,Grambling State Tigers,0.654
+01/10/2026,05:30 PM,MS Valley State Delta Devils,Prairie View A&M Panthers,0.055
+01/10/2026,05:30 PM,Prairie View A&M Panthers,MS Valley State Delta Devils,0.945
+01/10/2026,06:00 PM,Southern University Jaguars,Florida A&M Rattlers,0.612
+01/10/2026,06:00 PM,Florida A&M Rattlers,Southern University Jaguars,0.388
+01/10/2026,06:00 PM,Belmont Bruins,Drake Bulldogs,0.716
+01/10/2026,06:00 PM,Drake Bulldogs,Belmont Bruins,0.284
+01/10/2026,06:00 PM,UNC Wilmington Seahawks,Stony Brook Seawolves,0.825
+01/10/2026,06:00 PM,Stony Brook Seawolves,UNC Wilmington Seahawks,0.175
+01/10/2026,06:00 PM,Arkansas Razorbacks,Auburn Tigers,0.481
+01/10/2026,06:00 PM,Auburn Tigers,Arkansas Razorbacks,0.519
+01/10/2026,06:00 PM,Missouri Tigers,Ole Miss Rebels,0.453
+01/10/2026,06:00 PM,Ole Miss Rebels,Missouri Tigers,0.547
+01/10/2026,06:00 PM,Clemson Tigers,Notre Dame Fighting Irish,0.585
+01/10/2026,06:00 PM,Notre Dame Fighting Irish,Clemson Tigers,0.415
+01/10/2026,06:00 PM,Seton Hall Pirates,Georgetown Hoyas,0.568
+01/10/2026,06:00 PM,Georgetown Hoyas,Seton Hall Pirates,0.432
+01/10/2026,06:00 PM,Wake Forest Demon Deacons,UNC Tar Heels,0.153
+01/10/2026,06:00 PM,UNC Tar Heels,Wake Forest Demon Deacons,0.847
+01/10/2026,06:00 PM,Nicholls State Colonels,New Orleans Privateers,0.444
+01/10/2026,06:00 PM,New Orleans Privateers,Nicholls State Colonels,0.556
+01/10/2026,06:00 PM,Houston Christian Huskies,Stephen F. Austin Lumberjacks,0.092
+01/10/2026,06:00 PM,Stephen F. Austin Lumberjacks,Houston Christian Huskies,0.908
+01/10/2026,06:00 PM,UTRGV Vaqueros,Texas A&M Commerce Lions,0.673
+01/10/2026,06:00 PM,Texas A&M Commerce Lions,UTRGV Vaqueros,0.327
+01/10/2026,06:00 PM,Northern Iowa Panthers,Bradley University Braves,0.397
+01/10/2026,06:00 PM,Bradley University Braves,Northern Iowa Panthers,0.603
+01/10/2026,07:00 PM,Cal State Northridge Matadors,Cal State Fullerton Titans,0.486
+01/10/2026,07:00 PM,Cal State Fullerton Titans,Cal State Northridge Matadors,0.514
+01/10/2026,07:00 PM,Texas Tech Red Raiders,Colorado Buffaloes,0.756
+01/10/2026,07:00 PM,Colorado Buffaloes,Texas Tech Red Raiders,0.244
+01/10/2026,07:00 PM,Campbell Fighting Camels,Elon Phoenix,0.394
+01/10/2026,07:00 PM,Elon Phoenix,Campbell Fighting Camels,0.606
+01/10/2026,07:00 PM,CSU Bakersfield Roadrunners,Long Beach State 49ers,0.367
+01/10/2026,07:00 PM,Long Beach State 49ers,CSU Bakersfield Roadrunners,0.633
+01/10/2026,07:00 PM,San Diego Toreros,Pacific Tigers,0.249
+01/10/2026,07:00 PM,Pacific Tigers,San Diego Toreros,0.751
+01/10/2026,07:00 PM,Incarnate Word Cardinals,Lamar Cardinals,0.466
+01/10/2026,07:00 PM,Lamar Cardinals,Incarnate Word Cardinals,0.534
+01/10/2026,08:00 PM,St. Thomas Tommies,Oral Roberts Golden Eagles,0.804
+01/10/2026,08:00 PM,Oral Roberts Golden Eagles,St. Thomas Tommies,0.196
+01/10/2026,08:00 PM,UC San Diego Tritons,UC Riverside Highlanders,0.855
+01/10/2026,08:00 PM,UC Riverside Highlanders,UC San Diego Tritons,0.145
+01/10/2026,08:00 PM,San Jose State Spartans,Grand Canyon Antelopes,0.055
+01/10/2026,08:00 PM,Grand Canyon Antelopes,San Jose State Spartans,0.945
+01/10/2026,08:00 PM,MTSU Blue Raiders,New Mexico State Aggies,0.425
+01/10/2026,08:00 PM,New Mexico State Aggies,MTSU Blue Raiders,0.575
+01/10/2026,08:00 PM,North Dakota Fighting Hawks,UMKC Kangarros,0.473
+01/10/2026,08:00 PM,UMKC Kangarros,North Dakota Fighting Hawks,0.527
+01/10/2026,08:00 PM,Oregon State Beavers,Portland Pilots,0.547
+01/10/2026,08:00 PM,Portland Pilots,Oregon State Beavers,0.453
+01/10/2026,08:00 PM,Texas Longhorns,Alabama Crimson Tide,0.082
+01/10/2026,08:00 PM,Alabama Crimson Tide,Texas Longhorns,0.918
+01/10/2026,08:00 PM,Maryland Terrapins,UCLA Bruins,0.111
+01/10/2026,08:00 PM,UCLA Bruins,Maryland Terrapins,0.889
+01/10/2026,08:00 PM,Southern Utah Thunderbirds,California Baptist Lancers,0.056
+01/10/2026,08:00 PM,California Baptist Lancers,Southern Utah Thunderbirds,0.944
+01/10/2026,08:00 PM,Weber State Wildcats,Northern Colorado Bears,0.310
+01/10/2026,08:00 PM,Northern Colorado Bears,Weber State Wildcats,0.690
+01/10/2026,08:00 PM,San Francisco Dons,Pepperdine Waves,0.814
+01/10/2026,08:00 PM,Pepperdine Waves,San Francisco Dons,0.186
+01/10/2026,08:00 PM,Idaho State Bengals,Northern Arizona Lumberjacks,0.681
+01/10/2026,08:00 PM,Northern Arizona Lumberjacks,Idaho State Bengals,0.319
+01/10/2026,08:30 PM,Mississippi State Bulldogs,Kentucky Wildcats,0.139
+01/10/2026,08:30 PM,Kentucky Wildcats,Mississippi State Bulldogs,0.861
+01/10/2026,08:30 PM,Tennessee-Martin Skyhawks,Southern Indiana Screaming Eagles,0.729
+01/10/2026,08:30 PM,Southern Indiana Screaming Eagles,Tennessee-Martin Skyhawks,0.271
+01/10/2026,09:00 PM,Utah State Aggies,Boise State Broncos,0.538
+01/10/2026,09:00 PM,Boise State Broncos,Utah State Aggies,0.462
+01/10/2026,10:00 PM,Loyola Marymount Lions,Santa Clara Broncos,0.143
+01/10/2026,10:00 PM,Santa Clara Broncos,Loyola Marymount Lions,0.857
+01/10/2026,10:00 PM,Wyoming Cowboys,Nevada Wolf Pack,0.335
+01/10/2026,10:00 PM,Nevada Wolf Pack,Wyoming Cowboys,0.665
+01/10/2026,10:00 PM,Brigham Young Cougars,Utah Utes,0.927
+01/10/2026,10:00 PM,Utah Utes,Brigham Young Cougars,0.073
+01/10/2026,11:00 PM,Fresno State Bulldogs,San Diego State Aztecs,0.059
+01/10/2026,11:00 PM,San Diego State Aztecs,Fresno State Bulldogs,0.941
