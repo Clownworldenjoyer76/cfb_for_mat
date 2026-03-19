@@ -1,12 +1,12 @@
 year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_ml,away_ml,book_spread,book_total,book_ml
 2026,regular,1,401856634,2026-09-05T04:00:00.000Z,Alabama,East Carolina,,,,,,,
 2026,regular,1,401856635,2026-09-05T04:00:00.000Z,Arkansas,North Alabama,,,,,,,
-2026,regular,1,401856636,2026-09-05T04:00:00.000Z,Auburn,Baylor,,,,,,,
+2026,regular,1,401856636,2026-09-05T04:00:00.000Z,Auburn,Baylor,-7.5,58.5,-285,235,Bovada,Bovada,Bovada
 2026,regular,1,401856637,2026-09-05T04:00:00.000Z,Florida,Florida Atlantic,,,,,,,
 2026,regular,1,401856658,2026-09-05T04:00:00.000Z,Georgia,Tennessee State,,,,,,,
 2026,regular,1,401856659,2026-09-05T04:00:00.000Z,Kentucky,Youngstown State,,,,,,,
-2026,regular,1,401856660,2026-09-05T04:00:00.000Z,LSU,Clemson,,,,,,,
-2026,regular,1,401856661,2026-09-05T04:00:00.000Z,Ole Miss,Louisville,,,,,,,
+2026,regular,1,401856660,2026-09-05T04:00:00.000Z,LSU,Clemson,-11.5,51.5,-480,350,Bovada,Bovada,Bovada
+2026,regular,1,401856661,2026-09-05T04:00:00.000Z,Ole Miss,Louisville,-8.5,52.5,-350,275,Bovada,Bovada,Bovada
 2026,regular,1,401856662,2026-09-05T04:00:00.000Z,Mississippi State,UL Monroe,,,,,,,
 2026,regular,1,401856663,2026-09-05T04:00:00.000Z,Missouri,Arkansas-Pine Bluff,,,,,,,
 2026,regular,1,401856664,2026-09-05T04:00:00.000Z,Oklahoma,UTEP,,,,,,,
@@ -15,7 +15,7 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2026,regular,1,401856667,2026-09-05T04:00:00.000Z,Texas,Texas State,,,,,,,
 2026,regular,1,401856668,2026-09-05T04:00:00.000Z,Texas A&M,Missouri State,,,,,,,
 2026,regular,1,401856669,2026-09-05T04:00:00.000Z,Vanderbilt,Austin Peay,,,,,,,
-2026,regular,1,401856766,2026-08-29T04:00:00.000Z,TCU,North Carolina,,,,,,,
+2026,regular,1,401856766,2026-08-29T04:00:00.000Z,TCU,North Carolina,-7.5,50.5,-290,240,Bovada,Bovada,Bovada
 2026,regular,1,401856767,2026-09-03T04:00:00.000Z,UCF,Bethune-Cookman,,,,,,,
 2026,regular,1,401856768,2026-09-03T04:00:00.000Z,Utah,Idaho,,,,,,,
 2026,regular,1,401856769,2026-09-04T04:00:00.000Z,Kansas,Long Island University,,,,,,,
@@ -31,14 +31,14 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2026,regular,1,401856779,2026-09-05T04:00:00.000Z,Iowa State,Southeast Missouri State,,,,,,,
 2026,regular,1,401856780,2026-09-05T04:00:00.000Z,West Virginia,Coastal Carolina,,,,,,,
 2026,regular,1,401858201,2026-08-29T04:00:00.000Z,Stanford,Hawai'i,,,,,,,
-2026,regular,1,401858202,2026-08-29T04:00:00.000Z,Virginia,NC State,,,,,,,
+2026,regular,1,401858202,2026-08-29T04:00:00.000Z,Virginia,NC State,-3.5,54.5,-170,145,Bovada,Bovada,Bovada
 2026,regular,1,401858203,2026-08-29T04:00:00.000Z,Florida State,New Mexico State,,,,,,,
 2026,regular,1,401858204,2026-09-03T04:00:00.000Z,Wake Forest,Akron,,,,,,,
 2026,regular,1,401858206,2026-09-04T04:00:00.000Z,Stanford,Miami,,,,,,,
 2026,regular,1,401858207,2026-09-05T04:00:00.000Z,Pittsburgh,Miami (OH),,,,,,,
 2026,regular,1,401858208,2026-09-05T04:00:00.000Z,Syracuse,New Hampshire,,,,,,,
 2026,regular,1,401858209,2026-09-05T04:00:00.000Z,Duke,Tulane,,,,,,,
-2026,regular,1,401858210,2026-09-05T04:00:00.000Z,California,UCLA,,,,,,,
+2026,regular,1,401858210,2026-09-05T04:00:00.000Z,California,UCLA,-3.5,53.5,-165,140,Bovada,Bovada,Bovada
 2026,regular,1,401858211,2026-09-05T04:00:00.000Z,Virginia Tech,VMI,,,,,,,
 2026,regular,1,401858212,2026-09-07T04:00:00.000Z,Florida State,SMU,,,,,,,
 2026,regular,1,401858422,2026-09-03T04:00:00.000Z,Minnesota,Eastern Illinois,,,,,,,
@@ -57,7 +57,7 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2026,regular,1,401858435,2026-09-05T04:00:00.000Z,Purdue,Indiana State,,,,,,,
 2026,regular,1,401858436,2026-09-05T04:00:00.000Z,USC,Fresno State,,,,,,,
 2026,regular,1,401858437,2026-09-05T04:00:00.000Z,Washington,Washington State,,,,,,,
-2026,regular,1,401858438,2026-09-06T04:00:00.000Z,Wisconsin,Notre Dame,,,,,,,
+2026,regular,1,401858438,2026-09-06T04:00:00.000Z,Wisconsin,Notre Dame,16.5,46.5,650,-1100,Bovada,Bovada,Bovada
 2026,regular,1,401860878,2026-09-05T04:00:00.000Z,Colorado State,Wyoming,,,,,,,
 2026,regular,1,401860879,2026-09-05T04:00:00.000Z,San Diego State,Portland State,,,,,,,
 2026,regular,1,401860880,2026-09-05T04:00:00.000Z,Utah State,Idaho State,,,,,,,
@@ -80,10 +80,10 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2026,regular,2,401856676,2026-09-12T04:00:00.000Z,Ole Miss,Charlotte,,,,,,,
 2026,regular,2,401856677,2026-09-12T04:00:00.000Z,Minnesota,Mississippi State,,,,,,,
 2026,regular,2,401856678,2026-09-12T04:00:00.000Z,Kansas,Missouri,,,,,,,
-2026,regular,2,401856679,2026-09-12T04:00:00.000Z,Michigan,Oklahoma,,,,,,,
+2026,regular,2,401856679,2026-09-12T04:00:00.000Z,Michigan,Oklahoma,-1.5,45.5,-115,-105,Bovada,Bovada,Bovada
 2026,regular,2,401856680,2026-09-12T04:00:00.000Z,South Carolina,Towson,,,,,,,
 2026,regular,2,401856681,2026-09-12T04:00:00.000Z,Georgia Tech,Tennessee,,,,,,,
-2026,regular,2,401856682,2026-09-12T04:00:00.000Z,Texas,Ohio State,,,,,,,
+2026,regular,2,401856682,2026-09-12T04:00:00.000Z,Texas,Ohio State,-2.5,47.5,-130,110,Bovada,Bovada,Bovada
 2026,regular,2,401856683,2026-09-12T04:00:00.000Z,Texas A&M,Arizona State,,,,,,,
 2026,regular,2,401856684,2026-09-12T04:00:00.000Z,Vanderbilt,Delaware,,,,,,,
 2026,regular,2,401856781,2026-09-12T04:00:00.000Z,Kansas State,Washington State,,,,,,,
