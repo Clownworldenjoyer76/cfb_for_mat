@@ -64,6 +64,35 @@
       ]
     },
     {
+      "id": 401858210,
+      "season": 2026,
+      "seasonType": "regular",
+      "week": 1,
+      "startDate": "2026-09-05T04:00:00.000Z",
+      "homeTeamId": 25,
+      "homeTeam": "California",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 26,
+      "awayTeam": "UCLA",
+      "awayConference": "Big Ten",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "Bovada",
+          "spread": -3.5,
+          "formattedSpread": "California -3.5",
+          "spreadOpen": -3.5,
+          "overUnder": 53.5,
+          "overUnderOpen": 53.5,
+          "homeMoneyline": -165,
+          "awayMoneyline": 140
+        }
+      ]
+    },
+    {
       "id": 401856766,
       "season": 2026,
       "seasonType": "regular",
@@ -118,35 +147,6 @@
           "overUnderOpen": 51.5,
           "homeMoneyline": -480,
           "awayMoneyline": 350
-        }
-      ]
-    },
-    {
-      "id": 401858210,
-      "season": 2026,
-      "seasonType": "regular",
-      "week": 1,
-      "startDate": "2026-09-05T04:00:00.000Z",
-      "homeTeamId": 25,
-      "homeTeam": "California",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 26,
-      "awayTeam": "UCLA",
-      "awayConference": "Big Ten",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "Bovada",
-          "spread": -3.5,
-          "formattedSpread": "California -3.5",
-          "spreadOpen": -3.5,
-          "overUnder": 53.5,
-          "overUnderOpen": 53.5,
-          "homeMoneyline": -165,
-          "awayMoneyline": 140
         }
       ]
     },
