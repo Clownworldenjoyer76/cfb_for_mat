@@ -35,35 +35,6 @@
       ]
     },
     {
-      "id": 401856661,
-      "season": 2026,
-      "seasonType": "regular",
-      "week": 1,
-      "startDate": "2026-09-05T04:00:00.000Z",
-      "homeTeamId": 145,
-      "homeTeam": "Ole Miss",
-      "homeConference": "SEC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 97,
-      "awayTeam": "Louisville",
-      "awayConference": "ACC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "Bovada",
-          "spread": -8.5,
-          "formattedSpread": "Ole Miss -8.5",
-          "spreadOpen": -8.5,
-          "overUnder": 52.5,
-          "overUnderOpen": 52.5,
-          "homeMoneyline": -350,
-          "awayMoneyline": 275
-        }
-      ]
-    },
-    {
       "id": 401858210,
       "season": 2026,
       "seasonType": "regular",
@@ -93,6 +64,64 @@
       ]
     },
     {
+      "id": 401856660,
+      "season": 2026,
+      "seasonType": "regular",
+      "week": 1,
+      "startDate": "2026-09-05T04:00:00.000Z",
+      "homeTeamId": 99,
+      "homeTeam": "LSU",
+      "homeConference": "SEC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 228,
+      "awayTeam": "Clemson",
+      "awayConference": "ACC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "Bovada",
+          "spread": -11.5,
+          "formattedSpread": "LSU -11.5",
+          "spreadOpen": -11.5,
+          "overUnder": 50.5,
+          "overUnderOpen": 51.5,
+          "homeMoneyline": -480,
+          "awayMoneyline": 350
+        }
+      ]
+    },
+    {
+      "id": 401856661,
+      "season": 2026,
+      "seasonType": "regular",
+      "week": 1,
+      "startDate": "2026-09-05T04:00:00.000Z",
+      "homeTeamId": 145,
+      "homeTeam": "Ole Miss",
+      "homeConference": "SEC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 97,
+      "awayTeam": "Louisville",
+      "awayConference": "ACC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "Bovada",
+          "spread": -7.5,
+          "formattedSpread": "Ole Miss -7.5",
+          "spreadOpen": -8.5,
+          "overUnder": 52.5,
+          "overUnderOpen": 52.5,
+          "homeMoneyline": -350,
+          "awayMoneyline": 275
+        }
+      ]
+    },
+    {
       "id": 401856766,
       "season": 2026,
       "seasonType": "regular",
@@ -118,35 +147,6 @@
           "overUnderOpen": 50.5,
           "homeMoneyline": -290,
           "awayMoneyline": 240
-        }
-      ]
-    },
-    {
-      "id": 401856660,
-      "season": 2026,
-      "seasonType": "regular",
-      "week": 1,
-      "startDate": "2026-09-05T04:00:00.000Z",
-      "homeTeamId": 99,
-      "homeTeam": "LSU",
-      "homeConference": "SEC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 228,
-      "awayTeam": "Clemson",
-      "awayConference": "ACC",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "Bovada",
-          "spread": -11.5,
-          "formattedSpread": "LSU -11.5",
-          "spreadOpen": -11.5,
-          "overUnder": 51.5,
-          "overUnderOpen": 51.5,
-          "homeMoneyline": -480,
-          "awayMoneyline": 350
         }
       ]
     },
@@ -198,8 +198,8 @@
       "lines": [
         {
           "provider": "Bovada",
-          "spread": 16.5,
-          "formattedSpread": "Notre Dame -16.5",
+          "spread": 18.5,
+          "formattedSpread": "Notre Dame -18.5",
           "spreadOpen": 16.5,
           "overUnder": 46.5,
           "overUnderOpen": 46.5,
@@ -227,8 +227,8 @@
       "lines": [
         {
           "provider": "Bovada",
-          "spread": -2.5,
-          "formattedSpread": "Texas -2.5",
+          "spread": -1.5,
+          "formattedSpread": "Texas -1.5",
           "spreadOpen": -2.5,
           "overUnder": 47.5,
           "overUnderOpen": 47.5,
@@ -256,8 +256,8 @@
       "lines": [
         {
           "provider": "Bovada",
-          "spread": -1.5,
-          "formattedSpread": "Michigan -1.5",
+          "spread": -2.5,
+          "formattedSpread": "Michigan -2.5",
           "spreadOpen": -1.5,
           "overUnder": 45.5,
           "overUnderOpen": 45.5,
