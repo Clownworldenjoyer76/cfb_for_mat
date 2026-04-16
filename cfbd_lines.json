@@ -35,35 +35,6 @@
       ]
     },
     {
-      "id": 401858210,
-      "season": 2026,
-      "seasonType": "regular",
-      "week": 1,
-      "startDate": "2026-09-05T04:00:00.000Z",
-      "homeTeamId": 25,
-      "homeTeam": "California",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 26,
-      "awayTeam": "UCLA",
-      "awayConference": "Big Ten",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "Bovada",
-          "spread": -3.5,
-          "formattedSpread": "California -3.5",
-          "spreadOpen": -3.5,
-          "overUnder": 53.5,
-          "overUnderOpen": 53.5,
-          "homeMoneyline": -165,
-          "awayMoneyline": 140
-        }
-      ]
-    },
-    {
       "id": 401856660,
       "season": 2026,
       "seasonType": "regular",
@@ -140,13 +111,42 @@
       "lines": [
         {
           "provider": "Bovada",
-          "spread": -7.5,
-          "formattedSpread": "TCU -7.5",
+          "spread": -6.5,
+          "formattedSpread": "TCU -6.5",
           "spreadOpen": -7.5,
           "overUnder": 50.5,
           "overUnderOpen": 50.5,
           "homeMoneyline": -290,
           "awayMoneyline": 240
+        }
+      ]
+    },
+    {
+      "id": 401858210,
+      "season": 2026,
+      "seasonType": "regular",
+      "week": 1,
+      "startDate": "2026-09-05T04:00:00.000Z",
+      "homeTeamId": 25,
+      "homeTeam": "California",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 26,
+      "awayTeam": "UCLA",
+      "awayConference": "Big Ten",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "Bovada",
+          "spread": -1.5,
+          "formattedSpread": "California -1.5",
+          "spreadOpen": -3.5,
+          "overUnder": 53.5,
+          "overUnderOpen": 53.5,
+          "homeMoneyline": -165,
+          "awayMoneyline": 140
         }
       ]
     },
@@ -176,35 +176,6 @@
           "overUnderOpen": 58.5,
           "homeMoneyline": -285,
           "awayMoneyline": 235
-        }
-      ]
-    },
-    {
-      "id": 401858438,
-      "season": 2026,
-      "seasonType": "regular",
-      "week": 1,
-      "startDate": "2026-09-06T04:00:00.000Z",
-      "homeTeamId": 275,
-      "homeTeam": "Wisconsin",
-      "homeConference": "Big Ten",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 87,
-      "awayTeam": "Notre Dame",
-      "awayConference": "FBS Independents",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": [
-        {
-          "provider": "Bovada",
-          "spread": 18.5,
-          "formattedSpread": "Notre Dame -18.5",
-          "spreadOpen": 16.5,
-          "overUnder": 46.5,
-          "overUnderOpen": 46.5,
-          "homeMoneyline": 650,
-          "awayMoneyline": -1100
         }
       ]
     },
@@ -263,6 +234,35 @@
           "overUnderOpen": 45.5,
           "homeMoneyline": -115,
           "awayMoneyline": -105
+        }
+      ]
+    },
+    {
+      "id": 401858438,
+      "season": 2026,
+      "seasonType": "regular",
+      "week": 1,
+      "startDate": "2026-09-06T04:00:00.000Z",
+      "homeTeamId": 275,
+      "homeTeam": "Wisconsin",
+      "homeConference": "Big Ten",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 87,
+      "awayTeam": "Notre Dame",
+      "awayConference": "FBS Independents",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "Bovada",
+          "spread": 19.5,
+          "formattedSpread": "Notre Dame -19.5",
+          "spreadOpen": 16.5,
+          "overUnder": 46.5,
+          "overUnderOpen": 46.5,
+          "homeMoneyline": 650,
+          "awayMoneyline": -1100
         }
       ]
     },
