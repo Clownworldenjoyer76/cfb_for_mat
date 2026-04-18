@@ -1,12 +1,12 @@
 year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_ml,away_ml,book_spread,book_total,book_ml
 2026,regular,1,401856634,2026-09-05T04:00:00.000Z,Alabama,East Carolina,,,,,,,
 2026,regular,1,401856635,2026-09-05T04:00:00.000Z,Arkansas,North Alabama,,,,,,,
-2026,regular,1,401856636,2026-09-05T04:00:00.000Z,Auburn,Baylor,-6.5,59.5,-269,209,DraftKings,DraftKings,DraftKings
+2026,regular,1,401856636,2026-09-05T04:00:00.000Z,Auburn,Baylor,-6.5,59.5,-265,215,DraftKings,DraftKings,DraftKings
 2026,regular,1,401856637,2026-09-05T04:00:00.000Z,Florida,Florida Atlantic,,,,,,,
 2026,regular,1,401856658,2026-09-05T04:00:00.000Z,Georgia,Tennessee State,,,,,,,
 2026,regular,1,401856659,2026-09-05T04:00:00.000Z,Kentucky,Youngstown State,,,,,,,
-2026,regular,1,401856660,2026-09-05T04:00:00.000Z,LSU,Clemson,-10.5,50.5,-453,328,DraftKings,DraftKings,DraftKings
-2026,regular,1,401856661,2026-09-06T23:30:00.000Z,Ole Miss,Louisville,-7,53.5,-297,228,DraftKings,DraftKings,DraftKings
+2026,regular,1,401856660,2026-09-05T04:00:00.000Z,LSU,Clemson,-10.5,50.5,-440,340,DraftKings,DraftKings,DraftKings
+2026,regular,1,401856661,2026-09-06T23:30:00.000Z,Ole Miss,Louisville,-7,53.5,-290,235,DraftKings,DraftKings,DraftKings
 2026,regular,1,401856662,2026-09-05T04:00:00.000Z,Mississippi State,UL Monroe,,,,,,,
 2026,regular,1,401856663,2026-09-03T04:00:00.000Z,Missouri,Arkansas-Pine Bluff,,,,,,,
 2026,regular,1,401856664,2026-09-05T04:00:00.000Z,Oklahoma,UTEP,,,,,,,
@@ -15,7 +15,7 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2026,regular,1,401856667,2026-09-05T04:00:00.000Z,Texas,Texas State,,,,,,,
 2026,regular,1,401856668,2026-09-05T04:00:00.000Z,Texas A&M,Missouri State,,,,,,,
 2026,regular,1,401856669,2026-09-05T04:00:00.000Z,Vanderbilt,Austin Peay,,,,,,,
-2026,regular,1,401856766,2026-08-29T04:00:00.000Z,TCU,North Carolina,-6.5,49.5,-249,195,DraftKings,DraftKings,DraftKings
+2026,regular,1,401856766,2026-08-29T04:00:00.000Z,TCU,North Carolina,-6.5,49.5,-245,200,DraftKings,DraftKings,DraftKings
 2026,regular,1,401856767,2026-09-03T04:00:00.000Z,UCF,Bethune-Cookman,,,,,,,
 2026,regular,1,401856768,2026-09-03T04:00:00.000Z,Utah,Idaho,,,,,,,
 2026,regular,1,401856769,2026-09-04T04:00:00.000Z,Kansas,Long Island University,,,,,,,
@@ -31,7 +31,7 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2026,regular,1,401856779,2026-09-05T04:00:00.000Z,Iowa State,Southeast Missouri State,,,,,,,
 2026,regular,1,401856780,2026-09-05T04:00:00.000Z,West Virginia,Coastal Carolina,,,,,,,
 2026,regular,1,401858201,2026-08-29T04:00:00.000Z,Stanford,Hawai'i,,,,,,,
-2026,regular,1,401858202,2026-08-29T04:00:00.000Z,Virginia,NC State,-3,53.5,-160,128,DraftKings,DraftKings,DraftKings
+2026,regular,1,401858202,2026-08-29T04:00:00.000Z,Virginia,NC State,-3,53.5,-155,130,DraftKings,DraftKings,DraftKings
 2026,regular,1,401858204,2026-09-03T04:00:00.000Z,Wake Forest,Akron,,,,,,,
 2026,regular,1,401858206,2026-09-04T04:00:00.000Z,Stanford,Miami,,,,,,,
 2026,regular,1,401858207,2026-09-05T04:00:00.000Z,Pittsburgh,Miami (OH),,,,,,,
@@ -39,7 +39,7 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2026,regular,1,401858209,2026-09-05T04:00:00.000Z,Duke,Tulane,,,,,,,
 2026,regular,1,401858210,2026-09-05T04:00:00.000Z,California,UCLA,-1.5,53.5,-165,140,Bovada,Bovada,Bovada
 2026,regular,1,401858211,2026-09-05T04:00:00.000Z,Virginia Tech,VMI,,,,,,,
-2026,regular,1,401858212,2026-09-07T04:00:00.000Z,Florida State,SMU,,,,,,,
+2026,regular,1,401858212,2026-09-07T04:00:00.000Z,Florida State,SMU,2.5,52.5,120,-142,DraftKings,DraftKings,DraftKings
 2026,regular,1,401858422,2026-09-03T04:00:00.000Z,Minnesota,Eastern Illinois,,,,,,,
 2026,regular,1,401858423,2026-09-03T04:00:00.000Z,Rutgers,Massachusetts,,,,,,,
 2026,regular,1,401858424,2026-09-05T04:00:00.000Z,Illinois,UAB,,,,,,,
@@ -56,7 +56,7 @@ year,season_type,week,game_id,kickoff_utc,home_team,away_team,spread,total,home_
 2026,regular,1,401858435,2026-09-05T04:00:00.000Z,Purdue,Indiana State,,,,,,,
 2026,regular,1,401858436,2026-09-05T04:00:00.000Z,USC,Fresno State,,,,,,,
 2026,regular,1,401858437,2026-09-05T04:00:00.000Z,Washington,Washington State,,,,,,,
-2026,regular,1,401858438,2026-09-06T04:00:00.000Z,Wisconsin,Notre Dame,20.5,47.5,970,-2400,DraftKings,DraftKings,DraftKings
+2026,regular,1,401858438,2026-09-06T04:00:00.000Z,Wisconsin,Notre Dame,20.5,47.5,1100,-2100,DraftKings,DraftKings,DraftKings
 2026,regular,1,401860878,2026-09-05T04:00:00.000Z,Colorado State,Wyoming,,,,,,,
 2026,regular,1,401860879,2026-09-05T04:00:00.000Z,San Diego State,Portland State,,,,,,,
 2026,regular,1,401860880,2026-09-05T04:00:00.000Z,Utah State,Idaho State,,,,,,,

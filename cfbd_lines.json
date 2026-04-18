@@ -39,8 +39,37 @@
           "spreadOpen": null,
           "overUnder": 53.5,
           "overUnderOpen": null,
-          "homeMoneyline": -160,
-          "awayMoneyline": 128
+          "homeMoneyline": -155,
+          "awayMoneyline": 130
+        }
+      ]
+    },
+    {
+      "id": 401858212,
+      "season": 2026,
+      "seasonType": "regular",
+      "week": 1,
+      "startDate": "2026-09-07T04:00:00.000Z",
+      "homeTeamId": 52,
+      "homeTeam": "Florida State",
+      "homeConference": "ACC",
+      "homeClassification": "fbs",
+      "homeScore": null,
+      "awayTeamId": 2567,
+      "awayTeam": "SMU",
+      "awayConference": "ACC",
+      "awayClassification": "fbs",
+      "awayScore": null,
+      "lines": [
+        {
+          "provider": "DraftKings",
+          "spread": 2.5,
+          "formattedSpread": "SMU -2.5",
+          "spreadOpen": null,
+          "overUnder": 52.5,
+          "overUnderOpen": null,
+          "homeMoneyline": 120,
+          "awayMoneyline": -142
         }
       ]
     },
@@ -68,8 +97,8 @@
           "spreadOpen": null,
           "overUnder": 49.5,
           "overUnderOpen": null,
-          "homeMoneyline": -249,
-          "awayMoneyline": 195
+          "homeMoneyline": -245,
+          "awayMoneyline": 200
         },
         {
           "provider": "Bovada",
@@ -107,8 +136,8 @@
           "spreadOpen": -6.5,
           "overUnder": 59.5,
           "overUnderOpen": null,
-          "homeMoneyline": -269,
-          "awayMoneyline": 209
+          "homeMoneyline": -265,
+          "awayMoneyline": 215
         },
         {
           "provider": "Bovada",
@@ -156,8 +185,8 @@
           "spreadOpen": null,
           "overUnder": 50.5,
           "overUnderOpen": null,
-          "homeMoneyline": -453,
-          "awayMoneyline": 328
+          "homeMoneyline": -440,
+          "awayMoneyline": 340
         }
       ]
     },
@@ -195,8 +224,8 @@
           "spreadOpen": null,
           "overUnder": 53.5,
           "overUnderOpen": null,
-          "homeMoneyline": -297,
-          "awayMoneyline": 228
+          "homeMoneyline": -290,
+          "awayMoneyline": 235
         }
       ]
     },
@@ -321,8 +350,8 @@
           "spreadOpen": null,
           "overUnder": 47.5,
           "overUnderOpen": 47.5,
-          "homeMoneyline": 970,
-          "awayMoneyline": -2400
+          "homeMoneyline": 1100,
+          "awayMoneyline": -2100
         }
       ]
     },
@@ -11824,24 +11853,6 @@
       "awayTeamId": 252,
       "awayTeam": "BYU",
       "awayConference": "Big 12",
-      "awayClassification": "fbs",
-      "awayScore": null,
-      "lines": []
-    },
-    {
-      "id": 401858212,
-      "season": 2026,
-      "seasonType": "regular",
-      "week": 1,
-      "startDate": "2026-09-07T04:00:00.000Z",
-      "homeTeamId": 52,
-      "homeTeam": "Florida State",
-      "homeConference": "ACC",
-      "homeClassification": "fbs",
-      "homeScore": null,
-      "awayTeamId": 2567,
-      "awayTeam": "SMU",
-      "awayConference": "ACC",
       "awayClassification": "fbs",
       "awayScore": null,
       "lines": []
