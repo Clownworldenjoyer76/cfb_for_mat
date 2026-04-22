@@ -19,8 +19,7 @@ on:
         description: "Output CSV path (default: market_lines.csv)"
         required: false
         type: string
-  schedule:
-    - cron: "7 13 * * *"   # 13:07 UTC daily
+  
 
 permissions:
   contents: write
