@@ -1,0 +1,11 @@
+================================================================================
+[2026-08-18 21:31:37 UTC] pull_team_stats.py started | season=2026
+source=normalized_espn_cfb_pbp
+input=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/pbp/2026_pbp.csv.gz
+output=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/team_stats/2026_team_stats.csv
+log=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_team_stats.txt
+pbp_rows=0
+output_rows=0
+output_columns=15
+status=empty_pbp_written
+================================================================================
