@@ -5,18 +5,18 @@ Reads raw_depth.csv (one row per team, fully flattened depth chart JSON)
 and writes one cleaned depth chart CSV per team.
 
 Input:
-    docs/win/football/nfl/data/raw/raw_depth.csv
+    docs/win/football/cfb/data/raw/raw_depth.csv
 
 Output:
-    docs/win/football/nfl/data/master/depth_charts/{team.abbreviation}/{team.abbreviation}_depth.csv
+    docs/win/football/cfb/data/master/depth_charts/{team.abbreviation}/{team.abbreviation}_depth.csv
 """
 
 import csv
 import os
 import re
 
-INPUT_PATH = "docs/win/football/nfl/data/raw/raw_depth.csv"
-OUTPUT_ROOT = "docs/win/football/nfl/data/master/depth_charts"
+INPUT_PATH = "docs/win/football/cfb/data/raw/raw_depth.csv"
+OUTPUT_ROOT = "docs/win/football/cfb/data/master/depth_charts"
 
 OUT_HEADER = [
     "sport",
@@ -46,7 +46,7 @@ def main():
     with open(INPUT_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
-        header = reader.fieldnames
+        header = reader.fieldnames or []
 
     athlete_id_cols = [c for c in header if ATHLETE_ID_PATTERN.match(c)]
 
@@ -77,13 +77,17 @@ def main():
             injury = ""
             injury_idx = 0
             while True:
-                injury_col = f"{prefix}.athletes.{athlete_idx}.injuries.{injury_idx}.status"
+                injury_col = (
+                    f"{prefix}.athletes.{athlete_idx}."
+                    f"injuries.{injury_idx}.status"
+                )
                 if injury_col not in row:
                     break
                 if row[injury_col]:
                     injury = row[injury_col]
                     break
                 injury_idx += 1
+
             if not injury:
                 injury = "healthy"
 
@@ -93,7 +97,7 @@ def main():
 
             team_out_rows.append({
                 "sport": "football",
-                "league": "nfl",
+                "league": "college-football",
                 "player_id": player_id,
                 "name": name,
                 "team": team_abbr,
@@ -110,12 +114,18 @@ def main():
             })
 
     total_rows_written = 0
+
     for team_abbr, out_rows in output_rows_by_team.items():
         if not team_abbr:
             continue
+
         team_folder = os.path.join(OUTPUT_ROOT, team_abbr)
         os.makedirs(team_folder, exist_ok=True)
-        out_path = os.path.join(team_folder, f"{team_abbr}_depth.csv")
+
+        out_path = os.path.join(
+            team_folder,
+            f"{team_abbr}_depth.csv",
+        )
 
         with open(out_path, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=OUT_HEADER)
@@ -123,7 +133,11 @@ def main():
             writer.writerows(out_rows)
 
         total_rows_written += len(out_rows)
-        print(f"team={team_abbr} rows={len(out_rows)} output={out_path}")
+        print(
+            f"team={team_abbr} "
+            f"rows={len(out_rows)} "
+            f"output={out_path}"
+        )
 
     print(f"total_rows_written={total_rows_written}")
 

@@ -3,10 +3,10 @@
 """
 team_power_index.py
 
-Pulls ESPN's season-level Football Power Index data for every NFL team.
+Pulls ESPN's season-level Football Power Index data for every CFB team.
 
 Output:
-    docs/win/football/nfl/data/team_power_index/team_power_index_2026.csv
+    docs/win/football/cfb/data/team_power_index/team_power_index_2026.csv
 """
 
 import csv
@@ -20,11 +20,11 @@ SEASON = 2026
 
 POWERINDEX_URL = (
     f"https://sports.core.api.espn.com/v2/sports/football/"
-    f"leagues/nfl/seasons/{SEASON}/powerindex"
+    f"leagues/college-football/seasons/{SEASON}/powerindex"
 )
 
 OUTPUT_PATH = (
-    f"docs/win/football/nfl/data/team_power_index/"
+    f"docs/win/football/cfb/data/team_power_index/"
     f"team_power_index_{SEASON}.csv"
 )
 
@@ -133,10 +133,9 @@ def main():
         else str(row["team_id"])
     )
 
-    if len(rows) != 32:
+    if not rows:
         raise RuntimeError(
-            "Expected exactly 32 NFL teams from ESPN FPI; "
-            f"found {len(rows)}."
+            "No usable CFB team power index rows were returned."
         )
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)

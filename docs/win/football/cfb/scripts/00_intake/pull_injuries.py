@@ -2,11 +2,11 @@
 """
 pull_injuries.py
 
-Pulls NFL injury report data from ESPN's site API and writes
-docs/win/football/nfl/00_intake/injuries/{season}_injuries.csv
+Pulls CFB injury report data from ESPN's site API and writes
+docs/win/football/cfb/00_intake/injuries/{season}_injuries.csv
 
 Endpoint used:
-    https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries
+    https://site.api.espn.com/apis/site/v2/sports/football/college-football/injuries
 
 Output columns:
     season, team, player_id, player_name, position, game_status, report_date
@@ -20,8 +20,8 @@ import os
 import re
 import urllib.request
 
-INJURIES_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries"
-OUTPUT_DIR = "docs/win/football/nfl/00_intake/injuries"
+INJURIES_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/injuries"
+OUTPUT_DIR = "docs/win/football/cfb/00_intake/injuries"
 
 OUTPUT_HEADERS = [
     "season",
@@ -43,7 +43,8 @@ def extract_player_id(athlete):
     """
     Extracts the ESPN player id from the 'playercard' link href,
     since the athlete object in this endpoint has no direct id field.
-    Example href: https://www.espn.com/nfl/player/_/id/2578570/jacoby-brissett
+    Example href:
+    https://www.espn.com/college-football/player/_/id/4596437/aj-green
     """
     for link in athlete.get("links", []):
         rel = link.get("rel", [])
@@ -60,29 +61,43 @@ def main():
     season_year = data.get("season", {}).get("year", "")
 
     rows = []
+
     for team_entry in data.get("injuries", []):
         team_abbr = team_entry.get("displayName", "")
+
         for injury in team_entry.get("injuries", []):
             athlete = injury.get("athlete", {})
             position = athlete.get("position", {})
-            position_abbr = position.get("abbreviation", "") if isinstance(position, dict) else ""
 
-            rows.append({
-                "season": season_year,
-                "team": team_abbr,
-                "player_id": extract_player_id(athlete),
-                "player_name": athlete.get("displayName", ""),
-                "position": position_abbr,
-                "game_status": injury.get("status", ""),
-                "report_date": injury.get("date", ""),
-            })
+            position_abbr = (
+                position.get("abbreviation", "")
+                if isinstance(position, dict)
+                else ""
+            )
 
-    output_file = os.path.join(OUTPUT_DIR, f"{season_year}_injuries.csv")
+            rows.append(
+                {
+                    "season": season_year,
+                    "team": team_abbr,
+                    "player_id": extract_player_id(athlete),
+                    "player_name": athlete.get("displayName", ""),
+                    "position": position_abbr,
+                    "game_status": injury.get("status", ""),
+                    "report_date": injury.get("date", ""),
+                }
+            )
+
+    output_file = os.path.join(
+        OUTPUT_DIR,
+        f"{season_year}_injuries.csv",
+    )
+
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     with open(output_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=OUTPUT_HEADERS)
         writer.writeheader()
+
         for row in rows:
             writer.writerow(row)
 

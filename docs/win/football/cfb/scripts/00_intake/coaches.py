@@ -1,16 +1,16 @@
 """
 coaches.py
 
-Pulls each NFL team's current head coach from the ESPN API and writes
+Pulls each CFB team's current head coach from the ESPN API and writes
 one combined CSV.
 
 Sources:
-    https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams
-    https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/{season}/teams/{id}/coaches
+    https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams
+    https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/seasons/{season}/teams/{id}/coaches
     (coach $ref, person $ref, and career record $ref links resolved automatically)
 
 Output:
-    docs/win/football/nfl/data/master/coaches_master.csv
+    docs/win/football/cfb/data/master/coaches_master.csv
 """
 
 import csv
@@ -20,11 +20,11 @@ import urllib.request
 
 SEASON = 2026
 
-TEAMS_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
-COACHES_URL_TEMPLATE = "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/{season}/teams/{team_id}/coaches"
+TEAMS_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
+COACHES_URL_TEMPLATE = "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/seasons/{season}/teams/{team_id}/coaches"
 
-TEAM_MASTER_PATH = "docs/win/football/nfl/data/master/team_master.csv"
-OUTPUT_PATH = "docs/win/football/nfl/data/master/coaches_master.csv"
+TEAM_MASTER_PATH = "docs/win/football/cfb/data/master/team_master.csv"
+OUTPUT_PATH = "docs/win/football/cfb/data/master/coaches_master.csv"
 
 HEADER = [
     "sport",
@@ -88,6 +88,7 @@ def get_career_records(coach):
         rec_ref = rec_ref_obj.get("$ref")
         if not rec_ref:
             continue
+
         try:
             rec = fetch_json(rec_ref)
         except Exception as e:
@@ -111,7 +112,11 @@ def main():
     rows = []
 
     for team_id, team_abbr in teams:
-        url = COACHES_URL_TEMPLATE.format(season=SEASON, team_id=team_id)
+        url = COACHES_URL_TEMPLATE.format(
+            season=SEASON,
+            team_id=team_id,
+        )
+
         try:
             coaches_list = fetch_json(url)
         except Exception as e:
@@ -124,6 +129,10 @@ def main():
             continue
 
         coach_ref = items[0].get("$ref")
+        if not coach_ref:
+            print(f"team={team_abbr} coach ref missing")
+            continue
+
         try:
             coach = fetch_json(coach_ref)
         except Exception as e:
@@ -134,7 +143,7 @@ def main():
 
         rows.append({
             "sport": "football",
-            "league": "nfl",
+            "league": "college-football",
             "name": f"{coach.get('firstName', '')} {coach.get('lastName', '')}".strip(),
             "team": team_abbr,
             "team_id": team_abbr_to_id.get(team_abbr, ""),
@@ -144,9 +153,11 @@ def main():
             "id": coach.get("id", ""),
             "uid": coach.get("uid", ""),
         })
+
         print(f"team={team_abbr} done")
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+
     with open(OUTPUT_PATH, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=HEADER)
         writer.writeheader()
