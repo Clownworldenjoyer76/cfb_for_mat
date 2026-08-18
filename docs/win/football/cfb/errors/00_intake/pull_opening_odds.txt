@@ -1,9 +1,9 @@
-[2026-08-18T21:30:12.594704+00:00] Weekly schedule input: docs/win/football/cfb/00_intake/schedule/weekly/week_1_CFB_weekly_schedule.csv
-[2026-08-18T21:30:31.120419+00:00] Weekly rows loaded: 99
-[2026-08-18T21:30:31.120459+00:00] Existing opener rows loaded: 0
-[2026-08-18T21:30:31.120474+00:00] New opener rows built: 588
-[2026-08-18T21:30:31.120486+00:00] Final opener rows written: 588
-[2026-08-18T21:30:31.120498+00:00] Final opener ok rows: 0
-[2026-08-18T21:30:31.120509+00:00] Final opener missing rows: 588
-[2026-08-18T21:30:31.120521+00:00] Final opener error rows: 0
-[2026-08-18T21:30:31.120533+00:00] Output written: docs/win/football/cfb/00_intake/odds/openers/2026_CFB_openers.csv
+[2026-08-18T22:34:02.344151+00:00] Weekly schedule input: docs/win/football/cfb/00_intake/schedule/weekly/week_1_CFB_weekly_schedule.csv
+[2026-08-18T22:34:18.385094+00:00] Weekly rows loaded: 99
+[2026-08-18T22:34:18.385139+00:00] Existing opener rows loaded: 588
+[2026-08-18T22:34:18.385167+00:00] New opener rows built: 588
+[2026-08-18T22:34:18.385192+00:00] Final opener rows written: 1176
+[2026-08-18T22:34:18.385215+00:00] Final opener ok rows: 588
+[2026-08-18T22:34:18.385242+00:00] Final opener missing rows: 588
+[2026-08-18T22:34:18.385269+00:00] Final opener error rows: 0
+[2026-08-18T22:34:18.385292+00:00] Output written: docs/win/football/cfb/00_intake/odds/openers/2026_CFB_openers.csv

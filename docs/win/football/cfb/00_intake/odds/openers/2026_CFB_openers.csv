@@ -1,589 +1,1177 @@
 game_id,odds_provider_game_id,market_type,bet_side,opening_line,opening_odds_american,opening_timestamp,bookmaker,opening_spread,current_spread,spread_movement,opening_total,current_total,total_movement,opening_moneyline,current_moneyline,moneyline_movement,opener_status,opener_missing_reason,opener_http_status
+401856634,401856634,h2h,away,,1600,,Draft Kings,,,,,,,1600,2000,400,ok,,200
 401856634,401856634,h2h,away,,,,DraftKings,,,,,,,,2000,,missing,no_timestamped_espn_movement_data,200
+401856634,401856634,h2h,home,,-4000,,Draft Kings,,,,,,,-4000,-6500,-2500,ok,,200
 401856634,401856634,h2h,home,,,,DraftKings,,,,,,,,-6500,,missing,no_timestamped_espn_movement_data,200
+401856634,401856634,spreads,away,25.5,-108,,Draft Kings,25.5,28.5,3,,,,,,,ok,,200
 401856634,401856634,spreads,away,,,,DraftKings,,28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856634,401856634,spreads,home,-25.5,-112,,Draft Kings,-25.5,-28.5,-3,,,,,,,ok,,200
 401856634,401856634,spreads,home,,,,DraftKings,,-28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856634,401856634,totals,over,54.5,-105,,Draft Kings,,,,54.5,54.5,0,,,,ok,,200
 401856634,401856634,totals,over,,,,DraftKings,,,,,54.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856634,401856634,totals,under,54.5,-115,,Draft Kings,,,,54.5,54.5,0,,,,ok,,200
 401856634,401856634,totals,under,,,,DraftKings,,,,,54.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856635,401856635,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856635,401856635,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856635,401856635,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856635,401856635,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856635,401856635,spreads,away,40.5,-108,,Draft Kings,40.5,40.5,0,,,,,,,ok,,200
 401856635,401856635,spreads,away,,,,DraftKings,,40.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856635,401856635,spreads,home,-40.5,-112,,Draft Kings,-40.5,-40.5,0,,,,,,,ok,,200
 401856635,401856635,spreads,home,,,,DraftKings,,-40.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856635,401856635,totals,over,63.5,-112,,Draft Kings,,,,63.5,63.5,0,,,,ok,,200
 401856635,401856635,totals,over,,,,DraftKings,,,,,63.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856635,401856635,totals,under,63.5,-108,,Draft Kings,,,,63.5,63.5,0,,,,ok,,200
 401856635,401856635,totals,under,,,,DraftKings,,,,,63.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856636,401856636,h2h,away,,209,,Draft Kings,,,,,,,209,230,21,ok,,200
 401856636,401856636,h2h,away,,,,DraftKings,,,,,,,,230,,missing,no_timestamped_espn_movement_data,200
+401856636,401856636,h2h,home,,-269,,Draft Kings,,,,,,,-269,-285,-16,ok,,200
 401856636,401856636,h2h,home,,,,DraftKings,,,,,,,,-285,,missing,no_timestamped_espn_movement_data,200
+401856636,401856636,spreads,away,6.5,-112,,Draft Kings,6.5,7,0.5,,,,,,,ok,,200
 401856636,401856636,spreads,away,,,,DraftKings,,7,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856636,401856636,spreads,home,-6.5,-111,,Draft Kings,-6.5,-7,-0.5,,,,,,,ok,,200
 401856636,401856636,spreads,home,,,,DraftKings,,-7,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856636,401856636,totals,over,59.5,-114,,Draft Kings,,,,59.5,59.5,0,,,,ok,,200
 401856636,401856636,totals,over,,,,DraftKings,,,,,59.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856636,401856636,totals,under,59.5,-109,,Draft Kings,,,,59.5,59.5,0,,,,ok,,200
 401856636,401856636,totals,under,,,,DraftKings,,,,,59.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856637,401856637,h2h,away,,1500,,Draft Kings,,,,,,,1500,1600,100,ok,,200
 401856637,401856637,h2h,away,,,,DraftKings,,,,,,,,1600,,missing,no_timestamped_espn_movement_data,200
+401856637,401856637,h2h,home,,-3600,,Draft Kings,,,,,,,-3600,-4000,-400,ok,,200
 401856637,401856637,h2h,home,,,,DraftKings,,,,,,,,-4000,,missing,no_timestamped_espn_movement_data,200
+401856637,401856637,spreads,away,25.5,-105,,Draft Kings,25.5,26.5,1,,,,,,,ok,,200
 401856637,401856637,spreads,away,,,,DraftKings,,26.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856637,401856637,spreads,home,-25.5,-115,,Draft Kings,-25.5,-26.5,-1,,,,,,,ok,,200
 401856637,401856637,spreads,home,,,,DraftKings,,-26.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856637,401856637,totals,over,56.5,-115,,Draft Kings,,,,56.5,58.5,2,,,,ok,,200
 401856637,401856637,totals,over,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856637,401856637,totals,under,56.5,-105,,Draft Kings,,,,56.5,58.5,2,,,,ok,,200
 401856637,401856637,totals,under,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856658,401856658,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856658,401856658,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856658,401856658,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856658,401856658,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856658,401856658,spreads,away,44.5,-110,,Draft Kings,44.5,45.5,1,,,,,,,ok,,200
 401856658,401856658,spreads,away,,,,DraftKings,,45.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856658,401856658,spreads,home,-44.5,-110,,Draft Kings,-44.5,-45.5,-1,,,,,,,ok,,200
 401856658,401856658,spreads,home,,,,DraftKings,,-45.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856658,401856658,totals,over,56.5,-105,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401856658,401856658,totals,over,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856658,401856658,totals,under,56.5,-115,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401856658,401856658,totals,under,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856659,401856659,h2h,away,,1400,,Draft Kings,,,,,,,1400,1400,0,ok,,200
 401856659,401856659,h2h,away,,,,DraftKings,,,,,,,,1400,,missing,no_timestamped_espn_movement_data,200
+401856659,401856659,h2h,home,,-3200,,Draft Kings,,,,,,,-3200,-3200,0,ok,,200
 401856659,401856659,h2h,home,,,,DraftKings,,,,,,,,-3200,,missing,no_timestamped_espn_movement_data,200
+401856659,401856659,spreads,away,23.5,-112,,Draft Kings,23.5,23.5,0,,,,,,,ok,,200
 401856659,401856659,spreads,away,,,,DraftKings,,23.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856659,401856659,spreads,home,-23.5,-108,,Draft Kings,-23.5,-23.5,0,,,,,,,ok,,200
 401856659,401856659,spreads,home,,,,DraftKings,,-23.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856659,401856659,totals,over,62.5,-112,,Draft Kings,,,,62.5,62.5,0,,,,ok,,200
 401856659,401856659,totals,over,,,,DraftKings,,,,,62.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856659,401856659,totals,under,62.5,-108,,Draft Kings,,,,62.5,62.5,0,,,,ok,,200
 401856659,401856659,totals,under,,,,DraftKings,,,,,62.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856660,401856660,h2h,away,,328,,Draft Kings,,,,,,,328,285,-43,ok,,200
 401856660,401856660,h2h,away,,,,DraftKings,,,,,,,,285,,missing,no_timestamped_espn_movement_data,200
+401856660,401856660,h2h,home,,-453,,Draft Kings,,,,,,,-453,-360,93,ok,,200
 401856660,401856660,h2h,home,,,,DraftKings,,,,,,,,-360,,missing,no_timestamped_espn_movement_data,200
+401856660,401856660,spreads,away,10.5,-114,,Draft Kings,10.5,9.5,-1,,,,,,,ok,,200
 401856660,401856660,spreads,away,,,,DraftKings,,9.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856660,401856660,spreads,home,-10.5,-109,,Draft Kings,-10.5,-9.5,1,,,,,,,ok,,200
 401856660,401856660,spreads,home,,,,DraftKings,,-9.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856660,401856660,totals,over,50.5,-113,,Draft Kings,,,,50.5,51.5,1,,,,ok,,200
 401856660,401856660,totals,over,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856660,401856660,totals,under,50.5,-110,,Draft Kings,,,,50.5,51.5,1,,,,ok,,200
 401856660,401856660,totals,under,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856661,401856661,h2h,away,,228,,Draft Kings,,,,,,,228,210,-18,ok,,200
 401856661,401856661,h2h,away,,,,DraftKings,,,,,,,,210,,missing,no_timestamped_espn_movement_data,200
+401856661,401856661,h2h,home,,-297,,Draft Kings,,,,,,,-297,-258,39,ok,,200
 401856661,401856661,h2h,home,,,,DraftKings,,,,,,,,-258,,missing,no_timestamped_espn_movement_data,200
+401856661,401856661,spreads,away,7,-110,,Draft Kings,7,6.5,-0.5,,,,,,,ok,,200
 401856661,401856661,spreads,away,,,,DraftKings,,6.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856661,401856661,spreads,home,-7,-113,,Draft Kings,-7,-6.5,0.5,,,,,,,ok,,200
 401856661,401856661,spreads,home,,,,DraftKings,,-6.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856661,401856661,totals,over,53.5,-114,,Draft Kings,,,,53.5,55.5,2,,,,ok,,200
 401856661,401856661,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856661,401856661,totals,under,53.5,-109,,Draft Kings,,,,53.5,55.5,2,,,,ok,,200
 401856661,401856661,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856662,401856662,h2h,away,,2000,,Draft Kings,,,,,,,2000,1500,-500,ok,,200
 401856662,401856662,h2h,away,,,,DraftKings,,,,,,,,1500,,missing,no_timestamped_espn_movement_data,200
+401856662,401856662,h2h,home,,-6500,,Draft Kings,,,,,,,-6500,-3600,2900,ok,,200
 401856662,401856662,h2h,home,,,,DraftKings,,,,,,,,-3600,,missing,no_timestamped_espn_movement_data,200
+401856662,401856662,spreads,away,28.5,-115,,Draft Kings,28.5,28.5,0,,,,,,,ok,,200
 401856662,401856662,spreads,away,,,,DraftKings,,28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856662,401856662,spreads,home,-28.5,-105,,Draft Kings,-28.5,-28.5,0,,,,,,,ok,,200
 401856662,401856662,spreads,home,,,,DraftKings,,-28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856662,401856662,totals,over,54.5,-122,,Draft Kings,,,,54.5,55.5,1,,,,ok,,200
 401856662,401856662,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856662,401856662,totals,under,54.5,102,,Draft Kings,,,,54.5,55.5,1,,,,ok,,200
 401856662,401856662,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856663,401856663,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856663,401856663,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856663,401856663,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856663,401856663,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856663,401856663,spreads,away,54.5,-112,,Draft Kings,54.5,54.5,0,,,,,,,ok,,200
 401856663,401856663,spreads,away,,,,DraftKings,,54.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856663,401856663,spreads,home,-54.5,-108,,Draft Kings,-54.5,-54.5,0,,,,,,,ok,,200
 401856663,401856663,spreads,home,,,,DraftKings,,-54.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856663,401856663,totals,over,60.5,-112,,Draft Kings,,,,60.5,60.5,0,,,,ok,,200
 401856663,401856663,totals,over,,,,DraftKings,,,,,60.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856663,401856663,totals,under,60.5,-108,,Draft Kings,,,,60.5,60.5,0,,,,ok,,200
 401856663,401856663,totals,under,,,,DraftKings,,,,,60.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856664,401856664,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856664,401856664,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856664,401856664,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856664,401856664,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856664,401856664,spreads,away,40.5,-115,,Draft Kings,40.5,41.5,1,,,,,,,ok,,200
 401856664,401856664,spreads,away,,,,DraftKings,,41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856664,401856664,spreads,home,-40.5,-105,,Draft Kings,-40.5,-41.5,-1,,,,,,,ok,,200
 401856664,401856664,spreads,home,,,,DraftKings,,-41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856664,401856664,totals,over,50.5,-105,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401856664,401856664,totals,over,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856664,401856664,totals,under,50.5,-115,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401856664,401856664,totals,under,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856665,401856665,h2h,away,,3500,,Draft Kings,,,,,,,3500,5000,1500,ok,,200
 401856665,401856665,h2h,away,,,,DraftKings,,,,,,,,5000,,missing,no_timestamped_espn_movement_data,200
+401856665,401856665,h2h,home,,-20000,,Draft Kings,,,,,,,-20000,-100000,-80000,ok,,200
 401856665,401856665,h2h,home,,,,DraftKings,,,,,,,,-100000,,missing,no_timestamped_espn_movement_data,200
+401856665,401856665,spreads,away,33.5,-110,,Draft Kings,33.5,36.5,3,,,,,,,ok,,200
 401856665,401856665,spreads,away,,,,DraftKings,,36.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856665,401856665,spreads,home,-33.5,-110,,Draft Kings,-33.5,-36.5,-3,,,,,,,ok,,200
 401856665,401856665,spreads,home,,,,DraftKings,,-36.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856665,401856665,totals,over,52.5,-105,,Draft Kings,,,,52.5,53.5,1,,,,ok,,200
 401856665,401856665,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856665,401856665,totals,under,52.5,-115,,Draft Kings,,,,52.5,53.5,1,,,,ok,,200
 401856665,401856665,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856666,401856666,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856666,401856666,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856666,401856666,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856666,401856666,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856666,401856666,spreads,away,46.5,-108,,Draft Kings,46.5,46.5,0,,,,,,,ok,,200
 401856666,401856666,spreads,away,,,,DraftKings,,46.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856666,401856666,spreads,home,-46.5,-112,,Draft Kings,-46.5,-46.5,0,,,,,,,ok,,200
 401856666,401856666,spreads,home,,,,DraftKings,,-46.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856666,401856666,totals,over,66.5,-112,,Draft Kings,,,,66.5,66.5,0,,,,ok,,200
 401856666,401856666,totals,over,,,,DraftKings,,,,,66.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856666,401856666,totals,under,66.5,-108,,Draft Kings,,,,66.5,66.5,0,,,,ok,,200
 401856666,401856666,totals,under,,,,DraftKings,,,,,66.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856667,401856667,h2h,away,,2500,,Draft Kings,,,,,,,2500,3000,500,ok,,200
 401856667,401856667,h2h,away,,,,DraftKings,,,,,,,,3000,,missing,no_timestamped_espn_movement_data,200
+401856667,401856667,h2h,home,,-9000,,Draft Kings,,,,,,,-9000,-10000,-1000,ok,,200
 401856667,401856667,h2h,home,,,,DraftKings,,,,,,,,-10000,,missing,no_timestamped_espn_movement_data,200
+401856667,401856667,spreads,away,30.5,-110,,Draft Kings,30.5,30.5,0,,,,,,,ok,,200
 401856667,401856667,spreads,away,,,,DraftKings,,30.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856667,401856667,spreads,home,-30.5,-110,,Draft Kings,-30.5,-30.5,0,,,,,,,ok,,200
 401856667,401856667,spreads,home,,,,DraftKings,,-30.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856667,401856667,totals,over,,-108,,Draft Kings,,,,,,,,,,ok,,200
 401856667,401856667,totals,over,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856667,401856667,totals,under,,-112,,Draft Kings,,,,,,,,,,ok,,200
 401856667,401856667,totals,under,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856668,401856668,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856668,401856668,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856668,401856668,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856668,401856668,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856668,401856668,spreads,away,38.5,-110,,Draft Kings,38.5,40.5,2,,,,,,,ok,,200
 401856668,401856668,spreads,away,,,,DraftKings,,40.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856668,401856668,spreads,home,-38.5,-110,,Draft Kings,-38.5,-40.5,-2,,,,,,,ok,,200
 401856668,401856668,spreads,home,,,,DraftKings,,-40.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856668,401856668,totals,over,52.5,-115,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401856668,401856668,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856668,401856668,totals,under,52.5,-105,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401856668,401856668,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856669,401856669,h2h,away,,4000,,Draft Kings,,,,,,,4000,4000,0,ok,,200
 401856669,401856669,h2h,away,,,,DraftKings,,,,,,,,4000,,missing,no_timestamped_espn_movement_data,200
+401856669,401856669,h2h,home,,-50000,,Draft Kings,,,,,,,-50000,-50000,0,ok,,200
 401856669,401856669,h2h,home,,,,DraftKings,,,,,,,,-50000,,missing,no_timestamped_espn_movement_data,200
+401856669,401856669,spreads,away,30.5,-108,,Draft Kings,30.5,30.5,0,,,,,,,ok,,200
 401856669,401856669,spreads,away,,,,DraftKings,,30.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856669,401856669,spreads,home,-30.5,-112,,Draft Kings,-30.5,-30.5,0,,,,,,,ok,,200
 401856669,401856669,spreads,home,,,,DraftKings,,-30.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856669,401856669,totals,over,61.5,-112,,Draft Kings,,,,61.5,61.5,0,,,,ok,,200
 401856669,401856669,totals,over,,,,DraftKings,,,,,61.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856669,401856669,totals,under,61.5,-108,,Draft Kings,,,,61.5,61.5,0,,,,ok,,200
 401856669,401856669,totals,under,,,,DraftKings,,,,,61.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856766,401856766,h2h,away,,195,,Draft Kings,,,,,,,195,260,65,ok,,200
 401856766,401856766,h2h,away,,,,DraftKings,,,,,,,,260,,missing,no_timestamped_espn_movement_data,200
+401856766,401856766,h2h,home,,-249,,Draft Kings,,,,,,,-249,-325,-76,ok,,200
 401856766,401856766,h2h,home,,,,DraftKings,,,,,,,,-325,,missing,no_timestamped_espn_movement_data,200
+401856766,401856766,spreads,away,6.5,-114,,Draft Kings,6.5,7.5,1,,,,,,,ok,,200
 401856766,401856766,spreads,away,,,,DraftKings,,7.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856766,401856766,spreads,home,-6.5,-109,,Draft Kings,-6.5,-7.5,-1,,,,,,,ok,,200
 401856766,401856766,spreads,home,,,,DraftKings,,-7.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856766,401856766,totals,over,49.5,-115,,Draft Kings,,,,49.5,47.5,-2,,,,ok,,200
 401856766,401856766,totals,over,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856766,401856766,totals,under,49.5,-108,,Draft Kings,,,,49.5,47.5,-2,,,,ok,,200
 401856766,401856766,totals,under,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856767,401856767,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856767,401856767,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856767,401856767,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856767,401856767,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856767,401856767,spreads,away,41.5,-110,,Draft Kings,41.5,41.5,0,,,,,,,ok,,200
 401856767,401856767,spreads,away,,,,DraftKings,,41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856767,401856767,spreads,home,-41.5,-110,,Draft Kings,-41.5,-41.5,0,,,,,,,ok,,200
 401856767,401856767,spreads,home,,,,DraftKings,,-41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856767,401856767,totals,over,,-112,,Draft Kings,,,,,,,,,,ok,,200
 401856767,401856767,totals,over,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856767,401856767,totals,under,,,,Draft Kings,,,,,,,,,,ok,,200
 401856767,401856767,totals,under,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856768,401856768,h2h,away,,4000,,Draft Kings,,,,,,,4000,4000,0,ok,,200
 401856768,401856768,h2h,away,,,,DraftKings,,,,,,,,4000,,missing,no_timestamped_espn_movement_data,200
+401856768,401856768,h2h,home,,-50000,,Draft Kings,,,,,,,-50000,-50000,0,ok,,200
 401856768,401856768,h2h,home,,,,DraftKings,,,,,,,,-50000,,missing,no_timestamped_espn_movement_data,200
+401856768,401856768,spreads,away,32.5,-108,,Draft Kings,32.5,32.5,0,,,,,,,ok,,200
 401856768,401856768,spreads,away,,,,DraftKings,,32.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856768,401856768,spreads,home,-32.5,-112,,Draft Kings,-32.5,-32.5,0,,,,,,,ok,,200
 401856768,401856768,spreads,home,,,,DraftKings,,-32.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856768,401856768,totals,over,56.5,-112,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401856768,401856768,totals,over,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856768,401856768,totals,under,56.5,-108,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401856768,401856768,totals,under,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856769,401856769,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856769,401856769,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856769,401856769,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856769,401856769,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856769,401856769,spreads,away,38.5,-115,,Draft Kings,38.5,38.5,0,,,,,,,ok,,200
 401856769,401856769,spreads,away,,,,DraftKings,,38.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856769,401856769,spreads,home,-38.5,-105,,Draft Kings,-38.5,-38.5,0,,,,,,,ok,,200
 401856769,401856769,spreads,home,,,,DraftKings,,-38.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856769,401856769,totals,over,53.5,-112,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401856769,401856769,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856769,401856769,totals,under,53.5,-108,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401856769,401856769,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856770,401856770,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856770,401856770,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856770,401856770,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856770,401856770,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856770,401856770,spreads,away,42.5,-108,,Draft Kings,42.5,42.5,0,,,,,,,ok,,200
 401856770,401856770,spreads,away,,,,DraftKings,,42.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856770,401856770,spreads,home,-42.5,-112,,Draft Kings,-42.5,-42.5,0,,,,,,,ok,,200
 401856770,401856770,spreads,home,,,,DraftKings,,-42.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856770,401856770,totals,over,59.5,-108,,Draft Kings,,,,59.5,59.5,0,,,,ok,,200
 401856770,401856770,totals,over,,,,DraftKings,,,,,59.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856770,401856770,totals,under,59.5,-112,,Draft Kings,,,,59.5,59.5,0,,,,ok,,200
 401856770,401856770,totals,under,,,,DraftKings,,,,,59.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856771,401856771,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856771,401856771,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856771,401856771,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856771,401856771,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856771,401856771,spreads,away,40.5,-108,,Draft Kings,40.5,40.5,0,,,,,,,ok,,200
 401856771,401856771,spreads,away,,,,DraftKings,,40.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856771,401856771,spreads,home,-40.5,-112,,Draft Kings,-40.5,-40.5,0,,,,,,,ok,,200
 401856771,401856771,spreads,home,,,,DraftKings,,-40.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856771,401856771,totals,over,55.5,-115,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401856771,401856771,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856771,401856771,totals,under,55.5,-105,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401856771,401856771,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856772,401856772,h2h,away,,-520,,Draft Kings,,,,,,,-520,-625,-105,ok,,200
 401856772,401856772,h2h,away,,,,DraftKings,,,,,,,,-625,,missing,no_timestamped_espn_movement_data,200
+401856772,401856772,h2h,home,,390,,Draft Kings,,,,,,,390,455,65,ok,,200
 401856772,401856772,h2h,home,,,,DraftKings,,,,,,,,455,,missing,no_timestamped_espn_movement_data,200
+401856772,401856772,spreads,away,-11.5,-112,,Draft Kings,-11.5,-14.5,-3,,,,,,,ok,,200
 401856772,401856772,spreads,away,,,,DraftKings,,-14.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856772,401856772,spreads,home,11.5,-108,,Draft Kings,11.5,14.5,3,,,,,,,ok,,200
 401856772,401856772,spreads,home,,,,DraftKings,,14.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856772,401856772,totals,over,61.5,-112,,Draft Kings,,,,61.5,61.5,0,,,,ok,,200
 401856772,401856772,totals,over,,,,DraftKings,,,,,61.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856772,401856772,totals,under,61.5,-108,,Draft Kings,,,,61.5,61.5,0,,,,ok,,200
 401856772,401856772,totals,under,,,,DraftKings,,,,,61.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856773,401856773,h2h,away,,3000,,Draft Kings,,,,,,,3000,3000,0,ok,,200
 401856773,401856773,h2h,away,,,,DraftKings,,,,,,,,3000,,missing,no_timestamped_espn_movement_data,200
+401856773,401856773,h2h,home,,-10000,,Draft Kings,,,,,,,-10000,-10000,0,ok,,200
 401856773,401856773,h2h,home,,,,DraftKings,,,,,,,,-10000,,missing,no_timestamped_espn_movement_data,200
+401856773,401856773,spreads,away,31.5,-112,,Draft Kings,31.5,31.5,0,,,,,,,ok,,200
 401856773,401856773,spreads,away,,,,DraftKings,,31.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856773,401856773,spreads,home,-31.5,-108,,Draft Kings,-31.5,-31.5,0,,,,,,,ok,,200
 401856773,401856773,spreads,home,,,,DraftKings,,-31.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856773,401856773,totals,over,56.5,-110,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401856773,401856773,totals,over,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856773,401856773,totals,under,56.5,-110,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401856773,401856773,totals,under,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856774,401856774,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856774,401856774,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856774,401856774,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856774,401856774,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856774,401856774,spreads,away,41.5,-115,,Draft Kings,41.5,41.5,0,,,,,,,ok,,200
 401856774,401856774,spreads,away,,,,DraftKings,,41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856774,401856774,spreads,home,-41.5,-105,,Draft Kings,-41.5,-41.5,0,,,,,,,ok,,200
 401856774,401856774,spreads,home,,,,DraftKings,,-41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856774,401856774,totals,over,52.5,-112,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401856774,401856774,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856774,401856774,totals,under,52.5,-108,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401856774,401856774,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856775,401856775,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401856775,401856775,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856775,401856775,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401856775,401856775,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856775,401856775,spreads,away,47.5,-110,,Draft Kings,47.5,47.5,0,,,,,,,ok,,200
 401856775,401856775,spreads,away,,,,DraftKings,,47.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856775,401856775,spreads,home,-47.5,-110,,Draft Kings,-47.5,-47.5,0,,,,,,,ok,,200
 401856775,401856775,spreads,home,,,,DraftKings,,-47.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856775,401856775,totals,over,54.5,-112,,Draft Kings,,,,54.5,54.5,0,,,,ok,,200
 401856775,401856775,totals,over,,,,DraftKings,,,,,54.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856775,401856775,totals,under,54.5,-108,,Draft Kings,,,,54.5,54.5,0,,,,ok,,200
 401856775,401856775,totals,under,,,,DraftKings,,,,,54.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856776,401856776,h2h,away,,235,,Draft Kings,,,,,,,235,220,-15,ok,,200
 401856776,401856776,h2h,away,,,,DraftKings,,,,,,,,220,,missing,no_timestamped_espn_movement_data,200
+401856776,401856776,h2h,home,,-290,,Draft Kings,,,,,,,-290,-270,20,ok,,200
 401856776,401856776,h2h,home,,,,DraftKings,,,,,,,,-270,,missing,no_timestamped_espn_movement_data,200
+401856776,401856776,spreads,away,7,-110,,Draft Kings,7,7,0,,,,,,,ok,,200
 401856776,401856776,spreads,away,,,,DraftKings,,7,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856776,401856776,spreads,home,-7,-110,,Draft Kings,-7,-7,0,,,,,,,ok,,200
 401856776,401856776,spreads,home,,,,DraftKings,,-7,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856776,401856776,totals,over,51.5,-112,,Draft Kings,,,,51.5,50.5,-1,,,,ok,,200
 401856776,401856776,totals,over,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856776,401856776,totals,under,51.5,-108,,Draft Kings,,,,51.5,50.5,-1,,,,ok,,200
 401856776,401856776,totals,under,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856777,401856777,h2h,away,,215,,Draft Kings,,,,,,,215,225,10,ok,,200
 401856777,401856777,h2h,away,,,,DraftKings,,,,,,,,225,,missing,no_timestamped_espn_movement_data,200
+401856777,401856777,h2h,home,,-265,,Draft Kings,,,,,,,-265,-278,-13,ok,,200
 401856777,401856777,h2h,home,,,,DraftKings,,,,,,,,-278,,missing,no_timestamped_espn_movement_data,200
+401856777,401856777,spreads,away,9.5,-115,,Draft Kings,9.5,7.5,-2,,,,,,,ok,,200
 401856777,401856777,spreads,away,,,,DraftKings,,7.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856777,401856777,spreads,home,-9.5,-105,,Draft Kings,-9.5,-7.5,2,,,,,,,ok,,200
 401856777,401856777,spreads,home,,,,DraftKings,,-7.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856777,401856777,totals,over,54.5,-112,,Draft Kings,,,,54.5,53.5,-1,,,,ok,,200
 401856777,401856777,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856777,401856777,totals,under,54.5,-108,,Draft Kings,,,,54.5,53.5,-1,,,,ok,,200
 401856777,401856777,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856778,401856778,h2h,away,,750,,Draft Kings,,,,,,,750,900,150,ok,,200
 401856778,401856778,h2h,away,,,,DraftKings,,,,,,,,900,,missing,no_timestamped_espn_movement_data,200
+401856778,401856778,h2h,home,,-1200,,Draft Kings,,,,,,,-1200,-1600,-400,ok,,200
 401856778,401856778,h2h,home,,,,DraftKings,,,,,,,,-1600,,missing,no_timestamped_espn_movement_data,200
+401856778,401856778,spreads,away,18.5,-112,,Draft Kings,18.5,20.5,2,,,,,,,ok,,200
 401856778,401856778,spreads,away,,,,DraftKings,,20.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856778,401856778,spreads,home,-18.5,-108,,Draft Kings,-18.5,-20.5,-2,,,,,,,ok,,200
 401856778,401856778,spreads,home,,,,DraftKings,,-20.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856778,401856778,totals,over,50.5,-120,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401856778,401856778,totals,over,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856778,401856778,totals,under,50.5,100,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401856778,401856778,totals,under,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856779,401856779,h2h,away,,3000,,Draft Kings,,,,,,,3000,3000,0,ok,,200
 401856779,401856779,h2h,away,,,,DraftKings,,,,,,,,3000,,missing,no_timestamped_espn_movement_data,200
+401856779,401856779,h2h,home,,-10000,,Draft Kings,,,,,,,-10000,-10000,0,ok,,200
 401856779,401856779,h2h,home,,,,DraftKings,,,,,,,,-10000,,missing,no_timestamped_espn_movement_data,200
+401856779,401856779,spreads,away,29.5,-110,,Draft Kings,29.5,29.5,0,,,,,,,ok,,200
 401856779,401856779,spreads,away,,,,DraftKings,,29.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856779,401856779,spreads,home,-29.5,-110,,Draft Kings,-29.5,-29.5,0,,,,,,,ok,,200
 401856779,401856779,spreads,home,,,,DraftKings,,-29.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856779,401856779,totals,over,54.5,-112,,Draft Kings,,,,54.5,53.5,-1,,,,ok,,200
 401856779,401856779,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856779,401856779,totals,under,54.5,-108,,Draft Kings,,,,54.5,53.5,-1,,,,ok,,200
 401856779,401856779,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856780,401856780,h2h,away,,850,,Draft Kings,,,,,,,850,800,-50,ok,,200
 401856780,401856780,h2h,away,,,,DraftKings,,,,,,,,800,,missing,no_timestamped_espn_movement_data,200
+401856780,401856780,h2h,home,,-1600,,Draft Kings,,,,,,,-1600,-1350,250,ok,,200
 401856780,401856780,h2h,home,,,,DraftKings,,,,,,,,-1350,,missing,no_timestamped_espn_movement_data,200
+401856780,401856780,spreads,away,17.5,-115,,Draft Kings,17.5,21.5,4,,,,,,,ok,,200
 401856780,401856780,spreads,away,,,,DraftKings,,21.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856780,401856780,spreads,home,-17.5,-105,,Draft Kings,-17.5,-21.5,-4,,,,,,,ok,,200
 401856780,401856780,spreads,home,,,,DraftKings,,-21.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401856780,401856780,totals,over,58.5,-105,,Draft Kings,,,,58.5,58.5,0,,,,ok,,200
 401856780,401856780,totals,over,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401856780,401856780,totals,under,58.5,-115,,Draft Kings,,,,58.5,58.5,0,,,,ok,,200
 401856780,401856780,totals,under,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858201,401858201,h2h,away,,154,,Draft Kings,,,,,,,154,185,31,ok,,200
 401858201,401858201,h2h,away,,,,DraftKings,,,,,,,,185,,missing,no_timestamped_espn_movement_data,200
+401858201,401858201,h2h,home,,-175,,Draft Kings,,,,,,,-175,-225,-50,ok,,200
 401858201,401858201,h2h,home,,,,DraftKings,,,,,,,,-225,,missing,no_timestamped_espn_movement_data,200
+401858201,401858201,spreads,away,3,-112,,Draft Kings,3,6,3,,,,,,,ok,,200
 401858201,401858201,spreads,away,,,,DraftKings,,6,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858201,401858201,spreads,home,-3,-108,,Draft Kings,-3,-6,-3,,,,,,,ok,,200
 401858201,401858201,spreads,home,,,,DraftKings,,-6,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858201,401858201,totals,over,50.5,-112,,Draft Kings,,,,50.5,49.5,-1,,,,ok,,200
 401858201,401858201,totals,over,,,,DraftKings,,,,,49.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858201,401858201,totals,under,50.5,-108,,Draft Kings,,,,50.5,49.5,-1,,,,ok,,200
 401858201,401858201,totals,under,,,,DraftKings,,,,,49.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858202,401858202,h2h,away,,128,,Draft Kings,,,,,,,128,180,52,ok,,200
 401858202,401858202,h2h,away,,,,DraftKings,,,,,,,,180,,missing,no_timestamped_espn_movement_data,200
+401858202,401858202,h2h,home,,-160,,Draft Kings,,,,,,,-160,-218,-58,ok,,200
 401858202,401858202,h2h,home,,,,DraftKings,,,,,,,,-218,,missing,no_timestamped_espn_movement_data,200
+401858202,401858202,spreads,away,3,-115,,Draft Kings,3,5.5,2.5,,,,,,,ok,,200
 401858202,401858202,spreads,away,,,,DraftKings,,5.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858202,401858202,spreads,home,-3,-108,,Draft Kings,-3,-5.5,-2.5,,,,,,,ok,,200
 401858202,401858202,spreads,home,,,,DraftKings,,-5.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858202,401858202,totals,over,53.5,-114,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401858202,401858202,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858202,401858202,totals,under,53.5,-109,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401858202,401858202,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858204,401858204,h2h,away,,1200,,Draft Kings,,,,,,,1200,1300,100,ok,,200
 401858204,401858204,h2h,away,,,,DraftKings,,,,,,,,1300,,missing,no_timestamped_espn_movement_data,200
+401858204,401858204,h2h,home,,-2400,,Draft Kings,,,,,,,-2400,-2800,-400,ok,,200
 401858204,401858204,h2h,home,,,,DraftKings,,,,,,,,-2800,,missing,no_timestamped_espn_movement_data,200
+401858204,401858204,spreads,away,22.5,-110,,Draft Kings,22.5,23.5,1,,,,,,,ok,,200
 401858204,401858204,spreads,away,,,,DraftKings,,23.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858204,401858204,spreads,home,-22.5,-110,,Draft Kings,-22.5,-23.5,-1,,,,,,,ok,,200
 401858204,401858204,spreads,home,,,,DraftKings,,-23.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858204,401858204,totals,over,49.5,-115,,Draft Kings,,,,49.5,49.5,0,,,,ok,,200
 401858204,401858204,totals,over,,,,DraftKings,,,,,49.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858204,401858204,totals,under,49.5,-105,,Draft Kings,,,,49.5,49.5,0,,,,ok,,200
 401858204,401858204,totals,under,,,,DraftKings,,,,,49.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858206,401858206,h2h,away,,-2100,,Draft Kings,,,,,,,-2100,-3200,-1100,ok,,200
 401858206,401858206,h2h,away,,,,DraftKings,,,,,,,,-3200,,missing,no_timestamped_espn_movement_data,200
+401858206,401858206,h2h,home,,1100,,Draft Kings,,,,,,,1100,1400,300,ok,,200
 401858206,401858206,h2h,home,,,,DraftKings,,,,,,,,1400,,missing,no_timestamped_espn_movement_data,200
+401858206,401858206,spreads,away,-21.5,-110,,Draft Kings,-21.5,-24.5,-3,,,,,,,ok,,200
 401858206,401858206,spreads,away,,,,DraftKings,,-24.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858206,401858206,spreads,home,21.5,-110,,Draft Kings,21.5,24.5,3,,,,,,,ok,,200
 401858206,401858206,spreads,home,,,,DraftKings,,24.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858206,401858206,totals,over,48.5,-115,,Draft Kings,,,,48.5,48.5,0,,,,ok,,200
 401858206,401858206,totals,over,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858206,401858206,totals,under,48.5,-105,,Draft Kings,,,,48.5,48.5,0,,,,ok,,200
 401858206,401858206,totals,under,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858207,401858207,h2h,away,,525,,Draft Kings,,,,,,,525,550,25,ok,,200
 401858207,401858207,h2h,away,,,,DraftKings,,,,,,,,550,,missing,no_timestamped_espn_movement_data,200
+401858207,401858207,h2h,home,,-750,,Draft Kings,,,,,,,-750,-800,-50,ok,,200
 401858207,401858207,h2h,home,,,,DraftKings,,,,,,,,-800,,missing,no_timestamped_espn_movement_data,200
+401858207,401858207,spreads,away,16.5,-110,,Draft Kings,16.5,16.5,0,,,,,,,ok,,200
 401858207,401858207,spreads,away,,,,DraftKings,,16.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858207,401858207,spreads,home,-16.5,-110,,Draft Kings,-16.5,-16.5,0,,,,,,,ok,,200
 401858207,401858207,spreads,home,,,,DraftKings,,-16.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858207,401858207,totals,over,50.5,-110,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401858207,401858207,totals,over,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858207,401858207,totals,under,50.5,-110,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401858207,401858207,totals,under,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858208,401858208,h2h,away,,5000,,Draft Kings,,,,,,,5000,5000,0,ok,,200
 401858208,401858208,h2h,away,,,,DraftKings,,,,,,,,5000,,missing,no_timestamped_espn_movement_data,200
+401858208,401858208,h2h,home,,-100000,,Draft Kings,,,,,,,-100000,-100000,0,ok,,200
 401858208,401858208,h2h,home,,,,DraftKings,,,,,,,,-100000,,missing,no_timestamped_espn_movement_data,200
+401858208,401858208,spreads,away,32.5,-110,,Draft Kings,32.5,32.5,0,,,,,,,ok,,200
 401858208,401858208,spreads,away,,,,DraftKings,,32.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858208,401858208,spreads,home,-32.5,-110,,Draft Kings,-32.5,-32.5,0,,,,,,,ok,,200
 401858208,401858208,spreads,home,,,,DraftKings,,-32.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858208,401858208,totals,over,55.5,-112,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401858208,401858208,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858208,401858208,totals,under,55.5,-108,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401858208,401858208,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858209,401858209,h2h,away,,350,,Draft Kings,,,,,,,350,275,-75,ok,,200
 401858209,401858209,h2h,away,,,,DraftKings,,,,,,,,275,,missing,no_timestamped_espn_movement_data,200
+401858209,401858209,h2h,home,,-455,,Draft Kings,,,,,,,-455,-345,110,ok,,200
 401858209,401858209,h2h,home,,,,DraftKings,,,,,,,,-345,,missing,no_timestamped_espn_movement_data,200
+401858209,401858209,spreads,away,8.5,-108,,Draft Kings,8.5,9.5,1,,,,,,,ok,,200
 401858209,401858209,spreads,away,,,,DraftKings,,9.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858209,401858209,spreads,home,-8.5,-112,,Draft Kings,-8.5,-9.5,-1,,,,,,,ok,,200
 401858209,401858209,spreads,home,,,,DraftKings,,-9.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858209,401858209,totals,over,53.5,-112,,Draft Kings,,,,53.5,52.5,-1,,,,ok,,200
 401858209,401858209,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858209,401858209,totals,under,53.5,-108,,Draft Kings,,,,53.5,52.5,-1,,,,ok,,200
 401858209,401858209,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858210,401858210,h2h,away,,-105,,Draft Kings,,,,,,,-105,-108,-3,ok,,200
 401858210,401858210,h2h,away,,,,DraftKings,,,,,,,,-108,,missing,no_timestamped_espn_movement_data,200
+401858210,401858210,h2h,home,,-115,,Draft Kings,,,,,,,-115,-112,3,ok,,200
 401858210,401858210,h2h,home,,,,DraftKings,,,,,,,,-112,,missing,no_timestamped_espn_movement_data,200
+401858210,401858210,spreads,away,1.5,-108,,Draft Kings,1.5,1.5,0,,,,,,,ok,,200
 401858210,401858210,spreads,away,,,,DraftKings,,1.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858210,401858210,spreads,home,-1.5,-112,,Draft Kings,-1.5,-1.5,0,,,,,,,ok,,200
 401858210,401858210,spreads,home,,,,DraftKings,,-1.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858210,401858210,totals,over,53.5,-110,,Draft Kings,,,,53.5,55.5,2,,,,ok,,200
 401858210,401858210,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858210,401858210,totals,under,53.5,-110,,Draft Kings,,,,53.5,55.5,2,,,,ok,,200
 401858210,401858210,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858211,401858211,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401858211,401858211,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858211,401858211,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401858211,401858211,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858211,401858211,spreads,away,50.5,-108,,Draft Kings,50.5,50.5,0,,,,,,,ok,,200
 401858211,401858211,spreads,away,,,,DraftKings,,50.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858211,401858211,spreads,home,-50.5,-112,,Draft Kings,-50.5,-50.5,0,,,,,,,ok,,200
 401858211,401858211,spreads,home,,,,DraftKings,,-50.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858211,401858211,totals,over,57.5,-112,,Draft Kings,,,,57.5,57.5,0,,,,ok,,200
 401858211,401858211,totals,over,,,,DraftKings,,,,,57.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858211,401858211,totals,under,57.5,-108,,Draft Kings,,,,57.5,57.5,0,,,,ok,,200
 401858211,401858211,totals,under,,,,DraftKings,,,,,57.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858212,401858212,h2h,away,,-144,,Draft Kings,,,,,,,-144,-135,9,ok,,200
 401858212,401858212,h2h,away,,,,DraftKings,,,,,,,,-135,,missing,no_timestamped_espn_movement_data,200
+401858212,401858212,h2h,home,,116,,Draft Kings,,,,,,,116,114,-2,ok,,200
 401858212,401858212,h2h,home,,,,DraftKings,,,,,,,,114,,missing,no_timestamped_espn_movement_data,200
+401858212,401858212,spreads,away,-2.5,-114,,Draft Kings,-2.5,-2.5,0,,,,,,,ok,,200
 401858212,401858212,spreads,away,,,,DraftKings,,-2.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858212,401858212,spreads,home,2.5,-109,,Draft Kings,2.5,2.5,0,,,,,,,ok,,200
 401858212,401858212,spreads,home,,,,DraftKings,,2.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858212,401858212,totals,over,52.5,-113,,Draft Kings,,,,52.5,53.5,1,,,,ok,,200
 401858212,401858212,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858212,401858212,totals,under,52.5,-110,,Draft Kings,,,,52.5,53.5,1,,,,ok,,200
 401858212,401858212,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858422,401858422,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401858422,401858422,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858422,401858422,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401858422,401858422,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858422,401858422,spreads,away,43.5,-110,,Draft Kings,43.5,43.5,0,,,,,,,ok,,200
 401858422,401858422,spreads,away,,,,DraftKings,,43.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858422,401858422,spreads,home,-43.5,-110,,Draft Kings,-43.5,-43.5,0,,,,,,,ok,,200
 401858422,401858422,spreads,home,,,,DraftKings,,-43.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858422,401858422,totals,over,,-112,,Draft Kings,,,,,,,,,,ok,,200
 401858422,401858422,totals,over,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858422,401858422,totals,under,,-108,,Draft Kings,,,,,,,,,,ok,,200
 401858422,401858422,totals,under,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858423,401858423,h2h,away,,3000,,Draft Kings,,,,,,,3000,2000,-1000,ok,,200
 401858423,401858423,h2h,away,,,,DraftKings,,,,,,,,2000,,missing,no_timestamped_espn_movement_data,200
+401858423,401858423,h2h,home,,-10000,,Draft Kings,,,,,,,-10000,-6500,3500,ok,,200
 401858423,401858423,h2h,home,,,,DraftKings,,,,,,,,-6500,,missing,no_timestamped_espn_movement_data,200
+401858423,401858423,spreads,away,30.5,-110,,Draft Kings,30.5,30.5,0,,,,,,,ok,,200
 401858423,401858423,spreads,away,,,,DraftKings,,30.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858423,401858423,spreads,home,-30.5,-110,,Draft Kings,-30.5,-30.5,0,,,,,,,ok,,200
 401858423,401858423,spreads,home,,,,DraftKings,,-30.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858423,401858423,totals,over,55.5,-110,,Draft Kings,,,,55.5,53.5,-2,,,,ok,,200
 401858423,401858423,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858423,401858423,totals,under,55.5,-110,,Draft Kings,,,,55.5,53.5,-2,,,,ok,,200
 401858423,401858423,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858424,401858424,h2h,away,,2000,,Draft Kings,,,,,,,2000,2200,200,ok,,200
 401858424,401858424,h2h,away,,,,DraftKings,,,,,,,,2200,,missing,no_timestamped_espn_movement_data,200
+401858424,401858424,h2h,home,,-6500,,Draft Kings,,,,,,,-6500,-8000,-1500,ok,,200
 401858424,401858424,h2h,home,,,,DraftKings,,,,,,,,-8000,,missing,no_timestamped_espn_movement_data,200
+401858424,401858424,spreads,away,27.5,-112,,Draft Kings,27.5,27.5,0,,,,,,,ok,,200
 401858424,401858424,spreads,away,,,,DraftKings,,27.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858424,401858424,spreads,home,-27.5,-108,,Draft Kings,-27.5,-27.5,0,,,,,,,ok,,200
 401858424,401858424,spreads,home,,,,DraftKings,,-27.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858424,401858424,totals,over,56.5,-115,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401858424,401858424,totals,over,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858424,401858424,totals,under,56.5,-105,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401858424,401858424,totals,under,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858425,401858425,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401858425,401858425,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858425,401858425,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401858425,401858425,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858425,401858425,spreads,away,40.5,-112,,Draft Kings,40.5,41.5,1,,,,,,,ok,,200
 401858425,401858425,spreads,away,,,,DraftKings,,41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858425,401858425,spreads,home,-40.5,-108,,Draft Kings,-40.5,-41.5,-1,,,,,,,ok,,200
 401858425,401858425,spreads,home,,,,DraftKings,,-41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858425,401858425,totals,over,55.5,-118,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401858425,401858425,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858425,401858425,totals,under,55.5,-102,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401858425,401858425,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858426,401858426,h2h,away,,2500,,Draft Kings,,,,,,,2500,4000,1500,ok,,200
 401858426,401858426,h2h,away,,,,DraftKings,,,,,,,,4000,,missing,no_timestamped_espn_movement_data,200
+401858426,401858426,h2h,home,,-9000,,Draft Kings,,,,,,,-9000,-50000,-41000,ok,,200
 401858426,401858426,h2h,home,,,,DraftKings,,,,,,,,-50000,,missing,no_timestamped_espn_movement_data,200
+401858426,401858426,spreads,away,29.5,-112,,Draft Kings,29.5,31.5,2,,,,,,,ok,,200
 401858426,401858426,spreads,away,,,,DraftKings,,31.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858426,401858426,spreads,home,-29.5,-108,,Draft Kings,-29.5,-31.5,-2,,,,,,,ok,,200
 401858426,401858426,spreads,home,,,,DraftKings,,-31.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858426,401858426,totals,over,43.5,-112,,Draft Kings,,,,43.5,45.5,2,,,,ok,,200
 401858426,401858426,totals,over,,,,DraftKings,,,,,45.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858426,401858426,totals,under,43.5,-108,,Draft Kings,,,,43.5,45.5,2,,,,ok,,200
 401858426,401858426,totals,under,,,,DraftKings,,,,,45.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858427,401858427,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401858427,401858427,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858427,401858427,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401858427,401858427,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858427,401858427,spreads,away,45.5,-108,,Draft Kings,45.5,45.5,0,,,,,,,ok,,200
 401858427,401858427,spreads,away,,,,DraftKings,,45.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858427,401858427,spreads,home,-45.5,-112,,Draft Kings,-45.5,-45.5,0,,,,,,,ok,,200
 401858427,401858427,spreads,home,,,,DraftKings,,-45.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858427,401858427,totals,over,56.5,-112,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401858427,401858427,totals,over,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858427,401858427,totals,under,56.5,-108,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401858427,401858427,totals,under,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858428,401858428,h2h,away,,2200,,Draft Kings,,,,,,,2200,2000,-200,ok,,200
 401858428,401858428,h2h,away,,,,DraftKings,,,,,,,,2000,,missing,no_timestamped_espn_movement_data,200
+401858428,401858428,h2h,home,,-8000,,Draft Kings,,,,,,,-8000,-6500,1500,ok,,200
 401858428,401858428,h2h,home,,,,DraftKings,,,,,,,,-6500,,missing,no_timestamped_espn_movement_data,200
+401858428,401858428,spreads,away,26.5,-110,,Draft Kings,26.5,26.5,0,,,,,,,ok,,200
 401858428,401858428,spreads,away,,,,DraftKings,,26.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858428,401858428,spreads,home,-26.5,-110,,Draft Kings,-26.5,-26.5,0,,,,,,,ok,,200
 401858428,401858428,spreads,home,,,,DraftKings,,-26.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858428,401858428,totals,over,47.5,-115,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401858428,401858428,totals,over,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858428,401858428,totals,under,47.5,-105,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401858428,401858428,totals,under,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858429,401858429,h2h,away,,310,,Draft Kings,,,,,,,310,320,10,ok,,200
 401858429,401858429,h2h,away,,,,DraftKings,,,,,,,,320,,missing,no_timestamped_espn_movement_data,200
+401858429,401858429,h2h,home,,-395,,Draft Kings,,,,,,,-395,-410,-15,ok,,200
 401858429,401858429,h2h,home,,,,DraftKings,,,,,,,,-410,,missing,no_timestamped_espn_movement_data,200
+401858429,401858429,spreads,away,10.5,-112,,Draft Kings,10.5,10.5,0,,,,,,,ok,,200
 401858429,401858429,spreads,away,,,,DraftKings,,10.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858429,401858429,spreads,home,-10.5,-108,,Draft Kings,-10.5,-10.5,0,,,,,,,ok,,200
 401858429,401858429,spreads,home,,,,DraftKings,,-10.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858429,401858429,totals,over,49.5,-108,,Draft Kings,,,,49.5,49.5,0,,,,ok,,200
 401858429,401858429,totals,over,,,,DraftKings,,,,,49.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858429,401858429,totals,under,49.5,-112,,Draft Kings,,,,49.5,49.5,0,,,,ok,,200
 401858429,401858429,totals,under,,,,DraftKings,,,,,49.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858430,401858430,h2h,away,,1300,,Draft Kings,,,,,,,1300,1400,100,ok,,200
 401858430,401858430,h2h,away,,,,DraftKings,,,,,,,,1400,,missing,no_timestamped_espn_movement_data,200
+401858430,401858430,h2h,home,,-2800,,Draft Kings,,,,,,,-2800,-3200,-400,ok,,200
 401858430,401858430,h2h,home,,,,DraftKings,,,,,,,,-3200,,missing,no_timestamped_espn_movement_data,200
+401858430,401858430,spreads,away,23.5,-115,,Draft Kings,23.5,23.5,0,,,,,,,ok,,200
 401858430,401858430,spreads,away,,,,DraftKings,,23.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858430,401858430,spreads,home,-23.5,-105,,Draft Kings,-23.5,-23.5,0,,,,,,,ok,,200
 401858430,401858430,spreads,home,,,,DraftKings,,-23.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858430,401858430,totals,over,47.5,-112,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401858430,401858430,totals,over,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858430,401858430,totals,under,47.5,-108,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401858430,401858430,totals,under,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858431,401858431,h2h,away,,425,,Draft Kings,,,,,,,425,440,15,ok,,200
 401858431,401858431,h2h,away,,,,DraftKings,,,,,,,,440,,missing,no_timestamped_espn_movement_data,200
+401858431,401858431,h2h,home,,-575,,Draft Kings,,,,,,,-575,-600,-25,ok,,200
 401858431,401858431,h2h,home,,,,DraftKings,,,,,,,,-600,,missing,no_timestamped_espn_movement_data,200
+401858431,401858431,spreads,away,11.5,-110,,Draft Kings,11.5,11.5,0,,,,,,,ok,,200
 401858431,401858431,spreads,away,,,,DraftKings,,11.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858431,401858431,spreads,home,-11.5,-110,,Draft Kings,-11.5,-11.5,0,,,,,,,ok,,200
 401858431,401858431,spreads,home,,,,DraftKings,,-11.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858431,401858431,totals,over,46.5,-115,,Draft Kings,,,,46.5,46.5,0,,,,ok,,200
 401858431,401858431,totals,over,,,,DraftKings,,,,,46.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858431,401858431,totals,under,46.5,-105,,Draft Kings,,,,46.5,46.5,0,,,,ok,,200
 401858431,401858431,totals,under,,,,DraftKings,,,,,46.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858432,401858432,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401858432,401858432,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858432,401858432,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401858432,401858432,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858432,401858432,spreads,away,49.5,-112,,Draft Kings,49.5,50.5,1,,,,,,,ok,,200
 401858432,401858432,spreads,away,,,,DraftKings,,50.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858432,401858432,spreads,home,-49.5,-108,,Draft Kings,-49.5,-50.5,-1,,,,,,,ok,,200
 401858432,401858432,spreads,home,,,,DraftKings,,-50.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858432,401858432,totals,over,56.5,-115,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401858432,401858432,totals,over,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858432,401858432,totals,under,56.5,-105,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401858432,401858432,totals,under,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858433,401858433,h2h,away,,1500,,Draft Kings,,,,,,,1500,1500,0,ok,,200
 401858433,401858433,h2h,away,,,,DraftKings,,,,,,,,1500,,missing,no_timestamped_espn_movement_data,200
+401858433,401858433,h2h,home,,-3600,,Draft Kings,,,,,,,-3600,-3600,0,ok,,200
 401858433,401858433,h2h,home,,,,DraftKings,,,,,,,,-3600,,missing,no_timestamped_espn_movement_data,200
+401858433,401858433,spreads,away,24.5,-108,,Draft Kings,24.5,24.5,0,,,,,,,ok,,200
 401858433,401858433,spreads,away,,,,DraftKings,,24.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858433,401858433,spreads,home,-24.5,-112,,Draft Kings,-24.5,-24.5,0,,,,,,,ok,,200
 401858433,401858433,spreads,home,,,,DraftKings,,-24.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858433,401858433,totals,over,52.5,-112,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401858433,401858433,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858433,401858433,totals,under,52.5,-108,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401858433,401858433,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858434,401858434,h2h,away,,1200,,Draft Kings,,,,,,,1200,1500,300,ok,,200
 401858434,401858434,h2h,away,,,,DraftKings,,,,,,,,1500,,missing,no_timestamped_espn_movement_data,200
+401858434,401858434,h2h,home,,-2400,,Draft Kings,,,,,,,-2400,-3600,-1200,ok,,200
 401858434,401858434,h2h,home,,,,DraftKings,,,,,,,,-3600,,missing,no_timestamped_espn_movement_data,200
+401858434,401858434,spreads,away,23.5,-112,,Draft Kings,23.5,24.5,1,,,,,,,ok,,200
 401858434,401858434,spreads,away,,,,DraftKings,,24.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858434,401858434,spreads,home,-23.5,-108,,Draft Kings,-23.5,-24.5,-1,,,,,,,ok,,200
 401858434,401858434,spreads,home,,,,DraftKings,,-24.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858434,401858434,totals,over,54.5,-112,,Draft Kings,,,,54.5,54.5,0,,,,ok,,200
 401858434,401858434,totals,over,,,,DraftKings,,,,,54.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858434,401858434,totals,under,54.5,-108,,Draft Kings,,,,54.5,54.5,0,,,,ok,,200
 401858434,401858434,totals,under,,,,DraftKings,,,,,54.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858435,401858435,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401858435,401858435,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858435,401858435,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401858435,401858435,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858435,401858435,spreads,away,33.5,-110,,Draft Kings,33.5,34.5,1,,,,,,,ok,,200
 401858435,401858435,spreads,away,,,,DraftKings,,34.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858435,401858435,spreads,home,-33.5,-110,,Draft Kings,-33.5,-34.5,-1,,,,,,,ok,,200
 401858435,401858435,spreads,home,,,,DraftKings,,-34.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858435,401858435,totals,over,56.5,-112,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401858435,401858435,totals,over,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858435,401858435,totals,under,56.5,-108,,Draft Kings,,,,56.5,56.5,0,,,,ok,,200
 401858435,401858435,totals,under,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858436,401858436,h2h,away,,1300,,Draft Kings,,,,,,,1300,1400,100,ok,,200
 401858436,401858436,h2h,away,,,,DraftKings,,,,,,,,1400,,missing,no_timestamped_espn_movement_data,200
+401858436,401858436,h2h,home,,-2800,,Draft Kings,,,,,,,-2800,-3200,-400,ok,,200
 401858436,401858436,h2h,home,,,,DraftKings,,,,,,,,-3200,,missing,no_timestamped_espn_movement_data,200
+401858436,401858436,spreads,away,23.5,-112,,Draft Kings,23.5,22.5,-1,,,,,,,ok,,200
 401858436,401858436,spreads,away,,,,DraftKings,,22.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858436,401858436,spreads,home,-23.5,-108,,Draft Kings,-23.5,-22.5,1,,,,,,,ok,,200
 401858436,401858436,spreads,home,,,,DraftKings,,-22.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858436,401858436,totals,over,51.5,-112,,Draft Kings,,,,51.5,51.5,0,,,,ok,,200
 401858436,401858436,totals,over,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858436,401858436,totals,under,51.5,-108,,Draft Kings,,,,51.5,51.5,0,,,,ok,,200
 401858436,401858436,totals,under,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858437,401858437,h2h,away,,1000,,Draft Kings,,,,,,,1000,1300,300,ok,,200
 401858437,401858437,h2h,away,,,,DraftKings,,,,,,,,1300,,missing,no_timestamped_espn_movement_data,200
+401858437,401858437,h2h,home,,-1800,,Draft Kings,,,,,,,-1800,-2800,-1000,ok,,200
 401858437,401858437,h2h,home,,,,DraftKings,,,,,,,,-2800,,missing,no_timestamped_espn_movement_data,200
+401858437,401858437,spreads,away,21.5,-112,,Draft Kings,21.5,22.5,1,,,,,,,ok,,200
 401858437,401858437,spreads,away,,,,DraftKings,,22.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858437,401858437,spreads,home,-21.5,-108,,Draft Kings,-21.5,-22.5,-1,,,,,,,ok,,200
 401858437,401858437,spreads,home,,,,DraftKings,,-22.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858437,401858437,totals,over,50.5,-112,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401858437,401858437,totals,over,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858437,401858437,totals,under,50.5,-108,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401858437,401858437,totals,under,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858438,401858438,h2h,away,,970,,Draft Kings,,,,,,,970,1000,30,ok,,200
 401858438,401858438,h2h,away,,,,DraftKings,,,,,,,,1000,,missing,no_timestamped_espn_movement_data,200
+401858438,401858438,h2h,home,,-2400,,Draft Kings,,,,,,,-2400,-1800,600,ok,,200
 401858438,401858438,h2h,home,,,,DraftKings,,,,,,,,-1800,,missing,no_timestamped_espn_movement_data,200
+401858438,401858438,spreads,away,-20.5,-113,,Draft Kings,-20.5,20.5,41,,,,,,,ok,,200
 401858438,401858438,spreads,away,,,,DraftKings,,20.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858438,401858438,spreads,home,20.5,-110,,Draft Kings,20.5,-20.5,-41,,,,,,,ok,,200
 401858438,401858438,spreads,home,,,,DraftKings,,-20.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401858438,401858438,totals,over,47.5,-112,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401858438,401858438,totals,over,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401858438,401858438,totals,under,47.5,-111,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401858438,401858438,totals,under,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401860878,401860878,h2h,away,,150,,Draft Kings,,,,,,,150,150,0,ok,,200
 401860878,401860878,h2h,away,,,,DraftKings,,,,,,,,150,,missing,no_timestamped_espn_movement_data,200
+401860878,401860878,h2h,home,,-180,,Draft Kings,,,,,,,-180,-180,0,ok,,200
 401860878,401860878,h2h,home,,,,DraftKings,,,,,,,,-180,,missing,no_timestamped_espn_movement_data,200
+401860878,401860878,spreads,away,4,-110,,Draft Kings,4,3.5,-0.5,,,,,,,ok,,200
 401860878,401860878,spreads,away,,,,DraftKings,,3.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401860878,401860878,spreads,home,-4,-110,,Draft Kings,-4,-3.5,0.5,,,,,,,ok,,200
 401860878,401860878,spreads,home,,,,DraftKings,,-3.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401860878,401860878,totals,over,47.5,-115,,Draft Kings,,,,47.5,48.5,1,,,,ok,,200
 401860878,401860878,totals,over,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401860878,401860878,totals,under,47.5,-105,,Draft Kings,,,,47.5,48.5,1,,,,ok,,200
 401860878,401860878,totals,under,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401860879,401860879,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401860879,401860879,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401860879,401860879,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401860879,401860879,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401860879,401860879,spreads,away,38.5,-108,,Draft Kings,38.5,38.5,0,,,,,,,ok,,200
 401860879,401860879,spreads,away,,,,DraftKings,,38.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401860879,401860879,spreads,home,-38.5,-112,,Draft Kings,-38.5,-38.5,0,,,,,,,ok,,200
 401860879,401860879,spreads,home,,,,DraftKings,,-38.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401860879,401860879,totals,over,57.5,-112,,Draft Kings,,,,57.5,57.5,0,,,,ok,,200
 401860879,401860879,totals,over,,,,DraftKings,,,,,57.5,,,,,missing,no_timestamped_espn_movement_data,200
+401860879,401860879,totals,under,57.5,-108,,Draft Kings,,,,57.5,57.5,0,,,,ok,,200
 401860879,401860879,totals,under,,,,DraftKings,,,,,57.5,,,,,missing,no_timestamped_espn_movement_data,200
+401860880,401860880,h2h,away,,400,,Draft Kings,,,,,,,400,400,0,ok,,200
 401860880,401860880,h2h,away,,,,DraftKings,,,,,,,,400,,missing,no_timestamped_espn_movement_data,200
+401860880,401860880,h2h,home,,-535,,Draft Kings,,,,,,,-535,-535,0,ok,,200
 401860880,401860880,h2h,home,,,,DraftKings,,,,,,,,-535,,missing,no_timestamped_espn_movement_data,200
+401860880,401860880,spreads,away,11.5,-112,,Draft Kings,11.5,11.5,0,,,,,,,ok,,200
 401860880,401860880,spreads,away,,,,DraftKings,,11.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401860880,401860880,spreads,home,-11.5,-108,,Draft Kings,-11.5,-11.5,0,,,,,,,ok,,200
 401860880,401860880,spreads,home,,,,DraftKings,,-11.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401860880,401860880,totals,over,64.5,-115,,Draft Kings,,,,64.5,64.5,0,,,,ok,,200
 401860880,401860880,totals,over,,,,DraftKings,,,,,64.5,,,,,missing,no_timestamped_espn_movement_data,200
+401860880,401860880,totals,under,64.5,-105,,Draft Kings,,,,64.5,64.5,0,,,,ok,,200
 401860880,401860880,totals,under,,,,DraftKings,,,,,64.5,,,,,missing,no_timestamped_espn_movement_data,200
+401861962,401861962,h2h,away,,700,,Draft Kings,,,,,,,700,675,-25,ok,,200
 401861962,401861962,h2h,away,,,,DraftKings,,,,,,,,675,,missing,no_timestamped_espn_movement_data,200
+401861962,401861962,h2h,home,,-1100,,Draft Kings,,,,,,,-1100,-1050,50,ok,,200
 401861962,401861962,h2h,home,,,,DraftKings,,,,,,,,-1050,,missing,no_timestamped_espn_movement_data,200
+401861962,401861962,spreads,away,18.5,-108,,Draft Kings,18.5,18.5,0,,,,,,,ok,,200
 401861962,401861962,spreads,away,,,,DraftKings,,18.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401861962,401861962,spreads,home,-18.5,-112,,Draft Kings,-18.5,-18.5,0,,,,,,,ok,,200
 401861962,401861962,spreads,home,,,,DraftKings,,-18.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401861962,401861962,totals,over,58.5,-112,,Draft Kings,,,,58.5,58.5,0,,,,ok,,200
 401861962,401861962,totals,over,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401861962,401861962,totals,under,58.5,-108,,Draft Kings,,,,58.5,58.5,0,,,,ok,,200
 401861962,401861962,totals,under,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862693,401862693,h2h,away,,160,,Draft Kings,,,,,,,160,185,25,ok,,200
 401862693,401862693,h2h,away,,,,DraftKings,,,,,,,,185,,missing,no_timestamped_espn_movement_data,200
+401862693,401862693,h2h,home,,-175,,Draft Kings,,,,,,,-175,-225,-50,ok,,200
 401862693,401862693,h2h,home,,,,DraftKings,,,,,,,,-225,,missing,no_timestamped_espn_movement_data,200
+401862693,401862693,spreads,away,3,-115,,Draft Kings,3,6,3,,,,,,,ok,,200
 401862693,401862693,spreads,away,,,,DraftKings,,6,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862693,401862693,spreads,home,-3,-105,,Draft Kings,-3,-6,-3,,,,,,,ok,,200
 401862693,401862693,spreads,home,,,,DraftKings,,-6,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862693,401862693,totals,over,60.5,-112,,Draft Kings,,,,60.5,57.5,-3,,,,ok,,200
 401862693,401862693,totals,over,,,,DraftKings,,,,,57.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862693,401862693,totals,under,60.5,-108,,Draft Kings,,,,60.5,57.5,-3,,,,ok,,200
 401862693,401862693,totals,under,,,,DraftKings,,,,,57.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862694,401862694,h2h,away,,400,,Draft Kings,,,,,,,400,550,150,ok,,200
 401862694,401862694,h2h,away,,,,DraftKings,,,,,,,,550,,missing,no_timestamped_espn_movement_data,200
+401862694,401862694,h2h,home,,-535,,Draft Kings,,,,,,,-535,-800,-265,ok,,200
 401862694,401862694,h2h,home,,,,DraftKings,,,,,,,,-800,,missing,no_timestamped_espn_movement_data,200
+401862694,401862694,spreads,away,10.5,-108,,Draft Kings,10.5,15.5,5,,,,,,,ok,,200
 401862694,401862694,spreads,away,,,,DraftKings,,15.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862694,401862694,spreads,home,-10.5,-112,,Draft Kings,-10.5,-15.5,-5,,,,,,,ok,,200
 401862694,401862694,spreads,home,,,,DraftKings,,-15.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862694,401862694,totals,over,46.5,-110,,Draft Kings,,,,46.5,46.5,0,,,,ok,,200
 401862694,401862694,totals,over,,,,DraftKings,,,,,46.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862694,401862694,totals,under,46.5,-110,,Draft Kings,,,,46.5,46.5,0,,,,ok,,200
 401862694,401862694,totals,under,,,,DraftKings,,,,,46.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862695,401862695,h2h,away,,330,,Draft Kings,,,,,,,330,295,-35,ok,,200
 401862695,401862695,h2h,away,,,,DraftKings,,,,,,,,295,,missing,no_timestamped_espn_movement_data,200
+401862695,401862695,h2h,home,,-425,,Draft Kings,,,,,,,-425,-375,50,ok,,200
 401862695,401862695,h2h,home,,,,DraftKings,,,,,,,,-375,,missing,no_timestamped_espn_movement_data,200
+401862695,401862695,spreads,away,10.5,-112,,Draft Kings,10.5,9.5,-1,,,,,,,ok,,200
 401862695,401862695,spreads,away,,,,DraftKings,,9.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862695,401862695,spreads,home,-10.5,-108,,Draft Kings,-10.5,-9.5,1,,,,,,,ok,,200
 401862695,401862695,spreads,home,,,,DraftKings,,-9.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862695,401862695,totals,over,55.5,-112,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401862695,401862695,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862695,401862695,totals,under,55.5,-108,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401862695,401862695,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862696,401862696,h2h,away,,3500,,Draft Kings,,,,,,,3500,4000,500,ok,,200
 401862696,401862696,h2h,away,,,,DraftKings,,,,,,,,4000,,missing,no_timestamped_espn_movement_data,200
+401862696,401862696,h2h,home,,-20000,,Draft Kings,,,,,,,-20000,-50000,-30000,ok,,200
 401862696,401862696,h2h,home,,,,DraftKings,,,,,,,,-50000,,missing,no_timestamped_espn_movement_data,200
+401862696,401862696,spreads,away,30.5,-110,,Draft Kings,30.5,30.5,0,,,,,,,ok,,200
 401862696,401862696,spreads,away,,,,DraftKings,,30.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862696,401862696,spreads,home,-30.5,-110,,Draft Kings,-30.5,-30.5,0,,,,,,,ok,,200
 401862696,401862696,spreads,home,,,,DraftKings,,-30.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862696,401862696,totals,over,53.5,-112,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401862696,401862696,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862696,401862696,totals,under,53.5,-108,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401862696,401862696,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862697,401862697,h2h,away,,1800,,Draft Kings,,,,,,,1800,1800,0,ok,,200
 401862697,401862697,h2h,away,,,,DraftKings,,,,,,,,1800,,missing,no_timestamped_espn_movement_data,200
+401862697,401862697,h2h,home,,-5000,,Draft Kings,,,,,,,-5000,-5000,0,ok,,200
 401862697,401862697,h2h,home,,,,DraftKings,,,,,,,,-5000,,missing,no_timestamped_espn_movement_data,200
+401862697,401862697,spreads,away,23.5,-108,,Draft Kings,23.5,23.5,0,,,,,,,ok,,200
 401862697,401862697,spreads,away,,,,DraftKings,,23.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862697,401862697,spreads,home,-23.5,-112,,Draft Kings,-23.5,-23.5,0,,,,,,,ok,,200
 401862697,401862697,spreads,home,,,,DraftKings,,-23.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862697,401862697,totals,over,47.5,-112,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401862697,401862697,totals,over,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862697,401862697,totals,under,47.5,-108,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401862697,401862697,totals,under,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862698,401862698,h2h,away,,360,,Draft Kings,,,,,,,360,360,0,ok,,200
 401862698,401862698,h2h,away,,,,DraftKings,,,,,,,,360,,missing,no_timestamped_espn_movement_data,200
+401862698,401862698,h2h,home,,-470,,Draft Kings,,,,,,,-470,-470,0,ok,,200
 401862698,401862698,h2h,home,,,,DraftKings,,,,,,,,-470,,missing,no_timestamped_espn_movement_data,200
+401862698,401862698,spreads,away,10,-108,,Draft Kings,10,10,0,,,,,,,ok,,200
 401862698,401862698,spreads,away,,,,DraftKings,,10,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862698,401862698,spreads,home,-10,-112,,Draft Kings,-10,-10,0,,,,,,,ok,,200
 401862698,401862698,spreads,home,,,,DraftKings,,-10,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862698,401862698,totals,over,51.5,-112,,Draft Kings,,,,51.5,51.5,0,,,,ok,,200
 401862698,401862698,totals,over,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862698,401862698,totals,under,51.5,-108,,Draft Kings,,,,51.5,51.5,0,,,,ok,,200
 401862698,401862698,totals,under,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862699,401862699,h2h,away,,340,,Draft Kings,,,,,,,340,400,60,ok,,200
 401862699,401862699,h2h,away,,,,DraftKings,,,,,,,,400,,missing,no_timestamped_espn_movement_data,200
+401862699,401862699,h2h,home,,-440,,Draft Kings,,,,,,,-440,-535,-95,ok,,200
 401862699,401862699,h2h,home,,,,DraftKings,,,,,,,,-535,,missing,no_timestamped_espn_movement_data,200
+401862699,401862699,spreads,away,12.5,-110,,Draft Kings,12.5,13.5,1,,,,,,,ok,,200
 401862699,401862699,spreads,away,,,,DraftKings,,13.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862699,401862699,spreads,home,-12.5,-110,,Draft Kings,-12.5,-13.5,-1,,,,,,,ok,,200
 401862699,401862699,spreads,home,,,,DraftKings,,-13.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862699,401862699,totals,over,54.5,-108,,Draft Kings,,,,54.5,54.5,0,,,,ok,,200
 401862699,401862699,totals,over,,,,DraftKings,,,,,54.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862699,401862699,totals,under,54.5,-112,,Draft Kings,,,,54.5,54.5,0,,,,ok,,200
 401862699,401862699,totals,under,,,,DraftKings,,,,,54.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862700,401862700,h2h,away,,2500,,Draft Kings,,,,,,,2500,2500,0,ok,,200
 401862700,401862700,h2h,away,,,,DraftKings,,,,,,,,2500,,missing,no_timestamped_espn_movement_data,200
+401862700,401862700,h2h,home,,-9000,,Draft Kings,,,,,,,-9000,-9000,0,ok,,200
 401862700,401862700,h2h,home,,,,DraftKings,,,,,,,,-9000,,missing,no_timestamped_espn_movement_data,200
+401862700,401862700,spreads,away,28.5,-108,,Draft Kings,28.5,28.5,0,,,,,,,ok,,200
 401862700,401862700,spreads,away,,,,DraftKings,,28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862700,401862700,spreads,home,-28.5,-112,,Draft Kings,-28.5,-28.5,0,,,,,,,ok,,200
 401862700,401862700,spreads,home,,,,DraftKings,,-28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862700,401862700,totals,over,59.5,-110,,Draft Kings,,,,59.5,59.5,0,,,,ok,,200
 401862700,401862700,totals,over,,,,DraftKings,,,,,59.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862700,401862700,totals,under,59.5,-110,,Draft Kings,,,,59.5,59.5,0,,,,ok,,200
 401862700,401862700,totals,under,,,,DraftKings,,,,,59.5,,,,,missing,no_timestamped_espn_movement_data,200
+401862701,401862701,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401862701,401862701,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862701,401862701,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401862701,401862701,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862701,401862701,spreads,away,36.5,-112,,Draft Kings,36.5,36.5,0,,,,,,,ok,,200
 401862701,401862701,spreads,away,,,,DraftKings,,36.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862701,401862701,spreads,home,-36.5,-108,,Draft Kings,-36.5,-36.5,0,,,,,,,ok,,200
 401862701,401862701,spreads,home,,,,DraftKings,,-36.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862701,401862701,totals,over,,-112,,Draft Kings,,,,,,,,,,ok,,200
 401862701,401862701,totals,over,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401862701,401862701,totals,under,,-108,,Draft Kings,,,,,,,,,,ok,,200
 401862701,401862701,totals,under,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864424,401864424,h2h,away,,2200,,Draft Kings,,,,,,,2200,2200,0,ok,,200
 401864424,401864424,h2h,away,,,,DraftKings,,,,,,,,2200,,missing,no_timestamped_espn_movement_data,200
+401864424,401864424,h2h,home,,-8000,,Draft Kings,,,,,,,-8000,-8000,0,ok,,200
 401864424,401864424,h2h,home,,,,DraftKings,,,,,,,,-8000,,missing,no_timestamped_espn_movement_data,200
+401864424,401864424,spreads,away,27.5,-110,,Draft Kings,27.5,27.5,0,,,,,,,ok,,200
 401864424,401864424,spreads,away,,,,DraftKings,,27.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864424,401864424,spreads,home,-27.5,-110,,Draft Kings,-27.5,-27.5,0,,,,,,,ok,,200
 401864424,401864424,spreads,home,,,,DraftKings,,-27.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864424,401864424,totals,over,55.5,-105,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401864424,401864424,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864424,401864424,totals,under,55.5,-115,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401864424,401864424,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864425,401864425,h2h,away,,1300,,Draft Kings,,,,,,,1300,1500,200,ok,,200
 401864425,401864425,h2h,away,,,,DraftKings,,,,,,,,1500,,missing,no_timestamped_espn_movement_data,200
+401864425,401864425,h2h,home,,-2800,,Draft Kings,,,,,,,-2800,-3600,-800,ok,,200
 401864425,401864425,h2h,home,,,,DraftKings,,,,,,,,-3600,,missing,no_timestamped_espn_movement_data,200
+401864425,401864425,spreads,away,21.5,-112,,Draft Kings,21.5,22.5,1,,,,,,,ok,,200
 401864425,401864425,spreads,away,,,,DraftKings,,22.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864425,401864425,spreads,home,-21.5,-108,,Draft Kings,-21.5,-22.5,-1,,,,,,,ok,,200
 401864425,401864425,spreads,home,,,,DraftKings,,-22.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864425,401864425,totals,over,51.5,-112,,Draft Kings,,,,51.5,51.5,0,,,,ok,,200
 401864425,401864425,totals,over,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864425,401864425,totals,under,51.5,-108,,Draft Kings,,,,51.5,51.5,0,,,,ok,,200
 401864425,401864425,totals,under,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864432,401864432,h2h,away,,-142,,Draft Kings,,,,,,,-142,-142,0,ok,,200
 401864432,401864432,h2h,away,,,,DraftKings,,,,,,,,-142,,missing,no_timestamped_espn_movement_data,200
+401864432,401864432,h2h,home,,120,,Draft Kings,,,,,,,120,120,0,ok,,200
 401864432,401864432,h2h,home,,,,DraftKings,,,,,,,,120,,missing,no_timestamped_espn_movement_data,200
+401864432,401864432,spreads,away,-4.5,-108,,Draft Kings,-4.5,-2.5,2,,,,,,,ok,,200
 401864432,401864432,spreads,away,,,,DraftKings,,-2.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864432,401864432,spreads,home,4.5,-112,,Draft Kings,4.5,2.5,-2,,,,,,,ok,,200
 401864432,401864432,spreads,home,,,,DraftKings,,2.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864432,401864432,totals,over,53.5,-102,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401864432,401864432,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864432,401864432,totals,under,53.5,-118,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401864432,401864432,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864494,401864494,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401864494,401864494,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864494,401864494,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401864494,401864494,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864494,401864494,spreads,away,35.5,-110,,Draft Kings,35.5,38.5,3,,,,,,,ok,,200
 401864494,401864494,spreads,away,,,,DraftKings,,38.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864494,401864494,spreads,home,-35.5,-110,,Draft Kings,-35.5,-38.5,-3,,,,,,,ok,,200
 401864494,401864494,spreads,home,,,,DraftKings,,-38.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864494,401864494,totals,over,57.5,-122,,Draft Kings,,,,57.5,60.5,3,,,,ok,,200
 401864494,401864494,totals,over,,,,DraftKings,,,,,60.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864494,401864494,totals,under,57.5,102,,Draft Kings,,,,57.5,60.5,3,,,,ok,,200
 401864494,401864494,totals,under,,,,DraftKings,,,,,60.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864495,401864495,h2h,away,,136,,Draft Kings,,,,,,,136,170,34,ok,,200
 401864495,401864495,h2h,away,,,,DraftKings,,,,,,,,170,,missing,no_timestamped_espn_movement_data,200
+401864495,401864495,h2h,home,,-162,,Draft Kings,,,,,,,-162,-205,-43,ok,,200
 401864495,401864495,h2h,home,,,,DraftKings,,,,,,,,-205,,missing,no_timestamped_espn_movement_data,200
+401864495,401864495,spreads,away,3.5,-108,,Draft Kings,3.5,4.5,1,,,,,,,ok,,200
 401864495,401864495,spreads,away,,,,DraftKings,,4.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864495,401864495,spreads,home,-3.5,-112,,Draft Kings,-3.5,-4.5,-1,,,,,,,ok,,200
 401864495,401864495,spreads,home,,,,DraftKings,,-4.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864495,401864495,totals,over,53.5,-112,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401864495,401864495,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864495,401864495,totals,under,53.5,-108,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401864495,401864495,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864496,401864496,h2h,away,,2500,,Draft Kings,,,,,,,2500,2200,-300,ok,,200
 401864496,401864496,h2h,away,,,,DraftKings,,,,,,,,2200,,missing,no_timestamped_espn_movement_data,200
+401864496,401864496,h2h,home,,-9000,,Draft Kings,,,,,,,-9000,-8000,1000,ok,,200
 401864496,401864496,h2h,home,,,,DraftKings,,,,,,,,-8000,,missing,no_timestamped_espn_movement_data,200
+401864496,401864496,spreads,away,28.5,-108,,Draft Kings,28.5,28.5,0,,,,,,,ok,,200
 401864496,401864496,spreads,away,,,,DraftKings,,28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864496,401864496,spreads,home,-28.5,-112,,Draft Kings,-28.5,-28.5,0,,,,,,,ok,,200
 401864496,401864496,spreads,home,,,,DraftKings,,-28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864496,401864496,totals,over,58.5,-112,,Draft Kings,,,,58.5,58.5,0,,,,ok,,200
 401864496,401864496,totals,over,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864496,401864496,totals,under,58.5,-108,,Draft Kings,,,,58.5,58.5,0,,,,ok,,200
 401864496,401864496,totals,under,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864497,401864497,h2h,away,,-125,,Draft Kings,,,,,,,-125,-148,-23,ok,,200
 401864497,401864497,h2h,away,,,,DraftKings,,,,,,,,-148,,missing,no_timestamped_espn_movement_data,200
+401864497,401864497,h2h,home,,105,,Draft Kings,,,,,,,105,124,19,ok,,200
 401864497,401864497,h2h,home,,,,DraftKings,,,,,,,,124,,missing,no_timestamped_espn_movement_data,200
+401864497,401864497,spreads,away,-1.5,-110,,Draft Kings,-1.5,-3,-1.5,,,,,,,ok,,200
 401864497,401864497,spreads,away,,,,DraftKings,,-3,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864497,401864497,spreads,home,1.5,-110,,Draft Kings,1.5,3,1.5,,,,,,,ok,,200
 401864497,401864497,spreads,home,,,,DraftKings,,3,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864497,401864497,totals,over,57.5,-118,,Draft Kings,,,,57.5,58.5,1,,,,ok,,200
 401864497,401864497,totals,over,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864497,401864497,totals,under,57.5,-102,,Draft Kings,,,,57.5,58.5,1,,,,ok,,200
 401864497,401864497,totals,under,,,,DraftKings,,,,,58.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864498,401864498,h2h,away,,370,,Draft Kings,,,,,,,370,390,20,ok,,200
 401864498,401864498,h2h,away,,,,DraftKings,,,,,,,,390,,missing,no_timestamped_espn_movement_data,200
+401864498,401864498,h2h,home,,-485,,Draft Kings,,,,,,,-485,-520,-35,ok,,200
 401864498,401864498,h2h,home,,,,DraftKings,,,,,,,,-520,,missing,no_timestamped_espn_movement_data,200
+401864498,401864498,spreads,away,12.5,-112,,Draft Kings,12.5,12.5,0,,,,,,,ok,,200
 401864498,401864498,spreads,away,,,,DraftKings,,12.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864498,401864498,spreads,home,-12.5,-108,,Draft Kings,-12.5,-12.5,0,,,,,,,ok,,200
 401864498,401864498,spreads,home,,,,DraftKings,,-12.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864498,401864498,totals,over,49.5,-112,,Draft Kings,,,,49.5,48.5,-1,,,,ok,,200
 401864498,401864498,totals,over,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864498,401864498,totals,under,49.5,-108,,Draft Kings,,,,49.5,48.5,-1,,,,ok,,200
 401864498,401864498,totals,under,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864499,401864499,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401864499,401864499,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864499,401864499,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401864499,401864499,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864499,401864499,spreads,away,39.5,-105,,Draft Kings,39.5,39.5,0,,,,,,,ok,,200
 401864499,401864499,spreads,away,,,,DraftKings,,39.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864499,401864499,spreads,home,-39.5,-115,,Draft Kings,-39.5,-39.5,0,,,,,,,ok,,200
 401864499,401864499,spreads,home,,,,DraftKings,,-39.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864499,401864499,totals,over,57.5,-115,,Draft Kings,,,,57.5,57.5,0,,,,ok,,200
 401864499,401864499,totals,over,,,,DraftKings,,,,,57.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864499,401864499,totals,under,57.5,-105,,Draft Kings,,,,57.5,57.5,0,,,,ok,,200
 401864499,401864499,totals,under,,,,DraftKings,,,,,57.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864570,401864570,h2h,away,,3000,,Draft Kings,,,,,,,3000,2000,-1000,ok,,200
 401864570,401864570,h2h,away,,,,DraftKings,,,,,,,,2000,,missing,no_timestamped_espn_movement_data,200
+401864570,401864570,h2h,home,,-10000,,Draft Kings,,,,,,,-10000,-6500,3500,ok,,200
 401864570,401864570,h2h,home,,,,DraftKings,,,,,,,,-6500,,missing,no_timestamped_espn_movement_data,200
+401864570,401864570,spreads,away,28.5,-108,,Draft Kings,28.5,31.5,3,,,,,,,ok,,200
 401864570,401864570,spreads,away,,,,DraftKings,,31.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864570,401864570,spreads,home,-28.5,-112,,Draft Kings,-28.5,-31.5,-3,,,,,,,ok,,200
 401864570,401864570,spreads,home,,,,DraftKings,,-31.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864570,401864570,totals,over,53.5,-112,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401864570,401864570,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864570,401864570,totals,under,53.5,-108,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401864570,401864570,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864577,401864577,h2h,away,,260,,Draft Kings,,,,,,,260,220,-40,ok,,200
 401864577,401864577,h2h,away,,,,DraftKings,,,,,,,,220,,missing,no_timestamped_espn_movement_data,200
+401864577,401864577,h2h,home,,-325,,Draft Kings,,,,,,,-325,-270,55,ok,,200
 401864577,401864577,h2h,home,,,,DraftKings,,,,,,,,-270,,missing,no_timestamped_espn_movement_data,200
+401864577,401864577,spreads,away,10,-112,,Draft Kings,10,6.5,-3.5,,,,,,,ok,,200
 401864577,401864577,spreads,away,,,,DraftKings,,6.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864577,401864577,spreads,home,-10,-108,,Draft Kings,-10,-6.5,3.5,,,,,,,ok,,200
 401864577,401864577,spreads,home,,,,DraftKings,,-6.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401864577,401864577,totals,over,48.5,-110,,Draft Kings,,,,48.5,47.5,-1,,,,ok,,200
 401864577,401864577,totals,over,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401864577,401864577,totals,under,48.5,-110,,Draft Kings,,,,48.5,47.5,-1,,,,ok,,200
 401864577,401864577,totals,under,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866408,401866408,h2h,away,,260,,Draft Kings,,,,,,,260,275,15,ok,,200
 401866408,401866408,h2h,away,,,,DraftKings,,,,,,,,275,,missing,no_timestamped_espn_movement_data,200
+401866408,401866408,h2h,home,,-325,,Draft Kings,,,,,,,-325,-345,-20,ok,,200
 401866408,401866408,h2h,home,,,,DraftKings,,,,,,,,-345,,missing,no_timestamped_espn_movement_data,200
+401866408,401866408,spreads,away,8.5,-112,,Draft Kings,8.5,8.5,0,,,,,,,ok,,200
 401866408,401866408,spreads,away,,,,DraftKings,,8.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866408,401866408,spreads,home,-8.5,-108,,Draft Kings,-8.5,-8.5,0,,,,,,,ok,,200
 401866408,401866408,spreads,home,,,,DraftKings,,-8.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866408,401866408,totals,over,52.5,-115,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401866408,401866408,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866408,401866408,totals,under,52.5,-105,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401866408,401866408,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866409,401866409,h2h,away,,1000,,Draft Kings,,,,,,,1000,2200,1200,ok,,200
 401866409,401866409,h2h,away,,,,DraftKings,,,,,,,,2200,,missing,no_timestamped_espn_movement_data,200
+401866409,401866409,h2h,home,,-1800,,Draft Kings,,,,,,,-1800,-8000,-6200,ok,,200
 401866409,401866409,h2h,home,,,,DraftKings,,,,,,,,-8000,,missing,no_timestamped_espn_movement_data,200
+401866409,401866409,spreads,away,24.5,-110,,Draft Kings,24.5,24.5,0,,,,,,,ok,,200
 401866409,401866409,spreads,away,,,,DraftKings,,24.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866409,401866409,spreads,home,-24.5,-110,,Draft Kings,-24.5,-24.5,0,,,,,,,ok,,200
 401866409,401866409,spreads,home,,,,DraftKings,,-24.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866409,401866409,totals,over,48.5,-112,,Draft Kings,,,,48.5,48.5,0,,,,ok,,200
 401866409,401866409,totals,over,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866409,401866409,totals,under,48.5,-108,,Draft Kings,,,,48.5,48.5,0,,,,ok,,200
 401866409,401866409,totals,under,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866410,401866410,h2h,away,,105,,Draft Kings,,,,,,,105,114,9,ok,,200
 401866410,401866410,h2h,away,,,,DraftKings,,,,,,,,114,,missing,no_timestamped_espn_movement_data,200
+401866410,401866410,h2h,home,,-125,,Draft Kings,,,,,,,-125,-135,-10,ok,,200
 401866410,401866410,h2h,home,,,,DraftKings,,,,,,,,-135,,missing,no_timestamped_espn_movement_data,200
+401866410,401866410,spreads,away,1.5,,,Draft Kings,1.5,2.5,1,,,,,,,ok,,200
 401866410,401866410,spreads,away,,,,DraftKings,,2.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866410,401866410,spreads,home,-1.5,-115,,Draft Kings,-1.5,-2.5,-1,,,,,,,ok,,200
 401866410,401866410,spreads,home,,,,DraftKings,,-2.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866410,401866410,totals,over,47.5,-112,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401866410,401866410,totals,over,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866410,401866410,totals,under,47.5,-108,,Draft Kings,,,,47.5,47.5,0,,,,ok,,200
 401866410,401866410,totals,under,,,,DraftKings,,,,,47.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866411,401866411,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401866411,401866411,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866411,401866411,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401866411,401866411,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866411,401866411,spreads,away,35.5,-110,,Draft Kings,35.5,35.5,0,,,,,,,ok,,200
 401866411,401866411,spreads,away,,,,DraftKings,,35.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866411,401866411,spreads,home,-35.5,-110,,Draft Kings,-35.5,-35.5,0,,,,,,,ok,,200
 401866411,401866411,spreads,home,,,,DraftKings,,-35.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866411,401866411,totals,over,57.5,-112,,Draft Kings,,,,57.5,56.5,-1,,,,ok,,200
 401866411,401866411,totals,over,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866411,401866411,totals,under,57.5,-108,,Draft Kings,,,,57.5,56.5,-1,,,,ok,,200
 401866411,401866411,totals,under,,,,DraftKings,,,,,56.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866623,401866623,h2h,away,,1700,,Draft Kings,,,,,,,1700,1700,0,ok,,200
 401866623,401866623,h2h,away,,,,DraftKings,,,,,,,,1700,,missing,no_timestamped_espn_movement_data,200
+401866623,401866623,h2h,home,,-4500,,Draft Kings,,,,,,,-4500,-4500,0,ok,,200
 401866623,401866623,h2h,home,,,,DraftKings,,,,,,,,-4500,,missing,no_timestamped_espn_movement_data,200
+401866623,401866623,spreads,away,28.5,-112,,Draft Kings,28.5,28.5,0,,,,,,,ok,,200
 401866623,401866623,spreads,away,,,,DraftKings,,28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866623,401866623,spreads,home,-28.5,-108,,Draft Kings,-28.5,-28.5,0,,,,,,,ok,,200
 401866623,401866623,spreads,home,,,,DraftKings,,-28.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866623,401866623,totals,over,63.5,-108,,Draft Kings,,,,63.5,63.5,0,,,,ok,,200
 401866623,401866623,totals,over,,,,DraftKings,,,,,63.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866623,401866623,totals,under,63.5,-112,,Draft Kings,,,,63.5,63.5,0,,,,ok,,200
 401866623,401866623,totals,under,,,,DraftKings,,,,,63.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866627,401866627,h2h,away,,850,,Draft Kings,,,,,,,850,800,-50,ok,,200
 401866627,401866627,h2h,away,,,,DraftKings,,,,,,,,800,,missing,no_timestamped_espn_movement_data,200
+401866627,401866627,h2h,home,,-1450,,Draft Kings,,,,,,,-1450,-1350,100,ok,,200
 401866627,401866627,h2h,home,,,,DraftKings,,,,,,,,-1350,,missing,no_timestamped_espn_movement_data,200
+401866627,401866627,spreads,away,17.5,-112,,Draft Kings,17.5,17.5,0,,,,,,,ok,,200
 401866627,401866627,spreads,away,,,,DraftKings,,17.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866627,401866627,spreads,home,-17.5,-108,,Draft Kings,-17.5,-17.5,0,,,,,,,ok,,200
 401866627,401866627,spreads,home,,,,DraftKings,,-17.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401866627,401866627,totals,over,53.5,-112,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401866627,401866627,totals,over,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401866627,401866627,totals,under,53.5,-108,,Draft Kings,,,,53.5,53.5,0,,,,ok,,200
 401866627,401866627,totals,under,,,,DraftKings,,,,,53.5,,,,,missing,no_timestamped_espn_movement_data,200
+401867866,401867866,h2h,away,,1000,,Draft Kings,,,,,,,1000,1000,0,ok,,200
 401867866,401867866,h2h,away,,,,DraftKings,,,,,,,,1000,,missing,no_timestamped_espn_movement_data,200
+401867866,401867866,h2h,home,,-1800,,Draft Kings,,,,,,,-1800,-1800,0,ok,,200
 401867866,401867866,h2h,home,,,,DraftKings,,,,,,,,-1800,,missing,no_timestamped_espn_movement_data,200
+401867866,401867866,spreads,away,20.5,-115,,Draft Kings,20.5,20.5,0,,,,,,,ok,,200
 401867866,401867866,spreads,away,,,,DraftKings,,20.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401867866,401867866,spreads,home,-20.5,-105,,Draft Kings,-20.5,-20.5,0,,,,,,,ok,,200
 401867866,401867866,spreads,home,,,,DraftKings,,-20.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401867866,401867866,totals,over,59.5,-115,,Draft Kings,,,,59.5,59.5,0,,,,ok,,200
 401867866,401867866,totals,over,,,,DraftKings,,,,,59.5,,,,,missing,no_timestamped_espn_movement_data,200
+401867866,401867866,totals,under,59.5,-105,,Draft Kings,,,,59.5,59.5,0,,,,ok,,200
 401867866,401867866,totals,under,,,,DraftKings,,,,,59.5,,,,,missing,no_timestamped_espn_movement_data,200
+401867973,401867973,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401867973,401867973,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401867973,401867973,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401867973,401867973,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401867973,401867973,spreads,away,41.5,-112,,Draft Kings,41.5,41.5,0,,,,,,,ok,,200
 401867973,401867973,spreads,away,,,,DraftKings,,41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401867973,401867973,spreads,home,-41.5,-108,,Draft Kings,-41.5,-41.5,0,,,,,,,ok,,200
 401867973,401867973,spreads,home,,,,DraftKings,,-41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401867973,401867973,totals,over,55.5,-110,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401867973,401867973,totals,over,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401867973,401867973,totals,under,55.5,-110,,Draft Kings,,,,55.5,55.5,0,,,,ok,,200
 401867973,401867973,totals,under,,,,DraftKings,,,,,55.5,,,,,missing,no_timestamped_espn_movement_data,200
+401868140,401868140,h2h,away,,1000,,Draft Kings,,,,,,,1000,1000,0,ok,,200
 401868140,401868140,h2h,away,,,,DraftKings,,,,,,,,1000,,missing,no_timestamped_espn_movement_data,200
+401868140,401868140,h2h,home,,-1800,,Draft Kings,,,,,,,-1800,-1800,0,ok,,200
 401868140,401868140,h2h,home,,,,DraftKings,,,,,,,,-1800,,missing,no_timestamped_espn_movement_data,200
+401868140,401868140,spreads,away,19.5,-108,,Draft Kings,19.5,19.5,0,,,,,,,ok,,200
 401868140,401868140,spreads,away,,,,DraftKings,,19.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401868140,401868140,spreads,home,-19.5,-112,,Draft Kings,-19.5,-19.5,0,,,,,,,ok,,200
 401868140,401868140,spreads,home,,,,DraftKings,,-19.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401868140,401868140,totals,over,52.5,-115,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401868140,401868140,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401868140,401868140,totals,under,52.5,-105,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401868140,401868140,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401868170,401868170,h2h,away,,2200,,Draft Kings,,,,,,,2200,2000,-200,ok,,200
 401868170,401868170,h2h,away,,,,DraftKings,,,,,,,,2000,,missing,no_timestamped_espn_movement_data,200
+401868170,401868170,h2h,home,,-8000,,Draft Kings,,,,,,,-8000,-6500,1500,ok,,200
 401868170,401868170,h2h,home,,,,DraftKings,,,,,,,,-6500,,missing,no_timestamped_espn_movement_data,200
+401868170,401868170,spreads,away,25.5,-110,,Draft Kings,25.5,25.5,0,,,,,,,ok,,200
 401868170,401868170,spreads,away,,,,DraftKings,,25.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401868170,401868170,spreads,home,-25.5,-110,,Draft Kings,-25.5,-25.5,0,,,,,,,ok,,200
 401868170,401868170,spreads,home,,,,DraftKings,,-25.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401868170,401868170,totals,over,51.5,-115,,Draft Kings,,,,51.5,51.5,0,,,,ok,,200
 401868170,401868170,totals,over,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401868170,401868170,totals,under,51.5,-105,,Draft Kings,,,,51.5,51.5,0,,,,ok,,200
 401868170,401868170,totals,under,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401868316,401868316,h2h,away,,370,,Draft Kings,,,,,,,370,380,10,ok,,200
 401868316,401868316,h2h,away,,,,DraftKings,,,,,,,,380,,missing,no_timestamped_espn_movement_data,200
+401868316,401868316,h2h,home,,-485,,Draft Kings,,,,,,,-485,-500,-15,ok,,200
 401868316,401868316,h2h,home,,,,DraftKings,,,,,,,,-500,,missing,no_timestamped_espn_movement_data,200
+401868316,401868316,spreads,away,12.5,-110,,Draft Kings,12.5,12.5,0,,,,,,,ok,,200
 401868316,401868316,spreads,away,,,,DraftKings,,12.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401868316,401868316,spreads,home,-12.5,-110,,Draft Kings,-12.5,-12.5,0,,,,,,,ok,,200
 401868316,401868316,spreads,home,,,,DraftKings,,-12.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401868316,401868316,totals,over,52.5,-112,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401868316,401868316,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401868316,401868316,totals,under,52.5,-108,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401868316,401868316,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401868356,401868356,h2h,away,,1300,,Draft Kings,,,,,,,1300,1300,0,ok,,200
 401868356,401868356,h2h,away,,,,DraftKings,,,,,,,,1300,,missing,no_timestamped_espn_movement_data,200
+401868356,401868356,h2h,home,,-2800,,Draft Kings,,,,,,,-2800,-2800,0,ok,,200
 401868356,401868356,h2h,home,,,,DraftKings,,,,,,,,-2800,,missing,no_timestamped_espn_movement_data,200
+401868356,401868356,spreads,away,21,-112,,Draft Kings,21,21,0,,,,,,,ok,,200
 401868356,401868356,spreads,away,,,,DraftKings,,21,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401868356,401868356,spreads,home,-21,-108,,Draft Kings,-21,-21,0,,,,,,,ok,,200
 401868356,401868356,spreads,home,,,,DraftKings,,-21,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401868356,401868356,totals,over,50.5,-108,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401868356,401868356,totals,over,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401868356,401868356,totals,under,50.5,-112,,Draft Kings,,,,50.5,50.5,0,,,,ok,,200
 401868356,401868356,totals,under,,,,DraftKings,,,,,50.5,,,,,missing,no_timestamped_espn_movement_data,200
+401869129,401869129,h2h,away,,,,Draft Kings,,,,,,,,,,ok,,200
 401869129,401869129,h2h,away,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401869129,401869129,h2h,home,,,,Draft Kings,,,,,,,,,,ok,,200
 401869129,401869129,h2h,home,,,,DraftKings,,,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401869129,401869129,spreads,away,41.5,-108,,Draft Kings,41.5,41.5,0,,,,,,,ok,,200
 401869129,401869129,spreads,away,,,,DraftKings,,41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401869129,401869129,spreads,home,-41.5,-112,,Draft Kings,-41.5,-41.5,0,,,,,,,ok,,200
 401869129,401869129,spreads,home,,,,DraftKings,,-41.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401869129,401869129,totals,over,52.5,-115,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401869129,401869129,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401869129,401869129,totals,under,52.5,-105,,Draft Kings,,,,52.5,52.5,0,,,,ok,,200
 401869129,401869129,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401869142,401869142,h2h,away,,1100,,Draft Kings,,,,,,,1100,1100,0,ok,,200
 401869142,401869142,h2h,away,,,,DraftKings,,,,,,,,1100,,missing,no_timestamped_espn_movement_data,200
+401869142,401869142,h2h,home,,-2100,,Draft Kings,,,,,,,-2100,-2100,0,ok,,200
 401869142,401869142,h2h,home,,,,DraftKings,,,,,,,,-2100,,missing,no_timestamped_espn_movement_data,200
+401869142,401869142,spreads,away,18.5,-108,,Draft Kings,18.5,18.5,0,,,,,,,ok,,200
 401869142,401869142,spreads,away,,,,DraftKings,,18.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401869142,401869142,spreads,home,-18.5,-112,,Draft Kings,-18.5,-18.5,0,,,,,,,ok,,200
 401869142,401869142,spreads,home,,,,DraftKings,,-18.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401869142,401869142,totals,over,48.5,-112,,Draft Kings,,,,48.5,48.5,0,,,,ok,,200
 401869142,401869142,totals,over,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401869142,401869142,totals,under,48.5,-108,,Draft Kings,,,,48.5,48.5,0,,,,ok,,200
 401869142,401869142,totals,under,,,,DraftKings,,,,,48.5,,,,,missing,no_timestamped_espn_movement_data,200
+401869960,401869960,h2h,away,,205,,Draft Kings,,,,,,,205,200,-5,ok,,200
 401869960,401869960,h2h,away,,,,DraftKings,,,,,,,,200,,missing,no_timestamped_espn_movement_data,200
+401869960,401869960,h2h,home,,-250,,Draft Kings,,,,,,,-250,-245,5,ok,,200
 401869960,401869960,h2h,home,,,,DraftKings,,,,,,,,-245,,missing,no_timestamped_espn_movement_data,200
+401869960,401869960,spreads,away,6,-110,,Draft Kings,6,6.5,0.5,,,,,,,ok,,200
 401869960,401869960,spreads,away,,,,DraftKings,,6.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401869960,401869960,spreads,home,-6,-110,,Draft Kings,-6,-6.5,-0.5,,,,,,,ok,,200
 401869960,401869960,spreads,home,,,,DraftKings,,-6.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401869960,401869960,totals,over,50.5,-112,,Draft Kings,,,,50.5,52.5,2,,,,ok,,200
 401869960,401869960,totals,over,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401869960,401869960,totals,under,50.5,-108,,Draft Kings,,,,50.5,52.5,2,,,,ok,,200
 401869960,401869960,totals,under,,,,DraftKings,,,,,52.5,,,,,missing,no_timestamped_espn_movement_data,200
+401870763,401870763,h2h,away,,750,,Draft Kings,,,,,,,750,575,-175,ok,,200
 401870763,401870763,h2h,away,,,,DraftKings,,,,,,,,575,,missing,no_timestamped_espn_movement_data,200
+401870763,401870763,h2h,home,,-1200,,Draft Kings,,,,,,,-1200,-850,350,ok,,200
 401870763,401870763,h2h,home,,,,DraftKings,,,,,,,,-850,,missing,no_timestamped_espn_movement_data,200
+401870763,401870763,spreads,away,17.5,-112,,Draft Kings,17.5,15.5,-2,,,,,,,ok,,200
 401870763,401870763,spreads,away,,,,DraftKings,,15.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401870763,401870763,spreads,home,-17.5,-108,,Draft Kings,-17.5,-15.5,2,,,,,,,ok,,200
 401870763,401870763,spreads,home,,,,DraftKings,,-15.5,,,,,,,,missing,no_timestamped_espn_movement_data,200
+401870763,401870763,totals,over,50.5,-112,,Draft Kings,,,,50.5,51.5,1,,,,ok,,200
 401870763,401870763,totals,over,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
+401870763,401870763,totals,under,50.5,-108,,Draft Kings,,,,50.5,51.5,1,,,,ok,,200
 401870763,401870763,totals,under,,,,DraftKings,,,,,51.5,,,,,missing,no_timestamped_espn_movement_data,200
