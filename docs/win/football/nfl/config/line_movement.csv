@@ -1,0 +1,217 @@
+rule_id,market_type,analysis_family,row_type,opening_bucket,movement,closing_spread_bucket,closing_total_bucket,reference_side,outcome_type,games,wins,losses,pushes,rate_pct,quality_flag
+SP_MV_EX_-11.5,spread,movement_exact,rule,,-11.5,,,opening_favorite,cover,1,1,0,0,100.0,small_sample
+SP_MV_EX_-8,spread,movement_exact,rule,,-8,,,opening_favorite,cover,3,2,1,0,66.7,small_sample
+SP_MV_EX_-7.5,spread,movement_exact,rule,,-7.5,,,opening_favorite,cover,3,1,2,0,33.3,small_sample
+SP_MV_EX_-7,spread,movement_exact,rule,,-7,,,opening_favorite,cover,3,0,3,0,0.0,small_sample
+SP_MV_EX_-6.5,spread,movement_exact,rule,,-6.5,,,opening_favorite,cover,3,2,1,0,66.7,small_sample
+SP_MV_EX_-6,spread,movement_exact,rule,,-6,,,opening_favorite,cover,3,1,2,0,33.3,small_sample
+SP_MV_EX_-5.5,spread,movement_exact,rule,,-5.5,,,opening_favorite,cover,11,7,3,1,70.0,small_sample
+SP_MV_EX_-5,spread,movement_exact,rule,,-5,,,opening_favorite,cover,8,3,4,1,42.9,small_sample
+SP_MV_EX_-4.5,spread,movement_exact,rule,,-4.5,,,opening_favorite,cover,19,8,11,0,42.1,small_sample
+SP_MV_EX_-4,spread,movement_exact,rule,,-4,,,opening_favorite,cover,12,5,7,0,41.7,small_sample
+SP_MV_EX_-3.5,spread,movement_exact,rule,,-3.5,,,opening_favorite,cover,38,15,21,2,41.7,ok
+SP_MV_EX_-3,spread,movement_exact,rule,,-3,,,opening_favorite,cover,85,37,47,1,44.0,ok
+SP_MV_EX_-2.5,spread,movement_exact,rule,,-2.5,,,opening_favorite,cover,160,74,84,2,46.8,ok
+SP_MV_EX_-2,spread,movement_exact,rule,,-2,,,opening_favorite,cover,221,102,109,10,48.3,ok
+SP_MV_EX_-1.5,spread,movement_exact,rule,,-1.5,,,opening_favorite,cover,275,129,140,6,48.0,ok
+SP_MV_EX_-1,spread,movement_exact,rule,,-1,,,opening_favorite,cover,430,210,209,11,50.1,ok
+SP_MV_EX_-0.5,spread,movement_exact,rule,,-0.5,,,opening_favorite,cover,660,326,314,20,50.9,ok
+SP_MV_EX_0,spread,movement_exact,rule,,0,,,opening_favorite,cover,991,476,492,23,49.2,population_mismatch
+SP_MV_EX_0.5,spread,movement_exact,rule,,0.5,,,opening_favorite,cover,652,310,323,19,49.0,ok
+SP_MV_EX_1,spread,movement_exact,rule,,1,,,opening_favorite,cover,345,164,173,8,48.7,ok
+SP_MV_EX_1.5,spread,movement_exact,rule,,1.5,,,opening_favorite,cover,253,119,131,3,47.6,ok
+SP_MV_EX_2,spread,movement_exact,rule,,2,,,opening_favorite,cover,279,140,132,7,51.5,ok
+SP_MV_EX_2.5,spread,movement_exact,rule,,2.5,,,opening_favorite,cover,127,59,68,0,46.5,ok
+SP_MV_EX_3,spread,movement_exact,rule,,3,,,opening_favorite,cover,83,36,43,4,45.6,ok
+SP_MV_EX_3.5,spread,movement_exact,rule,,3.5,,,opening_favorite,cover,79,43,35,1,55.1,ok
+SP_MV_EX_4,spread,movement_exact,rule,,4,,,opening_favorite,cover,67,27,38,2,41.5,ok
+SP_MV_EX_4.5,spread,movement_exact,rule,,4.5,,,opening_favorite,cover,22,9,12,1,42.9,ok
+SP_MV_EX_5,spread,movement_exact,rule,,5,,,opening_favorite,cover,25,14,11,0,56.0,ok
+SP_MV_EX_5.5,spread,movement_exact,rule,,5.5,,,opening_favorite,cover,8,4,4,0,50.0,small_sample
+SP_MV_EX_6,spread,movement_exact,rule,,6,,,opening_favorite,cover,6,4,2,0,66.7,small_sample
+SP_MV_EX_6.5,spread,movement_exact,rule,,6.5,,,opening_favorite,cover,9,3,5,1,37.5,small_sample
+SP_MV_EX_7,spread,movement_exact,rule,,7,,,opening_favorite,cover,3,0,3,0,0.0,small_sample
+SP_MV_EX_7.5,spread,movement_exact,rule,,7.5,,,opening_favorite,cover,1,1,0,0,100.0,small_sample
+SP_MV_EX_8,spread,movement_exact,rule,,8,,,opening_favorite,cover,2,2,0,0,100.0,small_sample
+SP_MV_EX_8.5,spread,movement_exact,rule,,8.5,,,opening_favorite,cover,4,3,1,0,75.0,small_sample
+SP_MV_EX_9.5,spread,movement_exact,rule,,9.5,,,opening_favorite,cover,4,2,2,0,50.0,small_sample
+SP_MV_EX_11,spread,movement_exact,rule,,11,,,opening_favorite,cover,1,0,1,0,0.0,small_sample
+SP_MV_EX_12.5,spread,movement_exact,rule,,12.5,,,opening_favorite,cover,1,0,1,0,0.0,small_sample
+SP_OB_1_2.5_M3F,spread,opening_bucket_x_movement,rule,1-2.5,3+ toward favorite,,,opening_favorite,cover,25,12,13,0,48.0,ok
+SP_OB_1_2.5_M2F,spread,opening_bucket_x_movement,rule,1-2.5,2-2.5 toward favorite,,,opening_favorite,cover,77,37,34,6,52.1,ok
+SP_OB_1_2.5_M1F,spread,opening_bucket_x_movement,rule,1-2.5,0.5-1.5 toward favorite,,,opening_favorite,cover,358,162,174,22,48.2,ok
+SP_OB_1_2.5_M0,spread,opening_bucket_x_movement,rule,1-2.5,same,,,opening_favorite,cover,192,87,103,2,45.8,ok
+SP_OB_1_2.5_M1D,spread,opening_bucket_x_movement,rule,1-2.5,0.5-1.5 toward underdog,,,opening_favorite,cover,124,60,63,1,48.8,ok
+SP_OB_1_2.5_M2D,spread,opening_bucket_x_movement,rule,1-2.5,2-2.5 toward underdog,,,opening_favorite,cover,95,49,44,2,52.7,ok
+SP_OB_1_2.5_M3D,spread,opening_bucket_x_movement,rule,1-2.5,3+ toward underdog,,,opening_favorite,cover,177,89,86,2,50.9,ok
+SP_OB_3_6.5_M3F,spread,opening_bucket_x_movement,rule,3-6.5,3+ toward favorite,,,opening_favorite,cover,78,31,46,1,40.3,ok
+SP_OB_3_6.5_M2F,spread,opening_bucket_x_movement,rule,3-6.5,2-2.5 toward favorite,,,opening_favorite,cover,141,66,72,3,47.8,ok
+SP_OB_3_6.5_M1F,spread,opening_bucket_x_movement,rule,3-6.5,0.5-1.5 toward favorite,,,opening_favorite,cover,634,323,301,10,51.8,ok
+SP_OB_3_6.5_M0,spread,opening_bucket_x_movement,rule,3-6.5,same,,,opening_favorite,cover,536,256,262,18,49.4,ok
+SP_OB_3_6.5_M1D,spread,opening_bucket_x_movement,rule,3-6.5,0.5-1.5 toward underdog,,,opening_favorite,cover,689,332,340,17,49.4,ok
+SP_OB_3_6.5_M2D,spread,opening_bucket_x_movement,rule,3-6.5,2-2.5 toward underdog,,,opening_favorite,cover,190,90,97,3,48.1,ok
+SP_OB_3_6.5_M3D,spread,opening_bucket_x_movement,rule,3-6.5,3+ toward underdog,,,opening_favorite,cover,81,35,41,5,46.1,ok
+SP_OB_7_9.5_M3F,spread,opening_bucket_x_movement,rule,7-9.5,3+ toward favorite,,,opening_favorite,cover,34,18,16,0,52.9,ok
+SP_OB_7_9.5_M2F,spread,opening_bucket_x_movement,rule,7-9.5,2-2.5 toward favorite,,,opening_favorite,cover,83,38,43,2,46.9,ok
+SP_OB_7_9.5_M1F,spread,opening_bucket_x_movement,rule,7-9.5,0.5-1.5 toward favorite,,,opening_favorite,cover,191,83,106,2,43.9,ok
+SP_OB_7_9.5_M0,spread,opening_bucket_x_movement,rule,7-9.5,same,,,opening_favorite,cover,167,87,78,2,52.7,ok
+SP_OB_7_9.5_M1D,spread,opening_bucket_x_movement,rule,7-9.5,0.5-1.5 toward underdog,,,opening_favorite,cover,265,127,131,7,49.2,ok
+SP_OB_7_9.5_M2D,spread,opening_bucket_x_movement,rule,7-9.5,2-2.5 toward underdog,,,opening_favorite,cover,87,41,44,2,48.2,ok
+SP_OB_7_9.5_M3D,spread,opening_bucket_x_movement,rule,7-9.5,3+ toward underdog,,,opening_favorite,cover,24,12,12,0,50.0,ok
+SP_OB_10_13.5_M3F,spread,opening_bucket_x_movement,rule,10-13.5,3+ toward favorite,,,opening_favorite,cover,37,16,17,4,48.5,ok
+SP_OB_10_13.5_M2F,spread,opening_bucket_x_movement,rule,10-13.5,2-2.5 toward favorite,,,opening_favorite,cover,36,15,21,0,41.7,ok
+SP_OB_10_13.5_M1F,spread,opening_bucket_x_movement,rule,10-13.5,0.5-1.5 toward favorite,,,opening_favorite,cover,115,61,53,1,53.5,ok
+SP_OB_10_13.5_M0,spread,opening_bucket_x_movement,rule,10-13.5,same,,,opening_favorite,cover,71,36,34,1,51.4,ok
+SP_OB_10_13.5_M1D,spread,opening_bucket_x_movement,rule,10-13.5,0.5-1.5 toward underdog,,,opening_favorite,cover,135,59,71,5,45.4,ok
+SP_OB_10_13.5_M2D,spread,opening_bucket_x_movement,rule,10-13.5,2-2.5 toward underdog,,,opening_favorite,cover,32,19,13,0,59.4,ok
+SP_OB_10_13.5_M3D,spread,opening_bucket_x_movement,rule,10-13.5,3+ toward underdog,,,opening_favorite,cover,31,11,18,2,37.9,ok
+SP_OB_14P_M3F,spread,opening_bucket_x_movement,rule,14+,3+ toward favorite,,,opening_favorite,cover,2,1,1,0,50.0,small_sample
+SP_OB_14P_M2F,spread,opening_bucket_x_movement,rule,14+,2-2.5 toward favorite,,,opening_favorite,cover,12,8,3,1,72.7,small_sample
+SP_OB_14P_M1F,spread,opening_bucket_x_movement,rule,14+,0.5-1.5 toward favorite,,,opening_favorite,cover,21,12,8,1,60.0,ok
+SP_OB_14P_M0,spread,opening_bucket_x_movement,rule,14+,same,,,opening_favorite,cover,22,7,15,0,31.8,ok
+SP_OB_14P_M1D,spread,opening_bucket_x_movement,rule,14+,0.5-1.5 toward underdog,,,opening_favorite,cover,37,15,22,0,40.5,ok
+SP_OB_14P_M2D,spread,opening_bucket_x_movement,rule,14+,2-2.5 toward underdog,,,opening_favorite,cover,2,0,2,0,0.0,small_sample
+SP_OB_14P_M3D,spread,opening_bucket_x_movement,rule,14+,3+ toward underdog,,,opening_favorite,cover,2,1,1,0,50.0,small_sample
+SP_OB_BASE_1_2.5,spread,opening_bucket_baseline,baseline,1-2.5,,,,opening_favorite,cover,1048,496,517,35,49.0,ok
+SP_OB_BASE_3_6.5,spread,opening_bucket_baseline,baseline,3-6.5,,,,opening_favorite,cover,2349,1133,1159,57,49.4,ok
+SP_OB_BASE_7_9.5,spread,opening_bucket_baseline,baseline,7-9.5,,,,opening_favorite,cover,851,406,430,15,48.6,ok
+SP_OB_BASE_10_13.5,spread,opening_bucket_baseline,baseline,10-13.5,,,,opening_favorite,cover,457,217,227,13,48.9,ok
+SP_OB_BASE_14P,spread,opening_bucket_baseline,baseline,14+,,,,opening_favorite,cover,98,44,52,2,45.8,ok
+SP_MB_3F,spread,movement_bucket_baseline,baseline,,3+ toward favorite,,,opening_favorite,cover,176,78,93,5,45.6,ok
+SP_MB_2F,spread,movement_bucket_baseline,baseline,,2-2.5 toward favorite,,,opening_favorite,cover,349,164,173,12,48.7,ok
+SP_MB_1F,spread,movement_bucket_baseline,baseline,,0.5-1.5 toward favorite,,,opening_favorite,cover,1319,641,642,36,50.0,ok
+SP_MB_0,spread,movement_bucket_baseline,baseline,,same,,,opening_favorite,cover,988,473,492,23,49.0,population_mismatch
+SP_MB_1D,spread,movement_bucket_baseline,baseline,,0.5-1.5 toward underdog,,,opening_favorite,cover,1250,593,627,30,48.6,ok
+SP_MB_2D,spread,movement_bucket_baseline,baseline,,2-2.5 toward underdog,,,opening_favorite,cover,406,199,200,7,49.9,ok
+SP_MB_3D,spread,movement_bucket_baseline,baseline,,3+ toward underdog,,,opening_favorite,cover,315,148,158,9,48.4,ok
+TOT_MV_EX_6.5,total,movement_exact,rule,,6.5,,,over,over,1,1,0,0,100.0,small_sample
+TOT_MV_EX_6,total,movement_exact,rule,,6,,,over,over,1,0,1,0,0.0,small_sample
+TOT_MV_EX_5.5,total,movement_exact,rule,,5.5,,,over,over,2,1,1,0,50.0,small_sample
+TOT_MV_EX_5,total,movement_exact,rule,,5,,,over,over,11,5,6,0,45.5,small_sample
+TOT_MV_EX_4.5,total,movement_exact,rule,,4.5,,,over,over,7,5,2,0,71.4,small_sample
+TOT_MV_EX_4,total,movement_exact,rule,,4,,,over,over,24,12,12,0,50.0,ok
+TOT_MV_EX_3.5,total,movement_exact,rule,,3.5,,,over,over,50,24,24,2,50.0,ok
+TOT_MV_EX_3,total,movement_exact,rule,,3,,,over,over,85,45,40,0,52.9,ok
+TOT_MV_EX_2.5,total,movement_exact,rule,,2.5,,,over,over,160,78,81,1,49.1,ok
+TOT_MV_EX_2,total,movement_exact,rule,,2,,,over,over,237,112,124,1,47.5,ok
+TOT_MV_EX_1.5,total,movement_exact,rule,,1.5,,,over,over,361,165,190,6,46.5,ok
+TOT_MV_EX_1,total,movement_exact,rule,,1,,,over,over,457,221,233,3,48.7,ok
+TOT_MV_EX_0.5,total,movement_exact,rule,,0.5,,,over,over,530,249,270,11,48.0,ok
+TOT_MV_EX_0,total,movement_exact,rule,,0,,,over,over,633,321,303,9,51.4,conflicting_source_statistics
+TOT_MV_EX_-0.5,total,movement_exact,rule,,-0.5,,,over,over,615,306,305,4,50.1,ok
+TOT_MV_EX_-1,total,movement_exact,rule,,-1,,,over,over,504,265,234,5,53.1,ok
+TOT_MV_EX_-1.5,total,movement_exact,rule,,-1.5,,,over,over,393,189,199,5,48.7,ok
+TOT_MV_EX_-2,total,movement_exact,rule,,-2,,,over,over,304,154,145,5,51.5,ok
+TOT_MV_EX_-2.5,total,movement_exact,rule,,-2.5,,,over,over,176,76,91,9,45.5,ok
+TOT_MV_EX_-3,total,movement_exact,rule,,-3,,,over,over,131,64,67,0,48.9,ok
+TOT_MV_EX_-3.5,total,movement_exact,rule,,-3.5,,,over,over,75,38,36,1,51.4,ok
+TOT_MV_EX_-4,total,movement_exact,rule,,-4,,,over,over,62,23,39,0,37.1,ok
+TOT_MV_EX_-4.5,total,movement_exact,rule,,-4.5,,,over,over,17,7,10,0,41.2,small_sample
+TOT_MV_EX_-5,total,movement_exact,rule,,-5,,,over,over,14,8,6,0,57.1,small_sample
+TOT_MV_EX_-5.5,total,movement_exact,rule,,-5.5,,,over,over,9,2,7,0,22.2,small_sample
+TOT_MV_EX_-6,total,movement_exact,rule,,-6,,,over,over,9,5,4,0,55.6,small_sample
+TOT_MV_EX_-6.5,total,movement_exact,rule,,-6.5,,,over,over,7,5,2,0,71.4,small_sample
+TOT_MV_EX_-7,total,movement_exact,rule,,-7,,,over,over,8,4,4,0,50.0,small_sample
+TOT_MV_EX_-7.5,total,movement_exact,rule,,-7.5,,,over,over,3,0,3,0,0.0,small_sample
+TOT_MV_EX_-8,total,movement_exact,rule,,-8,,,over,over,1,1,0,0,100.0,small_sample
+TOT_MV_EX_-8.5,total,movement_exact,rule,,-8.5,,,over,over,3,2,1,0,66.7,small_sample
+TOT_MV_EX_-9,total,movement_exact,rule,,-9,,,over,over,3,1,2,0,33.3,small_sample
+TOT_MV_EX_-9.5,total,movement_exact,rule,,-9.5,,,over,over,2,0,2,0,0.0,small_sample
+TOT_MV_EX_-10,total,movement_exact,rule,,-10,,,over,over,1,0,1,0,0.0,small_sample
+TOT_MV_EX_-11,total,movement_exact,rule,,-11,,,over,over,1,1,0,0,100.0,small_sample
+TOT_OB_0_35.5_M2O,total,opening_bucket_x_movement,rule,0-35.5,2-2.5 toward over,,,over,over,5,2,3,0,40.0,small_sample
+TOT_OB_0_35.5_M1O,total,opening_bucket_x_movement,rule,0-35.5,0.5-1.5 toward over,,,over,over,17,9,8,0,52.9,small_sample
+TOT_OB_0_35.5_M0,total,opening_bucket_x_movement,rule,0-35.5,same,,,over,over,3,2,1,0,66.7,small_sample
+TOT_OB_0_35.5_M1U,total,opening_bucket_x_movement,rule,0-35.5,0.5-1.5 toward under,,,over,over,14,8,6,0,57.1,small_sample
+TOT_OB_0_35.5_M2U,total,opening_bucket_x_movement,rule,0-35.5,2-2.5 toward under,,,over,over,1,0,1,0,0.0,small_sample
+TOT_OB_0_35.5_M3U,total,opening_bucket_x_movement,rule,0-35.5,3+ toward under,,,over,over,1,1,0,0,100.0,small_sample
+TOT_OB_36_40.5_M3O,total,opening_bucket_x_movement,rule,36-40.5,3+ toward over,,,over,over,29,11,16,2,40.7,ok
+TOT_OB_36_40.5_M2O,total,opening_bucket_x_movement,rule,36-40.5,2-2.5 toward over,,,over,over,62,29,31,2,48.3,ok
+TOT_OB_36_40.5_M1O,total,opening_bucket_x_movement,rule,36-40.5,0.5-1.5 toward over,,,over,over,220,107,108,5,49.8,ok
+TOT_OB_36_40.5_M0,total,opening_bucket_x_movement,rule,36-40.5,same,,,over,over,111,59,45,7,56.7,ok
+TOT_OB_36_40.5_M1U,total,opening_bucket_x_movement,rule,36-40.5,0.5-1.5 toward under,,,over,over,205,97,104,4,48.3,ok
+TOT_OB_36_40.5_M2U,total,opening_bucket_x_movement,rule,36-40.5,2-2.5 toward under,,,over,over,54,30,22,2,57.7,ok
+TOT_OB_36_40.5_M3U,total,opening_bucket_x_movement,rule,36-40.5,3+ toward under,,,over,over,30,13,17,0,43.3,ok
+TOT_OB_41_45.5_M3O,total,opening_bucket_x_movement,rule,41-45.5,3+ toward over,,,over,over,72,36,36,0,50.0,ok
+TOT_OB_41_45.5_M2O,total,opening_bucket_x_movement,rule,41-45.5,2-2.5 toward over,,,over,over,183,86,90,7,48.9,ok
+TOT_OB_41_45.5_M1O,total,opening_bucket_x_movement,rule,41-45.5,0.5-1.5 toward over,,,over,over,604,298,288,18,50.9,ok
+TOT_OB_41_45.5_M0,total,opening_bucket_x_movement,rule,41-45.5,same,,,over,over,279,135,136,8,49.8,ok
+TOT_OB_41_45.5_M1U,total,opening_bucket_x_movement,rule,41-45.5,0.5-1.5 toward under,,,over,over,676,329,331,16,49.8,ok
+TOT_OB_41_45.5_M2U,total,opening_bucket_x_movement,rule,41-45.5,2-2.5 toward under,,,over,over,206,97,103,6,48.5,ok
+TOT_OB_41_45.5_M3U,total,opening_bucket_x_movement,rule,41-45.5,3+ toward under,,,over,over,131,69,58,4,54.3,ok
+TOT_OB_46_50.5_M3O,total,opening_bucket_x_movement,rule,46-50.5,3+ toward over,,,over,over,64,33,31,0,51.6,ok
+TOT_OB_46_50.5_M2O,total,opening_bucket_x_movement,rule,46-50.5,2-2.5 toward over,,,over,over,109,59,48,2,55.1,ok
+TOT_OB_46_50.5_M1O,total,opening_bucket_x_movement,rule,46-50.5,0.5-1.5 toward over,,,over,over,400,206,188,6,52.3,ok
+TOT_OB_46_50.5_M0,total,opening_bucket_x_movement,rule,46-50.5,same,,,over,over,190,95,89,6,51.6,ok
+TOT_OB_46_50.5_M1U,total,opening_bucket_x_movement,rule,46-50.5,0.5-1.5 toward under,,,over,over,474,242,216,16,52.8,ok
+TOT_OB_46_50.5_M2U,total,opening_bucket_x_movement,rule,46-50.5,2-2.5 toward under,,,over,over,163,87,72,4,54.7,ok
+TOT_OB_46_50.5_M3U,total,opening_bucket_x_movement,rule,46-50.5,3+ toward under,,,over,over,123,59,61,3,49.2,ok
+TOT_OB_51P_M3O,total,opening_bucket_x_movement,rule,51+,3+ toward over,,,over,over,16,10,6,0,62.5,small_sample
+TOT_OB_51P_M2O,total,opening_bucket_x_movement,rule,51+,2-2.5 toward over,,,over,over,38,21,16,1,56.8,ok
+TOT_OB_51P_M1O,total,opening_bucket_x_movement,rule,51+,0.5-1.5 toward over,,,over,over,107,59,48,0,55.1,ok
+TOT_OB_51P_M0,total,opening_bucket_x_movement,rule,51+,same,,,over,over,50,30,18,2,62.5,ok
+TOT_OB_51P_M1U,total,opening_bucket_x_movement,rule,51+,0.5-1.5 toward under,,,over,over,143,72,71,0,50.3,ok
+TOT_OB_51P_M2U,total,opening_bucket_x_movement,rule,51+,2-2.5 toward under,,,over,over,56,25,31,0,44.6,ok
+TOT_OB_51P_M3U,total,opening_bucket_x_movement,rule,51+,3+ toward under,,,over,over,61,32,27,2,54.2,ok
+TOT_OB_BASE_0_35.5,total,opening_bucket_baseline,baseline,0-35.5,,,,over,over,41,22,19,0,53.7,ok
+TOT_OB_BASE_36_40.5,total,opening_bucket_baseline,baseline,36-40.5,,,,over,over,711,346,343,22,50.2,ok
+TOT_OB_BASE_41_45.5,total,opening_bucket_baseline,baseline,41-45.5,,,,over,over,2151,1050,1042,59,50.2,ok
+TOT_OB_BASE_46_50.5,total,opening_bucket_baseline,baseline,46-50.5,,,,over,over,1523,781,705,37,52.6,ok
+TOT_OB_BASE_51P,total,opening_bucket_baseline,baseline,51+,,,,over,over,471,249,217,5,53.4,ok
+TOT_MB_3O,total,movement_bucket_baseline,baseline,,3+ toward over,,,over,over,181,90,89,2,50.3,ok
+TOT_MB_2O,total,movement_bucket_baseline,baseline,,2-2.5 toward over,,,over,over,397,197,188,12,51.2,ok
+TOT_MB_1O,total,movement_bucket_baseline,baseline,,0.5-1.5 toward over,,,over,over,1348,679,640,29,51.5,ok
+TOT_MB_0,total,movement_bucket_baseline,baseline,,same,,,over,over,633,321,289,23,52.6,conflicting_source_statistics
+TOT_MB_1U,total,movement_bucket_baseline,baseline,,0.5-1.5 toward under,,,over,over,1512,748,728,36,50.7,ok
+TOT_MB_2U,total,movement_bucket_baseline,baseline,,2-2.5 toward under,,,over,over,480,239,229,12,51.1,ok
+TOT_MB_3U,total,movement_bucket_baseline,baseline,,3+ toward under,,,over,over,346,174,163,9,51.6,ok
+JT_7_9.5_0_35.5_FAV,joint,closing_spread_x_total,rule,,,7-9.5,0-35.5,favorite,cover,41,21,19,1,52.5,ok
+JT_7_9.5_0_35.5_OVER,joint,closing_spread_x_total,rule,,,7-9.5,0-35.5,over,over,41,26,13,2,66.7,ok
+JT_7_9.5_36_40.5_FAV,joint,closing_spread_x_total,rule,,,7-9.5,36-40.5,favorite,cover,186,99,82,5,54.7,ok
+JT_7_9.5_36_40.5_OVER,joint,closing_spread_x_total,rule,,,7-9.5,36-40.5,over,over,186,102,81,3,55.7,ok
+JT_7_9.5_41_45.5_FAV,joint,closing_spread_x_total,rule,,,7-9.5,41-45.5,favorite,cover,476,230,238,8,49.1,ok
+JT_7_9.5_41_45.5_OVER,joint,closing_spread_x_total,rule,,,7-9.5,41-45.5,over,over,476,249,217,10,53.4,ok
+JT_7_9.5_46_50.5_FAV,joint,closing_spread_x_total,rule,,,7-9.5,46-50.5,favorite,cover,289,136,145,8,48.4,ok
+JT_7_9.5_46_50.5_OVER,joint,closing_spread_x_total,rule,,,7-9.5,46-50.5,over,over,289,125,159,5,44.0,ok
+JT_7_9.5_51P_FAV,joint,closing_spread_x_total,rule,,,7-9.5,51+,favorite,cover,106,43,61,2,41.3,ok
+JT_7_9.5_51P_OVER,joint,closing_spread_x_total,rule,,,7-9.5,51+,over,over,106,51,53,2,49.0,ok
+JT_3_6.5_0_35.5_FAV,joint,closing_spread_x_total,rule,,,3-6.5,0-35.5,favorite,cover,110,49,57,4,46.2,ok
+JT_3_6.5_0_35.5_OVER,joint,closing_spread_x_total,rule,,,3-6.5,0-35.5,over,over,110,62,47,1,56.9,ok
+JT_3_6.5_36_40.5_FAV,joint,closing_spread_x_total,rule,,,3-6.5,36-40.5,favorite,cover,641,293,322,26,47.6,ok
+JT_3_6.5_36_40.5_OVER,joint,closing_spread_x_total,rule,,,3-6.5,36-40.5,over,over,641,321,311,9,50.8,ok
+JT_3_6.5_41_45.5_FAV,joint,closing_spread_x_total,rule,,,3-6.5,41-45.5,favorite,cover,1258,580,626,52,48.1,ok
+JT_3_6.5_41_45.5_OVER,joint,closing_spread_x_total,rule,,,3-6.5,41-45.5,over,over,1258,569,663,26,46.2,ok
+JT_3_6.5_46_50.5_FAV,joint,closing_spread_x_total,rule,,,3-6.5,46-50.5,favorite,cover,802,401,381,20,51.3,ok
+JT_3_6.5_46_50.5_OVER,joint,closing_spread_x_total,rule,,,3-6.5,46-50.5,over,over,802,394,397,11,49.8,ok
+JT_3_6.5_51P_FAV,joint,closing_spread_x_total,rule,,,3-6.5,51+,favorite,cover,269,126,138,5,47.7,ok
+JT_3_6.5_51P_OVER,joint,closing_spread_x_total,rule,,,3-6.5,51+,over,over,269,135,132,2,50.6,ok
+JT_14P_0_35.5_FAV,joint,closing_spread_x_total,rule,,,14+,0-35.5,favorite,cover,1,0,1,0,0.0,small_sample
+JT_14P_0_35.5_OVER,joint,closing_spread_x_total,rule,,,14+,0-35.5,over,over,1,1,0,0,100.0,small_sample
+JT_14P_36_40.5_FAV,joint,closing_spread_x_total,rule,,,14+,36-40.5,favorite,cover,33,16,16,1,50.0,ok
+JT_14P_36_40.5_OVER,joint,closing_spread_x_total,rule,,,14+,36-40.5,over,over,33,21,12,0,63.6,ok
+JT_14P_41_45.5_FAV,joint,closing_spread_x_total,rule,,,14+,41-45.5,favorite,cover,83,36,45,2,44.4,ok
+JT_14P_41_45.5_OVER,joint,closing_spread_x_total,rule,,,14+,41-45.5,over,over,83,37,43,3,46.3,ok
+JT_14P_46_50.5_FAV,joint,closing_spread_x_total,rule,,,14+,46-50.5,favorite,cover,57,29,24,4,54.7,ok
+JT_14P_46_50.5_OVER,joint,closing_spread_x_total,rule,,,14+,46-50.5,over,over,57,26,31,0,45.6,ok
+JT_14P_51P_FAV,joint,closing_spread_x_total,rule,,,14+,51+,favorite,cover,8,3,5,0,37.5,small_sample
+JT_14P_51P_OVER,joint,closing_spread_x_total,rule,,,14+,51+,over,over,8,4,4,0,50.0,small_sample
+JT_10_13.5_0_35.5_FAV,joint,closing_spread_x_total,rule,,,10-13.5,0-35.5,favorite,cover,18,8,10,0,44.4,small_sample
+JT_10_13.5_0_35.5_OVER,joint,closing_spread_x_total,rule,,,10-13.5,0-35.5,over,over,18,7,10,1,41.2,small_sample
+JT_10_13.5_36_40.5_FAV,joint,closing_spread_x_total,rule,,,10-13.5,36-40.5,favorite,cover,111,53,54,4,49.5,ok
+JT_10_13.5_36_40.5_OVER,joint,closing_spread_x_total,rule,,,10-13.5,36-40.5,over,over,111,58,53,0,52.3,ok
+JT_10_13.5_41_45.5_FAV,joint,closing_spread_x_total,rule,,,10-13.5,41-45.5,favorite,cover,257,113,136,8,45.4,ok
+JT_10_13.5_41_45.5_OVER,joint,closing_spread_x_total,rule,,,10-13.5,41-45.5,over,over,257,118,132,7,47.2,ok
+JT_10_13.5_46_50.5_FAV,joint,closing_spread_x_total,rule,,,10-13.5,46-50.5,favorite,cover,166,82,81,3,50.3,ok
+JT_10_13.5_46_50.5_OVER,joint,closing_spread_x_total,rule,,,10-13.5,46-50.5,over,over,166,77,89,0,46.4,ok
+JT_10_13.5_51P_FAV,joint,closing_spread_x_total,rule,,,10-13.5,51+,favorite,cover,34,17,17,0,50.0,ok
+JT_10_13.5_51P_OVER,joint,closing_spread_x_total,rule,,,10-13.5,51+,over,over,34,12,20,2,37.5,ok
+JT_1_2.5_0_35.5_FAV,joint,closing_spread_x_total,rule,,,1-2.5,0-35.5,favorite,cover,44,25,19,0,56.8,ok
+JT_1_2.5_0_35.5_OVER,joint,closing_spread_x_total,rule,,,1-2.5,0-35.5,over,over,44,22,22,0,50.0,ok
+JT_1_2.5_36_40.5_FAV,joint,closing_spread_x_total,rule,,,1-2.5,36-40.5,favorite,cover,261,133,127,1,51.2,ok
+JT_1_2.5_36_40.5_OVER,joint,closing_spread_x_total,rule,,,1-2.5,36-40.5,over,over,261,128,125,8,50.6,ok
+JT_1_2.5_41_45.5_FAV,joint,closing_spread_x_total,rule,,,1-2.5,41-45.5,favorite,cover,483,228,252,3,47.5,ok
+JT_1_2.5_41_45.5_OVER,joint,closing_spread_x_total,rule,,,1-2.5,41-45.5,over,over,483,250,225,8,52.6,ok
+JT_1_2.5_46_50.5_FAV,joint,closing_spread_x_total,rule,,,1-2.5,46-50.5,favorite,cover,323,156,159,8,49.5,ok
+JT_1_2.5_46_50.5_OVER,joint,closing_spread_x_total,rule,,,1-2.5,46-50.5,over,over,323,152,167,4,47.6,ok
+JT_1_2.5_51P_FAV,joint,closing_spread_x_total,rule,,,1-2.5,51+,favorite,cover,96,50,45,1,52.6,ok
+JT_1_2.5_51P_OVER,joint,closing_spread_x_total,rule,,,1-2.5,51+,over,over,96,45,48,3,48.4,ok

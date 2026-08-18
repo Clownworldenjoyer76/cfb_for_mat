@@ -1,0 +1,188 @@
+You only need one workflow YAML because filter_performance_report.py can run either a baseline report or any threshold sweep you specify.
+
+I did not access GitHub.
+
+1. Create this workflow
+
+Create:
+
+.github/workflows/nfl_filter_performance.yml
+
+Full YAML:
+
+name: NFL Backtest Filter Performance
+# MANUAL RUN ONLY.
+# Reads completed backtest files and builds a filter-performance report.
+#
+# Reads:
+#   docs/win/football/nfl/models/backtest/walkforward_probabilities.csv
+#   docs/win/football/nfl/models/backtest/historical_moneyline_selected.csv
+#   docs/win/football/nfl/models/backtest/historical_spread_selected.csv
+#   docs/win/football/nfl/models/backtest/historical_total_selected.csv
+#
+# Runs:
+#   docs/win/football/nfl/models/backtest/filter_performance_report.py
+#
+# Writes:
+#   docs/win/football/nfl/models/backtest/filter_performance_report.csv
+on:
+  workflow_dispatch:
+    inputs:
+      markets:
+        description: "Markets, space-separated: moneyline spread total"
+        required: false
+        default: "moneyline spread total"
+        type: string
+      min_ev:
+        description: "Minimum EV values, space-separated. Leave blank for no EV filter."
+        required: false
+        default: ""
+        type: string
+      min_edge:
+        description: "Minimum edge values, space-separated. Leave blank for no edge filter."
+        required: false
+        default: ""
+        type: string
+      min_model_prob:
+        description: "Minimum model probabilities, space-separated. Leave blank for no probability filter."
+        required: false
+        default: ""
+        type: string
+      min_odds_american:
+        description: "Minimum American odds values, space-separated. Leave blank for no minimum."
+        required: false
+        default: ""
+        type: string
+      max_odds_american:
+        description: "Maximum American odds values, space-separated. Leave blank for no maximum."
+        required: false
+        default: ""
+        type: string
+      min_kelly:
+        description: "Minimum Kelly values, space-separated. Leave blank for no Kelly filter."
+        required: false
+        default: ""
+        type: string
+permissions:
+  contents: write
+jobs:
+  filter-performance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy
+      - name: Run filter performance report
+        env:
+          MARKETS: ${{ inputs.markets }}
+          MIN_EV: ${{ inputs.min_ev }}
+          MIN_EDGE: ${{ inputs.min_edge }}
+          MIN_MODEL_PROB: ${{ inputs.min_model_prob }}
+          MIN_ODDS_AMERICAN: ${{ inputs.min_odds_american }}
+          MAX_ODDS_AMERICAN: ${{ inputs.max_odds_american }}
+          MIN_KELLY: ${{ inputs.min_kelly }}
+        run: |
+          SCRIPT="docs/win/football/nfl/models/backtest/filter_performance_report.py"
+          OUTPUT="docs/win/football/nfl/models/backtest/filter_performance_report.csv"
+          ARGS=(
+            --output "$OUTPUT"
+          )
+          if [[ -n "$MARKETS" ]]; then
+            read -r -a VALUES <<< "$MARKETS"
+            ARGS+=(--markets "${VALUES[@]}")
+          fi
+          if [[ -n "$MIN_EV" ]]; then
+            read -r -a VALUES <<< "$MIN_EV"
+            ARGS+=(--min-ev "${VALUES[@]}")
+          fi
+          if [[ -n "$MIN_EDGE" ]]; then
+            read -r -a VALUES <<< "$MIN_EDGE"
+            ARGS+=(--min-edge "${VALUES[@]}")
+          fi
+          if [[ -n "$MIN_MODEL_PROB" ]]; then
+            read -r -a VALUES <<< "$MIN_MODEL_PROB"
+            ARGS+=(--min-model-prob "${VALUES[@]}")
+          fi
+          if [[ -n "$MIN_ODDS_AMERICAN" ]]; then
+            read -r -a VALUES <<< "$MIN_ODDS_AMERICAN"
+            ARGS+=(--min-odds-american "${VALUES[@]}")
+          fi
+          if [[ -n "$MAX_ODDS_AMERICAN" ]]; then
+            read -r -a VALUES <<< "$MAX_ODDS_AMERICAN"
+            ARGS+=(--max-odds-american "${VALUES[@]}")
+          fi
+          if [[ -n "$MIN_KELLY" ]]; then
+            read -r -a VALUES <<< "$MIN_KELLY"
+            ARGS+=(--min-kelly "${VALUES[@]}")
+          fi
+          python "$SCRIPT" "${ARGS[@]}"
+      - name: Commit filter performance report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/win/football/nfl/models/backtest/filter_performance_report.csv
+          if git diff --cached --quiet; then
+            echo "No filter performance report changes to commit."
+            exit 0
+          fi
+          git commit -m "Update NFL backtest filter performance report"
+          git push
+
+2. How to run it
+
+Go to:
+
+GitHub → Actions → NFL Backtest Filter Performance → Run workflow
+
+Use main.
+
+For the first run, leave every threshold field blank. Keep:
+
+markets:
+moneyline spread total
+
+That produces the baseline and confirms the workflow/script operate correctly.
+
+The resulting file will be:
+
+docs/win/football/nfl/models/backtest/filter_performance_report.csv
+
+and the workflow will commit it back to GitHub.
+
+3. Then run an actual sweep
+
+After the baseline succeeds, run the same workflow again and enter the threshold values you specifically want tested.
+
+The fields accept space-separated values. For example, if you decide you want these EV values tested:
+
+0 0.03 0.05 0.10
+
+put exactly that in min_ev.
+
+If you also enter:
+
+min_edge:
+0 0.02 0.05
+
+the script tests every combination of those EV and edge values.
+
+Leave any dimension blank when you do not want it filtered.
+
+Important
+
+The script automatically creates separate total rows for:
+
+ALL
+OVER
+UNDER
+
+So you do not need a separate totals workflow.
+
+The first run should be all blanks so we verify that its baseline rows reproduce the original 883 ML, 520 spread, and 793 total selections before doing any filter analysis.

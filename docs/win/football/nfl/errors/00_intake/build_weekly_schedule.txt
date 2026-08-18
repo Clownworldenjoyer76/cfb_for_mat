@@ -1,0 +1,15 @@
+[2026-08-16T15:04:40.745278+00:00] Schedule input: docs/win/football/nfl/00_intake/schedule/2026_schedule.csv
+[2026-08-16T15:04:40.745323+00:00] Odds CSV input: docs/win/football/nfl/00_intake/odds/2026_08_16_NFL_odds.csv
+[2026-08-16T15:04:40.745348+00:00] Raw odds input: docs/win/football/nfl/00_intake/odds/raw/2026_08_16_nfl_odds.json
+[2026-08-16T15:04:40.785609+00:00] Schedule rows loaded: 272
+[2026-08-16T15:04:40.785641+00:00] Raw odds events loaded: 137
+[2026-08-16T15:04:40.785664+00:00] Raw odds objects loaded: 137
+[2026-08-16T15:04:40.785697+00:00] Odds CSV rows loaded: 822
+[2026-08-16T15:04:40.785737+00:00] Schedule matches from raw odds events: 137
+[2026-08-16T15:04:40.785762+00:00] Unmatched raw odds events: 0
+[2026-08-16T15:04:40.785783+00:00] Target week: season=2026, season_type=reg, week=1
+[2026-08-16T15:04:40.785803+00:00] Weekly schedule rows written: 16
+[2026-08-16T15:04:40.785831+00:00] Rows with odds: 16
+[2026-08-16T15:04:40.785850+00:00] Rows with event but no odds: 0
+[2026-08-16T15:04:40.785869+00:00] Rows with no odds event match: 0
+[2026-08-16T15:04:40.785888+00:00] Output written: docs/win/football/nfl/00_intake/schedule/weekly/week_1_NFL_weekly_schedule.csv

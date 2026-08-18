@@ -1,0 +1,486 @@
+{
+  "step": 14,
+  "candidate_version": "v4_market_independent_outcomes",
+  "production_cutover": false,
+  "created_utc": "2026-08-15T16:46:26.573149+00:00",
+  "oof_seasons": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "final_selected_variants": {
+    "margin": "augmented",
+    "total": "augmented",
+    "moneyline": "augmented"
+  },
+  "raw_variant_metrics": {
+    "margin": {
+      "core": {
+        "n": 1138,
+        "mae": 10.389973289218222,
+        "rmse": 13.411890612294705
+      },
+      "augmented": {
+        "n": 1138,
+        "mae": 9.852877893386507,
+        "rmse": 12.767673814142746
+      }
+    },
+    "total": {
+      "core": {
+        "n": 1138,
+        "mae": 10.758418375935415,
+        "rmse": 13.517322285576277
+      },
+      "augmented": {
+        "n": 1138,
+        "mae": 10.527528780906048,
+        "rmse": 13.285658471224743
+      }
+    },
+    "moneyline": {
+      "core": {
+        "n": 1135,
+        "brier": 0.24008442863972726,
+        "logloss": 0.6727476001164474,
+        "accuracy": 0.5744493392070484
+      },
+      "augmented": {
+        "n": 1135,
+        "brier": 0.21994777216943098,
+        "logloss": 0.6299331141768248,
+        "accuracy": 0.6466960352422908
+      }
+    }
+  },
+  "selected_raw_metrics": {
+    "margin": {
+      "n": 1138,
+      "mae": 9.852877893386507,
+      "rmse": 12.767673814142746
+    },
+    "total": {
+      "n": 1138,
+      "mae": 10.527528780906048,
+      "rmse": 13.285658471224743
+    },
+    "moneyline": {
+      "n": 1135,
+      "brier": 0.21994777216943098,
+      "logloss": 0.6299331141768248,
+      "accuracy": 0.6466960352422908
+    }
+  },
+  "naive_baselines": {
+    "margin": {
+      "n": 1138,
+      "mae": 10.696106012391658,
+      "rmse": 13.863278195123737
+    },
+    "total": {
+      "n": 1138,
+      "mae": 10.810878709555714,
+      "rmse": 13.70177596735529
+    },
+    "moneyline": {
+      "n": 1135,
+      "brier": 0.24768883863629604,
+      "logloss": 0.6885193957723648,
+      "accuracy": 0.5541850220264317
+    }
+  },
+  "closing_market_benchmarks": {
+    "margin": {
+      "n": 1138,
+      "mae": 9.53207381370826,
+      "rmse": 12.42164369099115
+    },
+    "total": {
+      "n": 1138,
+      "mae": 10.191564147627416,
+      "rmse": 13.02967412228198
+    },
+    "moneyline": {
+      "n": 1135,
+      "brier": 0.2100652105778717,
+      "logloss": 0.6072770226281572,
+      "accuracy": 0.6731277533039648
+    }
+  },
+  "nested_chronological_metrics": {
+    "margin": {
+      "n": 854,
+      "mae": 10.088579081528223,
+      "rmse": 13.023734229692803
+    },
+    "total": {
+      "n": 854,
+      "mae": 10.37592697462006,
+      "rmse": 13.16476458970037
+    },
+    "moneyline": {
+      "n": 853,
+      "brier": 0.21884568793042866,
+      "logloss": 0.6280292025031033,
+      "accuracy": 0.6541617819460727
+    },
+    "spread_vs_closing": {
+      "n": 835,
+      "brier": 0.25916888141681077,
+      "logloss": 0.7138747666097424,
+      "accuracy": 0.5125748502994012
+    },
+    "total_vs_closing": {
+      "n": 847,
+      "brier": 0.25985523451846104,
+      "logloss": 0.7140811081980758,
+      "accuracy": 0.4911452184179457
+    }
+  },
+  "nested_chronological_baselines": {
+    "margin_naive": {
+      "n": 854,
+      "mae": 11.065537051641343,
+      "rmse": 14.31721476221064
+    },
+    "total_naive": {
+      "n": 854,
+      "mae": 10.66234969337362,
+      "rmse": 13.62657742096952
+    },
+    "moneyline_naive": {
+      "n": 853,
+      "brier": 0.2476066092431092,
+      "logloss": 0.6883536528438486,
+      "accuracy": 0.5498241500586166
+    },
+    "margin_closing": {
+      "n": 854,
+      "mae": 9.781030444964872,
+      "rmse": 12.71717660474419
+    },
+    "total_closing": {
+      "n": 854,
+      "mae": 10.12295081967213,
+      "rmse": 12.968232668641065
+    },
+    "moneyline_closing": {
+      "n": 853,
+      "brier": 0.21032250520680015,
+      "logloss": 0.6080420966304689,
+      "accuracy": 0.6787807737397421
+    },
+    "spread_closing": {
+      "n": 835,
+      "brier": 0.2501250263200838,
+      "logloss": 0.6933975651644441,
+      "accuracy": 0.49820359281437127
+    },
+    "total_price_closing": {
+      "n": 847,
+      "brier": 0.25006404413545136,
+      "logloss": 0.6932755440091551,
+      "accuracy": 0.5171192443919717
+    }
+  },
+  "nested_fold_metadata": [
+    {
+      "season": 2023,
+      "selected_variants": {
+        "margin": "augmented",
+        "total": "augmented",
+        "moneyline": "augmented"
+      },
+      "platt": {
+        "intercept": 0.17674214252898582,
+        "slope": 0.9977139633998796,
+        "fit_rows": 282
+      },
+      "residual_rows": {
+        "margin": 284,
+        "total": 284
+      }
+    },
+    {
+      "season": 2024,
+      "selected_variants": {
+        "margin": "augmented",
+        "total": "augmented",
+        "moneyline": "augmented"
+      },
+      "platt": {
+        "intercept": 0.1497034282920199,
+        "slope": 0.9927725550263686,
+        "fit_rows": 567
+      },
+      "residual_rows": {
+        "margin": 569,
+        "total": 569
+      }
+    },
+    {
+      "season": 2025,
+      "selected_variants": {
+        "margin": "augmented",
+        "total": "augmented",
+        "moneyline": "augmented"
+      },
+      "platt": {
+        "intercept": 0.11729051226290632,
+        "slope": 1.1459132831895387,
+        "fit_rows": 852
+      },
+      "residual_rows": {
+        "margin": 854,
+        "total": 854
+      }
+    }
+  ],
+  "season_comparison": [
+    {
+      "season": 2023,
+      "margin_model_rmse": 13.465121774617387,
+      "margin_naive_rmse": 14.407781172187551,
+      "total_model_rmse": 13.343224780085455,
+      "total_naive_rmse": 13.737080242718719,
+      "moneyline_model_logloss": 0.639314649022968,
+      "moneyline_naive_logloss": 0.6857198079846516,
+      "margin_beats_naive": true,
+      "total_beats_naive": true,
+      "moneyline_beats_naive": true
+    },
+    {
+      "season": 2024,
+      "margin_model_rmse": 12.880559580559968,
+      "margin_naive_rmse": 14.442081406182318,
+      "total_model_rmse": 12.814833151917,
+      "total_naive_rmse": 13.255764738045736,
+      "moneyline_model_logloss": 0.6125695214720975,
+      "moneyline_naive_logloss": 0.6886662767577383,
+      "margin_beats_naive": true,
+      "total_beats_naive": true,
+      "moneyline_beats_naive": true
+    },
+    {
+      "season": 2025,
+      "margin_model_rmse": 12.712455747922371,
+      "margin_naive_rmse": 14.098518967462658,
+      "total_model_rmse": 13.329922639900317,
+      "total_naive_rmse": 13.879935766844403,
+      "moneyline_model_logloss": 0.6322329369047827,
+      "moneyline_naive_logloss": 0.6906912781774625,
+      "margin_beats_naive": true,
+      "total_beats_naive": true,
+      "moneyline_beats_naive": true
+    }
+  ],
+  "gates": {
+    "margin": {
+      "beats_naive_overall": true,
+      "seasons_beating_naive": 3,
+      "seasons_evaluated": 3,
+      "pass": true
+    },
+    "total": {
+      "beats_naive_overall": true,
+      "seasons_beating_naive": 3,
+      "seasons_evaluated": 3,
+      "pass": true
+    },
+    "moneyline": {
+      "beats_naive_overall": true,
+      "seasons_beating_naive": 3,
+      "seasons_evaluated": 3,
+      "pass": true
+    }
+  },
+  "overall_candidate_pass": true,
+  "closing_market_diagnostic": {
+    "warning": "Closing-market diagnostic only; not live decision-time betting performance.",
+    "spread": {
+      "n": 1109,
+      "brier": 0.2586253712979325,
+      "logloss": 0.7124564227489601,
+      "accuracy": 0.5139765554553652
+    },
+    "spread_market": {
+      "n": 1109,
+      "brier": 0.2497116022852504,
+      "logloss": 0.6925695988964345,
+      "accuracy": 0.5058611361587015
+    },
+    "total": {
+      "n": 1128,
+      "brier": 0.25848774455506873,
+      "logloss": 0.7114936663090166,
+      "accuracy": 0.5
+    },
+    "total_market": {
+      "n": 1128,
+      "brier": 0.2500287402304702,
+      "logloss": 0.6932046554806245,
+      "accuracy": 0.5088652482269503
+    }
+  },
+  "calibration_bins": {
+    "moneyline": [
+      {
+        "n": 114,
+        "mean_probability": 0.314816873878619,
+        "observed_rate": 0.2631578947368421
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.3766314595274958,
+        "observed_rate": 0.39823008849557523
+      },
+      {
+        "n": 114,
+        "mean_probability": 0.4143659970333585,
+        "observed_rate": 0.41228070175438597
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.45823817540746803,
+        "observed_rate": 0.4778761061946903
+      },
+      {
+        "n": 114,
+        "mean_probability": 0.5008141227384196,
+        "observed_rate": 0.49122807017543857
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.5575700452818214,
+        "observed_rate": 0.5929203539823009
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.6184951392914831,
+        "observed_rate": 0.6106194690265486
+      },
+      {
+        "n": 114,
+        "mean_probability": 0.6919603476261177,
+        "observed_rate": 0.7280701754385965
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.7664768085193133,
+        "observed_rate": 0.7522123893805309
+      },
+      {
+        "n": 114,
+        "mean_probability": 0.8425381502323729,
+        "observed_rate": 0.8157894736842105
+      }
+    ],
+    "spread_closing": [
+      {
+        "n": 111,
+        "mean_probability": 0.34897639291312416,
+        "observed_rate": 0.5495495495495496
+      },
+      {
+        "n": 111,
+        "mean_probability": 0.41115280482591565,
+        "observed_rate": 0.43243243243243246
+      },
+      {
+        "n": 111,
+        "mean_probability": 0.44288224956063266,
+        "observed_rate": 0.45045045045045046
+      },
+      {
+        "n": 111,
+        "mean_probability": 0.47145299957250747,
+        "observed_rate": 0.4954954954954955
+      },
+      {
+        "n": 111,
+        "mean_probability": 0.49768837378679204,
+        "observed_rate": 0.5135135135135135
+      },
+      {
+        "n": 110,
+        "mean_probability": 0.5196117590669437,
+        "observed_rate": 0.5
+      },
+      {
+        "n": 111,
+        "mean_probability": 0.5463275226016879,
+        "observed_rate": 0.5315315315315315
+      },
+      {
+        "n": 111,
+        "mean_probability": 0.5765924096328313,
+        "observed_rate": 0.5225225225225225
+      },
+      {
+        "n": 111,
+        "mean_probability": 0.6199433176586078,
+        "observed_rate": 0.5135135135135135
+      },
+      {
+        "n": 111,
+        "mean_probability": 0.7026552035339383,
+        "observed_rate": 0.5405405405405406
+      }
+    ],
+    "total_closing": [
+      {
+        "n": 113,
+        "mean_probability": 0.34038135527318536,
+        "observed_rate": 0.5752212389380531
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.4004930245579109,
+        "observed_rate": 0.39823008849557523
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.43397048073782596,
+        "observed_rate": 0.4778761061946903
+      },
+      {
+        "n": 112,
+        "mean_probability": 0.45839348481044434,
+        "observed_rate": 0.45535714285714285
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.4767407499572297,
+        "observed_rate": 0.5221238938053098
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.4987557739863446,
+        "observed_rate": 0.5132743362831859
+      },
+      {
+        "n": 112,
+        "mean_probability": 0.5214897690183279,
+        "observed_rate": 0.4732142857142857
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.5459819276171517,
+        "observed_rate": 0.5132743362831859
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.5811935238035989,
+        "observed_rate": 0.45132743362831856
+      },
+      {
+        "n": 113,
+        "mean_probability": 0.6653654136273854,
+        "observed_rate": 0.5398230088495575
+      }
+    ]
+  },
+  "historical_roi_claim_allowed": false,
+  "next_stage": "If forecast gates pass, deploy in shadow/forward-validation mode against preserved 2026 sportsbook snapshots."
+}

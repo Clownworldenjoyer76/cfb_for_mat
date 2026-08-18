@@ -1,7 +1,10 @@
-sportsdataverse
-cfbd
-pandas
-python-dateutil
-pytz
+pandas==1.5.3
+numpy==1.26.4
+scikit-learn==1.4.2
+lightgbm==4.3.0
+xgboost==2.0.3
+scipy==1.10.1
+pyarrow==14.0.2
+nfl_data_py==0.3.3
+pyyaml==6.0.2
 requests
-pyyaml

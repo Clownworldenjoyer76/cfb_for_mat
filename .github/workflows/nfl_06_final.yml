@@ -1,0 +1,49 @@
+name: NFL 06 Final
+
+# MANUAL RUN ONLY.
+#
+# Pulls final NFL scores/status from ESPN and writes:
+# docs/win/football/nfl/04_final_results/results/
+#
+# Also writes the run/error log to:
+# docs/win/football/nfl/errors/04_final_results/pull_final_scores.txt
+#
+# Generated files are committed back to the repository.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  nfl-final-results:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Run NFL final scores
+        run: |
+          python docs/win/football/nfl/scripts/04_final_results/pull_final_scores.py
+
+      - name: Commit final results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add docs/win/football/nfl/04_final_results/results/
+          git add docs/win/football/nfl/errors/04_final_results/pull_final_scores.txt
+
+          if git diff --cached --quiet; then
+            echo "No final-results changes to commit."
+          else
+            git commit -m "Update NFL final results"
+            git push
+          fi

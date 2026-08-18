@@ -1,0 +1,103 @@
+sport,league,player_id,name,team,position_abb,position,injury,depth_chart_rank,starter_flag,backup_flag,team_id,season,guid,uid
+football,nfl,4570044,Jaquan Brisker,PIT,FS,Free Safety,healthy,1,1,0,23,2026,036fd1d7-80a7-613d-5f86-981407de3d6d,s:20~l:28~a:4570044
+football,nfl,4696820,Jack Henderson,PIT,FS,Free Safety,healthy,2,0,1,23,2026,c1de8f02-e271-3d86-8819-af674214468f,s:20~l:28~a:4696820
+football,nfl,4430961,Devan Boykin,PIT,FS,Free Safety,healthy,3,0,1,23,2026,c99b4d71-d346-374c-9682-089878ef9054,s:20~l:28~a:4430961
+football,nfl,2969961,Rayshawn Jenkins,PIT,FS,Free Safety,healthy,4,0,1,23,2026,c4263718-6be9-f66e-f50e-93c290c30802,s:20~l:28~a:2969961
+football,nfl,4426506,Joey Porter Jr.,PIT,LCB,Left Cornerback,Out,1,1,0,23,2026,947fca04-4472-9b5d-251a-3cdd97841e20,s:20~l:28~a:4426506
+football,nfl,4363034,Asante Samuel Jr.,PIT,LCB,Left Cornerback,healthy,2,0,1,23,2026,d3e870a4-6ef6-23a2-d633-1ed041ea905e,s:20~l:28~a:4363034
+football,nfl,4362082,D'Shawn Jamison,PIT,LCB,Left Cornerback,healthy,3,0,1,23,2026,e25c6afa-d175-03f9-e935-8a8f55fa9000,s:20~l:28~a:4362082
+football,nfl,4565353,Tamon Lynum,PIT,LCB,Left Cornerback,healthy,4,0,1,23,2026,abbb4a1d-aa7e-3581-9a84-433505bbdb6e,s:20~l:28~a:4565353
+football,nfl,4682980,Derrick Harmon,PIT,LDE,Left Defensive End,healthy,1,1,0,23,2026,dda3e155-2461-3379-8a26-0218bf5962c7,s:20~l:28~a:4682980
+football,nfl,4431533,Gabriel Rubio,PIT,LDE,Left Defensive End,healthy,2,0,1,23,2026,35ba77e7-32b5-37c7-8958-02a0e269fe04,s:20~l:28~a:4431533
+football,nfl,4372378,Anthony Goodlow,PIT,LDE,Left Defensive End,healthy,3,0,1,23,2026,af3a3223-41ad-f974-572b-e18fcfcde446,s:20~l:28~a:4372378
+football,nfl,5084849,Kevin Jobity Jr.,PIT,LDE,Left Defensive End,healthy,4,0,1,23,2026,782f92fc-7a54-388a-845f-3c5f51f91f5f,s:20~l:28~a:5084849
+football,nfl,4361652,Payton Wilson,PIT,LILB,Left Inside Linebacker,healthy,1,1,0,23,2026,c1a0c4b5-c6d8-b2e5-4d96-018b0cf333ec,s:20~l:28~a:4361652
+football,nfl,3116689,Cole Holcomb,PIT,LILB,Left Inside Linebacker,healthy,2,0,1,23,2026,e34a3e1f-6169-a875-d6ae-76d9417b9320,s:20~l:28~a:3116689
+football,nfl,4040615,Malik Harrison,PIT,LILB,Left Inside Linebacker,healthy,3,0,1,23,2026,540ade42-3b3f-be65-4b81-046ec29461e6,s:20~l:28~a:4040615
+football,nfl,3045373,Jalen Ramsey,PIT,NB,Nickel Back,Out,1,1,0,23,2026,a5623fce-1fb1-d273-2b6e-61ac583303c3,s:20~l:28~a:3045373
+football,nfl,4567979,Brandin Echols,PIT,NB,Nickel Back,healthy,2,0,1,23,2026,6338c7ad-ee07-06e2-b921-a5b57f96464a,s:20~l:28~a:4567979
+football,nfl,4608004,Donte Kent,PIT,NB,Nickel Back,Out,3,0,1,23,2026,6b6dda44-8d07-3eff-8e9d-4f482e72beaf,s:20~l:28~a:4608004
+football,nfl,4362855,Israel Mukuamu,PIT,NB,Nickel Back,healthy,4,0,1,23,2026,d2993b56-a90e-65e9-000f-f0969811c363,s:20~l:28~a:4362855
+football,nfl,4430947,Yahya Black,PIT,NT,Nose Tackle,healthy,1,1,0,23,2026,719d67dc-96d8-3b44-9a9c-8ac9a3f58075,s:20~l:28~a:4430947
+football,nfl,3047495,Sebastian Joseph-Day,PIT,NT,Nose Tackle,healthy,2,0,1,23,2026,23ac2df6-b423-cfe9-5527-7a09058b5b4b,s:20~l:28~a:3047495
+football,nfl,4240759,Esezi Otomewo,PIT,NT,Nose Tackle,healthy,3,0,1,23,2026,2a6b3a0f-9c18-32de-fb07-77979243dcde,s:20~l:28~a:4240759
+football,nfl,4573443,Kyler Baugh,PIT,NT,Nose Tackle,healthy,4,0,1,23,2026,10fe9828-fd8c-3e56-4a25-0696ede6a857,s:20~l:28~a:4573443
+football,nfl,3873935,Jamel Dean,PIT,RCB,Right Cornerback,healthy,1,1,0,23,2026,537896f1-aa7f-dc2b-5a56-b9bdae0e9c06,s:20~l:28~a:3873935
+football,nfl,4685327,Daylen Everette,PIT,RCB,Right Cornerback,healthy,2,0,1,23,2026,c4f37108-302c-3730-b2eb-a6926cdb02bc,s:20~l:28~a:4685327
+football,nfl,4692628,Doneiko Slaughter,PIT,RCB,Right Cornerback,healthy,3,0,1,23,2026,bb5c76dd-fca7-35dd-a332-4eb392489644,s:20~l:28~a:4692628
+football,nfl,4691005,Daryl Porter,PIT,RCB,Right Cornerback,healthy,4,0,1,23,2026,81d7eba4-50e9-3bac-a408-5341eb1657c1,s:20~l:28~a:4691005
+football,nfl,4429743,Daequan Hardy,PIT,RCB,Right Cornerback,Injured Reserve,5,0,1,23,2026,703c73dc-b861-d70d-a277-69a3a0891d49,s:20~l:28~a:4429743
+football,nfl,13977,Cameron Heyward,PIT,RDE,Right Defensive End,healthy,1,1,0,23,2026,712b78be-6085-d619-137e-3179c2c4c1f4,s:20~l:28~a:13977
+football,nfl,4426694,Keeanu Benton,PIT,RDE,Right Defensive End,healthy,2,0,1,23,2026,1b33cedc-29a8-f9f6-53dc-05a3d0ebcc07,s:20~l:28~a:4426694
+football,nfl,2974348,Dean Lowry,PIT,RDE,Right Defensive End,healthy,3,0,1,23,2026,1771f92f-43b5-5e6e-92b7-0908d2a762a4,s:20~l:28~a:2974348
+football,nfl,4569474,Logan Lee,PIT,RDE,Right Defensive End,healthy,4,0,1,23,2026,9780b54f-eb65-4ffd-ef82-426f801220f6,s:20~l:28~a:4569474
+football,nfl,4242207,Patrick Queen,PIT,RILB,Right Inside Linebacker,healthy,1,1,0,23,2026,8822527a-d2cf-e259-fbf1-8989fdec740c,s:20~l:28~a:4242207
+football,nfl,2987743,Elandon Roberts,PIT,RILB,Right Inside Linebacker,healthy,2,0,1,23,2026,72ae3704-1297-b57d-6759-c32f8a26fca6,s:20~l:28~a:2987743
+football,nfl,4429490,Carson Bruener,PIT,RILB,Right Inside Linebacker,healthy,3,0,1,23,2026,b94cea81-bc3a-3c33-bf5a-e87ff1a3de87,s:20~l:28~a:4429490
+football,nfl,4428909,Jacoby Windmon,PIT,RILB,Right Inside Linebacker,healthy,4,0,1,23,2026,3e45dffa-3564-0d0a-5e73-9d725fa282d9,s:20~l:28~a:4428909
+football,nfl,4037333,Alex Highsmith,PIT,SLB,Strongside Linebacker,healthy,1,1,0,23,2026,3d63171f-bbec-74eb-1235-7d4fc7745b73,s:20~l:28~a:4037333
+football,nfl,4431590,Jack Sawyer,PIT,SLB,Strongside Linebacker,healthy,2,0,1,23,2026,a810e96c-0c76-30c2-aa9f-16d54b53a1a4,s:20~l:28~a:4431590
+football,nfl,4372098,Julius Welschof,PIT,SLB,Strongside Linebacker,healthy,3,0,1,23,2026,ebd24a7e-cb3c-f264-b6be-bebb71c8b09c,s:20~l:28~a:4372098
+football,nfl,3929846,DeShon Elliott,PIT,SS,Strong Safety,healthy,1,1,0,23,2026,61000bf9-77e4-ce4a-0964-fd79175445bb,s:20~l:28~a:3929846
+football,nfl,2969961,Rayshawn Jenkins,PIT,SS,Strong Safety,healthy,2,0,1,23,2026,c4263718-6be9-f66e-f50e-93c290c30802,s:20~l:28~a:2969961
+football,nfl,4426882,Sebastian Castro,PIT,SS,Strong Safety,healthy,3,0,1,23,2026,541b7df1-2847-0b19-7567-14e85fcc1234,s:20~l:28~a:4426882
+football,nfl,3045282,T.J. Watt,PIT,WLB,Weakside Linebacker,healthy,1,1,0,23,2026,fa239d3e-e2c0-2e06-6856-2a52abea3f2c,s:20~l:28~a:3045282
+football,nfl,4429164,Nick Herbig,PIT,WLB,Weakside Linebacker,healthy,2,0,1,23,2026,b5a6a0e4-88c9-3a7f-ae1c-8c7ecb944815,s:20~l:28~a:4429164
+football,nfl,4240778,Jamin Davis,PIT,WLB,Weakside Linebacker,healthy,3,0,1,23,2026,7cab5bfa-fa89-3d3f-6d27-82a0779ecbb5,s:20~l:28~a:4240778
+football,nfl,3051397,Cameron Johnston,PIT,H,Holder,healthy,1,1,0,23,2026,625afb46-2094-7b6a-55ca-a3171dc77a35,s:20~l:28~a:3051397
+football,nfl,5081338,Kaden Wetjen,PIT,KR,Kick Returner,healthy,1,1,0,23,2026,319efe37-aa87-38b0-9bd2-59f6317273c6,s:20~l:28~a:5081338
+football,nfl,4569987,Jaylen Warren,PIT,KR,Kick Returner,healthy,2,0,1,23,2026,224e4c1e-625d-b1b2-b8ea-1316942fa7ac,s:20~l:28~a:4569987
+football,nfl,4038815,Rico Dowdle,PIT,KR,Kick Returner,healthy,3,0,1,23,2026,da1e8487-d66d-6ff0-7438-e9d6e77856e0,s:20~l:28~a:4038815
+football,nfl,4608004,Donte Kent,PIT,KR,Kick Returner,Out,4,0,1,23,2026,6b6dda44-8d07-3eff-8e9d-4f482e72beaf,s:20~l:28~a:4608004
+football,nfl,2978524,Christian Kuntz,PIT,LS,Long Snapper,healthy,1,1,0,23,2026,df1bfc4e-06df-2daf-5866-165ca52c2952,s:20~l:28~a:2978524
+football,nfl,3051397,Cameron Johnston,PIT,P,Punter,healthy,1,1,0,23,2026,625afb46-2094-7b6a-55ca-a3171dc77a35,s:20~l:28~a:3051397
+football,nfl,17372,Chris Boswell,PIT,PK,Place Kicker,healthy,1,1,0,23,2026,8ad36dbe-d0e6-9493-9684-926df627f249,s:20~l:28~a:17372
+football,nfl,4710727,Laith Marjan,PIT,PK,Place Kicker,healthy,2,0,1,23,2026,ca2fd76c-ded8-37e5-8ba9-d2e430d7f98d,s:20~l:28~a:4710727
+football,nfl,5081338,Kaden Wetjen,PIT,PR,Punt Returner,healthy,1,1,0,23,2026,319efe37-aa87-38b0-9bd2-59f6317273c6,s:20~l:28~a:5081338
+football,nfl,4038815,Rico Dowdle,PIT,PR,Punt Returner,healthy,2,0,1,23,2026,da1e8487-d66d-6ff0-7438-e9d6e77856e0,s:20~l:28~a:4038815
+football,nfl,4608004,Donte Kent,PIT,PR,Punt Returner,Out,3,0,1,23,2026,6b6dda44-8d07-3eff-8e9d-4f482e72beaf,s:20~l:28~a:4608004
+football,nfl,4429775,Zach Frazier,PIT,C,Center,healthy,1,1,0,23,2026,1749c93f-3924-32e6-8ab6-c2cef786e5a2,s:20~l:28~a:4429775
+football,nfl,4035253,Ryan McCollum,PIT,C,Center,healthy,2,0,1,23,2026,8fb2f931-95f8-ca2e-d93b-de719f55f199,s:20~l:28~a:4035253
+football,nfl,4432684,Greg Crippen,PIT,C,Center,healthy,3,0,1,23,2026,ccffc021-4e3a-39f9-ac6d-b4dc61fc1b63,s:20~l:28~a:4432684
+football,nfl,4693370,Riley Nowakowski,PIT,FB,Fullback,healthy,1,1,0,23,2026,0fb33cde-7172-3bd6-b9d1-6ac5e08f21fd,s:20~l:28~a:4693370
+football,nfl,4368304,Mason McCormick,PIT,LG,Left Guard,healthy,1,1,0,23,2026,9fbc9ec8-19b1-2088-ee18-ca598e36b96d,s:20~l:28~a:4368304
+football,nfl,4431258,Gennings Dunker,PIT,LG,Left Guard,healthy,2,0,1,23,2026,3e1f3842-5489-30aa-81eb-8b67e1aa2019,s:20~l:28~a:4431258
+football,nfl,4427170,Troy Fautanu,PIT,LT,Left Tackle,healthy,1,1,0,23,2026,91893b7e-db5e-d0fa-5191-37e6df06b823,s:20~l:28~a:4427170
+football,nfl,4428990,Broderick Jones,PIT,LT,Left Tackle,healthy,2,0,1,23,2026,17994147-f9eb-3c8a-bf8b-97aa32aff0b5,s:20~l:28~a:4428990
+football,nfl,3932668,Jack Driscoll,PIT,LT,Left Tackle,healthy,3,0,1,23,2026,ee3af3c3-3ab1-ffde-0439-ef41e915aeb1,s:20~l:28~a:3932668
+football,nfl,8439,Aaron Rodgers,PIT,QB,Quarterback,healthy,1,1,0,23,2026,5fbab03e-2816-55ab-ae10-83b132803d9e,s:20~l:28~a:8439
+football,nfl,3116407,Mason Rudolph,PIT,QB,Quarterback,healthy,2,0,1,23,2026,779f3cff-73eb-dcb6-1327-48a95fa9d491,s:20~l:28~a:3116407
+football,nfl,4429955,Will Howard,PIT,QB,Quarterback,healthy,3,0,1,23,2026,f46a7394-0ed7-3f37-90b8-ad6c8ccc360e,s:20~l:28~a:4429955
+football,nfl,4714771,Drew Allar,PIT,QB,Quarterback,healthy,4,0,1,23,2026,7bb8f199-a273-303f-aa57-af966d886efa,s:20~l:28~a:4714771
+football,nfl,4569987,Jaylen Warren,PIT,RB,Running Back,healthy,1,1,0,23,2026,224e4c1e-625d-b1b2-b8ea-1316942fa7ac,s:20~l:28~a:4569987
+football,nfl,4038815,Rico Dowdle,PIT,RB,Running Back,healthy,2,0,1,23,2026,da1e8487-d66d-6ff0-7438-e9d6e77856e0,s:20~l:28~a:4038815
+football,nfl,4819231,Kaleb Johnson,PIT,RB,Running Back,healthy,3,0,1,23,2026,69abf2e0-5e51-3367-a4cf-2eaf9d46ff9b,s:20~l:28~a:4819231
+football,nfl,4037457,Travis Homer,PIT,RB,Running Back,healthy,4,0,1,23,2026,c40bfd45-2886-d6d0-ad72-0ad8f0aee91d,s:20~l:28~a:4037457
+football,nfl,4428119,Lew Nichols,PIT,RB,Running Back,healthy,5,0,1,23,2026,d9523718-5c26-7458-5735-84e5fde38e9c,s:20~l:28~a:4428119
+football,nfl,5081508,Eli Heidenreich,PIT,RB,Running Back,healthy,6,0,1,23,2026,8cfd753e-fd8a-3c24-b8fc-0a60f4751627,s:20~l:28~a:5081508
+football,nfl,4372056,Spencer Anderson,PIT,RG,Right Guard,healthy,1,1,0,23,2026,32679c43-81ae-6d36-ba51-9474f3e83c8a,s:20~l:28~a:4372056
+football,nfl,4241087,Brock Hoffman,PIT,RG,Right Guard,healthy,2,0,1,23,2026,547214f1-6644-5f2b-938c-6f6ee89d4e3d,s:20~l:28~a:4241087
+football,nfl,4373830,Steven Jones,PIT,RG,Right Guard,healthy,3,0,1,23,2026,b8aa36be-db7d-ceae-7579-63ce57d14dfa,s:20~l:28~a:4373830
+football,nfl,4570898,Dylan Cook,PIT,RT,Right Tackle,healthy,1,1,0,23,2026,85708979-ef2c-d0ec-f369-d615a2a2628a,s:20~l:28~a:4570898
+football,nfl,5150136,Max Iheanachor,PIT,RT,Right Tackle,healthy,2,0,1,23,2026,34173f97-1414-3c47-9903-211a42f7f785,s:20~l:28~a:5150136
+football,nfl,4426368,Doug Nester,PIT,RT,Right Tackle,healthy,3,0,1,23,2026,69eb5366-06e5-c55b-bd57-b430631815fc,s:20~l:28~a:4426368
+football,nfl,4361411,Pat Freiermuth,PIT,TE,Tight End,healthy,1,1,0,23,2026,dd0c7d09-aed2-e7dd-defd-12de97619e6e,s:20~l:28~a:4361411
+football,nfl,4430802,Darnell Washington,PIT,TE,Tight End,healthy,2,0,1,23,2026,cc423765-e806-35e3-ae40-863502fa6122,s:20~l:28~a:4430802
+football,nfl,2975674,Robert Tonyan,PIT,TE,Tight End,healthy,3,0,1,23,2026,f8f7e2e9-dcf2-eed6-43bd-3270116d80cc,s:20~l:28~a:2975674
+football,nfl,4429262,Jaheim Bell,PIT,TE,Tight End,healthy,4,0,1,23,2026,851ea1cc-1e3c-3f18-b54e-9da0be69071b,s:20~l:28~a:4429262
+football,nfl,4566198,Lake McRee,PIT,TE,Tight End,healthy,5,0,1,23,2026,a1769941-f3e5-3faa-92cc-ea74c08f222c,s:20~l:28~a:4566198
+football,nfl,5097854,Lance Mason,PIT,TE,Tight End,healthy,6,0,1,23,2026,d4409486-1478-33fb-ae21-95060b334cb3,s:20~l:28~a:5097854
+football,nfl,4047650,DK Metcalf,PIT,WR,Wide Receiver,healthy,1,1,0,23,2026,c6727be7-1ac0-315c-437d-e281fe9a2e84,s:20~l:28~a:4047650
+football,nfl,4035687,Michael Pittman Jr.,PIT,WR,Wide Receiver,healthy,2,0,1,23,2026,f9ac7a55-5934-2bf7-e70a-9c1d04cac2eb,s:20~l:28~a:4035687
+football,nfl,4613132,Levi Wentz,PIT,WR,Wide Receiver,healthy,11,0,1,23,2026,7eceb834-ab43-340e-aa61-dbf3658d9e30,s:20~l:28~a:4613132
+football,nfl,4035465,Cornell Powell,PIT,WR,Wide Receiver,healthy,12,0,1,23,2026,1e59ec46-5fcf-f29f-6865-b851813a6640,s:20~l:28~a:4035465
+football,nfl,4247942,Isaiah Winstead,PIT,WR,Wide Receiver,healthy,13,0,1,23,2026,44548102-4cf8-483c-87b1-cad3d628f535,s:20~l:28~a:4247942
+football,nfl,5192448,Cole Burgess,PIT,WR,Wide Receiver,healthy,14,0,1,23,2026,f496a6d8-68b1-3ce1-9a89-a4fd26133e72,s:20~l:28~a:5192448
+football,nfl,4431492,Roman Wilson,PIT,WR,Wide Receiver,healthy,3,0,1,23,2026,26f43986-7674-3ef9-b523-f3f66dbd16a4,s:20~l:28~a:4431492
+football,nfl,4685261,Germie Bernard,PIT,WR,Wide Receiver,healthy,4,0,1,23,2026,e9fc2458-287b-37fb-a2a2-222f32efdad4,s:20~l:28~a:4685261
+football,nfl,4035656,Ben Skowronek,PIT,WR,Wide Receiver,healthy,5,0,1,23,2026,6db86c11-4877-9443-8b4f-2f3af45dfab0,s:20~l:28~a:4035656
+football,nfl,5081338,Kaden Wetjen,PIT,WR,Wide Receiver,healthy,6,0,1,23,2026,319efe37-aa87-38b0-9bd2-59f6317273c6,s:20~l:28~a:5081338
+football,nfl,4694237,Max Hurleman,PIT,WR,Wide Receiver,healthy,7,0,1,23,2026,c594fa98-bf7e-39ae-a32b-eb664a8e7a36,s:20~l:28~a:4694237
+football,nfl,4240577,Brandon Smith,PIT,WR,Wide Receiver,healthy,8,0,1,23,2026,8fd4f1b9-52f7-d4b6-43d7-136d2b5e9560,s:20~l:28~a:4240577
+football,nfl,5178972,Jakobie Keeney-James,PIT,WR,Wide Receiver,healthy,9,0,1,23,2026,49715857-bfe6-3879-b48c-afa74dc63ca3,s:20~l:28~a:5178972
+football,nfl,4696907,Joaquin Davis,PIT,WR,Wide Receiver,healthy,10,0,1,23,2026,3cf3f76d-97bc-32e7-8a7e-8bf939ca5f94,s:20~l:28~a:4696907

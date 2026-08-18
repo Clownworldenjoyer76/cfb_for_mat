@@ -1,0 +1,45 @@
+## Future Note — ESPN Team Detail Fields (Empty During Offseason)
+
+These 5 fields are part of the team detail endpoint response and were
+confirmed to exist (via $ref links) but return 0 items during the
+2026 offseason. Revisit once games have been played.
+
+Base team detail endpoint (already used elsewhere in the pipeline):
+https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/{season}/teams/{team_id}
+
+Each of the 5 fields below is a $ref on that response — resolve the
+ref URL directly to pull the data once populated:
+
+1. awards
+   - Field: teamData.awards.$ref
+   - Likely populates: weekly/season awards (Player of the Week, etc.)
+   - Check after: Week 1 completes
+
+2. againstTheSpreadRecords
+   - Field: teamData.againstTheSpreadRecords.$ref
+   - Requires: at least 1 game played against a spread
+   - Check after: Week 1 completes
+
+3. notes
+   - Field: teamData.notes.$ref
+   - Likely populates: game-context notes (injury/milestone notes tied to games)
+   - Check after: Week 1 completes
+
+4. ranks
+   - Field: teamData.ranks.$ref
+   - Likely populates: ESPN power rankings
+   - Check after: a few weeks into the season (power rankings usually
+     lag actual game count, not available Week 1 necessarily)
+
+5. record
+   - Field: teamData.record.$ref
+   - Populates: cumulative win/loss/tie record for the season
+   - Check after: Week 1 completes
+   - Note: likely redundant with pull_final_scores.py output, since
+     win/loss can be derived from your own results file — check for
+     duplication before building a separate script for this.
+
+How to check each: pull the team detail endpoint for one team (e.g.
+team_id=22), resolve the specific field's $ref, and inspect the
+response the same way this conversation checked coaches/venue/groups —
+confirm real fields exist before building any script around it.

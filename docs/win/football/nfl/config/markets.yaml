@@ -1,0 +1,177 @@
+selection_defaults:
+  min_ev: 0.00
+  min_edge: 0.00
+  min_kelly: 0.00
+  max_kelly: 0.99
+  min_odds_american: -10000
+  max_odds_american: 10000
+  min_model_prob: 0.00
+  max_model_prob: 1.00
+
+
+markets:
+
+  ###################################################
+  # ── Moneyline ────────────────────────────────────
+  ###################################################
+
+  moneyline:
+    enabled: true
+    pick_preference: best_prob
+#    best_ev, best_prob, best_kelly
+    home:
+      enabled: true
+
+      odds_bands:
+        - [-10000, -110]
+
+      edge_bands:
+        - [0.00, 1.00]
+
+      ev_bands:
+        - [0.00, 1.00]
+
+      kelly_bands:
+        - [0.00, 0.0299]
+        - [0.10, 0.15]
+        - [0.25, 1.00]
+
+      prob_bands:
+        - [0.60, 0.6499]
+        - [0.70, 1.00]
+
+    away:
+      enabled: true
+
+      odds_bands:
+        - [-299, -150]
+
+      edge_bands:
+        - [0.00, 1.00]
+
+      ev_bands:
+        - [0.00, 1.00]
+
+      kelly_bands:
+        - [0.03, 1.00]
+
+      prob_bands:
+        - [0.65, 1.00]
+
+
+  ###################################################
+  # ── Spread ───────────────────────────────────────
+  ###################################################
+
+  spread:
+    enabled: true
+    pick_preference: best_prob
+    max_spread_abs: 100.0
+
+    home:
+      enabled: true
+
+      line_bands:
+        - [-14.0, -10.0]
+        - [-6.99, -3.5]
+        - [3.0, 50.00]
+
+      odds_bands:
+        - [-10000, -100]
+        - [100, 10000]
+
+      edge_bands:
+        - [0.04, 0.0799]
+        - [0.10, 1.00]
+
+      ev_bands:
+        - [0.00, 99.99]
+
+      kelly_bands:
+        - [0.00, 1.00]
+
+      prob_bands:
+        - [0.55, 0.599]
+        - [0.65, 0.699]
+        - [0.75, 0.799]
+
+    away:
+      enabled: true
+
+      line_bands:
+        - [-6.5, -3.5]
+        - [3.0, 6.99]
+        - [14.0, 100.0]
+
+      odds_bands:
+        - [-10000, -100]
+        - [100, 10000]
+
+      edge_bands:
+        - [0.00, 0.799]
+        - [0.10, 0.15]
+
+      ev_bands:
+        - [0.00, 0.0199]
+        - [0.04, 99.99]
+
+      kelly_bands:
+        - [0.05, 1.00]
+
+      prob_bands:
+        - [0.55, 0.599]
+        - [0.65, 0.70]
+
+
+  ###################################################
+  # ── Totals ───────────────────────────────────────
+  ###################################################
+
+  total:
+    enabled: true
+    pick_preference: best_prob
+    min_total: 0.0
+    max_total: 100.0
+
+    over:
+      enabled: true
+
+      line_bands:
+        - [40.0, 100.0]
+
+      odds_bands:
+        - [-119, -101]
+
+      edge_bands:
+        - [0.00, 1.00]
+
+      ev_bands:
+        - [0.00, 99.99]
+
+      kelly_bands:
+        - [0.00, 1.00]
+
+      prob_bands:
+        - [0.60, 0.7499]
+
+    under:
+      enabled: true
+
+      line_bands:
+        - [40.0, 54.99]
+
+      odds_bands:
+        - [-10000, 10000]
+
+      edge_bands:
+        - [0.00, 1.00]
+
+      ev_bands:
+        - [0.00, 0.0399]
+        - [0.06, 99.99]
+
+      kelly_bands:
+        - [0.00, 0.25]
+
+      prob_bands:
+        - [0.55, 0.599]

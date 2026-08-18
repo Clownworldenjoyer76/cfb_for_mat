@@ -1,0 +1,154 @@
+[2026-06-24 10:29:08 UTC] ================================================================================
+[2026-06-24 10:29:08 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-06-24 10:29:09 UTC] source_used=nfl_data_py
+[2026-06-24 10:29:09 UTC] rows=0 columns=0
+[2026-06-24 10:29:09 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv
+[2026-06-24 10:29:09 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-06-24 10:29:09 UTC] pull_pbp.py completed
+[2026-06-24 11:02:17 UTC] ================================================================================
+[2026-06-24 11:02:17 UTC] pull_pbp.py started | season=2025 | source=auto
+[2026-06-24 11:02:34 UTC] source_used=nflreadpy
+[2026-06-24 11:02:34 UTC] rows=48771 columns=372
+[2026-06-24 11:02:34 UTC] output=docs/win/football/nfl/00_intake/pbp/2025_pbp.csv.gz
+[2026-06-24 11:02:34 UTC] missing_feature_columns=turnover
+[2026-06-24 11:02:34 UTC] pull_pbp.py completed
+[2026-06-25 15:41:43 UTC] ================================================================================
+[2026-06-25 15:41:43 UTC] pull_pbp.py started | season=2025 | source=auto
+[2026-06-25 15:42:01 UTC] source_used=nflreadpy
+[2026-06-25 15:42:01 UTC] rows=48771 columns=373
+[2026-06-25 15:42:01 UTC] output=docs/win/football/nfl/00_intake/pbp/2025_pbp.csv.gz
+[2026-06-25 15:42:01 UTC] missing_feature_columns=none
+[2026-06-25 15:42:01 UTC] pull_pbp.py completed
+[2026-06-25 15:49:25 UTC] ================================================================================
+[2026-06-25 15:49:25 UTC] pull_pbp.py started | season=2024 | source=auto
+[2026-06-25 15:49:41 UTC] source_used=nflreadpy
+[2026-06-25 15:49:41 UTC] rows=49492 columns=373
+[2026-06-25 15:49:41 UTC] output=docs/win/football/nfl/00_intake/pbp/2024_pbp.csv.gz
+[2026-06-25 15:49:41 UTC] missing_feature_columns=none
+[2026-06-25 15:49:41 UTC] pull_pbp.py completed
+[2026-06-25 15:50:52 UTC] ================================================================================
+[2026-06-25 15:50:52 UTC] pull_pbp.py started | season=2023 | source=auto
+[2026-06-25 15:51:07 UTC] source_used=nflreadpy
+[2026-06-25 15:51:07 UTC] rows=49665 columns=373
+[2026-06-25 15:51:07 UTC] output=docs/win/football/nfl/00_intake/pbp/2023_pbp.csv.gz
+[2026-06-25 15:51:07 UTC] missing_feature_columns=none
+[2026-06-25 15:51:07 UTC] pull_pbp.py completed
+[2026-06-25 15:54:27 UTC] ================================================================================
+[2026-06-25 15:54:27 UTC] pull_pbp.py started | season=2022 | source=auto
+[2026-06-25 15:54:43 UTC] source_used=nflreadpy
+[2026-06-25 15:54:43 UTC] rows=49434 columns=373
+[2026-06-25 15:54:43 UTC] output=docs/win/football/nfl/00_intake/pbp/2022_pbp.csv.gz
+[2026-06-25 15:54:43 UTC] missing_feature_columns=none
+[2026-06-25 15:54:43 UTC] pull_pbp.py completed
+[2026-06-25 15:56:53 UTC] ================================================================================
+[2026-06-25 15:56:53 UTC] pull_pbp.py started | season=2021 | source=auto
+[2026-06-25 15:57:09 UTC] source_used=nflreadpy
+[2026-06-25 15:57:09 UTC] rows=49922 columns=373
+[2026-06-25 15:57:09 UTC] output=docs/win/football/nfl/00_intake/pbp/2021_pbp.csv.gz
+[2026-06-25 15:57:09 UTC] missing_feature_columns=none
+[2026-06-25 15:57:09 UTC] pull_pbp.py completed
+[2026-06-25 16:14:46 UTC] ================================================================================
+[2026-06-25 16:14:46 UTC] pull_pbp.py started | season=2021 | source=auto
+[2026-06-25 16:15:02 UTC] source_used=nflreadpy
+[2026-06-25 16:15:02 UTC] rows=49922 columns=373
+[2026-06-25 16:15:02 UTC] output=docs/win/football/nfl/00_intake/pbp/2021_pbp.csv.gz
+[2026-06-25 16:15:02 UTC] missing_feature_columns=none
+[2026-06-25 16:15:02 UTC] pull_pbp.py completed
+[2026-06-25 16:30:33 UTC] ================================================================================
+[2026-06-25 16:30:33 UTC] pull_pbp.py started | season=2021 | source=auto
+[2026-06-25 16:30:52 UTC] source_used=nflreadpy
+[2026-06-25 16:30:52 UTC] rows=49922 columns=373
+[2026-06-25 16:30:52 UTC] output=docs/win/football/nfl/00_intake/pbp/2021_pbp.csv.gz
+[2026-06-25 16:30:52 UTC] missing_feature_columns=none
+[2026-06-25 16:30:52 UTC] pull_pbp.py completed
+[2026-06-25 16:33:04 UTC] ================================================================================
+[2026-06-25 16:33:04 UTC] pull_pbp.py started | season=2022 | source=auto
+[2026-06-25 16:33:21 UTC] source_used=nflreadpy
+[2026-06-25 16:33:21 UTC] rows=49434 columns=373
+[2026-06-25 16:33:21 UTC] output=docs/win/football/nfl/00_intake/pbp/2022_pbp.csv.gz
+[2026-06-25 16:33:21 UTC] missing_feature_columns=none
+[2026-06-25 16:33:21 UTC] pull_pbp.py completed
+[2026-06-25 16:35:07 UTC] ================================================================================
+[2026-06-25 16:35:07 UTC] pull_pbp.py started | season=2023 | source=auto
+[2026-06-25 16:35:23 UTC] source_used=nflreadpy
+[2026-06-25 16:35:23 UTC] rows=49665 columns=373
+[2026-06-25 16:35:23 UTC] output=docs/win/football/nfl/00_intake/pbp/2023_pbp.csv.gz
+[2026-06-25 16:35:23 UTC] missing_feature_columns=none
+[2026-06-25 16:35:23 UTC] pull_pbp.py completed
+[2026-06-25 16:38:21 UTC] ================================================================================
+[2026-06-25 16:38:21 UTC] pull_pbp.py started | season=2024 | source=auto
+[2026-06-25 16:38:38 UTC] source_used=nflreadpy
+[2026-06-25 16:38:38 UTC] rows=49492 columns=373
+[2026-06-25 16:38:38 UTC] output=docs/win/football/nfl/00_intake/pbp/2024_pbp.csv.gz
+[2026-06-25 16:38:38 UTC] missing_feature_columns=none
+[2026-06-25 16:38:38 UTC] pull_pbp.py completed
+[2026-06-25 16:45:19 UTC] ================================================================================
+[2026-06-25 16:45:19 UTC] pull_pbp.py started | season=2025 | source=auto
+[2026-06-25 16:45:35 UTC] source_used=nflreadpy
+[2026-06-25 16:45:35 UTC] rows=48771 columns=373
+[2026-06-25 16:45:35 UTC] output=docs/win/football/nfl/00_intake/pbp/2025_pbp.csv.gz
+[2026-06-25 16:45:35 UTC] missing_feature_columns=none
+[2026-06-25 16:45:35 UTC] pull_pbp.py completed
+[2026-06-25 16:46:56 UTC] ================================================================================
+[2026-06-25 16:46:56 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-06-25 16:46:57 UTC] source_used=nfl_data_py
+[2026-06-25 16:46:57 UTC] rows=0 columns=0
+[2026-06-25 16:46:57 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-06-25 16:46:57 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-06-25 16:46:57 UTC] pull_pbp.py completed
+[2026-08-06 13:42:43 UTC] ================================================================================
+[2026-08-06 13:42:43 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-08-06 13:42:43 UTC] source_used=nfl_data_py
+[2026-08-06 13:42:43 UTC] rows=0 columns=0
+[2026-08-06 13:42:43 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-08-06 13:42:43 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-08-06 13:42:43 UTC] pull_pbp.py completed
+[2026-08-06 15:02:15 UTC] ================================================================================
+[2026-08-06 15:02:15 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-08-06 15:02:16 UTC] source_used=nfl_data_py
+[2026-08-06 15:02:16 UTC] rows=0 columns=0
+[2026-08-06 15:02:16 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-08-06 15:02:16 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-08-06 15:02:16 UTC] pull_pbp.py completed
+[2026-08-10 13:48:59 UTC] ================================================================================
+[2026-08-10 13:48:59 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-08-10 13:49:00 UTC] source_used=nfl_data_py
+[2026-08-10 13:49:00 UTC] rows=0 columns=0
+[2026-08-10 13:49:00 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-08-10 13:49:00 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-08-10 13:49:00 UTC] pull_pbp.py completed
+[2026-08-11 10:51:00 UTC] ================================================================================
+[2026-08-11 10:51:00 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-08-11 10:51:01 UTC] source_used=nfl_data_py
+[2026-08-11 10:51:01 UTC] rows=0 columns=0
+[2026-08-11 10:51:01 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-08-11 10:51:01 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-08-11 10:51:01 UTC] pull_pbp.py completed
+[2026-08-11 16:29:30 UTC] ================================================================================
+[2026-08-11 16:29:30 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-08-11 16:29:30 UTC] source_used=nfl_data_py
+[2026-08-11 16:29:30 UTC] rows=0 columns=0
+[2026-08-11 16:29:30 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-08-11 16:29:30 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-08-11 16:29:30 UTC] pull_pbp.py completed
+[2026-08-13 15:45:58 UTC] ================================================================================
+[2026-08-13 15:45:58 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-08-13 15:45:58 UTC] source_used=nfl_data_py
+[2026-08-13 15:45:58 UTC] rows=0 columns=0
+[2026-08-13 15:45:58 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-08-13 15:45:58 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-08-13 15:45:58 UTC] pull_pbp.py completed
+[2026-08-15 17:45:50 UTC] ================================================================================
+[2026-08-15 17:45:50 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-08-15 17:45:50 UTC] source_used=nfl_data_py
+[2026-08-15 17:45:50 UTC] rows=0 columns=0
+[2026-08-15 17:45:50 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-08-15 17:45:50 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-08-15 17:45:50 UTC] pull_pbp.py completed
+[2026-08-16 15:01:17 UTC] ================================================================================
+[2026-08-16 15:01:17 UTC] pull_pbp.py started | season=2026 | source=auto
+[2026-08-16 15:01:17 UTC] source_used=nfl_data_py
+[2026-08-16 15:01:17 UTC] rows=0 columns=0
+[2026-08-16 15:01:17 UTC] output=docs/win/football/nfl/00_intake/pbp/2026_pbp.csv.gz
+[2026-08-16 15:01:17 UTC] missing_feature_columns=season,season_type,week,game_id,old_game_id,play_id,home_team,away_team,posteam,defteam,side_of_field,yardline_100,game_date,game_seconds_remaining,half_seconds_remaining,qtr,down,ydstogo,ydsnet,desc,play_type,yards_gained,epa,success,wp,wpa,cp,cpoe,qb_epa,pass,rush,sack,interception,fumble,fumble_lost,turnover,touchdown,pass_touchdown,rush_touchdown,first_down,third_down_converted,third_down_failed,fourth_down_converted,fourth_down_failed,series,series_success,drive,fixed_drive,fixed_drive_result,drive_real_start_time,drive_play_count,drive_time_of_possession,drive_first_downs,drive_inside20,drive_ended_with_score,drive_quarter_start,drive_quarter_end,drive_yards_penalized,posteam_score,defteam_score,score_differential,total_home_score,total_away_score,passer_player_id,passer_player_name,rusher_player_id,rusher_player_name,receiver_player_id,receiver_player_name
+[2026-08-16 15:01:17 UTC] pull_pbp.py completed

@@ -1,0 +1,90 @@
+name: NFL 02 Daily
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  nfl-daily-am:
+    runs-on: ubuntu-latest
+
+    env:
+      API_ODDS: ${{ secrets.API_ODDS }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Pull current odds
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/pull_odds.py
+
+      - name: Build weekly schedule
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/build_weekly_schedule.py
+
+      - name: Pull opening odds and movement
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/pull_opening_odds.py
+
+      - name: Pull raw roster
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/pull_raw_roster.py
+
+      - name: Clean roster
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/roster_cleanup.py
+
+      - name: Pull depth charts
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/depth_chart.py
+
+      - name: Clean depth charts
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/depth_cleanup.py
+
+      - name: Build QB map
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/build_qb_map.py
+
+      - name: Pull injuries
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/pull_injuries.py
+
+      - name: Fetch weather
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/fetch_weather.py
+
+      - name: Pull ESPN predictions
+        run: |
+          python docs/win/football/nfl/scripts/00_intake/pull_e_predictions.py
+
+      - name: Validate daily outputs
+        run: |
+          python docs/win/football/nfl/scripts/validation/validate_daily.py
+
+      - name: Commit and push all daily outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A docs/win/football/nfl/
+
+          if git diff --cached --quiet; then
+            echo "No NFL daily output changes to commit."
+          else
+            git commit -m "Update NFL daily AM data"
+            git push
+          fi

@@ -1,0 +1,30 @@
+{
+  "candidate_version": "v4_market_independent_outcomes",
+  "shadow_only": true,
+  "season": 2026,
+  "week": 1,
+  "generated_at": "2026-08-15T16:55:25.630148+00:00",
+  "games": 16,
+  "selected_variants": {
+    "margin": "augmented",
+    "total": "augmented",
+    "moneyline": "augmented"
+  },
+  "market_inputs_used_by_model": false,
+  "market_used_post_prediction": true,
+  "probability_method": {
+    "moneyline": "OOF Platt calibration of direct home-win classifier",
+    "spread": "empirical OOF margin-error distribution evaluated at current live line",
+    "total": "empirical OOF total-error distribution evaluated at current live line"
+  },
+  "odds_capture": {
+    "source_kind": "legacy_current_file",
+    "path": "00_intake/odds/raw/2026_08_11_nfl_odds.json",
+    "snapshot_id": null,
+    "fetched_at": "2026-08-11T16:32:06.345381+00:00"
+  },
+  "historical_validation_overall_candidate_pass": true,
+  "production_cutover": false,
+  "production_files_modified": false,
+  "output": "forward_validation/v4/2026_week_1_v4_shadow.csv"
+}

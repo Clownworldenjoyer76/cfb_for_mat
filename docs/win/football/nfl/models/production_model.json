@@ -1,0 +1,26 @@
+{
+  "active_model": "v4_market_independent_outcomes",
+  "activated_date": "2026-08-15",
+  "season": 2026,
+  "production_prediction_scripts": [
+    "scripts/01_merge/projection_week1.py",
+    "scripts/01_merge/projection.py"
+  ],
+  "selected_variants": {
+    "margin": "augmented",
+    "total": "augmented",
+    "moneyline": "augmented"
+  },
+  "active_model_files": {
+    "margin": "step11_margin_model_augmented_v4.cbm",
+    "total": "step11_total_model_augmented_v4.cbm",
+    "moneyline": "step11_moneyline_model_augmented_v4.cbm",
+    "feature_schema": "step11_market_independent_feature_schema_v4.json",
+    "probability_calibration": "step14_error_distributions_v4.json",
+    "validation": "step14_market_independent_validation_v4.json"
+  },
+  "legacy_model_archive": "archive/legacy_260_feature_model",
+  "market_inputs_used_by_model": false,
+  "market_applied_after_prediction_for_spread_total_probability": true,
+  "historical_roi_claim_allowed": false
+}

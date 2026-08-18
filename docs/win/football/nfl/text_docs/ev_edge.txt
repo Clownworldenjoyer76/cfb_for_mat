@@ -1,0 +1,5 @@
+Edge: how much higher your model probability is than the sportsbook implied probability.
+
+EV: how much profit you expect per $1 wagered, using both your probability and the payout odds.
+
+Example: model 55%, market 50% → 5% edge. At +100 odds, that’s 10% EV.

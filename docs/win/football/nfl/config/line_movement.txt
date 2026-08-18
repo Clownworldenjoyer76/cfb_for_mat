@@ -1,0 +1,393 @@
+docs/win/football/nfl/config/line_movement.csv
+
+This file is the normalized historical NFL line-movement and betting-market lookup table used to compare current NFL odds conditions with historical results.
+
+Each row represents either a specific historical betting condition or a broader historical baseline. The file covers spread movement, total movement, opening-line ranges, exact movement amounts, movement-direction buckets, and combined closing spread/total conditions.
+
+Column definitions
+
+Column	Meaning
+rule_id	Unique shorthand identifier for the historical condition. The ID encodes the market and type of rule so it can be referenced consistently by the pipeline.
+market_type	Market represented by the row. Values include spread, total, and joint. joint means the rule uses both the closing spread and closing total.
+analysis_family	Identifies what kind of historical comparison the row represents, such as exact movement, opening-line bucket plus movement, opening-line baseline, movement baseline, or closing spread combined with closing total.
+row_type	rule for a specific historical condition or baseline for a broader comparison group.
+opening_bucket	Range containing the opening spread or opening total. Examples: 3-6.5, 10-13.5, 36-40.5, 46-50.5, 51+. Blank when the rule does not depend on the opening line.
+movement	Amount or category of movement from the opening line. It may be an exact number such as -2.5 or a bucket such as 2-2.5 toward underdog, 0.5-1.5 toward over, or same.
+closing_spread_bucket	Closing spread range used by combined spread/total rules. Example: 7-9.5.
+closing_total_bucket	Closing total range used by combined spread/total rules. Example: 46-50.5.
+reference_side	The side whose historical performance is recorded in wins, losses, and rate_pct. Examples: opening_favorite, favorite, or over.
+outcome_type	What constitutes a historical win for the row. cover means ATS performance. over means the game finished Over the total.
+games	Number of historical games matching the condition.
+wins	Historical wins for the reference_side.
+losses	Historical losses for the reference_side.
+pushes	Historical pushes for the condition.
+rate_pct	Historical success percentage for the reference_side, excluding pushes from the win-rate denominator where applicable.
+quality_flag	Classification attached to the row. Common values are ok and small_sample, with other flags available for rows that were specially identified during normalization.
+
+How to read rule_id
+
+The ID is shorthand for the condition represented by the row.
+
+Market prefixes
+
+Prefix	Meaning
+SP	Spread
+TOT	Game total / Over-Under
+JT	Joint closing spread + closing total condition
+
+⸻
+
+Spread rule IDs
+
+SP_MV_EX_-11.5
+
+Breakdown:
+
+* SP = spread
+* MV = movement
+* EX = exact movement
+* -11.5 = exact movement amount
+
+This row means:
+
+Historically, when the NFL spread moved exactly 11.5 points toward the opening favorite, how often did the opening favorite cover?
+
+For exact spread-movement rules:
+
+* Negative movement = movement toward the opening favorite
+* Positive movement = movement toward the opening underdog
+* 0 = closing spread was the same as the opening spread
+
+Example:
+
+SP_MV_EX_-2
+
+means an exact 2-point move toward the opening favorite.
+
+SP_MV_EX_3.5
+
+means an exact 3.5-point move toward the opening underdog.
+
+The historical result is always measured from the perspective of reference_side = opening_favorite.
+
+⸻
+
+SP_OB_10_13.5_M2D
+
+Breakdown:
+
+* SP = spread
+* OB = opening spread bucket
+* 10_13.5 = opening favorite was between 10 and 13.5 points
+* M2D = movement of 2 to 2.5 points toward the opening underdog
+
+This means:
+
+The opening favorite was favored by 10 to 13.5 points, and the line subsequently moved 2 to 2.5 points toward the opening underdog.
+
+For this example the historical result is:
+
+* 32 games
+* Opening favorite: 19-13 ATS
+* Cover rate: 59.4%
+
+Spread movement bucket codes
+
+Code	Meaning
+M3F	3+ points toward opening favorite
+M2F	2-2.5 points toward opening favorite
+M1F	0.5-1.5 points toward opening favorite
+M0	No movement
+M1D	0.5-1.5 points toward opening underdog
+M2D	2-2.5 points toward opening underdog
+M3D	3+ points toward opening underdog
+
+F therefore means favorite and D means underdog.
+
+⸻
+
+SP_OB_BASE_10_13.5
+
+Breakdown:
+
+* SP = spread
+* OB_BASE = opening spread bucket baseline
+* 10_13.5 = opening favorite of 10 through 13.5
+
+This is not tied to one movement category.
+
+It represents the historical ATS performance of opening favorites in that opening spread range across the full bucket.
+
+Example:
+
+SP_OB_BASE_10_13.5
+
+means:
+
+How often did opening favorites of 10 to 13.5 points cover overall?
+
+This baseline can be compared with more specific movement conditions within the same opening range.
+
+⸻
+
+SP_MB_2D
+
+Breakdown:
+
+* SP = spread
+* MB = movement bucket baseline
+* 2D = 2 to 2.5 points toward the opening underdog
+
+This represents:
+
+How did opening favorites perform ATS overall whenever the spread moved 2 to 2.5 points toward the opening underdog, regardless of the opening spread range?
+
+These rows provide broad movement-history baselines.
+
+⸻
+
+Total rule IDs
+
+TOT_MV_EX_-2
+
+Breakdown:
+
+* TOT = game total
+* MV = movement
+* EX = exact movement
+* -2 = total moved exactly 2 points downward
+
+For exact total-movement rules:
+
+* Positive movement = total moved toward the Over / upward
+* Negative movement = total moved toward the Under / downward
+* 0 = closing total was the same as the opening total
+
+Therefore:
+
+TOT_MV_EX_2.5
+
+means the total increased exactly 2.5 points.
+
+TOT_MV_EX_-2.5
+
+means the total decreased exactly 2.5 points.
+
+The historical result is measured using:
+
+reference_side = over
+
+so rate_pct represents the historical Over percentage.
+
+⸻
+
+TOT_OB_46_50.5_M2U
+
+Breakdown:
+
+* TOT = total
+* OB = opening total bucket
+* 46_50.5 = opening total between 46 and 50.5
+* M2U = movement of 2 to 2.5 points toward the Under
+
+This means:
+
+The game opened with a total between 46 and 50.5, and the total subsequently moved 2 to 2.5 points downward toward the Under.
+
+The historical wins/losses are recorded from the Over perspective.
+
+For example:
+
+TOT_OB_46_50.5_M2U
+
+contains:
+
+* 163 games
+* Over record: 87-72-4
+* Over rate: 54.7%
+
+So even though the market movement was toward the Under, rate_pct tells you how frequently the Over historically won in that exact condition.
+
+Total movement bucket codes
+
+Code	Meaning
+M3O	3+ points toward Over
+M2O	2-2.5 points toward Over
+M1O	0.5-1.5 points toward Over
+M0	No movement
+M1U	0.5-1.5 points toward Under
+M2U	2-2.5 points toward Under
+M3U	3+ points toward Under
+
+O means Over and U means Under.
+
+⸻
+
+TOT_OB_BASE_46_50.5
+
+This is the broader historical baseline for games whose opening total was between 46 and 50.5.
+
+It answers:
+
+Across all games opening from 46 through 50.5, how often did the game go Over?
+
+It can be compared with a specific rule such as:
+
+TOT_OB_46_50.5_M2U
+
+to see how the movement condition performed relative to the normal historical behavior of that opening-total range.
+
+⸻
+
+TOT_MB_3U
+
+Breakdown:
+
+* TOT = total
+* MB = movement bucket baseline
+* 3U = total moved 3+ points toward the Under
+
+This represents:
+
+Across all opening totals, how often did games go Over when the total moved at least 3 points toward the Under?
+
+It is a broad movement baseline rather than an opening-line-specific condition.
+
+⸻
+
+Joint spread + total rules
+
+JT_7_9.5_46_50.5_FAV
+
+Breakdown:
+
+* JT = joint spread/total rule
+* 7_9.5 = closing favorite spread between 7 and 9.5
+* 46_50.5 = closing total between 46 and 50.5
+* FAV = historical favorite ATS result
+
+This means:
+
+When the closing favorite was laying between 7 and 9.5 points and the closing game total was between 46 and 50.5, how often did the favorite cover?
+
+The corresponding row:
+
+JT_7_9.5_46_50.5_OVER
+
+uses exactly the same closing-line condition but measures how often the game went Over.
+
+Therefore the pair:
+
+* JT_7_9.5_46_50.5_FAV
+* JT_7_9.5_46_50.5_OVER
+
+describes two different historical outcomes for the same market setup.
+
+⸻
+
+Meaning of analysis_family
+
+movement_exact
+
+Uses one exact amount of line movement.
+
+Examples:
+
+* spread moved exactly 2 points
+* total moved exactly -1.5 points
+
+Rule IDs generally contain:
+
+MV_EX
+
+⸻
+
+opening_bucket_x_movement
+
+Combines:
+
+1. the opening spread or opening total range, and
+2. the subsequent movement direction/magnitude.
+
+Examples:
+
+* opening favorite 10-13.5 + move 2-2.5 toward underdog
+* opening total 46-50.5 + move 2-2.5 toward Under
+
+These are the SP_OB_* and TOT_OB_* rules.
+
+⸻
+
+opening_bucket_baseline
+
+Historical performance for an opening-line range without restricting it to one movement category.
+
+Examples:
+
+SP_OB_BASE_3_6.5
+
+TOT_OB_BASE_46_50.5
+
+⸻
+
+movement_bucket_baseline
+
+Historical performance for one general movement category regardless of opening-line range.
+
+Examples:
+
+SP_MB_3F
+
+TOT_MB_2U
+
+⸻
+
+closing_spread_x_total
+
+Uses the closing point-spread range and closing total range together.
+
+These are the JT_* rules.
+
+⸻
+
+Practical use
+
+A current NFL game can be converted into the same conditions represented in this file.
+
+For example, suppose a game:
+
+* opened with the favorite at -11
+* current/closing favorite is -8.5
+* therefore moved 2.5 points toward the opening underdog
+
+The game matches:
+
+SP_OB_10_13.5_M2D
+
+because:
+
+* opening favorite falls in 10-13.5
+* movement is 2-2.5 toward underdog
+
+The pipeline can then attach that rule’s historical:
+
+* sample size
+* ATS record
+* cover percentage
+* rule ID
+
+Likewise, if a game:
+
+* opened at total 48.5
+* moved to 46.5
+
+it matches:
+
+TOT_OB_46_50.5_M2U
+
+because:
+
+* opening total was in 46-50.5
+* total moved exactly 2 points toward the Under
+
+The file therefore provides a consistent lookup layer that turns raw NFL opening/current market data into identifiable historical betting conditions and their associated historical performance.

@@ -1,0 +1,32 @@
+{
+  "backtest_type": "CURRENT_STORED_PIPELINE_REPLAY",
+  "created_utc": "2026-08-14T20:44:08.290894+00:00",
+  "leakage_warning": "Static enrichment-rule features contain multi-season outcome-derived statistics; ROI is diagnostic replay, not fully leakage-free validation.",
+  "rows": {
+    "moneyline_picks": 883,
+    "predictions": 1138,
+    "spread_picks": 520,
+    "total_picks": 793
+  },
+  "source_sha256": {
+    "historical_core_2021.csv": "9b53473502875505b1a21aaf036e068ac4b2da4ca3f01a1c231eeb8a41199494",
+    "historical_core_2022.csv": "c9cd27b6de9b74b36d85e48bf901a38fefa9f3fc1337d2b2827d37e95db795dd",
+    "historical_core_2023.csv": "32e1acc16a8a9e0f6dadf51d595b90e999463464a3a5ebcaf075e4fe7cb0f600",
+    "historical_core_2024.csv": "942e225442ba43623da607c0689f8cc2583f61043994cdb62d85f9f8e6040921",
+    "historical_core_2025.csv": "c597d18dcd2fdc5a95893f912f6a6555d988911397c68adb8dd007e70da0caf5",
+    "markets.yaml": "8efc9e7218e0df606bf551d4b4cab106dc5b1a3c8a2d533d57c91b77a62b5808",
+    "selections.py": "979a76d53e285052e423ccc096e07b225fc4e21302636beb8002c46b74201467",
+    "settings.yaml": "3c05247a508ee2a60b4ba6ab05e662b92b1e6cef8c61d5c76e34eb2c6e6d0724",
+    "step11_feature_schema.json": "a245e13e1d943bd1db4452d89c55cc623827ba0e5dda3fc1de9a8ef517d4a3ad",
+    "step13.py": "8cc9508d70fee16d5788f95b439a9aa18017328ddc5b870e48c0c6df3340cf00",
+    "step14_calibration.py": "aa46dbb84c91da46a03dc2f77aed483176989b1508bd61b704d08aef21f586b8"
+  },
+  "training_seasons": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "write_boundary": "models/backtest"
+}

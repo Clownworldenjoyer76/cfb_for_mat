@@ -1,0 +1,7746 @@
+{
+  "fetched_at": "2026-07-20T20:51:40.289191+00:00",
+  "sport": "american-football",
+  "league": "usa-nfl",
+  "preferred_bookmakers": [
+    "DraftKings",
+    "FanDuel"
+  ],
+  "events_url": "https://api.odds-api.io/v3/events?apiKey=REDACTED&sport=american-football&league=usa-nfl&limit=500",
+  "events_count": 88,
+  "odds_events_count": 88,
+  "events": [
+    {
+      "id": 71515752,
+      "home": "Seattle Seahawks",
+      "away": "New England Patriots",
+      "homeId": 4430,
+      "awayId": 4424,
+      "date": "2026-09-10T00:20:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71387370,
+      "home": "Los Angeles Rams",
+      "away": "San Francisco 49ers",
+      "homeId": 4387,
+      "awayId": 4389,
+      "date": "2026-09-11T00:35:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515754,
+      "home": "Carolina Panthers",
+      "away": "Chicago Bears",
+      "homeId": 4415,
+      "awayId": 4391,
+      "date": "2026-09-13T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515756,
+      "home": "Cincinnati Bengals",
+      "away": "Tampa Bay Buccaneers",
+      "homeId": 4416,
+      "awayId": 4388,
+      "date": "2026-09-13T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515758,
+      "home": "Detroit Lions",
+      "away": "New Orleans Saints",
+      "homeId": 4419,
+      "awayId": 4425,
+      "date": "2026-09-13T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515760,
+      "home": "Houston Texans",
+      "away": "Buffalo Bills",
+      "homeId": 4324,
+      "awayId": 4376,
+      "date": "2026-09-13T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515762,
+      "home": "Indianapolis Colts",
+      "away": "Baltimore Ravens",
+      "homeId": 4421,
+      "awayId": 4413,
+      "date": "2026-09-13T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515764,
+      "home": "Jacksonville Jaguars",
+      "away": "Cleveland Browns",
+      "homeId": 4386,
+      "awayId": 4417,
+      "date": "2026-09-13T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515766,
+      "home": "Pittsburgh Steelers",
+      "away": "Atlanta Falcons",
+      "homeId": 4345,
+      "awayId": 4393,
+      "date": "2026-09-13T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515768,
+      "home": "Tennessee Titans",
+      "away": "New York Jets",
+      "homeId": 367364,
+      "awayId": 4427,
+      "date": "2026-09-13T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515770,
+      "home": "Los Angeles Chargers",
+      "away": "Arizona Cardinals",
+      "homeId": 4429,
+      "awayId": 4412,
+      "date": "2026-09-13T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515772,
+      "home": "Las Vegas Raiders",
+      "away": "Miami Dolphins",
+      "homeId": 4390,
+      "awayId": 4287,
+      "date": "2026-09-13T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515774,
+      "home": "Minnesota Vikings",
+      "away": "Green Bay Packers",
+      "homeId": 4423,
+      "awayId": 4420,
+      "date": "2026-09-13T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515776,
+      "home": "Philadelphia Eagles",
+      "away": "Washington Commanders",
+      "homeId": 4428,
+      "awayId": 4432,
+      "date": "2026-09-13T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71445306,
+      "home": "New York Giants",
+      "away": "Dallas Cowboys",
+      "homeId": 4426,
+      "awayId": 4392,
+      "date": "2026-09-14T00:20:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71474268,
+      "home": "Kansas City Chiefs",
+      "away": "Denver Broncos",
+      "homeId": 4422,
+      "awayId": 4418,
+      "date": "2026-09-15T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71466824,
+      "home": "Buffalo Bills",
+      "away": "Detroit Lions",
+      "homeId": 4376,
+      "awayId": 4419,
+      "date": "2026-09-18T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515778,
+      "home": "Atlanta Falcons",
+      "away": "Carolina Panthers",
+      "homeId": 4393,
+      "awayId": 4415,
+      "date": "2026-09-20T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515780,
+      "home": "Baltimore Ravens",
+      "away": "New Orleans Saints",
+      "homeId": 4413,
+      "awayId": 4425,
+      "date": "2026-09-20T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515782,
+      "home": "Chicago Bears",
+      "away": "Minnesota Vikings",
+      "homeId": 4391,
+      "awayId": 4423,
+      "date": "2026-09-20T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515784,
+      "home": "Houston Texans",
+      "away": "Cincinnati Bengals",
+      "homeId": 4324,
+      "awayId": 4416,
+      "date": "2026-09-20T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515786,
+      "home": "New England Patriots",
+      "away": "Pittsburgh Steelers",
+      "homeId": 4424,
+      "awayId": 4345,
+      "date": "2026-09-20T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515788,
+      "home": "New York Jets",
+      "away": "Green Bay Packers",
+      "homeId": 4427,
+      "awayId": 4420,
+      "date": "2026-09-20T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515790,
+      "home": "Tampa Bay Buccaneers",
+      "away": "Cleveland Browns",
+      "homeId": 4388,
+      "awayId": 4417,
+      "date": "2026-09-20T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515792,
+      "home": "Tennessee Titans",
+      "away": "Philadelphia Eagles",
+      "homeId": 367364,
+      "awayId": 4428,
+      "date": "2026-09-20T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515794,
+      "home": "Denver Broncos",
+      "away": "Jacksonville Jaguars",
+      "homeId": 4418,
+      "awayId": 4386,
+      "date": "2026-09-20T20:05:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515796,
+      "home": "Los Angeles Chargers",
+      "away": "Las Vegas Raiders",
+      "homeId": 4429,
+      "awayId": 4390,
+      "date": "2026-09-20T20:05:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515798,
+      "home": "Arizona Cardinals",
+      "away": "Seattle Seahawks",
+      "homeId": 4412,
+      "awayId": 4430,
+      "date": "2026-09-20T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515800,
+      "home": "Dallas Cowboys",
+      "away": "Washington Commanders",
+      "homeId": 4392,
+      "awayId": 4432,
+      "date": "2026-09-20T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515802,
+      "home": "San Francisco 49ers",
+      "away": "Miami Dolphins",
+      "homeId": 4389,
+      "awayId": 4287,
+      "date": "2026-09-20T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515804,
+      "home": "Kansas City Chiefs",
+      "away": "Indianapolis Colts",
+      "homeId": 4422,
+      "awayId": 4421,
+      "date": "2026-09-21T00:20:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515806,
+      "home": "Los Angeles Rams",
+      "away": "New York Giants",
+      "homeId": 4387,
+      "awayId": 4426,
+      "date": "2026-09-22T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515808,
+      "home": "Green Bay Packers",
+      "away": "Atlanta Falcons",
+      "homeId": 4420,
+      "awayId": 4393,
+      "date": "2026-09-25T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515810,
+      "home": "Buffalo Bills",
+      "away": "Los Angeles Chargers",
+      "homeId": 4376,
+      "awayId": 4429,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515812,
+      "home": "Cleveland Browns",
+      "away": "Carolina Panthers",
+      "homeId": 4417,
+      "awayId": 4415,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515818,
+      "home": "Detroit Lions",
+      "away": "New York Jets",
+      "homeId": 4419,
+      "awayId": 4427,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515820,
+      "home": "Indianapolis Colts",
+      "away": "Houston Texans",
+      "homeId": 4421,
+      "awayId": 4324,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515822,
+      "home": "Jacksonville Jaguars",
+      "away": "New England Patriots",
+      "homeId": 4386,
+      "awayId": 4424,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515824,
+      "home": "Miami Dolphins",
+      "away": "Kansas City Chiefs",
+      "homeId": 4287,
+      "awayId": 4422,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515826,
+      "home": "New York Giants",
+      "away": "Tennessee Titans",
+      "homeId": 4426,
+      "awayId": 367364,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515828,
+      "home": "Pittsburgh Steelers",
+      "away": "Cincinnati Bengals",
+      "homeId": 4345,
+      "awayId": 4416,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515830,
+      "home": "Washington Commanders",
+      "away": "Seattle Seahawks",
+      "homeId": 4432,
+      "awayId": 4430,
+      "date": "2026-09-27T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515832,
+      "home": "San Francisco 49ers",
+      "away": "Arizona Cardinals",
+      "homeId": 4389,
+      "awayId": 4412,
+      "date": "2026-09-27T20:05:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515834,
+      "home": "Tampa Bay Buccaneers",
+      "away": "Minnesota Vikings",
+      "homeId": 4388,
+      "awayId": 4423,
+      "date": "2026-09-27T20:05:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71451946,
+      "home": "Dallas Cowboys",
+      "away": "Baltimore Ravens",
+      "homeId": 4392,
+      "awayId": 4413,
+      "date": "2026-09-27T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515836,
+      "home": "New Orleans Saints",
+      "away": "Las Vegas Raiders",
+      "homeId": 4425,
+      "awayId": 4390,
+      "date": "2026-09-27T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515838,
+      "home": "Denver Broncos",
+      "away": "Los Angeles Rams",
+      "homeId": 4418,
+      "awayId": 4387,
+      "date": "2026-09-28T00:20:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515840,
+      "home": "Chicago Bears",
+      "away": "Philadelphia Eagles",
+      "homeId": 4391,
+      "awayId": 4428,
+      "date": "2026-09-29T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515842,
+      "home": "Cleveland Browns",
+      "away": "Pittsburgh Steelers",
+      "homeId": 4417,
+      "awayId": 4345,
+      "date": "2026-10-02T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71488622,
+      "home": "Washington Commanders",
+      "away": "Indianapolis Colts",
+      "homeId": 4432,
+      "awayId": 4421,
+      "date": "2026-10-04T13:30:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515844,
+      "home": "Baltimore Ravens",
+      "away": "Tennessee Titans",
+      "homeId": 4413,
+      "awayId": 367364,
+      "date": "2026-10-04T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515846,
+      "home": "Buffalo Bills",
+      "away": "New England Patriots",
+      "homeId": 4376,
+      "awayId": 4424,
+      "date": "2026-10-04T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515848,
+      "home": "Chicago Bears",
+      "away": "New York Jets",
+      "homeId": 4391,
+      "awayId": 4427,
+      "date": "2026-10-04T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515850,
+      "home": "Cincinnati Bengals",
+      "away": "Jacksonville Jaguars",
+      "homeId": 4416,
+      "awayId": 4386,
+      "date": "2026-10-04T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515852,
+      "home": "Houston Texans",
+      "away": "Dallas Cowboys",
+      "homeId": 4324,
+      "awayId": 4392,
+      "date": "2026-10-04T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515854,
+      "home": "New York Giants",
+      "away": "Arizona Cardinals",
+      "homeId": 4426,
+      "awayId": 4412,
+      "date": "2026-10-04T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515856,
+      "home": "Philadelphia Eagles",
+      "away": "Los Angeles Rams",
+      "homeId": 4428,
+      "awayId": 4387,
+      "date": "2026-10-04T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515858,
+      "home": "Tampa Bay Buccaneers",
+      "away": "Green Bay Packers",
+      "homeId": 4388,
+      "awayId": 4420,
+      "date": "2026-10-04T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515860,
+      "home": "Minnesota Vikings",
+      "away": "Miami Dolphins",
+      "homeId": 4423,
+      "awayId": 4287,
+      "date": "2026-10-04T20:05:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515862,
+      "home": "Las Vegas Raiders",
+      "away": "Kansas City Chiefs",
+      "homeId": 4390,
+      "awayId": 4422,
+      "date": "2026-10-04T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515864,
+      "home": "Seattle Seahawks",
+      "away": "Los Angeles Chargers",
+      "homeId": 4430,
+      "awayId": 4429,
+      "date": "2026-10-04T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71531176,
+      "home": "San Francisco 49ers",
+      "away": "Denver Broncos",
+      "homeId": 4389,
+      "awayId": 4418,
+      "date": "2026-10-04T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515868,
+      "home": "Carolina Panthers",
+      "away": "Detroit Lions",
+      "homeId": 4415,
+      "awayId": 4419,
+      "date": "2026-10-05T00:20:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515870,
+      "home": "New Orleans Saints",
+      "away": "Atlanta Falcons",
+      "homeId": 4425,
+      "awayId": 4393,
+      "date": "2026-10-06T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515872,
+      "home": "Dallas Cowboys",
+      "away": "Tampa Bay Buccaneers",
+      "homeId": 4392,
+      "awayId": 4388,
+      "date": "2026-10-09T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71488624,
+      "home": "Jacksonville Jaguars",
+      "away": "Philadelphia Eagles",
+      "homeId": 4386,
+      "awayId": 4428,
+      "date": "2026-10-11T13:30:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515874,
+      "home": "Miami Dolphins",
+      "away": "Cincinnati Bengals",
+      "homeId": 4287,
+      "awayId": 4416,
+      "date": "2026-10-11T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515876,
+      "home": "New England Patriots",
+      "away": "Las Vegas Raiders",
+      "homeId": 4424,
+      "awayId": 4390,
+      "date": "2026-10-11T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515878,
+      "home": "New Orleans Saints",
+      "away": "Minnesota Vikings",
+      "homeId": 4425,
+      "awayId": 4423,
+      "date": "2026-10-11T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515880,
+      "home": "New York Jets",
+      "away": "Cleveland Browns",
+      "homeId": 4427,
+      "awayId": 4417,
+      "date": "2026-10-11T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515882,
+      "home": "Pittsburgh Steelers",
+      "away": "Indianapolis Colts",
+      "homeId": 4345,
+      "awayId": 4421,
+      "date": "2026-10-11T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515884,
+      "home": "Tennessee Titans",
+      "away": "Houston Texans",
+      "homeId": 367364,
+      "awayId": 4324,
+      "date": "2026-10-11T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515886,
+      "home": "Washington Commanders",
+      "away": "New York Giants",
+      "homeId": 4432,
+      "awayId": 4426,
+      "date": "2026-10-11T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515888,
+      "home": "Los Angeles Chargers",
+      "away": "Denver Broncos",
+      "homeId": 4429,
+      "awayId": 4418,
+      "date": "2026-10-11T20:05:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515890,
+      "home": "Arizona Cardinals",
+      "away": "Detroit Lions",
+      "homeId": 4412,
+      "awayId": 4419,
+      "date": "2026-10-11T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515892,
+      "home": "Green Bay Packers",
+      "away": "Chicago Bears",
+      "homeId": 4420,
+      "awayId": 4391,
+      "date": "2026-10-11T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515894,
+      "home": "Seattle Seahawks",
+      "away": "San Francisco 49ers",
+      "homeId": 4430,
+      "awayId": 4389,
+      "date": "2026-10-11T20:25:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515896,
+      "home": "Atlanta Falcons",
+      "away": "Baltimore Ravens",
+      "homeId": 4393,
+      "awayId": 4413,
+      "date": "2026-10-12T00:20:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515898,
+      "home": "Los Angeles Rams",
+      "away": "Buffalo Bills",
+      "homeId": 4387,
+      "awayId": 4376,
+      "date": "2026-10-13T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515900,
+      "home": "Denver Broncos",
+      "away": "Seattle Seahawks",
+      "homeId": 4418,
+      "awayId": 4430,
+      "date": "2026-10-16T00:15:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71488626,
+      "home": "Jacksonville Jaguars",
+      "away": "Houston Texans",
+      "homeId": 4386,
+      "awayId": 4324,
+      "date": "2026-10-18T13:30:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515902,
+      "home": "Atlanta Falcons",
+      "away": "Chicago Bears",
+      "homeId": 4393,
+      "awayId": 4391,
+      "date": "2026-10-18T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515904,
+      "home": "Cleveland Browns",
+      "away": "Baltimore Ravens",
+      "homeId": 4417,
+      "awayId": 4413,
+      "date": "2026-10-18T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515906,
+      "home": "Indianapolis Colts",
+      "away": "Tennessee Titans",
+      "homeId": 4421,
+      "awayId": 367364,
+      "date": "2026-10-18T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515908,
+      "home": "New England Patriots",
+      "away": "New York Jets",
+      "homeId": 4424,
+      "awayId": 4427,
+      "date": "2026-10-18T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515910,
+      "home": "New York Giants",
+      "away": "New Orleans Saints",
+      "homeId": 4426,
+      "awayId": 4425,
+      "date": "2026-10-18T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515912,
+      "home": "Philadelphia Eagles",
+      "away": "Carolina Panthers",
+      "homeId": 4428,
+      "awayId": 4415,
+      "date": "2026-10-18T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    {
+      "id": 71515914,
+      "home": "Tampa Bay Buccaneers",
+      "away": "Pittsburgh Steelers",
+      "homeId": 4388,
+      "awayId": 4345,
+      "date": "2026-10-18T17:00:00Z",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "status": "pending",
+      "scores": {
+        "home": 0,
+        "away": 0
+      }
+    }
+  ],
+  "odds": [
+    {
+      "id": 71515752,
+      "home": "Seattle Seahawks",
+      "away": "New England Patriots",
+      "homeId": 4430,
+      "awayId": 4424,
+      "date": "2026-09-10T00:20:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118042",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35607262"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118042",
+        "FanDuel": "35607262"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-09T18:06:42.71Z",
+            "odds": [
+              {
+                "home": "1.52",
+                "away": "2.60"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-13T16:19:58.036Z",
+            "odds": [
+              {
+                "home": "1.51",
+                "away": "2.66"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-13T16:19:58.036Z",
+            "odds": [
+              {
+                "hdp": -4.5,
+                "home": "1.98",
+                "away": "1.83"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-06-03T00:56:44.901Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.87",
+                "under": "1.95"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71387370,
+      "home": "Los Angeles Rams",
+      "away": "San Francisco 49ers",
+      "homeId": 4387,
+      "awayId": 4389,
+      "date": "2026-09-11T00:35:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34107951",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35596960"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34107951",
+        "FanDuel": "35596960"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:04:18.654Z",
+            "odds": [
+              {
+                "home": "1.54",
+                "away": "2.54"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-20T19:04:18.654Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-13T16:19:58.036Z",
+            "odds": [
+              {
+                "home": "1.48",
+                "away": "2.76"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-13T16:19:58.036Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.87",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-06-01T17:24:49.828Z",
+            "odds": [
+              {
+                "hdp": 49.5,
+                "over": "1.98",
+                "under": "1.83"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515760,
+      "home": "Houston Texans",
+      "away": "Buffalo Bills",
+      "homeId": 4324,
+      "awayId": 4376,
+      "date": "2026-09-13T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118029",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35610167"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118029",
+        "FanDuel": "35610167"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:10:03.882Z",
+            "odds": [
+              {
+                "home": "2.00",
+                "away": "1.83"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-20T19:10:03.882Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:10:03.882Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:51:24.592Z",
+            "odds": [
+              {
+                "home": "1.94",
+                "away": "1.91"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-14T20:57:45.447Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.82",
+                "away": "2.00"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-14T19:22:35.388Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.89",
+                "under": "1.93"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515764,
+      "home": "Jacksonville Jaguars",
+      "away": "Cleveland Browns",
+      "homeId": 4386,
+      "awayId": 4417,
+      "date": "2026-09-13T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118250",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35609019"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118250",
+        "FanDuel": "35609019"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:10:03.882Z",
+            "odds": [
+              {
+                "home": "1.27",
+                "away": "3.85"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -7.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:10:03.882Z",
+            "odds": [
+              {
+                "hdp": 40.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:50:58.542Z",
+            "odds": [
+              {
+                "home": "1.25",
+                "away": "4.20"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-06-25T01:32:08.103Z",
+            "odds": [
+              {
+                "hdp": -7.5,
+                "home": "1.87",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-06-25T01:32:08.103Z",
+            "odds": [
+              {
+                "hdp": 40.5,
+                "over": "1.85",
+                "under": "1.96"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515768,
+      "home": "Tennessee Titans",
+      "away": "New York Jets",
+      "homeId": 367364,
+      "awayId": 4427,
+      "date": "2026-09-13T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118237",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35609021"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118237",
+        "FanDuel": "35609021"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "home": "1.70",
+                "away": "2.20"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "hdp": 38.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:50:58.542Z",
+            "odds": [
+              {
+                "home": "1.75",
+                "away": "2.16"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-27T12:34:02.374Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.91",
+                "away": "1.91"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-27T12:34:02.374Z",
+            "odds": [
+              {
+                "hdp": 38.5,
+                "over": "1.91",
+                "under": "1.91"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515754,
+      "home": "Carolina Panthers",
+      "away": "Chicago Bears",
+      "homeId": 4415,
+      "awayId": 4391,
+      "date": "2026-09-13T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118028",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35607426"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118028",
+        "FanDuel": "35607426"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.14",
+                "away": "1.74"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:50:58.542Z",
+            "odds": [
+              {
+                "home": "2.18",
+                "away": "1.72"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-14T13:24:28.148Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.95",
+                "away": "1.87"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-14T13:24:28.148Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.91",
+                "under": "1.91"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515756,
+      "home": "Cincinnati Bengals",
+      "away": "Tampa Bay Buccaneers",
+      "homeId": 4416,
+      "awayId": 4388,
+      "date": "2026-09-13T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118140",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35610169"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118140",
+        "FanDuel": "35610169"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:06:47.998Z",
+            "odds": [
+              {
+                "home": "1.52",
+                "away": "2.60"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:06:47.998Z",
+            "odds": [
+              {
+                "hdp": 52.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-13T16:21:06.088Z",
+            "odds": [
+              {
+                "home": "1.48",
+                "away": "2.76"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-13T16:21:06.088Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.87",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-14T20:54:03.987Z",
+            "odds": [
+              {
+                "hdp": 51.5,
+                "over": "1.89",
+                "under": "1.93"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515758,
+      "home": "Detroit Lions",
+      "away": "New Orleans Saints",
+      "homeId": 4419,
+      "awayId": 4425,
+      "date": "2026-09-13T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118210",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35610168"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118210",
+        "FanDuel": "35610168"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:19:02.016Z",
+            "odds": [
+              {
+                "home": "1.30",
+                "away": "3.60"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -7,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "hdp": 49.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:51:12.09Z",
+            "odds": [
+              {
+                "home": "1.27",
+                "away": "3.95"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-13T16:21:06.088Z",
+            "odds": [
+              {
+                "hdp": -7,
+                "home": "1.87",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-06-11T14:39:46.514Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.87",
+                "under": "1.95"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515762,
+      "home": "Indianapolis Colts",
+      "away": "Baltimore Ravens",
+      "homeId": 4421,
+      "awayId": 4413,
+      "date": "2026-09-13T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118266",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35610190"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118266",
+        "FanDuel": "35610190"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-16T20:57:44.355Z",
+            "odds": [
+              {
+                "home": "2.54",
+                "away": "1.54"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 49.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:50:44.844Z",
+            "odds": [
+              {
+                "home": "2.68",
+                "away": "1.50"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-14T20:54:53.348Z",
+            "odds": [
+              {
+                "hdp": 3.5,
+                "home": "1.95",
+                "away": "1.87"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-18T17:21:57.016Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.91",
+                "under": "1.91"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515766,
+      "home": "Pittsburgh Steelers",
+      "away": "Atlanta Falcons",
+      "homeId": 4345,
+      "awayId": 4393,
+      "date": "2026-09-13T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118069",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35609020"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118069",
+        "FanDuel": "35609020"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:10:03.882Z",
+            "odds": [
+              {
+                "home": "1.70",
+                "away": "2.20"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-20T19:10:03.882Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:10:03.882Z",
+            "odds": [
+              {
+                "hdp": 41.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-05-18T16:15:18.51Z",
+            "odds": [
+              {
+                "home": "1.68",
+                "away": "2.24"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-06-05T02:41:31.322Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.83",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-14T15:04:00.184Z",
+            "odds": [
+              {
+                "hdp": 41.5,
+                "over": "1.95",
+                "under": "1.87"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515778,
+      "home": "Atlanta Falcons",
+      "away": "Carolina Panthers",
+      "homeId": 4393,
+      "awayId": 4415,
+      "date": "2026-09-20T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118054"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118054"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T14:56:51.092Z",
+            "odds": [
+              {
+                "home": "1.84",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -1.5,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515782,
+      "home": "Chicago Bears",
+      "away": "Minnesota Vikings",
+      "homeId": 4391,
+      "awayId": 4423,
+      "date": "2026-09-20T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118014"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118014"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:21:22.736Z",
+            "odds": [
+              {
+                "home": "1.55",
+                "away": "2.50"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515774,
+      "home": "Minnesota Vikings",
+      "away": "Green Bay Packers",
+      "homeId": 4423,
+      "awayId": 4420,
+      "date": "2026-09-13T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118152",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35610171"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118152",
+        "FanDuel": "35610171"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:06:47.998Z",
+            "odds": [
+              {
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-20T19:06:47.998Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.83",
+                "away": "2.00"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:06:47.998Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-05T02:39:13.186Z",
+            "odds": [
+              {
+                "home": "1.96",
+                "away": "1.89"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-06-03T18:29:44.39Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.83",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-06-04T00:03:02.292Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.87",
+                "under": "1.95"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515776,
+      "home": "Philadelphia Eagles",
+      "away": "Washington Commanders",
+      "homeId": 4428,
+      "awayId": 4432,
+      "date": "2026-09-13T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118074",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35609293"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118074",
+        "FanDuel": "35609293"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:06:05.22Z",
+            "odds": [
+              {
+                "home": "1.45",
+                "away": "2.80"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-20T19:06:05.22Z",
+            "odds": [
+              {
+                "hdp": -4.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:06:05.22Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-05-14T14:47:24.278Z",
+            "odds": [
+              {
+                "home": "1.47",
+                "away": "2.80"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-14T14:47:24.278Z",
+            "odds": [
+              {
+                "hdp": -4.5,
+                "home": "1.95",
+                "away": "1.87"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-14T14:47:24.278Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.87",
+                "under": "1.95"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71466824,
+      "home": "Buffalo Bills",
+      "away": "Detroit Lions",
+      "homeId": 4376,
+      "awayId": 4419,
+      "date": "2026-09-18T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118219",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35599552"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118219",
+        "FanDuel": "35599552"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-15T20:13:50.858Z",
+            "odds": [
+              {
+                "home": "1.64",
+                "away": "2.30"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 52.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": []
+      }
+    },
+    {
+      "id": 71515780,
+      "home": "Baltimore Ravens",
+      "away": "New Orleans Saints",
+      "homeId": 4413,
+      "awayId": 4425,
+      "date": "2026-09-20T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118168"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118168"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T19:39:55.54Z",
+            "odds": [
+              {
+                "home": "1.27",
+                "away": "3.85"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -7.5,
+                "home": "1.89",
+                "away": "1.92"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515770,
+      "home": "Los Angeles Chargers",
+      "away": "Arizona Cardinals",
+      "homeId": 4429,
+      "awayId": 4412,
+      "date": "2026-09-13T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118231",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35610170"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118231",
+        "FanDuel": "35610170"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "home": "1.17",
+                "away": "5.25"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "hdp": -10.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:50:21.406Z",
+            "odds": [
+              {
+                "home": "1.17",
+                "away": "5.40"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-06-05T02:55:35.203Z",
+            "odds": [
+              {
+                "hdp": -10.5,
+                "home": "1.94",
+                "away": "1.88"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-14T19:23:24.743Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.91",
+                "under": "1.91"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515772,
+      "home": "Las Vegas Raiders",
+      "away": "Miami Dolphins",
+      "homeId": 4390,
+      "awayId": 4287,
+      "date": "2026-09-13T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118243",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35609018"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118243",
+        "FanDuel": "35609018"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "home": "1.50",
+                "away": "2.64"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:08:39.445Z",
+            "odds": [
+              {
+                "hdp": 40.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-04T13:33:14.516Z",
+            "odds": [
+              {
+                "home": "1.48",
+                "away": "2.76"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-04T13:33:14.516Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.83",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-14T21:02:51.476Z",
+            "odds": [
+              {
+                "hdp": 40.5,
+                "over": "1.91",
+                "under": "1.91"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71445306,
+      "home": "New York Giants",
+      "away": "Dallas Cowboys",
+      "homeId": 4426,
+      "awayId": 4392,
+      "date": "2026-09-14T00:20:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118096",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35596943"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118096",
+        "FanDuel": "35596943"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T19:05:05.275Z",
+            "odds": [
+              {
+                "home": "2.24",
+                "away": "1.67"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-07T17:32:36.191Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-20T19:05:05.275Z",
+            "odds": [
+              {
+                "hdp": 42.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:49:58.093Z",
+            "odds": [
+              {
+                "home": "2.28",
+                "away": "1.66"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-06-25T01:32:08.103Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.98",
+                "away": "1.83"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-06-25T01:32:08.103Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.87",
+                "under": "1.95"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71474268,
+      "home": "Kansas City Chiefs",
+      "away": "Denver Broncos",
+      "homeId": 4422,
+      "awayId": 4418,
+      "date": "2026-09-15T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118255",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35601246"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118255",
+        "FanDuel": "35601246"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-20T18:22:33.212Z",
+            "odds": [
+              {
+                "home": "1.70",
+                "away": "2.20"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-12T21:17:30.776Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 42.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:52:02.844Z",
+            "odds": [
+              {
+                "home": "1.68",
+                "away": "2.24"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-06-10T01:46:03.134Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.85",
+                "away": "1.96"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-12T21:46:43.119Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.96",
+                "under": "1.85"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515792,
+      "home": "Tennessee Titans",
+      "away": "Philadelphia Eagles",
+      "homeId": 367364,
+      "awayId": 4428,
+      "date": "2026-09-20T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118241"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118241"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.80",
+                "away": "1.45"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 4.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 42.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515794,
+      "home": "Denver Broncos",
+      "away": "Jacksonville Jaguars",
+      "homeId": 4418,
+      "awayId": 4386,
+      "date": "2026-09-20T20:05:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118278"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118278"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.67",
+                "away": "2.24"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-17T00:02:37.474Z",
+            "odds": [
+              {
+                "hdp": -3,
+                "home": "1.98",
+                "away": "1.84"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515796,
+      "home": "Los Angeles Chargers",
+      "away": "Las Vegas Raiders",
+      "homeId": 4429,
+      "awayId": 4390,
+      "date": "2026-09-20T20:05:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118153"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118153"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.23",
+                "away": "4.30"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -8.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 42.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515798,
+      "home": "Arizona Cardinals",
+      "away": "Seattle Seahawks",
+      "homeId": 4412,
+      "awayId": 4430,
+      "date": "2026-09-20T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118115"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118115"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T15:50:15.649Z",
+            "odds": [
+              {
+                "home": "4.70",
+                "away": "1.20"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 10,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515800,
+      "home": "Dallas Cowboys",
+      "away": "Washington Commanders",
+      "homeId": 4392,
+      "awayId": 4432,
+      "date": "2026-09-20T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118129"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118129"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.48",
+                "away": "2.70"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -4.5,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 51.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515784,
+      "home": "Houston Texans",
+      "away": "Cincinnati Bengals",
+      "homeId": 4324,
+      "awayId": 4416,
+      "date": "2026-09-20T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118026"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118026"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.74",
+                "away": "2.14"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515786,
+      "home": "New England Patriots",
+      "away": "Pittsburgh Steelers",
+      "homeId": 4424,
+      "awayId": 4345,
+      "date": "2026-09-20T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118226"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118226"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T17:28:39.698Z",
+            "odds": [
+              {
+                "home": "1.44",
+                "away": "2.85"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -4.5,
+                "home": "1.92",
+                "away": "1.89"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515790,
+      "home": "Tampa Bay Buccaneers",
+      "away": "Cleveland Browns",
+      "homeId": 4388,
+      "awayId": 4417,
+      "date": "2026-09-20T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118151"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118151"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T16:33:56.124Z",
+            "odds": [
+              {
+                "home": "1.35",
+                "away": "3.25"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -6.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 42.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515802,
+      "home": "San Francisco 49ers",
+      "away": "Miami Dolphins",
+      "homeId": 4389,
+      "awayId": 4287,
+      "date": "2026-09-20T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118075"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118075"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T21:46:31.703Z",
+            "odds": [
+              {
+                "home": "1.19",
+                "away": "4.90"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -10.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515788,
+      "home": "New York Jets",
+      "away": "Green Bay Packers",
+      "homeId": 4427,
+      "awayId": 4420,
+      "date": "2026-09-20T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118196"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118196"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T16:52:11.324Z",
+            "odds": [
+              {
+                "home": "3.10",
+                "away": "1.38"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 6,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 42.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515804,
+      "home": "Kansas City Chiefs",
+      "away": "Indianapolis Colts",
+      "homeId": 4422,
+      "awayId": 4421,
+      "date": "2026-09-21T00:20:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118260"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118260"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:23:26.226Z",
+            "odds": [
+              {
+                "home": "1.37",
+                "away": "3.15"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -6,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515806,
+      "home": "Los Angeles Rams",
+      "away": "New York Giants",
+      "homeId": 4387,
+      "awayId": 4426,
+      "date": "2026-09-22T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118089"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118089"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T19:54:42.285Z",
+            "odds": [
+              {
+                "home": "1.25",
+                "away": "4.10"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -9.5,
+                "home": "1.92",
+                "away": "1.89"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515812,
+      "home": "Cleveland Browns",
+      "away": "Carolina Panthers",
+      "homeId": 4417,
+      "awayId": 4415,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118105"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118105"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.14",
+                "away": "1.74"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.89",
+                "away": "1.92"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 40.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515818,
+      "home": "Detroit Lions",
+      "away": "New York Jets",
+      "homeId": 4419,
+      "awayId": 4427,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118222"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118222"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:19:55.379Z",
+            "odds": [
+              {
+                "home": "1.22",
+                "away": "4.40"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -9.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515822,
+      "home": "Jacksonville Jaguars",
+      "away": "New England Patriots",
+      "homeId": 4386,
+      "awayId": 4424,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118258"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118258"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.84",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -1.5,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515824,
+      "home": "Miami Dolphins",
+      "away": "Kansas City Chiefs",
+      "homeId": 4287,
+      "awayId": 4422,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118189"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118189"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "3.70",
+                "away": "1.29"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 7,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515826,
+      "home": "New York Giants",
+      "away": "Tennessee Titans",
+      "homeId": 4426,
+      "awayId": 367364,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118112"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118112"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T19:54:06.558Z",
+            "odds": [
+              {
+                "home": "1.57",
+                "away": "2.45"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-15T01:16:15.223Z",
+            "odds": [
+              {
+                "hdp": -3,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515808,
+      "home": "Green Bay Packers",
+      "away": "Atlanta Falcons",
+      "homeId": 4420,
+      "awayId": 4393,
+      "date": "2026-09-25T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118180"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118180"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T15:57:05.494Z",
+            "odds": [
+              {
+                "home": "1.29",
+                "away": "3.70"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -7.5,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515810,
+      "home": "Buffalo Bills",
+      "away": "Los Angeles Chargers",
+      "homeId": 4376,
+      "awayId": 4429,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118212"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118212"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-14T20:49:01.361Z",
+            "odds": [
+              {
+                "home": "1.74",
+                "away": "2.14"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515820,
+      "home": "Indianapolis Colts",
+      "away": "Houston Texans",
+      "homeId": 4421,
+      "awayId": 4324,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118261"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118261"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.10",
+                "away": "1.76"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-07T14:19:02.016Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71451946,
+      "home": "Dallas Cowboys",
+      "away": "Baltimore Ravens",
+      "homeId": 4392,
+      "awayId": 4413,
+      "date": "2026-09-27T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118119",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35601592"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118119",
+        "FanDuel": "35601592"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.14",
+                "away": "1.74"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 51.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": []
+      }
+    },
+    {
+      "id": 71515828,
+      "home": "Pittsburgh Steelers",
+      "away": "Cincinnati Bengals",
+      "homeId": 4345,
+      "awayId": 4416,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118057"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118057"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.83",
+                "away": "2.00"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515830,
+      "home": "Washington Commanders",
+      "away": "Seattle Seahawks",
+      "homeId": 4432,
+      "awayId": 4430,
+      "date": "2026-09-27T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118053"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118053"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-18T20:46:00.333Z",
+            "odds": [
+              {
+                "home": "2.60",
+                "away": "1.52"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515832,
+      "home": "San Francisco 49ers",
+      "away": "Arizona Cardinals",
+      "homeId": 4389,
+      "awayId": 4412,
+      "date": "2026-09-27T20:05:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118047"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118047"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T15:46:55.592Z",
+            "odds": [
+              {
+                "home": "1.16",
+                "away": "5.40"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -11.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71488622,
+      "home": "Washington Commanders",
+      "away": "Indianapolis Colts",
+      "homeId": 4432,
+      "awayId": 4421,
+      "date": "2026-10-04T13:30:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118061",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35605982"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118061",
+        "FanDuel": "35605982"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:19:55.379Z",
+            "odds": [
+              {
+                "home": "1.89",
+                "away": "1.92"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -1.5,
+                "home": "2.02",
+                "away": "1.81"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:52:31.416Z",
+            "odds": [
+              {
+                "home": "1.86",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-27T12:34:02.374Z",
+            "odds": [
+              {
+                "hdp": -1.5,
+                "home": "1.95",
+                "away": "1.87"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-27T12:34:02.374Z",
+            "odds": [
+              {
+                "hdp": 49.5,
+                "over": "1.91",
+                "under": "1.91"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515834,
+      "home": "Tampa Bay Buccaneers",
+      "away": "Minnesota Vikings",
+      "homeId": 4388,
+      "awayId": 4423,
+      "date": "2026-09-27T20:05:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118145"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118145"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.80",
+                "away": "2.05"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -1.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515836,
+      "home": "New Orleans Saints",
+      "away": "Las Vegas Raiders",
+      "homeId": 4425,
+      "awayId": 4390,
+      "date": "2026-09-27T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118012"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118012"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T19:41:01.085Z",
+            "odds": [
+              {
+                "home": "1.60",
+                "away": "2.40"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 42.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515838,
+      "home": "Denver Broncos",
+      "away": "Los Angeles Rams",
+      "homeId": 4418,
+      "awayId": 4387,
+      "date": "2026-09-28T00:20:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118276"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118276"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-14T03:26:57.382Z",
+            "odds": [
+              {
+                "home": "2.36",
+                "away": "1.61"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 3,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515840,
+      "home": "Chicago Bears",
+      "away": "Philadelphia Eagles",
+      "homeId": 4391,
+      "awayId": 4428,
+      "date": "2026-09-29T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118030"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118030"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.84",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -1.5,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515842,
+      "home": "Cleveland Browns",
+      "away": "Pittsburgh Steelers",
+      "homeId": 4417,
+      "awayId": 4345,
+      "date": "2026-10-02T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118083"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118083"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.36",
+                "away": "1.61"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 3,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 41.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515846,
+      "home": "Buffalo Bills",
+      "away": "New England Patriots",
+      "homeId": 4376,
+      "awayId": 4424,
+      "date": "2026-10-04T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118207"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118207"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.61",
+                "away": "2.36"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 49.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515848,
+      "home": "Chicago Bears",
+      "away": "New York Jets",
+      "homeId": 4391,
+      "awayId": 4427,
+      "date": "2026-10-04T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118036"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118036"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T16:25:02.264Z",
+            "odds": [
+              {
+                "home": "1.25",
+                "away": "4.10"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -8.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515852,
+      "home": "Houston Texans",
+      "away": "Dallas Cowboys",
+      "homeId": 4324,
+      "awayId": 4392,
+      "date": "2026-10-04T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118034"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118034"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.74",
+                "away": "2.14"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515854,
+      "home": "New York Giants",
+      "away": "Arizona Cardinals",
+      "homeId": 4426,
+      "awayId": 4412,
+      "date": "2026-10-04T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118104"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118104"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-10T00:39:13.246Z",
+            "odds": [
+              {
+                "home": "1.32",
+                "away": "3.50"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -7,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515844,
+      "home": "Baltimore Ravens",
+      "away": "Tennessee Titans",
+      "homeId": 4413,
+      "awayId": 367364,
+      "date": "2026-10-04T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118175"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118175"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.25",
+                "away": "4.10"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -8.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515850,
+      "home": "Cincinnati Bengals",
+      "away": "Jacksonville Jaguars",
+      "homeId": 4416,
+      "awayId": 4386,
+      "date": "2026-10-04T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118124"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118124"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T17:25:48.119Z",
+            "odds": [
+              {
+                "home": "1.74",
+                "away": "2.14"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 51.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515856,
+      "home": "Philadelphia Eagles",
+      "away": "Los Angeles Rams",
+      "homeId": 4428,
+      "awayId": 4387,
+      "date": "2026-10-04T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118078"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118078"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.20",
+                "away": "1.70"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515858,
+      "home": "Tampa Bay Buccaneers",
+      "away": "Green Bay Packers",
+      "homeId": 4388,
+      "awayId": 4420,
+      "date": "2026-10-04T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118141"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118141"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.05",
+                "away": "1.80"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515860,
+      "home": "Minnesota Vikings",
+      "away": "Miami Dolphins",
+      "homeId": 4423,
+      "awayId": 4287,
+      "date": "2026-10-04T20:05:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118170"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118170"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.26",
+                "away": "4.00"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -7.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515862,
+      "home": "Las Vegas Raiders",
+      "away": "Kansas City Chiefs",
+      "homeId": 4390,
+      "awayId": 4422,
+      "date": "2026-10-04T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118238"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118238"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:23:26.226Z",
+            "odds": [
+              {
+                "home": "3.00",
+                "away": "1.40"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 5.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515868,
+      "home": "Carolina Panthers",
+      "away": "Detroit Lions",
+      "homeId": 4415,
+      "awayId": 4419,
+      "date": "2026-10-05T00:20:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118032"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118032"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-17T16:50:18.259Z",
+            "odds": [
+              {
+                "home": "2.36",
+                "away": "1.61"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 3,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515872,
+      "home": "Dallas Cowboys",
+      "away": "Tampa Bay Buccaneers",
+      "homeId": 4392,
+      "awayId": 4388,
+      "date": "2026-10-09T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118137"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118137"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-14T21:06:26.834Z",
+            "odds": [
+              {
+                "home": "1.52",
+                "away": "2.60"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 52.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515876,
+      "home": "New England Patriots",
+      "away": "Las Vegas Raiders",
+      "homeId": 4424,
+      "awayId": 4390,
+      "date": "2026-10-11T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118223"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118223"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.24",
+                "away": "4.20"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -8.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71531176,
+      "home": "San Francisco 49ers",
+      "away": "Denver Broncos",
+      "homeId": 4389,
+      "awayId": 4418,
+      "date": "2026-10-04T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118067"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118067"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.67",
+                "away": "2.24"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.84",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 46.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515864,
+      "home": "Seattle Seahawks",
+      "away": "Los Angeles Chargers",
+      "homeId": 4430,
+      "awayId": 4429,
+      "date": "2026-10-04T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118039"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118039"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.61",
+                "away": "2.36"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515870,
+      "home": "New Orleans Saints",
+      "away": "Atlanta Falcons",
+      "homeId": 4425,
+      "awayId": 4393,
+      "date": "2026-10-06T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118279"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118279"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.74",
+                "away": "2.14"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515874,
+      "home": "Miami Dolphins",
+      "away": "Cincinnati Bengals",
+      "homeId": 4287,
+      "awayId": 4416,
+      "date": "2026-10-11T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118195"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118195"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "3.05",
+                "away": "1.40"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 5.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 49.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515878,
+      "home": "New Orleans Saints",
+      "away": "Minnesota Vikings",
+      "homeId": 4425,
+      "awayId": 4423,
+      "date": "2026-10-11T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118174"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118174"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.00",
+                "away": "1.83"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515880,
+      "home": "New York Jets",
+      "away": "Cleveland Browns",
+      "homeId": 4427,
+      "awayId": 4417,
+      "date": "2026-10-11T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118204"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118204"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-13T20:56:58.777Z",
+            "odds": [
+              {
+                "home": "1.74",
+                "away": "2.14"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 40.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71488624,
+      "home": "Jacksonville Jaguars",
+      "away": "Philadelphia Eagles",
+      "homeId": 4386,
+      "awayId": 4428,
+      "date": "2026-10-11T13:30:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118254",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35605983"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118254",
+        "FanDuel": "35605983"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.10",
+                "away": "1.76"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-17T00:02:37.474Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-17T00:02:37.474Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.98",
+                "under": "1.84"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-05-13T17:34:45.605Z",
+            "odds": [
+              {
+                "home": "2.06",
+                "away": "1.81"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-13T17:34:45.605Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.89",
+                "away": "1.93"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-13T17:34:45.605Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.98",
+                "under": "1.83"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515884,
+      "home": "Tennessee Titans",
+      "away": "Houston Texans",
+      "homeId": 367364,
+      "awayId": 4324,
+      "date": "2026-10-11T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118229"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118229"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "2.60",
+                "away": "1.52"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515886,
+      "home": "Washington Commanders",
+      "away": "New York Giants",
+      "homeId": 4432,
+      "awayId": 4426,
+      "date": "2026-10-11T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118048"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118048"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.74",
+                "away": "2.14"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515888,
+      "home": "Los Angeles Chargers",
+      "away": "Denver Broncos",
+      "homeId": 4429,
+      "awayId": 4418,
+      "date": "2026-10-11T20:05:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118147"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118147"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-14T03:26:57.382Z",
+            "odds": [
+              {
+                "home": "1.67",
+                "away": "2.24"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 44.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515890,
+      "home": "Arizona Cardinals",
+      "away": "Detroit Lions",
+      "homeId": 4412,
+      "awayId": 4419,
+      "date": "2026-10-11T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118121"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118121"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-10T15:26:23.094Z",
+            "odds": [
+              {
+                "home": "4.00",
+                "away": "1.26"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-15T01:41:48.716Z",
+            "odds": [
+              {
+                "hdp": 8.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T01:41:48.716Z",
+            "odds": [
+              {
+                "hdp": 49.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515892,
+      "home": "Green Bay Packers",
+      "away": "Chicago Bears",
+      "homeId": 4420,
+      "awayId": 4391,
+      "date": "2026-10-11T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118176"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118176"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-30T09:53:38.722Z",
+            "odds": [
+              {
+                "home": "1.60",
+                "away": "2.40"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-15T00:09:55.171Z",
+            "odds": [
+              {
+                "hdp": -3,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T00:09:55.171Z",
+            "odds": [
+              {
+                "hdp": 49.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515894,
+      "home": "Seattle Seahawks",
+      "away": "San Francisco 49ers",
+      "homeId": 4430,
+      "awayId": 4389,
+      "date": "2026-10-11T20:25:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118017"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118017"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-18T20:44:18.787Z",
+            "odds": [
+              {
+                "home": "1.48",
+                "away": "2.70"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515896,
+      "home": "Atlanta Falcons",
+      "away": "Baltimore Ravens",
+      "homeId": 4393,
+      "awayId": 4413,
+      "date": "2026-10-12T00:20:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118099"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118099"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-30T09:51:09.048Z",
+            "odds": [
+              {
+                "home": "2.85",
+                "away": "1.44"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-15T00:35:39.409Z",
+            "odds": [
+              {
+                "hdp": 4.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T00:35:39.409Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515900,
+      "home": "Denver Broncos",
+      "away": "Seattle Seahawks",
+      "homeId": 4418,
+      "awayId": 4430,
+      "date": "2026-10-16T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118277"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118277"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-05-15T00:18:52.222Z",
+            "odds": [
+              {
+                "home": "2.10",
+                "away": "1.76"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-14T03:26:57.382Z",
+            "odds": [
+              {
+                "hdp": 2.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T00:18:52.222Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515882,
+      "home": "Pittsburgh Steelers",
+      "away": "Indianapolis Colts",
+      "homeId": 4345,
+      "awayId": 4421,
+      "date": "2026-10-11T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118065"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118065"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "home": "1.70",
+                "away": "2.20"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-07-06T11:11:47.796Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515898,
+      "home": "Los Angeles Rams",
+      "away": "Buffalo Bills",
+      "homeId": 4387,
+      "awayId": 4376,
+      "date": "2026-10-13T00:15:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118101"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118101"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:19:02.016Z",
+            "odds": [
+              {
+                "home": "1.54",
+                "away": "2.54"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-07T14:19:02.016Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T00:35:20.695Z",
+            "odds": [
+              {
+                "hdp": 53.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515908,
+      "home": "New England Patriots",
+      "away": "New York Jets",
+      "homeId": 4424,
+      "awayId": 4427,
+      "date": "2026-10-18T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118215"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118215"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-15T22:40:58.788Z",
+            "odds": [
+              {
+                "home": "1.22",
+                "away": "4.40"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-06-15T22:40:58.788Z",
+            "odds": [
+              {
+                "hdp": -9.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-06-15T22:40:58.788Z",
+            "odds": [
+              {
+                "hdp": 42.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515910,
+      "home": "New York Giants",
+      "away": "New Orleans Saints",
+      "homeId": 4426,
+      "awayId": 4425,
+      "date": "2026-10-18T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118108"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118108"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-05-15T00:43:47.814Z",
+            "odds": [
+              {
+                "home": "1.67",
+                "away": "2.24"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-15T00:43:47.814Z",
+            "odds": [
+              {
+                "hdp": -2.5,
+                "home": "1.86",
+                "away": "1.95"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T00:43:47.814Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71488626,
+      "home": "Jacksonville Jaguars",
+      "away": "Houston Texans",
+      "homeId": 4386,
+      "awayId": 4324,
+      "date": "2026-10-18T13:30:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118244",
+        "FanDuel": "https://sportsbook.fanduel.com/event/35605984"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118244",
+        "FanDuel": "35605984"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-05-13T13:55:27.358Z",
+            "odds": [
+              {
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-13T13:55:27.358Z",
+            "odds": [
+              {
+                "hdp": 1.5,
+                "home": "1.84",
+                "away": "1.98"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-13T13:06:13.289Z",
+            "odds": [
+              {
+                "hdp": 41.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ],
+        "FanDuel": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-29T22:52:31.416Z",
+            "odds": [
+              {
+                "home": "1.94",
+                "away": "1.91"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-13T17:33:05.604Z",
+            "odds": [
+              {
+                "hdp": -1.5,
+                "home": "2.00",
+                "away": "1.82"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-13T17:33:05.604Z",
+            "odds": [
+              {
+                "hdp": 40.5,
+                "over": "1.87",
+                "under": "1.95"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515902,
+      "home": "Atlanta Falcons",
+      "away": "Chicago Bears",
+      "homeId": 4393,
+      "awayId": 4391,
+      "date": "2026-10-18T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118076"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118076"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:23:26.226Z",
+            "odds": [
+              {
+                "home": "2.40",
+                "away": "1.60"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-15T01:02:37.308Z",
+            "odds": [
+              {
+                "hdp": 3,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T01:02:37.308Z",
+            "odds": [
+              {
+                "hdp": 47.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515904,
+      "home": "Cleveland Browns",
+      "away": "Baltimore Ravens",
+      "homeId": 4417,
+      "awayId": 4413,
+      "date": "2026-10-18T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118086"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118086"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-06-15T22:39:00.309Z",
+            "odds": [
+              {
+                "home": "3.60",
+                "away": "1.30"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-06-15T22:39:00.309Z",
+            "odds": [
+              {
+                "hdp": 7,
+                "home": "1.95",
+                "away": "1.86"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-06-15T22:39:00.309Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515906,
+      "home": "Indianapolis Colts",
+      "away": "Tennessee Titans",
+      "homeId": 4421,
+      "awayId": 367364,
+      "date": "2026-10-18T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118265"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118265"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-05-15T02:11:15.873Z",
+            "odds": [
+              {
+                "home": "1.52",
+                "away": "2.60"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-15T02:11:15.873Z",
+            "odds": [
+              {
+                "hdp": -3.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T02:11:15.873Z",
+            "odds": [
+              {
+                "hdp": 48.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515912,
+      "home": "Philadelphia Eagles",
+      "away": "Carolina Panthers",
+      "homeId": 4428,
+      "awayId": 4415,
+      "date": "2026-10-18T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118081"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118081"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-07-07T14:19:02.016Z",
+            "odds": [
+              {
+                "home": "1.35",
+                "away": "3.25"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-07-07T14:19:02.016Z",
+            "odds": [
+              {
+                "hdp": -6.5,
+                "home": "1.89",
+                "away": "1.92"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T01:12:14.598Z",
+            "odds": [
+              {
+                "hdp": 43.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 71515914,
+      "home": "Tampa Bay Buccaneers",
+      "away": "Pittsburgh Steelers",
+      "homeId": 4388,
+      "awayId": 4345,
+      "date": "2026-10-18T17:00:00Z",
+      "status": "pending",
+      "sport": {
+        "name": "American Football",
+        "slug": "american-football"
+      },
+      "league": {
+        "name": "USA - NFL",
+        "slug": "usa-nfl"
+      },
+      "urls": {
+        "DraftKings": "https://sportsbook.draftkings.com/event/34118154"
+      },
+      "bookmakerIds": {
+        "DraftKings": "34118154"
+      },
+      "bookmakers": {
+        "DraftKings": [
+          {
+            "name": "ML",
+            "updatedAt": "2026-05-15T02:14:53.949Z",
+            "odds": [
+              {
+                "home": "1.80",
+                "away": "2.05"
+              }
+            ]
+          },
+          {
+            "name": "Spread",
+            "updatedAt": "2026-05-15T02:14:53.949Z",
+            "odds": [
+              {
+                "hdp": -1.5,
+                "home": "1.90",
+                "away": "1.90"
+              }
+            ]
+          },
+          {
+            "name": "Totals",
+            "updatedAt": "2026-05-15T02:14:53.949Z",
+            "odds": [
+              {
+                "hdp": 45.5,
+                "over": "1.90",
+                "under": "1.90"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

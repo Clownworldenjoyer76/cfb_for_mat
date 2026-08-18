@@ -1,0 +1,264 @@
+{
+  "season": 2026,
+  "week": 1,
+  "shadow_only": true,
+  "games": 16,
+  "moneyline": {
+    "valid_games": 16,
+    "thresholds": {
+      "0.00": {
+        "n": 16,
+        "side_counts": {
+          "HOME": 11,
+          "AWAY": 5
+        },
+        "average_fair_edge": 0.03555615083726582,
+        "max_fair_edge": 0.0750020602516836
+      },
+      "0.02": {
+        "n": 9,
+        "side_counts": {
+          "HOME": 6,
+          "AWAY": 3
+        },
+        "average_fair_edge": 0.05423089998124443,
+        "max_fair_edge": 0.0750020602516836
+      },
+      "0.03": {
+        "n": 9,
+        "side_counts": {
+          "HOME": 6,
+          "AWAY": 3
+        },
+        "average_fair_edge": 0.05423089998124443,
+        "max_fair_edge": 0.0750020602516836
+      },
+      "0.05": {
+        "n": 5,
+        "side_counts": {
+          "HOME": 3,
+          "AWAY": 2
+        },
+        "average_fair_edge": 0.06535758117831054,
+        "max_fair_edge": 0.0750020602516836
+      },
+      "0.08": {
+        "n": 0,
+        "side_counts": {},
+        "average_fair_edge": null,
+        "max_fair_edge": null
+      }
+    },
+    "top_five": [
+      {
+        "game_id": 401872660,
+        "away_team": "Buffalo Bills",
+        "home_team": "Houston Texans",
+        "side": "AWAY",
+        "fair_edge": 0.0750020602516836
+      },
+      {
+        "game_id": 401872657,
+        "away_team": "San Francisco 49ers",
+        "home_team": "Los Angeles Rams",
+        "side": "HOME",
+        "fair_edge": 0.071469889716854
+      },
+      {
+        "game_id": 401872656,
+        "away_team": "New England Patriots",
+        "home_team": "Seattle Seahawks",
+        "side": "HOME",
+        "fair_edge": 0.0632728148394105
+      },
+      {
+        "game_id": 401872924,
+        "away_team": "New York Jets",
+        "home_team": "Tennessee Titans",
+        "side": "HOME",
+        "fair_edge": 0.0618645798914895
+      },
+      {
+        "game_id": 401872658,
+        "away_team": "Atlanta Falcons",
+        "home_team": "Pittsburgh Steelers",
+        "side": "AWAY",
+        "fair_edge": 0.0551785611921151
+      }
+    ]
+  },
+  "spread": {
+    "valid_games": 16,
+    "thresholds": {
+      "0.00": {
+        "n": 16,
+        "side_counts": {
+          "HOME": 11,
+          "AWAY": 5
+        },
+        "average_fair_edge": 0.05382065440069412,
+        "max_fair_edge": 0.1012837166653931
+      },
+      "0.02": {
+        "n": 11,
+        "side_counts": {
+          "HOME": 8,
+          "AWAY": 3
+        },
+        "average_fair_edge": 0.07336255335410818,
+        "max_fair_edge": 0.1012837166653931
+      },
+      "0.03": {
+        "n": 11,
+        "side_counts": {
+          "HOME": 8,
+          "AWAY": 3
+        },
+        "average_fair_edge": 0.07336255335410818,
+        "max_fair_edge": 0.1012837166653931
+      },
+      "0.05": {
+        "n": 10,
+        "side_counts": {
+          "HOME": 7,
+          "AWAY": 3
+        },
+        "average_fair_edge": 0.0769666642517238,
+        "max_fair_edge": 0.1012837166653931
+      },
+      "0.08": {
+        "n": 3,
+        "side_counts": {
+          "HOME": 3
+        },
+        "average_fair_edge": 0.1005450701714169,
+        "max_fair_edge": 0.1012837166653931
+      }
+    },
+    "top_five": [
+      {
+        "game_id": 401872927,
+        "away_team": "Green Bay Packers",
+        "home_team": "Minnesota Vikings",
+        "side": "HOME",
+        "fair_edge": 0.1012837166653931
+      },
+      {
+        "game_id": 401872922,
+        "away_team": "Cleveland Browns",
+        "home_team": "Jacksonville Jaguars",
+        "side": "HOME",
+        "fair_edge": 0.1010544815465729
+      },
+      {
+        "game_id": 401872656,
+        "away_team": "New England Patriots",
+        "home_team": "Seattle Seahawks",
+        "side": "HOME",
+        "fair_edge": 0.0992970123022847
+      },
+      {
+        "game_id": 401872924,
+        "away_team": "New York Jets",
+        "home_team": "Tennessee Titans",
+        "side": "HOME",
+        "fair_edge": 0.0762206770077176
+      },
+      {
+        "game_id": 401872657,
+        "away_team": "San Francisco 49ers",
+        "home_team": "Los Angeles Rams",
+        "side": "HOME",
+        "fair_edge": 0.0738137082601054
+      }
+    ]
+  },
+  "total": {
+    "valid_games": 16,
+    "thresholds": {
+      "0.00": {
+        "n": 16,
+        "side_counts": {
+          "UNDER": 10,
+          "OVER": 6
+        },
+        "average_fair_edge": 0.03895702850192803,
+        "max_fair_edge": 0.0852372583479789
+      },
+      "0.02": {
+        "n": 11,
+        "side_counts": {
+          "UNDER": 8,
+          "OVER": 3
+        },
+        "average_fair_edge": 0.05316119217943032,
+        "max_fair_edge": 0.0852372583479789
+      },
+      "0.03": {
+        "n": 9,
+        "side_counts": {
+          "UNDER": 7,
+          "OVER": 2
+        },
+        "average_fair_edge": 0.058823648086517175,
+        "max_fair_edge": 0.0852372583479789
+      },
+      "0.05": {
+        "n": 6,
+        "side_counts": {
+          "UNDER": 4,
+          "OVER": 2
+        },
+        "average_fair_edge": 0.06766256590509663,
+        "max_fair_edge": 0.0852372583479789
+      },
+      "0.08": {
+        "n": 2,
+        "side_counts": {
+          "OVER": 1,
+          "UNDER": 1
+        },
+        "average_fair_edge": 0.08347978910369065,
+        "max_fair_edge": 0.0852372583479789
+      }
+    },
+    "top_five": [
+      {
+        "game_id": 401872922,
+        "away_team": "Cleveland Browns",
+        "home_team": "Jacksonville Jaguars",
+        "side": "OVER",
+        "fair_edge": 0.0852372583479789
+      },
+      {
+        "game_id": 401872925,
+        "away_team": "Tampa Bay Buccaneers",
+        "home_team": "Cincinnati Bengals",
+        "side": "UNDER",
+        "fair_edge": 0.0817223198594024
+      },
+      {
+        "game_id": 401872657,
+        "away_team": "San Francisco 49ers",
+        "home_team": "Los Angeles Rams",
+        "side": "UNDER",
+        "fair_edge": 0.0676625659050966
+      },
+      {
+        "game_id": 401872930,
+        "away_team": "Dallas Cowboys",
+        "home_team": "New York Giants",
+        "side": "UNDER",
+        "fair_edge": 0.0659050966608084
+      },
+      {
+        "game_id": 401872924,
+        "away_team": "New York Jets",
+        "home_team": "Tennessee Titans",
+        "side": "OVER",
+        "fair_edge": 0.055360281195079
+      }
+    ]
+  },
+  "warning": "Forward-validation snapshot only. No outcomes have occurred, so this is not evidence of realized betting profit."
+}
