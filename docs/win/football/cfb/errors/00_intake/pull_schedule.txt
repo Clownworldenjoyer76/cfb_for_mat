@@ -1,161 +1,143 @@
-pull_schedule.py started
-LEAGUE=college-football
-YEAR=2026
-TEAM_MAP_FILE=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/team_map.csv
-STADIUM_MAP_FILE=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/stadium_map.csv
-OUTPUT_FILE=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
-UPDATES_FILE=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/updates/2026_schedule_20260818_205747.csv
-team_ids_found=138
-existing_rows_found=0
-WARNING: HTTP error for TEAM_ID=103: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=25: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=228: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=150: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=52: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=59: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=97: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2390: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=152: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=153: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=221: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2567: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=24: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=183: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=258: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=259: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=154: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=349: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2429: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=151: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2226: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=235: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2426: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=249: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=242: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=58: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=218: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2655: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=202: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=5: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2636: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=9: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=12: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=252: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=239: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2132: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=38: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=248: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=66: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2305: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2306: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=197: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2628: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2641: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2116: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=254: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=277: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=356: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=84: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2294: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=120: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=127: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=130: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=135: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=158: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=77: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=194: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2483: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=213: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2509: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=164: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=26: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=30: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=264: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=275: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=48: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2229: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=55: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=338: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2335: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2393: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2623: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=166: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2534: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=98: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=87: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=41: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2006: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2050: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=189: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2084: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2117: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2199: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2309: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=113: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=193: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=195: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=16: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2649: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2711: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2005: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=62: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2440: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=167: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2449: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2459: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=23: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2439: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2638: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2751: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=68: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=36: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=278: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=204: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=21: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=326: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=328: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=265: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=333: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=8: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=57: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=61: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=96: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=99: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=344: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=142: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=201: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=145: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2579: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2633: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=245: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=251: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=238: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2026: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2032: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=324: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=290: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2247: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=256: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=309: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2348: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=276: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=295: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=6: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2572: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2653: 403 Forbidden
-WARNING: HTTP error for TEAM_ID=2433: 403 Forbidden
-api_calls_attempted=138
-api_calls_succeeded=0
-events_seen=0
-duplicate_events_seen=0
-duplicate_events_rewritten=0
-duplicate_existing_game_ids=0
-pulled_unique_games=0
-existing_unique_games=0
-added_rows=0
-updated_rows=0
-unchanged_rows=0
-missing_from_new_pull=0
-main_unique_games_written=0
-pull_schedule.py finished
+TEAM_ID=103 events=12
+TEAM_ID=25 events=12
+TEAM_ID=228 events=12
+TEAM_ID=150 events=12
+TEAM_ID=52 events=12
+TEAM_ID=59 events=12
+TEAM_ID=97 events=12
+TEAM_ID=2390 events=12
+TEAM_ID=152 events=12
+TEAM_ID=153 events=12
+TEAM_ID=221 events=12
+TEAM_ID=2567 events=12
+TEAM_ID=24 events=12
+TEAM_ID=183 events=12
+TEAM_ID=258 events=12
+TEAM_ID=259 events=12
+TEAM_ID=154 events=12
+TEAM_ID=349 events=12
+TEAM_ID=2429 events=12
+TEAM_ID=151 events=12
+TEAM_ID=2226 events=12
+TEAM_ID=235 events=12
+TEAM_ID=2426 events=12
+TEAM_ID=249 events=12
+TEAM_ID=242 events=12
+TEAM_ID=58 events=12
+TEAM_ID=218 events=12
+TEAM_ID=2655 events=12
+TEAM_ID=202 events=12
+TEAM_ID=5 events=12
+TEAM_ID=2636 events=12
+TEAM_ID=9 events=12
+TEAM_ID=12 events=12
+TEAM_ID=252 events=12
+TEAM_ID=239 events=12
+TEAM_ID=2132 events=12
+TEAM_ID=38 events=12
+TEAM_ID=248 events=12
+TEAM_ID=66 events=12
+TEAM_ID=2305 events=12
+TEAM_ID=2306 events=12
+TEAM_ID=197 events=12
+TEAM_ID=2628 events=12
+TEAM_ID=2641 events=12
+TEAM_ID=2116 events=12
+TEAM_ID=254 events=12
+TEAM_ID=277 events=12
+TEAM_ID=356 events=12
+TEAM_ID=84 events=12
+TEAM_ID=2294 events=12
+TEAM_ID=120 events=12
+TEAM_ID=127 events=12
+TEAM_ID=130 events=12
+TEAM_ID=135 events=12
+TEAM_ID=158 events=12
+TEAM_ID=77 events=12
+TEAM_ID=194 events=12
+TEAM_ID=2483 events=12
+TEAM_ID=213 events=12
+TEAM_ID=2509 events=12
+TEAM_ID=164 events=12
+TEAM_ID=26 events=12
+TEAM_ID=30 events=12
+TEAM_ID=264 events=12
+TEAM_ID=275 events=12
+TEAM_ID=48 events=12
+TEAM_ID=2229 events=12
+TEAM_ID=55 events=12
+TEAM_ID=338 events=12
+TEAM_ID=2335 events=12
+TEAM_ID=2393 events=12
+TEAM_ID=2623 events=12
+TEAM_ID=166 events=12
+TEAM_ID=2534 events=12
+TEAM_ID=98 events=12
+TEAM_ID=87 events=12
+TEAM_ID=41 events=12
+TEAM_ID=2006 events=12
+TEAM_ID=2050 events=12
+TEAM_ID=189 events=12
+TEAM_ID=2084 events=12
+TEAM_ID=2117 events=12
+TEAM_ID=2199 events=12
+TEAM_ID=2309 events=12
+TEAM_ID=113 events=12
+TEAM_ID=193 events=12
+TEAM_ID=195 events=12
+TEAM_ID=16 events=12
+TEAM_ID=2649 events=12
+TEAM_ID=2711 events=12
+TEAM_ID=2005 events=12
+TEAM_ID=62 events=12
+TEAM_ID=2440 events=12
+TEAM_ID=167 events=12
+TEAM_ID=2449 events=12
+TEAM_ID=2459 events=12
+TEAM_ID=23 events=13
+TEAM_ID=2439 events=12
+TEAM_ID=2638 events=12
+TEAM_ID=2751 events=12
+TEAM_ID=68 events=11
+TEAM_ID=36 events=12
+TEAM_ID=278 events=12
+TEAM_ID=204 events=11
+TEAM_ID=21 events=11
+TEAM_ID=326 events=11
+TEAM_ID=328 events=12
+TEAM_ID=265 events=12
+TEAM_ID=333 events=12
+TEAM_ID=8 events=12
+TEAM_ID=2 events=12
+TEAM_ID=57 events=12
+TEAM_ID=61 events=12
+TEAM_ID=96 events=12
+TEAM_ID=99 events=12
+TEAM_ID=344 events=12
+TEAM_ID=142 events=12
+TEAM_ID=201 events=12
+TEAM_ID=145 events=12
+TEAM_ID=2579 events=12
+TEAM_ID=2633 events=12
+TEAM_ID=245 events=12
+TEAM_ID=251 events=12
+TEAM_ID=238 events=12
+TEAM_ID=2026 events=12
+TEAM_ID=2032 events=12
+TEAM_ID=324 events=12
+TEAM_ID=290 events=12
+TEAM_ID=2247 events=12
+TEAM_ID=256 events=12
+TEAM_ID=309 events=12
+TEAM_ID=2348 events=12
+TEAM_ID=276 events=12
+TEAM_ID=295 events=12
+TEAM_ID=6 events=12
+TEAM_ID=2572 events=12
+TEAM_ID=2653 events=12
+TEAM_ID=2433 events=12
+team_ids=138
+successful_team_pulls=138
+events_seen=1653
+unique_games_pulled=892
+schedule_rows_written=892
