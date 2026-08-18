@@ -1,25 +1,25 @@
 """
 pull_raw_roster.py
 
-Pulls current NFL team list and rosters from the ESPN API, flattens the
+Pulls current CFB team list and rosters from the ESPN API, flattens the
 JSON response fresh (columns derived from the actual response, not from
 any prior file), and writes one combined CSV.
 
 Endpoints used:
-    https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams
-    https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{id}/roster
+    https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams
+    https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/{id}/roster
 
 Output:
-    docs/win/football/nfl/data/raw/raw_roster.csv
+    docs/win/football/cfb/data/raw/raw_roster.csv
 """
 
 import csv
 import json
 import urllib.request
 
-TEAMS_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
-ROSTER_URL_TEMPLATE = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{team_id}/roster"
-OUTPUT_PATH = "docs/win/football/nfl/data/raw/raw_roster.csv"
+TEAMS_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
+ROSTER_URL_TEMPLATE = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/{team_id}/roster"
+OUTPUT_PATH = "docs/win/football/cfb/data/raw/raw_roster.csv"
 
 
 def fetch_json(url):

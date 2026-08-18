@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# docs/win/football/nfl/scripts/00_intake/build_weekly_schedule.py
+# docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py
 
 import csv
 import json
@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 
-BASE_DIR = Path("docs/win/football/nfl")
+BASE_DIR = Path("docs/win/football/cfb")
 
 SCHEDULE_DIR = BASE_DIR / "00_intake" / "schedule"
 WEEKLY_DIR = SCHEDULE_DIR / "weekly"
@@ -19,7 +19,7 @@ WEEKLY_DIR = SCHEDULE_DIR / "weekly"
 ODDS_DIR = BASE_DIR / "00_intake" / "odds"
 RAW_ODDS_DIR = ODDS_DIR / "raw"
 
-TEAM_MAP_PATH = BASE_DIR / "config" / "mapping" / "team_map_nfl.csv"
+TEAM_MAP_PATH = BASE_DIR / "config" / "mapping" / "team_map.csv"
 
 ERROR_DIR = BASE_DIR / "errors" / "00_intake"
 ERROR_DIR.mkdir(parents=True, exist_ok=True)
@@ -103,40 +103,8 @@ ODDS_REQUIRED_COLUMNS = [
     "under_american",
 ]
 
-OBSERVED_ODDS_TEAM_MAP = {
-    "Arizona": "Arizona Cardinals",
-    "Atlanta": "Atlanta Falcons",
-    "Baltimore": "Baltimore Ravens",
-    "Buffalo": "Buffalo Bills",
-    "Carolina": "Carolina Panthers",
-    "Chicago": "Chicago Bears",
-    "Cincinnati": "Cincinnati Bengals",
-    "Cleveland": "Cleveland Browns",
-    "Dallas": "Dallas Cowboys",
-    "Denver": "Denver Broncos",
-    "Detroit": "Detroit Lions",
-    "Green Bay": "Green Bay Packers",
-    "Houston": "Houston Texans",
-    "Indianapolis": "Indianapolis Colts",
-    "Jacksonville": "Jacksonville Jaguars",
-    "Kansas City": "Kansas City Chiefs",
-    "LA Chargers": "Los Angeles Chargers",
-    "LA Rams": "Los Angeles Rams",
-    "Las Vegas": "Las Vegas Raiders",
-    "Miami": "Miami Dolphins",
-    "Minnesota": "Minnesota Vikings",
-    "New England": "New England Patriots",
-    "New Orleans": "New Orleans Saints",
-    "NY Giants": "New York Giants",
-    "NY Jets": "New York Jets",
-    "Philadelphia": "Philadelphia Eagles",
-    "Pittsburgh": "Pittsburgh Steelers",
-    "San Francisco": "San Francisco 49ers",
-    "Seattle": "Seattle Seahawks",
-    "Tampa Bay": "Tampa Bay Buccaneers",
-    "Tennessee": "Tennessee Titans",
-    "Washington": "Washington Commanders",
-}
+OBSERVED_ODDS_TEAM_MAP = {}
+
 
 
 def utc_now_iso():
@@ -483,8 +451,8 @@ def main():
     LOG_FILE.write_text("", encoding="utf-8")
 
     schedule_path = latest_file(SCHEDULE_DIR, "*_schedule.csv", "schedule CSV")
-    odds_csv_path = latest_file(ODDS_DIR, "*_NFL_odds.csv", "NFL odds CSV")
-    raw_odds_path = latest_file(RAW_ODDS_DIR, "*_nfl_odds.json", "raw NFL odds JSON")
+    odds_csv_path = latest_file(ODDS_DIR, "*_CFB_odds.csv", "CFB odds CSV")
+    raw_odds_path = latest_file(RAW_ODDS_DIR, "*_cfb_odds.json", "raw CFB odds JSON")
 
     log(f"Schedule input: {schedule_path}")
     log(f"Odds CSV input: {odds_csv_path}")
@@ -503,7 +471,7 @@ def main():
     target_week = choose_target_week(schedule_rows, schedule_matches)
     target_week_number = str(target_week[2]).strip()
 
-    output_path = WEEKLY_DIR / f"week_{target_week_number}_NFL_weekly_schedule.csv"
+    output_path = WEEKLY_DIR / f"week_{target_week_number}_CFB_weekly_schedule.csv"
 
     output_rows = build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary)
 
