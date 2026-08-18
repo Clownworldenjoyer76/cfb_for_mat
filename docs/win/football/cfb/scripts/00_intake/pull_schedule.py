@@ -7,7 +7,7 @@ docs/win/football/cfb/scripts/00_intake/pull_schedule.py
 Pulls 2026 college-football schedule from ESPN team schedule API.
 
 Source:
-  https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/{TEAM_ID}/schedule?season=2026
+  https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/{TEAM_ID}/schedule?season=2026&seasontype=2
 
 Inputs:
   docs/win/football/cfb/config/mapping/team_map.csv
@@ -269,7 +269,7 @@ def build_stadium_maps(
 def fetch_team_schedule(team_id: str) -> dict[str, Any] | None:
     url = (
         "https://site.api.espn.com/apis/site/v2/sports/football/"
-        f"college-football/teams/{team_id}/schedule?season={YEAR}"
+        f"college-football/teams/{team_id}/schedule?season={YEAR}&seasontype=2"
     )
 
     request = urllib.request.Request(
