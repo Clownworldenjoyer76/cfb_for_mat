@@ -3,6 +3,7 @@
 
 import csv
 import json
+import re
 import sys
 import traceback
 from datetime import datetime, timezone
@@ -13,11 +14,10 @@ from urllib.request import Request, urlopen
 
 
 BASE_DIR = Path("docs/win/football/cfb")
-
 WEEKLY_DIR = BASE_DIR / "00_intake" / "schedule" / "weekly"
 OPENERS_DIR = BASE_DIR / "00_intake" / "odds" / "openers"
-
 ERROR_DIR = BASE_DIR / "errors" / "00_intake"
+
 ERROR_DIR.mkdir(parents=True, exist_ok=True)
 OPENERS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -159,7 +159,7 @@ def http_get_json(url):
     request = Request(
         url,
         headers={
-            "User-Agent": "cfb-pull-opening-odds/2.0",
+            "User-Agent": "cfb-pull-opening-odds/3.0",
             "Accept": "application/json",
         },
     )
@@ -236,6 +236,7 @@ def to_float(value):
 
     try:
         return float(text)
+
     except Exception:
         return None
 
@@ -294,7 +295,71 @@ def numeric_movement(
     if movement.is_integer():
         return str(int(movement))
 
-    return str(round(movement, 4))
+    return str(
+        round(
+            movement,
+            4,
+        )
+    )
+
+
+def normalize_timestamp(value):
+    if value is None:
+        return ""
+
+    text = str(value).strip()
+
+    if not text:
+        return ""
+
+    number = to_float(text)
+
+    if number is not None:
+        try:
+            if number > 1_000_000_000_000:
+                dt = datetime.fromtimestamp(
+                    number / 1000,
+                    tz=timezone.utc,
+                )
+                return dt.isoformat()
+
+            if number > 1_000_000_000:
+                dt = datetime.fromtimestamp(
+                    number,
+                    tz=timezone.utc,
+                )
+                return dt.isoformat()
+
+        except Exception:
+            pass
+
+    return text
+
+
+def bookmaker_key(value):
+    return re.sub(
+        r"[^a-z0-9]+",
+        "",
+        str(value or "")
+        .strip()
+        .lower(),
+    )
+
+
+def canonical_bookmaker(value):
+    text = str(
+        value or ""
+    ).strip()
+
+    key = bookmaker_key(text)
+
+    if key == "draftkings":
+        return "DraftKings"
+
+    if key == "fanduel":
+        return "FanDuel"
+
+    return text
 
 
 def fetch_ref(ref):
@@ -302,13 +367,18 @@ def fetch_ref(ref):
         return None
 
     if ref.startswith("http://"):
-        ref = "https://" + ref[len("http://"):]
+        ref = (
+            "https://"
+            + ref[len("http://"):]
+        )
 
     response = http_get_json(ref)
 
     if (
         isinstance(response, dict)
-        and response.get("_request_failed")
+        and response.get(
+            "_request_failed"
+        )
     ):
         log(
             "REF_FETCH_FAILED "
@@ -316,15 +386,21 @@ def fetch_ref(ref):
             f"ref={ref} "
             f"error={response.get('_error', '')}"
         )
+
         return None
 
     return response
 
 
 def provider_info(odds_item):
-    provider = odds_item.get("provider")
+    provider = odds_item.get(
+        "provider"
+    )
 
-    if not isinstance(provider, dict):
+    if not isinstance(
+        provider,
+        dict,
+    ):
         return {
             "id": "",
             "name": "",
@@ -338,13 +414,22 @@ def provider_info(odds_item):
         and not (
             provider.get("id")
             or provider.get("name")
+            or provider.get(
+                "displayName"
+            )
+            or provider.get(
+                "shortName"
+            )
         )
     ):
         resolved = fetch_ref(
             provider.get("$ref")
         )
 
-        if isinstance(resolved, dict):
+        if isinstance(
+            resolved,
+            dict,
+        ):
             provider_data = resolved
 
     return {
@@ -354,7 +439,7 @@ def provider_info(odds_item):
                 "",
             )
         ).strip(),
-        "name": str(
+        "name": canonical_bookmaker(
             provider_data.get("name")
             or provider_data.get(
                 "displayName"
@@ -363,7 +448,7 @@ def provider_info(odds_item):
                 "shortName"
             )
             or ""
-        ).strip(),
+        ),
         "priority": to_float(
             provider_data.get(
                 "priority"
@@ -372,8 +457,13 @@ def provider_info(odds_item):
     }
 
 
-def resolve_collection_items(collection):
-    if not isinstance(collection, dict):
+def resolve_collection_items(
+    collection,
+):
+    if not isinstance(
+        collection,
+        dict,
+    ):
         return []
 
     items = collection.get(
@@ -381,32 +471,49 @@ def resolve_collection_items(collection):
         [],
     )
 
-    if not isinstance(items, list):
+    if not isinstance(
+        items,
+        list,
+    ):
         return []
 
     resolved = []
 
     for item in items:
-        if not isinstance(item, dict):
+        if not isinstance(
+            item,
+            dict,
+        ):
             continue
 
         if (
             item.get("$ref")
             and not (
                 item.get("provider")
-                or item.get("homeTeamOdds")
-                or item.get("awayTeamOdds")
+                or item.get(
+                    "homeTeamOdds"
+                )
+                or item.get(
+                    "awayTeamOdds"
+                )
                 or item.get("open")
                 or item.get("current")
-                or item.get("overUnder") is not None
+                or item.get(
+                    "overUnder"
+                ) is not None
             )
         ):
             fetched = fetch_ref(
                 item.get("$ref")
             )
 
-            if isinstance(fetched, dict):
-                resolved.append(fetched)
+            if isinstance(
+                fetched,
+                dict,
+            ):
+                resolved.append(
+                    fetched
+                )
 
         else:
             resolved.append(item)
@@ -421,28 +528,32 @@ def select_primary_odds_item(
     if not items:
         return None
 
-    desired = str(
-        bookmaker_name or ""
-    ).strip().lower()
+    desired_key = bookmaker_key(
+        bookmaker_name
+    )
 
-    if desired:
+    if desired_key:
         for item in items:
             info = provider_info(item)
 
             if (
-                info["name"]
-                .strip()
-                .lower()
-                == desired
+                bookmaker_key(
+                    info["name"]
+                )
+                == desired_key
             ):
                 return item
 
     ranked = []
 
-    for index, item in enumerate(items):
+    for index, item in enumerate(
+        items
+    ):
         info = provider_info(item)
 
-        priority = info["priority"]
+        priority = info[
+            "priority"
+        ]
 
         rank = (
             priority
@@ -490,7 +601,9 @@ def fetch_current_odds(
 
     if (
         isinstance(response, dict)
-        and response.get("_request_failed")
+        and response.get(
+            "_request_failed"
+        )
     ):
         return (
             None,
@@ -531,42 +644,66 @@ def market_block(
     parent,
     snapshot,
 ):
-    if not isinstance(parent, dict):
+    if not isinstance(
+        parent,
+        dict,
+    ):
         return {}
 
-    block = parent.get(snapshot)
+    block = parent.get(
+        snapshot
+    )
 
-    if not isinstance(block, dict):
+    if not isinstance(
+        block,
+        dict,
+    ):
         return {}
 
     return block
+
+
+def market_object(
+    block,
+    market,
+):
+    if not isinstance(
+        block,
+        dict,
+    ):
+        return {}
+
+    obj = block.get(
+        market
+    )
+
+    if not isinstance(
+        obj,
+        dict,
+    ):
+        return {}
+
+    return obj
 
 
 def market_value(
     block,
     market,
 ):
-    if not isinstance(block, dict):
+    obj = market_object(
+        block,
+        market,
+    )
+
+    if not obj:
         return ""
-
-    obj = block.get(market)
-
-    if not isinstance(obj, dict):
-        return ""
-
-    if market in {
-        "pointSpread",
-        "total",
-    }:
-        return clean_number(
-            obj.get("american")
-            or obj.get(
-                "alternateDisplayValue"
-            )
-        )
 
     return clean_number(
-        obj.get("value")
+        obj.get("american")
+        or obj.get(
+            "alternateDisplayValue"
+        )
+        or obj.get("value")
     )
 
 
@@ -574,12 +711,12 @@ def market_american(
     block,
     market,
 ):
-    if not isinstance(block, dict):
-        return ""
+    obj = market_object(
+        block,
+        market,
+    )
 
-    obj = block.get(market)
-
-    if not isinstance(obj, dict):
+    if not obj:
         return ""
 
     return normalize_american(
@@ -590,8 +727,223 @@ def market_american(
     )
 
 
-def get_opening(odds_item):
-    if not isinstance(odds_item, dict):
+def first_block_timestamp(
+    block,
+):
+    if not isinstance(
+        block,
+        dict,
+    ):
+        return ""
+
+    for key in (
+        "timestamp",
+        "lastUpdated",
+        "lastUpdate",
+        "updated",
+        "date",
+    ):
+        value = block.get(key)
+
+        if (
+            value is not None
+            and str(value).strip()
+        ):
+            return normalize_timestamp(
+                value
+            )
+
+    for value in block.values():
+        if not isinstance(
+            value,
+            dict,
+        ):
+            continue
+
+        for key in (
+            "timestamp",
+            "lastUpdated",
+            "lastUpdate",
+            "updated",
+            "date",
+        ):
+            candidate = value.get(
+                key
+            )
+
+            if (
+                candidate is not None
+                and str(
+                    candidate
+                ).strip()
+            ):
+                return normalize_timestamp(
+                    candidate
+                )
+
+    return ""
+
+
+def infer_opening_favorite(
+    home_open,
+    away_open,
+    home_moneyline,
+    away_moneyline,
+):
+    home_ml = to_float(
+        home_moneyline
+    )
+    away_ml = to_float(
+        away_moneyline
+    )
+
+    if (
+        home_ml is not None
+        and away_ml is not None
+    ):
+        if (
+            home_ml < 0
+            and away_ml > 0
+        ):
+            return "home"
+
+        if (
+            away_ml < 0
+            and home_ml > 0
+        ):
+            return "away"
+
+    home_favorite = (
+        home_open.get("favorite")
+        is True
+    )
+
+    away_favorite = (
+        away_open.get("favorite")
+        is True
+    )
+
+    if (
+        home_favorite
+        and not away_favorite
+    ):
+        return "home"
+
+    if (
+        away_favorite
+        and not home_favorite
+    ):
+        return "away"
+
+    return ""
+
+
+def normalize_opening_spreads(
+    home_open,
+    away_open,
+    home_moneyline,
+    away_moneyline,
+):
+    raw_home = market_value(
+        home_open,
+        "pointSpread",
+    )
+
+    raw_away = market_value(
+        away_open,
+        "pointSpread",
+    )
+
+    home_num = to_float(
+        raw_home
+    )
+
+    away_num = to_float(
+        raw_away
+    )
+
+    if (
+        home_num is None
+        and away_num is None
+    ):
+        return "", ""
+
+    favorite = infer_opening_favorite(
+        home_open,
+        away_open,
+        home_moneyline,
+        away_moneyline,
+    )
+
+    if favorite:
+        if home_num is not None:
+            magnitude = abs(
+                home_num
+            )
+        else:
+            magnitude = abs(
+                away_num
+            )
+
+        if favorite == "home":
+            return (
+                clean_number(
+                    -magnitude
+                ),
+                clean_number(
+                    magnitude
+                ),
+            )
+
+        return (
+            clean_number(
+                magnitude
+            ),
+            clean_number(
+                -magnitude
+            ),
+        )
+
+    if (
+        home_num is not None
+        and away_num is not None
+    ):
+        return (
+            clean_number(
+                home_num
+            ),
+            clean_number(
+                away_num
+            ),
+        )
+
+    if home_num is not None:
+        return (
+            clean_number(
+                home_num
+            ),
+            clean_number(
+                -home_num
+            ),
+        )
+
+    return (
+        clean_number(
+            -away_num
+        ),
+        clean_number(
+            away_num
+        ),
+    )
+
+
+def get_opening(
+    odds_item,
+):
+    if not isinstance(
+        odds_item,
+        dict,
+    ):
         return {}
 
     game_open = market_block(
@@ -600,18 +952,26 @@ def get_opening(odds_item):
     )
 
     home_team = (
-        odds_item.get("homeTeamOdds")
+        odds_item.get(
+            "homeTeamOdds"
+        )
         if isinstance(
-            odds_item.get("homeTeamOdds"),
+            odds_item.get(
+                "homeTeamOdds"
+            ),
             dict,
         )
         else {}
     )
 
     away_team = (
-        odds_item.get("awayTeamOdds")
+        odds_item.get(
+            "awayTeamOdds"
+        )
         if isinstance(
-            odds_item.get("awayTeamOdds"),
+            odds_item.get(
+                "awayTeamOdds"
+            ),
             dict,
         )
         else {}
@@ -627,110 +987,139 @@ def get_opening(odds_item):
         "open",
     )
 
+    home_moneyline = (
+        market_american(
+            home_open,
+            "moneyLine",
+        )
+    )
+
+    away_moneyline = (
+        market_american(
+            away_open,
+            "moneyLine",
+        )
+    )
+
+    (
+        home_spread,
+        away_spread,
+    ) = normalize_opening_spreads(
+        home_open,
+        away_open,
+        home_moneyline,
+        away_moneyline,
+    )
+
+    opening_timestamp = (
+        first_block_timestamp(
+            game_open
+        )
+        or first_block_timestamp(
+            home_open
+        )
+        or first_block_timestamp(
+            away_open
+        )
+    )
+
     return {
-        "home_moneyline": market_american(
-            home_open,
-            "moneyLine",
+        "home_moneyline": (
+            home_moneyline
         ),
-        "away_moneyline": market_american(
-            away_open,
-            "moneyLine",
+        "away_moneyline": (
+            away_moneyline
         ),
-        "home_spread": market_value(
-            home_open,
-            "pointSpread",
+        "home_spread": (
+            home_spread
         ),
-        "away_spread": market_value(
-            away_open,
-            "pointSpread",
+        "away_spread": (
+            away_spread
         ),
-        "home_spread_odds": market_american(
-            home_open,
-            "spread",
+        "home_spread_odds": (
+            market_american(
+                home_open,
+                "spread",
+            )
         ),
-        "away_spread_odds": market_american(
-            away_open,
-            "spread",
+        "away_spread_odds": (
+            market_american(
+                away_open,
+                "spread",
+            )
         ),
         "total": market_value(
             game_open,
             "total",
         ),
-        "over_odds": market_american(
-            game_open,
-            "over",
+        "over_odds": (
+            market_american(
+                game_open,
+                "over",
+            )
         ),
-        "under_odds": market_american(
-            game_open,
-            "under",
+        "under_odds": (
+            market_american(
+                game_open,
+                "under",
+            )
         ),
-        "timestamp": "",
+        "timestamp": (
+            opening_timestamp
+        ),
     }
 
 
-def has_opening(opening):
-    if not isinstance(opening, dict):
-        return False
-
-    return any(
-        str(
-            opening.get(
-                field,
-                "",
-            )
-        ).strip()
-        for field in [
-            "home_moneyline",
-            "away_moneyline",
-            "home_spread",
-            "away_spread",
-            "home_spread_odds",
-            "away_spread_odds",
-            "total",
-            "over_odds",
-            "under_odds",
-        ]
-    )
-
-
-def response_status(
-    opening,
-    http_status,
-    error="",
+def status_fields(
+    status,
+    reason="",
+    http_status="",
 ):
-    if error:
+    return {
+        "opener_status": status,
+        "opener_missing_reason": reason,
+        "opener_http_status": str(
+            http_status or ""
+        ),
+    }
+
+
+def market_status(
+    value,
+    http_status,
+    request_error,
+    missing_reason,
+):
+    if request_error:
         status = (
             "missing"
             if str(http_status) == "404"
             else "error"
         )
 
-        return {
-            "opener_status": status,
-            "opener_missing_reason": error,
-            "opener_http_status": str(
-                http_status or ""
-            ),
-        }
+        return status_fields(
+            status,
+            request_error,
+            http_status,
+        )
 
-    if not has_opening(opening):
-        return {
-            "opener_status": "missing",
-            "opener_missing_reason": (
-                "no_opening_data"
-            ),
-            "opener_http_status": str(
-                http_status or ""
-            ),
-        }
+    if (
+        str(
+            value or ""
+        ).strip()
+        == ""
+    ):
+        return status_fields(
+            "missing",
+            missing_reason,
+            http_status,
+        )
 
-    return {
-        "opener_status": "ok",
-        "opener_missing_reason": "",
-        "opener_http_status": str(
-            http_status or ""
-        ),
-    }
+    return status_fields(
+        "ok",
+        "",
+        http_status,
+    )
 
 
 def base_row(
@@ -754,12 +1143,20 @@ def base_row(
                 "",
             )
         ),
-        "market_type": market_type,
-        "bet_side": bet_side,
+        "market_type": (
+            market_type
+        ),
+        "bet_side": (
+            bet_side
+        ),
         "opening_line": "",
         "opening_odds_american": "",
         "opening_timestamp": "",
-        "bookmaker": bookmaker,
+        "bookmaker": (
+            canonical_bookmaker(
+                bookmaker
+            )
+        ),
         "opening_spread": "",
         "current_spread": "",
         "spread_movement": "",
@@ -780,15 +1177,18 @@ def add_h2h_rows(
     weekly_row,
     opening,
     bookmaker,
-    status,
+    http_status,
+    request_error,
 ):
     for side in (
         "home",
         "away",
     ):
-        opening_value = opening.get(
-            f"{side}_moneyline",
-            "",
+        opening_value = (
+            opening.get(
+                f"{side}_moneyline",
+                "",
+            )
         )
 
         current_value = str(
@@ -797,6 +1197,16 @@ def add_h2h_rows(
                 "",
             )
         ).strip()
+
+        status = market_status(
+            opening_value,
+            http_status,
+            request_error,
+            (
+                f"opening_{side}_"
+                "moneyline_missing"
+            ),
+        )
 
         row = base_row(
             weekly_row,
@@ -807,7 +1217,6 @@ def add_h2h_rows(
 
         row.update(
             {
-                "opening_line": "",
                 "opening_odds_american": (
                     opening_value
                 ),
@@ -841,20 +1250,25 @@ def add_spread_rows(
     weekly_row,
     opening,
     bookmaker,
-    status,
+    http_status,
+    request_error,
 ):
     for side in (
         "home",
         "away",
     ):
-        opening_spread = opening.get(
-            f"{side}_spread",
-            "",
+        opening_spread = (
+            opening.get(
+                f"{side}_spread",
+                "",
+            )
         )
 
-        opening_odds = opening.get(
-            f"{side}_spread_odds",
-            "",
+        opening_odds = (
+            opening.get(
+                f"{side}_spread_odds",
+                "",
+            )
         )
 
         current_spread = str(
@@ -863,6 +1277,16 @@ def add_spread_rows(
                 "",
             )
         ).strip()
+
+        status = market_status(
+            opening_spread,
+            http_status,
+            request_error,
+            (
+                f"opening_{side}_"
+                "spread_missing"
+            ),
+        )
 
         row = base_row(
             weekly_row,
@@ -909,11 +1333,14 @@ def add_total_rows(
     weekly_row,
     opening,
     bookmaker,
-    status,
+    http_status,
+    request_error,
 ):
-    opening_total = opening.get(
-        "total",
-        "",
+    opening_total = (
+        opening.get(
+            "total",
+            "",
+        )
     )
 
     current_total = str(
@@ -927,9 +1354,18 @@ def add_total_rows(
         "over",
         "under",
     ):
-        opening_odds = opening.get(
-            f"{side}_odds",
-            "",
+        opening_odds = (
+            opening.get(
+                f"{side}_odds",
+                "",
+            )
+        )
+
+        status = market_status(
+            opening_total,
+            http_status,
+            request_error,
+            "opening_total_missing",
         )
 
         row = base_row(
@@ -1002,25 +1438,31 @@ def build_opening_rows(
             )
             continue
 
-        weekly_bookmaker = str(
-            weekly_row.get(
-                "bookmaker",
-                "",
+        weekly_bookmaker = (
+            canonical_bookmaker(
+                weekly_row.get(
+                    "bookmaker",
+                    "",
+                )
             )
-        ).strip()
+        )
 
         (
             odds_item,
             http_status,
-            error,
+            request_error,
         ) = fetch_current_odds(
             game_id,
-            bookmaker_name=weekly_bookmaker,
+            bookmaker_name=(
+                weekly_bookmaker
+            ),
         )
 
         if odds_item is None:
             opening = {}
-            bookmaker = weekly_bookmaker
+            bookmaker = (
+                weekly_bookmaker
+            )
 
         else:
             opening = get_opening(
@@ -1032,23 +1474,20 @@ def build_opening_rows(
             )
 
             bookmaker = (
-                provider["name"]
-                or weekly_bookmaker
-                or provider["id"]
+                canonical_bookmaker(
+                    provider["name"]
+                    or weekly_bookmaker
+                    or provider["id"]
+                )
             )
-
-        status = response_status(
-            opening,
-            http_status,
-            error,
-        )
 
         add_h2h_rows(
             output_rows,
             weekly_row,
             opening,
             bookmaker,
-            status,
+            http_status,
+            request_error,
         )
 
         add_spread_rows(
@@ -1056,7 +1495,8 @@ def build_opening_rows(
             weekly_row,
             opening,
             bookmaker,
-            status,
+            http_status,
+            request_error,
         )
 
         add_total_rows(
@@ -1064,13 +1504,16 @@ def build_opening_rows(
             weekly_row,
             opening,
             bookmaker,
-            status,
+            http_status,
+            request_error,
         )
 
     return output_rows
 
 
-def read_existing_openers(path):
+def read_existing_openers(
+    path,
+):
     if not path.exists():
         return []
 
@@ -1080,18 +1523,32 @@ def read_existing_openers(path):
         encoding="utf-8-sig",
     ) as f:
         reader = csv.DictReader(f)
-        fieldnames = reader.fieldnames or []
+
+        fieldnames = (
+            reader.fieldnames or []
+        )
 
         existing_rows = []
 
         for row in reader:
-            normalized = {}
-
-            for column in OUTPUT_COLUMNS:
-                normalized[column] = row.get(
+            normalized = {
+                column: row.get(
                     column,
                     "",
                 )
+                for column in (
+                    OUTPUT_COLUMNS
+                )
+            }
+
+            normalized[
+                "bookmaker"
+            ] = canonical_bookmaker(
+                normalized.get(
+                    "bookmaker",
+                    "",
+                )
+            )
 
             existing_rows.append(
                 normalized
@@ -1106,33 +1563,78 @@ def read_existing_openers(path):
         if missing:
             log(
                 "Existing opener file "
-                "missing columns; blanks inserted: "
+                "missing columns; "
+                "blanks inserted: "
                 f"{missing}"
             )
 
         return existing_rows
 
 
-def row_has_opening_data(row):
-    return any(
-        str(
-            row.get(
-                column,
-                "",
-            )
-        ).strip()
-        for column in [
-            "opening_line",
-            "opening_odds_american",
-            "opening_timestamp",
-            "opening_spread",
-            "opening_total",
-            "opening_moneyline",
-        ]
-    )
+def row_has_required_opening(
+    row,
+):
+    market_type = str(
+        row.get(
+            "market_type",
+            "",
+        )
+    ).strip()
+
+    if market_type == "h2h":
+        return bool(
+            str(
+                row.get(
+                    "opening_moneyline",
+                    "",
+                )
+            ).strip()
+            or str(
+                row.get(
+                    "opening_odds_american",
+                    "",
+                )
+            ).strip()
+        )
+
+    if market_type == "spreads":
+        return bool(
+            str(
+                row.get(
+                    "opening_spread",
+                    "",
+                )
+            ).strip()
+            or str(
+                row.get(
+                    "opening_line",
+                    "",
+                )
+            ).strip()
+        )
+
+    if market_type == "totals":
+        return bool(
+            str(
+                row.get(
+                    "opening_total",
+                    "",
+                )
+            ).strip()
+            or str(
+                row.get(
+                    "opening_line",
+                    "",
+                )
+            ).strip()
+        )
+
+    return False
 
 
-def row_status_rank(row):
+def row_status_rank(
+    row,
+):
     status = str(
         row.get(
             "opener_status",
@@ -1140,16 +1642,56 @@ def row_status_rank(row):
         )
     ).strip()
 
-    if status == "ok":
+    has_required_opening = (
+        row_has_required_opening(
+            row
+        )
+    )
+
+    if (
+        status == "ok"
+        and has_required_opening
+    ):
         return 3
 
-    if row_has_opening_data(row):
+    if has_required_opening:
         return 2
 
     if status == "missing":
         return 1
 
     return 0
+
+
+def row_key(
+    row,
+):
+    return (
+        str(
+            row.get(
+                "game_id",
+                "",
+            )
+        ).strip(),
+        str(
+            row.get(
+                "market_type",
+                "",
+            )
+        ).strip(),
+        str(
+            row.get(
+                "bet_side",
+                "",
+            )
+        ).strip(),
+        bookmaker_key(
+            row.get(
+                "bookmaker",
+                "",
+            )
+        ),
+    )
 
 
 def upsert_rows(
@@ -1159,64 +1701,45 @@ def upsert_rows(
     keyed = {}
 
     for row in existing_rows:
-        key = (
-            str(
-                row.get(
-                    "game_id",
-                    "",
-                )
-            ).strip(),
-            str(
-                row.get(
-                    "market_type",
-                    "",
-                )
-            ).strip(),
-            str(
-                row.get(
-                    "bet_side",
-                    "",
-                )
-            ).strip(),
-            str(
-                row.get(
-                    "bookmaker",
-                    "",
-                )
-            ).strip(),
+        row[
+            "bookmaker"
+        ] = canonical_bookmaker(
+            row.get(
+                "bookmaker",
+                "",
+            )
         )
 
-        keyed[key] = row
+        key = row_key(row)
+
+        existing = keyed.get(
+            key
+        )
+
+        if (
+            existing is None
+            or row_status_rank(row)
+            > row_status_rank(
+                existing
+            )
+        ):
+            keyed[key] = row
 
     for row in new_rows:
-        key = (
-            str(
-                row.get(
-                    "game_id",
-                    "",
-                )
-            ).strip(),
-            str(
-                row.get(
-                    "market_type",
-                    "",
-                )
-            ).strip(),
-            str(
-                row.get(
-                    "bet_side",
-                    "",
-                )
-            ).strip(),
-            str(
-                row.get(
-                    "bookmaker",
-                    "",
-                )
-            ).strip(),
+        row[
+            "bookmaker"
+        ] = canonical_bookmaker(
+            row.get(
+                "bookmaker",
+                "",
+            )
         )
 
-        existing = keyed.get(key)
+        key = row_key(row)
+
+        existing = keyed.get(
+            key
+        )
 
         if existing is None:
             keyed[key] = row
@@ -1224,7 +1747,9 @@ def upsert_rows(
 
         if (
             row_status_rank(row)
-            >= row_status_rank(existing)
+            >= row_status_rank(
+                existing
+            )
         ):
             keyed[key] = row
 
@@ -1246,9 +1771,11 @@ def upsert_rows(
                 "bet_side",
                 "",
             ),
-            row.get(
-                "bookmaker",
-                "",
+            bookmaker_key(
+                row.get(
+                    "bookmaker",
+                    "",
+                )
             ),
         )
     )
@@ -1417,6 +1944,10 @@ def main():
         f"{len(weekly_rows)}"
     )
     print(
+        f"Existing opener rows loaded: "
+        f"{len(existing_rows)}"
+    )
+    print(
         f"New opener rows built: "
         f"{len(new_rows)}"
     )
@@ -1446,8 +1977,10 @@ if __name__ == "__main__":
         log(
             traceback.format_exc()
         )
+
         print(
             f"ERROR: see {LOG_FILE}",
             file=sys.stderr,
         )
+
         raise
