@@ -15,6 +15,7 @@ Output:
 
 import csv
 import json
+import os
 import urllib.request
 
 TEAMS_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
@@ -79,6 +80,8 @@ def main():
             all_columns.update(flat_row.keys())
 
     fieldnames = sorted(all_columns)
+
+    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
     with open(OUTPUT_PATH, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
