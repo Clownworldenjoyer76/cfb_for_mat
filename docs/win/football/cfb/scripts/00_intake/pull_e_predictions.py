@@ -1,21 +1,21 @@
 """
-pull_espn_predictions.py
+pull_e_predictions.py
 
-Reads game_ids from the existing schedule output and pulls ESPN's
+Reads game_ids from the existing CFB schedule output and pulls ESPN's
 predictor data (pre-game win probability, matchup quality, predicted
 point differential, etc.) for every game, one file per week.
 
 Input:
-    docs/win/football/nfl/00_intake/schedule/{season}_schedule.csv
+    docs/win/football/cfb/00_intake/schedule/{season}_schedule.csv
 
 Source:
-    https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{game_id}/competitions/{game_id}/predictor
+    https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/events/{game_id}/competitions/{game_id}/predictor
 
 Output:
-    docs/win/football/nfl/00_intake/predictions/e_predictions/{season}_{season_type}_{week}_e_predictions.csv
+    docs/win/football/cfb/00_intake/predictions/e_predictions/{season}_{season_type}_{week}_e_predictions.csv
 
 Error/run log:
-    docs/win/football/nfl/errors/00_intake/pull_espn_predictions.txt
+    docs/win/football/cfb/errors/00_intake/pull_e_predictions.txt
 """
 
 import csv
@@ -27,11 +27,24 @@ from collections import defaultdict
 
 SEASON = 2026
 
-SCHEDULE_PATH = f"docs/win/football/nfl/00_intake/schedule/{SEASON}_schedule.csv"
-PREDICTOR_URL_TEMPLATE = "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{game_id}/competitions/{game_id}/predictor"
+SCHEDULE_PATH = (
+    f"docs/win/football/cfb/00_intake/schedule/"
+    f"{SEASON}_schedule.csv"
+)
 
-OUTPUT_DIR = "docs/win/football/nfl/00_intake/predictions/e_predictions"
-ERROR_LOG_PATH = "docs/win/football/nfl/errors/00_intake/pull_e_predictions.txt"
+PREDICTOR_URL_TEMPLATE = (
+    "https://sports.core.api.espn.com/v2/sports/football/"
+    "leagues/college-football/events/{game_id}/competitions/"
+    "{game_id}/predictor"
+)
+
+OUTPUT_DIR = (
+    "docs/win/football/cfb/00_intake/predictions/e_predictions"
+)
+
+ERROR_LOG_PATH = (
+    "docs/win/football/cfb/errors/00_intake/pull_e_predictions.txt"
+)
 
 OUTPUT_HEADER = [
     "season",
@@ -54,10 +67,13 @@ OUTPUT_HEADER = [
 def log(lines):
     os.makedirs(os.path.dirname(ERROR_LOG_PATH), exist_ok=True)
     timestamp = datetime.now(timezone.utc).isoformat()
+
     with open(ERROR_LOG_PATH, "a", encoding="utf-8") as f:
         f.write(f"--- run {timestamp} ---\n")
+
         for line in lines:
             f.write(line + "\n")
+
         f.write("\n")
 
 
@@ -69,9 +85,12 @@ def fetch_json(url, timeout=10):
 def extract_team_id(ref_url):
     if not ref_url:
         return ""
+
     parts = ref_url.split("/teams/")
+
     if len(parts) < 2:
         return ""
+
     return parts[1].split("?")[0]
 
 
@@ -89,13 +108,17 @@ def get_predictor_rows(game_id, season, season_type, week):
 
     for side in ["homeTeam", "awayTeam"]:
         side_data = predictor.get(side, {})
+
         if not side_data:
             continue
 
         team_ref = side_data.get("team", {}).get("$ref", "")
         team_id = extract_team_id(team_ref)
 
-        stats = {stat.get("name", ""): stat.get("value", "") for stat in side_data.get("statistics", [])}
+        stats = {
+            stat.get("name", ""): stat.get("value", "")
+            for stat in side_data.get("statistics", [])
+        }
 
         rows.append({
             "season": season,
@@ -107,8 +130,14 @@ def get_predictor_rows(game_id, season, season_type, week):
             "team_id": team_id,
             "gameProjection": stats.get("gameProjection", ""),
             "matchupQuality": stats.get("matchupQuality", ""),
-            "oppSeasonStrengthFbsRank": stats.get("oppSeasonStrengthFbsRank", ""),
-            "oppSeasonStrengthRating": stats.get("oppSeasonStrengthRating", ""),
+            "oppSeasonStrengthFbsRank": stats.get(
+                "oppSeasonStrengthFbsRank",
+                "",
+            ),
+            "oppSeasonStrengthRating": stats.get(
+                "oppSeasonStrengthRating",
+                "",
+            ),
             "teamChanceLoss": stats.get("teamChanceLoss", ""),
             "teamChanceTie": stats.get("teamChanceTie", ""),
             "teamPredPtDiff": stats.get("teamPredPtDiff", ""),
@@ -126,7 +155,11 @@ def main():
         log([msg])
         return
 
-    with open(SCHEDULE_PATH, newline="", encoding="utf-8") as f:
+    with open(
+        SCHEDULE_PATH,
+        newline="",
+        encoding="utf-8",
+    ) as f:
         reader = csv.DictReader(f)
         schedule_rows = list(reader)
 
@@ -136,6 +169,7 @@ def main():
 
     for row in schedule_rows:
         game_id = row.get("game_id", "").strip()
+
         if not game_id:
             continue
 
@@ -143,7 +177,12 @@ def main():
         season_type = row.get("season_type", "")
         week = row.get("week", "")
 
-        rows = get_predictor_rows(game_id, season, season_type, week)
+        rows = get_predictor_rows(
+            game_id,
+            season,
+            season_type,
+            week,
+        )
 
         if rows:
             resolved_count += 1
@@ -154,23 +193,45 @@ def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     files_written = 0
+
     for (season, season_type, week), rows in rows_by_week.items():
         if not season or not season_type or not week:
-            log_lines.append(f"SKIPPED group missing season/season_type/week: {season}/{season_type}/{week}")
+            log_lines.append(
+                "SKIPPED group missing season/season_type/week: "
+                f"{season}/{season_type}/{week}"
+            )
             continue
 
-        filename = f"{season}_{season_type}_{week}_e_predictions.csv"
+        filename = (
+            f"{season}_{season_type}_{week}_e_predictions.csv"
+        )
         out_path = os.path.join(OUTPUT_DIR, filename)
 
-        with open(out_path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=OUTPUT_HEADER)
+        with open(
+            out_path,
+            "w",
+            newline="",
+            encoding="utf-8",
+        ) as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=OUTPUT_HEADER,
+            )
             writer.writeheader()
             writer.writerows(rows)
 
         files_written += 1
-        log_lines.append(f"wrote {len(rows)} rows to {out_path}")
+        log_lines.append(
+            f"wrote {len(rows)} rows to {out_path}"
+        )
 
-    summary = f"games_processed={len(schedule_rows)} resolved={resolved_count} failed={failed_count} files_written={files_written}"
+    summary = (
+        f"games_processed={len(schedule_rows)} "
+        f"resolved={resolved_count} "
+        f"failed={failed_count} "
+        f"files_written={files_written}"
+    )
+
     print(summary)
     log_lines.append(summary)
     log(log_lines)
