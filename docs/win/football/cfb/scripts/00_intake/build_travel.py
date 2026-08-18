@@ -2,13 +2,13 @@
 """
 build_travel.py
 
-Builds docs/win/football/nfl/data/travel/{season}_week_{week}_travel.csv
+Builds docs/win/football/cfb/data/travel/{season}_week_{week}_travel.csv
 
 Reads all weekly schedule files found in:
-    docs/win/football/nfl/00_intake/schedule/weekly/week_{week}_NFL_weekly_schedule.csv
+    docs/win/football/cfb/00_intake/schedule/weekly/week_{week}_CFB_weekly_schedule.csv
 
 Joins stadium/location data from:
-    docs/win/football/nfl/config/mapping/stadium_map_nfl.csv
+    docs/win/football/cfb/config/mapping/stadium_map.csv
     (joined on team name)
 
 Output columns:
@@ -18,7 +18,7 @@ Output columns:
 
 Notes:
     - away_lat/away_lon/home_lat/home_lon are each team's home stadium
-      coordinates (from stadium_map_nfl.csv), regardless of neutral_site.
+      coordinates (from stadium_map.csv), regardless of neutral_site.
     - miles_traveled is the great-circle (haversine) distance between the
       away team's home stadium and the home team's stadium.
     - time_zones_crossed is the difference in UTC offset (in hours) between
@@ -42,9 +42,9 @@ import re
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-BASE_DIR = "docs/win/football/nfl"
+BASE_DIR = "docs/win/football/cfb"
 SCHEDULE_DIR = os.path.join(BASE_DIR, "00_intake/schedule/weekly")
-STADIUM_MAP_PATH = os.path.join(BASE_DIR, "config/mapping/stadium_map_nfl.csv")
+STADIUM_MAP_PATH = os.path.join(BASE_DIR, "config/mapping/stadium_map.csv")
 OUTPUT_DIR = os.path.join(BASE_DIR, "data/travel")
 
 OUTPUT_HEADERS = [
@@ -79,14 +79,24 @@ def haversine_miles(lat1, lon1, lat2, lon2):
     phi1, phi2 = math.radians(lat1), math.radians(lat2)
     dphi = math.radians(lat2 - lat1)
     dlambda = math.radians(lon2 - lon1)
-    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
+    a = (
+        math.sin(dphi / 2) ** 2
+        + math.cos(phi1)
+        * math.cos(phi2)
+        * math.sin(dlambda / 2) ** 2
+    )
     c = 2 * math.asin(math.sqrt(a))
     return R * c
 
 
 def utc_offset_hours(tz_name, game_date):
     try:
-        dt = datetime.strptime(game_date, "%Y-%m-%d").replace(tzinfo=ZoneInfo(tz_name))
+        dt = datetime.strptime(
+            game_date,
+            "%Y-%m-%d",
+        ).replace(
+            tzinfo=ZoneInfo(tz_name)
+        )
         return dt.utcoffset().total_seconds() / 3600
     except Exception:
         return None
@@ -103,9 +113,16 @@ def build_row(game, stadium_lookup, log_lines):
     home_row = stadium_lookup.get(home_team)
 
     if away_row is None:
-        log_lines.append(f"ERROR: game_id={game_id} no stadium_map match for away_team='{away_team}'")
+        log_lines.append(
+            f"ERROR: game_id={game_id} "
+            f"no stadium_map match for away_team='{away_team}'"
+        )
+
     if home_row is None:
-        log_lines.append(f"ERROR: game_id={game_id} no stadium_map match for home_team='{home_team}'")
+        log_lines.append(
+            f"ERROR: game_id={game_id} "
+            f"no stadium_map match for home_team='{home_team}'"
+        )
 
     away_lat = away_row["latitude"] if away_row else ""
     away_lon = away_row["longitude"] if away_row else ""
@@ -121,36 +138,74 @@ def build_row(game, stadium_lookup, log_lines):
     if away_row and home_row:
         try:
             miles_traveled = round(
-                haversine_miles(float(away_lat), float(away_lon), float(home_lat), float(home_lon)), 1
+                haversine_miles(
+                    float(away_lat),
+                    float(away_lon),
+                    float(home_lat),
+                    float(home_lon),
+                ),
+                1,
             )
         except Exception as e:
-            log_lines.append(f"ERROR: game_id={game_id} failed computing miles_traveled: {e}")
+            log_lines.append(
+                f"ERROR: game_id={game_id} "
+                f"failed computing miles_traveled: {e}"
+            )
 
-        away_offset = utc_offset_hours(away_row.get("timezone", ""), game_date)
-        home_offset = utc_offset_hours(home_row.get("timezone", ""), game_date)
-        if away_offset is not None and home_offset is not None:
-            time_zones_crossed = abs(home_offset - away_offset)
+        away_offset = utc_offset_hours(
+            away_row.get("timezone", ""),
+            game_date,
+        )
+        home_offset = utc_offset_hours(
+            home_row.get("timezone", ""),
+            game_date,
+        )
+
+        if (
+            away_offset is not None
+            and home_offset is not None
+        ):
+            time_zones_crossed = abs(
+                home_offset - away_offset
+            )
         else:
-            log_lines.append(f"WARNING: game_id={game_id} could not compute time_zones_crossed "
-                              f"(timezone/date parse issue)")
+            log_lines.append(
+                f"WARNING: game_id={game_id} "
+                "could not compute time_zones_crossed "
+                "(timezone/date parse issue)"
+            )
 
         try:
             away_lon_f = float(away_lon)
             home_lon_f = float(home_lon)
+
             if home_lon_f > away_lon_f:
                 west_to_east = 1
                 east_to_west = 0
+
             elif home_lon_f < away_lon_f:
                 west_to_east = 0
                 east_to_west = 1
+
             else:
                 west_to_east = 0
                 east_to_west = 0
-        except Exception as e:
-            log_lines.append(f"ERROR: game_id={game_id} failed computing travel direction: {e}")
 
-        home_country = home_row.get("venue_country", "").strip()
-        international_flag = 0 if home_country == "USA" else 1
+        except Exception as e:
+            log_lines.append(
+                f"ERROR: game_id={game_id} "
+                f"failed computing travel direction: {e}"
+            )
+
+        home_country = (
+            home_row.get("venue_country", "")
+            .strip()
+        )
+        international_flag = (
+            0
+            if home_country == "USA"
+            else 1
+        )
 
     return {
         "game_id": game_id,
@@ -169,46 +224,118 @@ def build_row(game, stadium_lookup, log_lines):
     }
 
 
-def process_week(season, week, schedule_path, stadium_lookup, log_lines):
-    output_path = os.path.join(OUTPUT_DIR, f"{season}_week_{week}_travel.csv")
+def process_week(
+    season,
+    week,
+    schedule_path,
+    stadium_lookup,
+    log_lines,
+):
+    output_path = os.path.join(
+        OUTPUT_DIR,
+        f"{season}_week_{week}_travel.csv",
+    )
 
-    schedule_rows = load_csv(schedule_path)
-    output_rows = [build_row(game, stadium_lookup, log_lines) for game in schedule_rows]
+    schedule_rows = load_csv(
+        schedule_path
+    )
 
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(output_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=OUTPUT_HEADERS)
+    output_rows = [
+        build_row(
+            game,
+            stadium_lookup,
+            log_lines,
+        )
+        for game in schedule_rows
+    ]
+
+    os.makedirs(
+        OUTPUT_DIR,
+        exist_ok=True,
+    )
+
+    with open(
+        output_path,
+        "w",
+        newline="",
+        encoding="utf-8",
+    ) as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=OUTPUT_HEADERS,
+        )
         writer.writeheader()
+
         for row in output_rows:
             writer.writerow(row)
 
-    print(f"Wrote {len(output_rows)} rows to {output_path}")
+    print(
+        f"Wrote {len(output_rows)} rows "
+        f"to {output_path}"
+    )
 
 
 def main():
     log_lines = []
     stadium_lookup = load_stadium_map()
 
-    schedule_files = sorted(glob.glob(os.path.join(SCHEDULE_DIR, "week_*_NFL_weekly_schedule.csv")))
+    schedule_files = sorted(
+        glob.glob(
+            os.path.join(
+                SCHEDULE_DIR,
+                "week_*_CFB_weekly_schedule.csv",
+            )
+        )
+    )
 
     if not schedule_files:
-        print(f"WARNING: no weekly schedule files found in {SCHEDULE_DIR}")
+        print(
+            f"WARNING: no weekly schedule files "
+            f"found in {SCHEDULE_DIR}"
+        )
 
     for schedule_path in schedule_files:
-        filename = os.path.basename(schedule_path)
-        match = re.match(r"week_(\d+)_NFL_weekly_schedule\.csv", filename)
+        filename = os.path.basename(
+            schedule_path
+        )
+
+        match = re.match(
+            r"week_(\d+)_CFB_weekly_schedule\.csv",
+            filename,
+        )
+
         if not match:
-            log_lines.append(f"WARNING: skipped unrecognized file name: {filename}")
+            log_lines.append(
+                "WARNING: skipped unrecognized "
+                f"file name: {filename}"
+            )
             continue
-        week = int(match.group(1))
 
-        rows = load_csv(schedule_path)
-        season = rows[0]["season"] if rows else ""
+        week = int(
+            match.group(1)
+        )
 
-        process_week(season, week, schedule_path, stadium_lookup, log_lines)
+        rows = load_csv(
+            schedule_path
+        )
+
+        season = (
+            rows[0]["season"]
+            if rows
+            else ""
+        )
+
+        process_week(
+            season,
+            week,
+            schedule_path,
+            stadium_lookup,
+            log_lines,
+        )
 
     if log_lines:
         print("Issues encountered:")
+
         for line in log_lines:
             print(line)
 
