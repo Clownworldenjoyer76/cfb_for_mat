@@ -23,7 +23,9 @@ jobs:
       - run: pip install pandas numpy pyyaml
 
       - run: python docs/win/football/cfb/scripts/00_intake/pull_schedule.py
+      - run: python docs/win/football/cfb/scripts/00_intake/pull_odds.py
       - run: python docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py
+      - run: python docs/win/football/cfb/scripts/00_intake/pull_opening_odds.py
       - run: python docs/win/football/cfb/scripts/00_intake/league_master.py
       - run: python docs/win/football/cfb/scripts/00_intake/pull_raw_roster.py
       - run: python docs/win/football/cfb/scripts/00_intake/roster_cleanup.py
