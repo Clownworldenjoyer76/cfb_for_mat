@@ -6,18 +6,21 @@ docs/win/football/cfb/scripts/00_intake/pull_historical_schedule.py
 
 ONE-OFF HISTORICAL CFB SCHEDULE BACKFILL.
 
-Pulls college-football schedules for:
+Pulls college-football regular-season schedules for:
     2021
     2022
     2023
     2024
     2025
 
-using ESPN's team schedule endpoint.
+using ESPN's date-based scoreboard endpoint.
 
 Source:
     https://site.api.espn.com/apis/site/v2/sports/football/
-    college-football/teams/{TEAM_ID}/schedule?season={YEAR}
+    college-football/scoreboard
+    ?dates=YYYYMMDD
+    &groups=80
+    &limit=1000
 
 Inputs:
     docs/win/football/cfb/config/mapping/team_map.csv
@@ -30,6 +33,13 @@ Outputs:
     docs/win/football/cfb/00_intake/schedule/2024_schedule.csv
     docs/win/football/cfb/00_intake/schedule/2025_schedule.csv
 
+Also writes timestamped copies to:
+    docs/win/football/cfb/00_intake/schedule/updates/
+
+Log:
+    docs/win/football/cfb/errors/00_intake/
+        pull_historical_schedule.txt
+
 This script intentionally does not touch 2026.
 """
 
@@ -41,13 +51,32 @@ import sys
 import traceback
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
 
-SEASONS = [2021, 2022, 2023, 2024, 2025]
+SEASONS = [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+]
+
+SEASON_TYPE = 2
+GROUPS = 80
+LIMIT = 1000
+
+# Scan a broad date range so Week 0 and late regular-season games
+# are not missed.
+SEASON_START_MONTH = 8
+SEASON_START_DAY = 1
+SEASON_END_MONTH = 12
+SEASON_END_DAY = 20
+
 
 OUTPUT_COLUMNS = [
     "season",
@@ -67,8 +96,10 @@ OUTPUT_COLUMNS = [
     "game_timezone",
 ]
 
+
 TEAM_ID_COLUMN = "team_id"
 CANONICAL_TEAM_COLUMN = "canonical_team"
+
 
 CFB_DIR = Path(__file__).resolve().parents[2]
 
@@ -121,6 +152,12 @@ UPDATES_DIR.mkdir(
 ERROR_DIR.mkdir(
     parents=True,
     exist_ok=True,
+)
+
+
+ESPN_SCOREBOARD_BASE = (
+    "https://site.api.espn.com/apis/site/v2/sports/football/"
+    "college-football/scoreboard"
 )
 
 
@@ -232,12 +269,9 @@ def require_columns(
         )
 
 
-def build_team_maps(
+def build_team_lookup(
     team_rows: list[dict[str, str]],
-) -> tuple[
-    list[str],
-    dict[str, str],
-]:
+) -> dict[str, str]:
     require_columns(
         rows=team_rows,
         required_cols=[
@@ -249,15 +283,9 @@ def build_team_maps(
         ),
     )
 
-    team_ids: list[str] = []
-    seen_team_ids: set[str] = set()
+    team_lookup: dict[str, str] = {}
 
-    team_lookup: dict[
-        str,
-        str,
-    ] = {}
-
-    optional_lookup_columns = [
+    lookup_columns = [
         TEAM_ID_COLUMN,
         "team_abbr",
         "alias",
@@ -274,45 +302,21 @@ def build_team_maps(
         team_rows,
         start=2,
     ):
-        team_id = clean(
-            row.get(
-                TEAM_ID_COLUMN
-            )
-        )
-
         canonical_team = clean(
             row.get(
                 CANONICAL_TEAM_COLUMN
             )
         )
 
-        if not team_id:
-            log(
-                "WARNING: "
-                f"team_map row {row_number} "
-                f"missing {TEAM_ID_COLUMN}"
-            )
-
-        elif team_id not in seen_team_ids:
-            team_ids.append(
-                team_id
-            )
-
-            seen_team_ids.add(
-                team_id
-            )
-
         if not canonical_team:
             log(
                 "WARNING: "
                 f"team_map row {row_number} "
-                f"missing "
-                f"{CANONICAL_TEAM_COLUMN}"
+                f"missing {CANONICAL_TEAM_COLUMN}"
             )
-
             continue
 
-        for col in optional_lookup_columns:
+        for col in lookup_columns:
             value = clean(
                 row.get(col)
             )
@@ -322,22 +326,17 @@ def build_team_maps(
                     key(value)
                 ] = canonical_team
 
-    if not team_ids:
+    if not team_lookup:
         fatal(
-            "No team IDs found in "
+            "No team mappings found in "
             f"{TEAM_MAP_FILE}"
         )
 
-    return (
-        team_ids,
-        team_lookup,
-    )
+    return team_lookup
 
 
 def build_stadium_maps(
-    stadium_rows: list[
-        dict[str, str]
-    ],
+    stadium_rows: list[dict[str, str]],
 ) -> tuple[
     dict[str, dict[str, str]],
     dict[str, dict[str, str]],
@@ -393,7 +392,6 @@ def build_stadium_maps(
             by_team[
                 key(team_value)
             ] = row
-
         else:
             log(
                 "WARNING: "
@@ -418,14 +416,18 @@ def build_stadium_maps(
     )
 
 
-def fetch_team_schedule(
-    team_id: str,
-    season: int,
+def fetch_scoreboard_date(
+    day: date,
 ) -> dict[str, Any] | None:
+    date_text = day.strftime(
+        "%Y%m%d"
+    )
+
     url = (
-        "https://site.api.espn.com/apis/site/v2/sports/football/"
-        f"college-football/teams/{team_id}/schedule"
-        f"?season={season}"
+        f"{ESPN_SCOREBOARD_BASE}"
+        f"?dates={date_text}"
+        f"&groups={GROUPS}"
+        f"&limit={LIMIT}"
     )
 
     request = urllib.request.Request(
@@ -455,8 +457,7 @@ def fetch_team_schedule(
     except urllib.error.HTTPError as e:
         log(
             "WARNING: "
-            f"season={season} "
-            f"TEAM_ID={team_id} "
+            f"date={date_text} "
             f"HTTP error "
             f"{e.code} {e.reason}"
         )
@@ -466,8 +467,7 @@ def fetch_team_schedule(
     except urllib.error.URLError as e:
         log(
             "WARNING: "
-            f"season={season} "
-            f"TEAM_ID={team_id} "
+            f"date={date_text} "
             f"URL error "
             f"{e.reason}"
         )
@@ -477,8 +477,7 @@ def fetch_team_schedule(
     except Exception as e:
         log(
             "WARNING: "
-            f"season={season} "
-            f"TEAM_ID={team_id} "
+            f"date={date_text} "
             f"fetch failed: {e}"
         )
 
@@ -531,12 +530,14 @@ def get_team_by_home_away(
         ):
             continue
 
+        value = clean(
+            competitor.get(
+                "homeAway"
+            )
+        )
+
         if (
-            clean(
-                competitor.get(
-                    "homeAway"
-                )
-            ).casefold()
+            value.casefold()
             == home_away.casefold()
         ):
             team = competitor.get(
@@ -602,6 +603,8 @@ def map_team_name(
         f"id={clean(team.get('id'))} "
         f"displayName="
         f"{clean(team.get('displayName'))} "
+        f"abbreviation="
+        f"{clean(team.get('abbreviation'))} "
         f"fallback={fallback}"
     )
 
@@ -683,6 +686,14 @@ def get_stadium_row(
         if match:
             return match
 
+        log(
+            "WARNING: historical neutral-site "
+            "stadium not mapped "
+            f"game_id={game_id} "
+            f"venue_id={espn_venue_id} "
+            f"stadium={espn_stadium}"
+        )
+
         return {}
 
     home_match = (
@@ -713,6 +724,15 @@ def get_stadium_row(
     if stadium_match:
         return stadium_match
 
+    log(
+        "WARNING: historical home stadium "
+        "not mapped "
+        f"game_id={game_id} "
+        f"home_team={home_team} "
+        f"venue_id={espn_venue_id} "
+        f"stadium={espn_stadium}"
+    )
+
     return {}
 
 
@@ -722,22 +742,40 @@ def get_team_timezone(
         str,
         dict[str, str],
     ],
+    game_id: str,
+    side: str,
 ) -> str:
     row = stadium_by_team.get(
         key(team),
         {},
     )
 
-    return clean(
+    timezone_value = clean(
         row.get("timezone")
     )
+
+    if not timezone_value:
+        log(
+            "WARNING: missing historical "
+            f"{side}_timezone "
+            f"game_id={game_id} "
+            f"team={team}"
+        )
+
+    return timezone_value
 
 
 def parse_event_datetime(
     raw_date: str,
     game_timezone: str,
+    game_id: str,
 ) -> tuple[str, str]:
     if not raw_date:
+        log(
+            "WARNING: missing event.date "
+            f"game_id={game_id}"
+        )
+
         return "", ""
 
     try:
@@ -753,7 +791,15 @@ def parse_event_datetime(
                 tzinfo=timezone.utc
             )
 
-    except Exception:
+    except Exception as e:
+        log(
+            "WARNING: could not parse "
+            "event.date "
+            f"game_id={game_id} "
+            f"date={raw_date} "
+            f"error={e}"
+        )
+
         return "", ""
 
     if game_timezone:
@@ -766,7 +812,15 @@ def parse_event_datetime(
                 )
             )
 
-        except Exception:
+        except Exception as e:
+            log(
+                "WARNING: invalid game_timezone; "
+                "using UTC "
+                f"game_id={game_id} "
+                f"game_timezone={game_timezone} "
+                f"error={e}"
+            )
+
             dt_local = (
                 dt_utc.astimezone(
                     timezone.utc
@@ -788,6 +842,93 @@ def parse_event_datetime(
             "%H:%M"
         ),
     )
+
+
+def get_event_season(
+    event: dict[str, Any],
+) -> str:
+    season_obj = event.get(
+        "season"
+    )
+
+    if isinstance(
+        season_obj,
+        dict,
+    ):
+        return clean(
+            season_obj.get(
+                "year"
+            )
+        )
+
+    return ""
+
+
+def get_event_season_type(
+    event: dict[str, Any],
+) -> str:
+    season_obj = event.get(
+        "season"
+    )
+
+    if isinstance(
+        season_obj,
+        dict,
+    ):
+        season_type = clean(
+            season_obj.get(
+                "type"
+            )
+        )
+
+        if season_type:
+            return season_type
+
+    season_type_obj = event.get(
+        "seasonType"
+    )
+
+    if isinstance(
+        season_type_obj,
+        dict,
+    ):
+        season_type = (
+            clean(
+                season_type_obj.get(
+                    "type"
+                )
+            )
+            or clean(
+                season_type_obj.get(
+                    "id"
+                )
+            )
+        )
+
+        if season_type:
+            return season_type
+
+    return ""
+
+
+def get_event_week(
+    event: dict[str, Any],
+) -> str:
+    week_obj = event.get(
+        "week"
+    )
+
+    if isinstance(
+        week_obj,
+        dict,
+    ):
+        return clean(
+            week_obj.get(
+                "number"
+            )
+        )
+
+    return ""
 
 
 def build_row(
@@ -812,6 +953,11 @@ def build_row(
     )
 
     if not game_id:
+        log(
+            "WARNING: skipped event "
+            "with missing id"
+        )
+
         return None
 
     competition = (
@@ -819,6 +965,15 @@ def build_row(
             event
         )
     )
+
+    if not competition:
+        log(
+            "WARNING: skipped event "
+            "with missing competition "
+            f"game_id={game_id}"
+        )
+
+        return None
 
     home_team_obj = (
         get_team_by_home_away(
@@ -856,11 +1011,9 @@ def build_row(
         else ""
     )
 
-    neutral_site = (
-        get_bool_text(
-            competition.get(
-                "neutralSite"
-            )
+    neutral_site = get_bool_text(
+        competition.get(
+            "neutralSite"
         )
     )
 
@@ -875,11 +1028,15 @@ def build_row(
         venue = {}
 
     espn_stadium = clean(
-        venue.get("fullName")
+        venue.get(
+            "fullName"
+        )
     )
 
     espn_venue_id = clean(
-        venue.get("id")
+        venue.get(
+            "id"
+        )
     )
 
     stadium_row = (
@@ -920,6 +1077,8 @@ def build_row(
         get_team_timezone(
             home_team,
             stadium_by_team,
+            game_id,
+            "home",
         )
     )
 
@@ -927,6 +1086,8 @@ def build_row(
         get_team_timezone(
             away_team,
             stadium_by_team,
+            game_id,
+            "away",
         )
     )
 
@@ -939,67 +1100,35 @@ def build_row(
     game_date, game_time = (
         parse_event_datetime(
             raw_date=clean(
-                event.get("date")
+                event.get(
+                    "date"
+                )
             ),
             game_timezone=(
                 game_timezone
             ),
+            game_id=game_id,
         )
     )
 
-    season = ""
-    season_obj = event.get(
-        "season"
-    )
-
-    if isinstance(
-        season_obj,
-        dict,
-    ):
-        season = clean(
-            season_obj.get(
-                "year"
-            )
+    season = (
+        get_event_season(
+            event
         )
-
-    if not season:
-        season = str(
+        or str(
             requested_season
         )
+    )
 
-    season_type = ""
-    season_type_obj = (
-        event.get(
-            "seasonType"
+    season_type = (
+        get_event_season_type(
+            event
         )
     )
 
-    if isinstance(
-        season_type_obj,
-        dict,
-    ):
-        season_type = (
-            clean(
-                season_type_obj.get(
-                    "abbreviation"
-                )
-            )
-        )
-
-    week = ""
-    week_obj = event.get(
-        "week"
+    week = get_event_week(
+        event
     )
-
-    if isinstance(
-        week_obj,
-        dict,
-    ):
-        week = clean(
-            week_obj.get(
-                "number"
-            )
-        )
 
     return {
         "season": season,
@@ -1047,7 +1176,9 @@ def write_csv(
             writer.writerow(
                 {
                     col: clean(
-                        row.get(col)
+                        row.get(
+                            col
+                        )
                     )
                     for col
                     in OUTPUT_COLUMNS
@@ -1055,7 +1186,7 @@ def write_csv(
             )
 
 
-def sort_key(
+def row_sort_key(
     row: dict[str, str],
 ) -> tuple[
     str,
@@ -1063,7 +1194,9 @@ def sort_key(
     str,
 ]:
     week_text = clean(
-        row.get("week")
+        row.get(
+            "week"
+        )
     )
 
     try:
@@ -1075,18 +1208,21 @@ def sort_key(
 
     return (
         clean(
-            row.get("game_date")
+            row.get(
+                "game_date"
+            )
         ),
         week,
         clean(
-            row.get("game_id")
+            row.get(
+                "game_id"
+            )
         ),
     )
 
 
 def pull_season(
     season: int,
-    team_ids: list[str],
     team_lookup: dict[str, str],
     stadium_by_team: dict[
         str,
@@ -1107,123 +1243,153 @@ def pull_season(
         dict[str, str],
     ] = {}
 
-    api_calls_attempted = 0
-    api_calls_succeeded = 0
+    start_date = date(
+        season,
+        SEASON_START_MONTH,
+        SEASON_START_DAY,
+    )
+
+    end_date = date(
+        season,
+        SEASON_END_MONTH,
+        SEASON_END_DAY,
+    )
+
+    current_date = start_date
+
+    api_calls = 0
+    successful_calls = 0
     events_seen = 0
+    accepted_events = 0
     duplicates_seen = 0
 
     print(
         f"Pulling {season}..."
     )
 
-    log(
-        ""
-    )
-
-    log(
-        "=" * 80
-    )
-
+    log("")
+    log("=" * 80)
     log(
         f"START SEASON={season}"
     )
+    log("=" * 80)
 
-    log(
-        "=" * 80
-    )
+    while current_date <= end_date:
+        api_calls += 1
 
-    for team_id in team_ids:
-        api_calls_attempted += 1
-
-        data = fetch_team_schedule(
-            team_id,
-            season,
+        date_text = (
+            current_date.strftime(
+                "%Y%m%d"
+            )
         )
 
-        if not data:
-            continue
-
-        api_calls_succeeded += 1
-
-        events = data.get(
-            "events"
+        data = (
+            fetch_scoreboard_date(
+                current_date
+            )
         )
 
-        if not isinstance(
-            events,
-            list,
-        ):
-            log(
-                "WARNING: "
-                f"season={season} "
-                f"TEAM_ID={team_id} "
-                "response missing events list"
+        if data:
+            successful_calls += 1
+
+            events = data.get(
+                "events"
             )
 
-            continue
+            if isinstance(
+                events,
+                list,
+            ):
+                if events:
+                    log(
+                        f"season={season} "
+                        f"date={date_text} "
+                        f"events_returned="
+                        f"{len(events)}"
+                    )
 
-        log(
-            f"season={season} "
-            f"TEAM_ID={team_id} "
-            f"events_returned={len(events)}"
+                for event in events:
+                    if not isinstance(
+                        event,
+                        dict,
+                    ):
+                        continue
+
+                    events_seen += 1
+
+                    event_season = (
+                        get_event_season(
+                            event
+                        )
+                    )
+
+                    if (
+                        event_season
+                        and event_season
+                        != str(season)
+                    ):
+                        continue
+
+                    event_season_type = (
+                        get_event_season_type(
+                            event
+                        )
+                    )
+
+                    # Historical backfill mirrors the live
+                    # regular-season schedule dataset.
+                    if (
+                        event_season_type
+                        and event_season_type
+                        != str(SEASON_TYPE)
+                    ):
+                        continue
+
+                    row = build_row(
+                        event=event,
+                        requested_season=season,
+                        team_lookup=team_lookup,
+                        stadium_by_team=stadium_by_team,
+                        stadium_by_stadium=stadium_by_stadium,
+                        stadium_by_venue_id=stadium_by_venue_id,
+                    )
+
+                    if row is None:
+                        continue
+
+                    game_id = row[
+                        "game_id"
+                    ]
+
+                    if (
+                        game_id
+                        in rows_by_game_id
+                    ):
+                        duplicates_seen += 1
+
+                    rows_by_game_id[
+                        game_id
+                    ] = row
+
+                    accepted_events += 1
+
+        current_date += timedelta(
+            days=1
         )
-
-        for event in events:
-            if not isinstance(
-                event,
-                dict,
-            ):
-                continue
-
-            events_seen += 1
-
-            row = build_row(
-                event=event,
-                requested_season=season,
-                team_lookup=team_lookup,
-                stadium_by_team=stadium_by_team,
-                stadium_by_stadium=stadium_by_stadium,
-                stadium_by_venue_id=stadium_by_venue_id,
-            )
-
-            if row is None:
-                continue
-
-            # Keep only the requested season.
-            if (
-                clean(
-                    row.get("season")
-                )
-                != str(season)
-            ):
-                continue
-
-            game_id = row[
-                "game_id"
-            ]
-
-            if (
-                game_id
-                in rows_by_game_id
-            ):
-                duplicates_seen += 1
-
-            rows_by_game_id[
-                game_id
-            ] = row
 
     rows = list(
         rows_by_game_id.values()
     )
 
     rows.sort(
-        key=sort_key
+        key=row_sort_key
     )
 
     if not rows:
         fatal(
-            "ESPN returned no team-schedule "
-            f"games for season={season}"
+            "ESPN returned no historical "
+            f"regular-season games for "
+            f"season={season}"
         )
 
     output_file = (
@@ -1251,20 +1417,25 @@ def pull_season(
 
     log(
         f"season={season} "
-        f"api_calls_attempted="
-        f"{api_calls_attempted}"
+        f"api_calls={api_calls}"
     )
 
     log(
         f"season={season} "
-        f"api_calls_succeeded="
-        f"{api_calls_succeeded}"
+        f"successful_calls="
+        f"{successful_calls}"
     )
 
     log(
         f"season={season} "
         f"events_seen="
         f"{events_seen}"
+    )
+
+    log(
+        f"season={season} "
+        f"accepted_events="
+        f"{accepted_events}"
     )
 
     log(
@@ -1282,6 +1453,12 @@ def pull_season(
     log(
         f"season={season} "
         f"output={output_file}"
+    )
+
+    log(
+        f"season={season} "
+        f"updates_output="
+        f"{updates_file}"
     )
 
     print(
@@ -1311,6 +1488,29 @@ def main() -> None:
         f"SEASONS={SEASONS}"
     )
 
+    log(
+        f"SEASON_TYPE="
+        f"{SEASON_TYPE}"
+    )
+
+    log(
+        f"GROUPS={GROUPS}"
+    )
+
+    log(
+        f"LIMIT={LIMIT}"
+    )
+
+    log(
+        f"TEAM_MAP_FILE="
+        f"{TEAM_MAP_FILE}"
+    )
+
+    log(
+        f"STADIUM_MAP_FILE="
+        f"{STADIUM_MAP_FILE}"
+    )
+
     try:
         team_rows = read_csv(
             TEAM_MAP_FILE
@@ -1320,11 +1520,10 @@ def main() -> None:
             STADIUM_MAP_FILE
         )
 
-        (
-            team_ids,
-            team_lookup,
-        ) = build_team_maps(
-            team_rows
+        team_lookup = (
+            build_team_lookup(
+                team_rows
+            )
         )
 
         (
@@ -1333,11 +1532,6 @@ def main() -> None:
             stadium_by_venue_id,
         ) = build_stadium_maps(
             stadium_rows
-        )
-
-        log(
-            f"team_ids_found="
-            f"{len(team_ids)}"
         )
 
         total_games = 0
@@ -1350,7 +1544,6 @@ def main() -> None:
         for season in SEASONS:
             count = pull_season(
                 season=season,
-                team_ids=team_ids,
                 team_lookup=team_lookup,
                 stadium_by_team=stadium_by_team,
                 stadium_by_stadium=stadium_by_stadium,
@@ -1364,13 +1557,12 @@ def main() -> None:
 
             total_games += count
 
+        log("")
+        log("=" * 80)
         log(
-            ""
+            "HISTORICAL BACKFILL SUMMARY"
         )
-
-        log(
-            "HISTORICAL SUMMARY"
-        )
+        log("=" * 80)
 
         for season in SEASONS:
             log(
@@ -1397,11 +1589,17 @@ def main() -> None:
         for season in SEASONS:
             print(
                 f"{season}: "
-                f"{season_counts[season]} games"
+                f"{season_counts[season]} "
+                "games"
             )
 
         print(
-            f"Total: {total_games} games"
+            f"Total: "
+            f"{total_games} games"
+        )
+
+        print(
+            f"Log: {LOG_FILE}"
         )
 
     except SystemExit:
