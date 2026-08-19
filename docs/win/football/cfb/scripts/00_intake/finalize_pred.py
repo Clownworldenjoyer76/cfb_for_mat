@@ -39,13 +39,19 @@ def to_dec(raw):
 
 
 def fmt2(d):
-    return str(d.quantize(Decimal("0.01")))
+    return str(
+        d.quantize(
+            Decimal("0.01")
+        )
+    )
 
 
 def load_schedule():
     """game_id -> (game_date, game_time)"""
     sched = {}
-    files = sorted(glob.glob(SCHED_GLOB))
+    files = sorted(
+        glob.glob(SCHED_GLOB)
+    )
 
     if not files:
         log.append(
@@ -62,20 +68,32 @@ def load_schedule():
                 encoding="utf-8-sig",
             ) as fh:
                 for row in csv.DictReader(fh):
-                    gid = (row.get("game_id") or "").strip()
+                    gid = (
+                        row.get("game_id")
+                        or ""
+                    ).strip()
 
                     if not gid:
                         continue
 
                     sched[gid] = (
-                        (row.get("game_date") or "").strip(),
-                        (row.get("game_time") or "").strip(),
+                        (
+                            row.get("game_date")
+                            or ""
+                        ).strip(),
+                        (
+                            row.get("game_time")
+                            or ""
+                        ).strip(),
                     )
 
         except Exception as e:
             log.append(
                 "FILE ERROR %s: %s"
-                % (path, e)
+                % (
+                    path,
+                    e,
+                )
             )
 
     log.append(
@@ -95,7 +113,9 @@ def load_odds():
     odds_last_update.
     """
     best = {}
-    files = sorted(glob.glob(ODDS_GLOB))
+    files = sorted(
+        glob.glob(ODDS_GLOB)
+    )
 
     if not files:
         log.append(
@@ -112,29 +132,45 @@ def load_odds():
                 encoding="utf-8-sig",
             ) as fh:
                 for row in csv.DictReader(fh):
-                    gid = (row.get("game_id") or "").strip()
+                    gid = (
+                        row.get("game_id")
+                        or ""
+                    ).strip()
 
                     if not gid:
                         continue
 
-                    total = (row.get("total") or "").strip()
+                    total = (
+                        row.get("total")
+                        or ""
+                    ).strip()
 
                     if not total:
                         continue
 
                     lu = (
-                        row.get("odds_last_update") or ""
+                        row.get("odds_last_update")
+                        or ""
                     ).strip()
 
                     prior = best.get(gid)
 
-                    if prior is None or lu > prior[0]:
-                        best[gid] = (lu, total)
+                    if (
+                        prior is None
+                        or lu > prior[0]
+                    ):
+                        best[gid] = (
+                            lu,
+                            total,
+                        )
 
         except Exception as e:
             log.append(
                 "FILE ERROR %s: %s"
-                % (path, e)
+                % (
+                    path,
+                    e,
+                )
             )
 
     log.append(
@@ -152,7 +188,11 @@ def load_odds():
 
 
 def main():
-    os.makedirs(OUT_DIR, exist_ok=True)
+    os.makedirs(
+        OUT_DIR,
+        exist_ok=True,
+    )
+
     os.makedirs(
         os.path.dirname(LOG_PATH),
         exist_ok=True,
@@ -194,7 +234,10 @@ def main():
         except Exception as e:
             log.append(
                 "FILE ERROR %s: %s"
-                % (path, e)
+                % (
+                    path,
+                    e,
+                )
             )
             continue
 
@@ -205,7 +248,10 @@ def main():
             start=2,
         ):
             rec = {
-                h: (row.get(h) or "").strip()
+                h: (
+                    row.get(h)
+                    or ""
+                ).strip()
                 for h in OUT_HEADERS
             }
 
@@ -262,11 +308,10 @@ def main():
                 )
 
             else:
-                half = total / Decimal(2)
-
                 hpd = to_dec(
                     rec["home_PtDiff"]
                 )
+
                 apd = to_dec(
                     rec["away_PtDiff"]
                 )
@@ -274,6 +319,9 @@ def main():
                 rec["total_projected_pts"] = fmt2(
                     total
                 )
+
+                home_projected = None
+                away_projected = None
 
                 if hpd is None:
                     rec["home_projected_pts"] = ""
@@ -289,8 +337,12 @@ def main():
                     )
 
                 else:
+                    home_projected = (
+                        total + hpd
+                    ) / Decimal(2)
+
                     rec["home_projected_pts"] = fmt2(
-                        half + hpd
+                        home_projected
                     )
 
                 if apd is None:
@@ -307,37 +359,66 @@ def main():
                     )
 
                 else:
+                    away_projected = (
+                        total + apd
+                    ) / Decimal(2)
+
                     rec["away_projected_pts"] = fmt2(
-                        half + apd
+                        away_projected
                     )
 
                 if (
-                    hpd is not None
-                    and apd is not None
+                    home_projected is not None
+                    and away_projected is not None
                 ):
-                    diff = abs(
-                        (half + hpd)
-                        + (half + apd)
+                    projected_sum = (
+                        home_projected
+                        + away_projected
+                    )
+
+                    total_diff = abs(
+                        projected_sum
                         - total
                     )
 
-                    if diff > Decimal("1.0"):
+                    margin_diff = abs(
+                        (
+                            home_projected
+                            - away_projected
+                        )
+                        - hpd
+                    )
+
+                    pt_diff_mismatch = abs(
+                        hpd + apd
+                    )
+
+                    if (
+                        total_diff > Decimal("1.0")
+                        or margin_diff > Decimal("1.0")
+                        or pt_diff_mismatch > Decimal("1.0")
+                    ):
                         check_fail += 1
 
                         log.append(
                             "CHECK FAIL %s line %d: "
-                            "game_id %s home+away=%s "
-                            "total=%s diff=%s"
+                            "game_id %s "
+                            "home=%s away=%s total=%s "
+                            "home_PtDiff=%s away_PtDiff=%s "
+                            "sum_diff=%s margin_diff=%s "
+                            "ptdiff_mismatch=%s"
                             % (
                                 path,
                                 lineno,
                                 gid,
-                                fmt2(
-                                    (half + hpd)
-                                    + (half + apd)
-                                ),
+                                fmt2(home_projected),
+                                fmt2(away_projected),
                                 fmt2(total),
-                                fmt2(diff),
+                                fmt2(hpd),
+                                fmt2(apd),
+                                fmt2(total_diff),
+                                fmt2(margin_diff),
+                                fmt2(pt_diff_mismatch),
                             )
                         )
 
@@ -377,6 +458,7 @@ def main():
                     fh,
                     fieldnames=OUT_HEADERS,
                 )
+
                 writer.writeheader()
 
                 for rec in out_rows:
@@ -388,7 +470,10 @@ def main():
         except Exception as e:
             log.append(
                 "WRITE ERROR %s: %s"
-                % (out_path, e)
+                % (
+                    out_path,
+                    e,
+                )
             )
 
     log.append(
@@ -421,7 +506,8 @@ def write_log():
             encoding="utf-8",
         ) as fh:
             fh.write(
-                "\n".join(log) + "\n"
+                "\n".join(log)
+                + "\n"
             )
 
     except Exception as e:
