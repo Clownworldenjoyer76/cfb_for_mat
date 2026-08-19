@@ -1,0 +1,66 @@
+name: fill
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  historical-schedule:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pull 2021-2025 historical schedules
+        run: |
+          python docs/win/football/cfb/scripts/00_intake/pull_historical_schedule.py
+
+      - name: Show generated schedule files
+        run: |
+          echo "Historical schedule files:"
+          ls -lh docs/win/football/cfb/00_intake/schedule/202*_schedule.csv
+
+          echo ""
+          echo "Row counts:"
+          for year in 2021 2022 2023 2024 2025; do
+            file="docs/win/football/cfb/00_intake/schedule/${year}_schedule.csv"
+
+            if [ -f "$file" ]; then
+              echo "$year: $(($(wc -l < "$file") - 1)) games"
+            else
+              echo "$year: FILE MISSING"
+              exit 1
+            fi
+          done
+
+      - name: Commit historical schedules
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            docs/win/football/cfb/00_intake/schedule/2021_schedule.csv \
+            docs/win/football/cfb/00_intake/schedule/2022_schedule.csv \
+            docs/win/football/cfb/00_intake/schedule/2023_schedule.csv \
+            docs/win/football/cfb/00_intake/schedule/2024_schedule.csv \
+            docs/win/football/cfb/00_intake/schedule/2025_schedule.csv \
+            docs/win/football/cfb/00_intake/schedule/updates/ \
+            docs/win/football/cfb/errors/00_intake/pull_historical_schedule.txt
+
+          if git diff --cached --quiet; then
+            echo "No schedule changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Backfill CFB schedules 2021-2025"
+          git push
