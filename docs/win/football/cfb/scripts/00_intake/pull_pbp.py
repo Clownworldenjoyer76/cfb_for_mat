@@ -73,6 +73,8 @@ LOG_FILE = ERROR_DIR / "pull_pbp.txt"
 
 EASTERN = ZoneInfo("America/New_York")
 
+IMPLEMENTATION_VERSION = "sportsdataverse_v3_2026-08-19"
+
 # Keep concurrency conservative. SportsDataverse itself performs ESPN network
 # work and XGBoost model inference inside each game process.
 DEFAULT_WORKERS = 3
@@ -770,6 +772,7 @@ def main() -> int:
         output_file = PBP_DIR / f"{season}_pbp.parquet"
 
         log("=" * 80)
+        log(f"implementation={IMPLEMENTATION_VERSION}")
         log(
             f"pull_pbp.py started | season={season} "
             f"| source=sportsdataverse.CFBPlayProcess "
@@ -852,6 +855,7 @@ def main() -> int:
             log("=" * 80)
 
             print("cfb pull_pbp completed")
+            print(f"implementation: {IMPLEMENTATION_VERSION}")
             print(f"season: {season}")
             print("source_used: sportsdataverse.CFBPlayProcess")
             print(f"sportsdataverse_version: {sportsdataverse_version()}")
@@ -894,6 +898,7 @@ def main() -> int:
                 log("=" * 80)
 
                 print("cfb pull_pbp dry run completed")
+                print(f"implementation: {IMPLEMENTATION_VERSION}")
                 print(f"season: {season}")
                 print("source_used: sportsdataverse.CFBPlayProcess")
                 print(f"sportsdataverse_version: {sportsdataverse_version()}")
@@ -912,6 +917,7 @@ def main() -> int:
             log("=" * 80)
 
             print("cfb pull_pbp dry run completed")
+            print(f"implementation: {IMPLEMENTATION_VERSION}")
             print(f"season: {season}")
             print("source_used: sportsdataverse.CFBPlayProcess")
             print(f"sportsdataverse_version: {sportsdataverse_version()}")
@@ -942,6 +948,7 @@ def main() -> int:
             log("=" * 80)
 
             print("cfb pull_pbp completed")
+            print(f"implementation: {IMPLEMENTATION_VERSION}")
             print(f"season: {season}")
             print("source_used: sportsdataverse.CFBPlayProcess")
             print(f"sportsdataverse_version: {sportsdataverse_version()}")
@@ -976,6 +983,7 @@ def main() -> int:
         log("=" * 80)
 
         print("cfb pull_pbp completed")
+        print(f"implementation: {IMPLEMENTATION_VERSION}")
         print(f"season: {season}")
         print("source_used: sportsdataverse.CFBPlayProcess")
         print(f"sportsdataverse_version: {sportsdataverse_version()}")
