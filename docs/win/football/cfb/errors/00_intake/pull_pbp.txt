@@ -1,0 +1,15 @@
+[2026-08-19 16:31:52 EDT] ================================================================================
+[2026-08-19 16:31:52 EDT] implementation=sportsdataverse_v3_2026-08-19
+[2026-08-19 16:31:52 EDT] pull_pbp.py started | season=2025 | source=sportsdataverse.CFBPlayProcess | sportsdataverse_version=0.0.75 | workers=1 | refresh=False | dry_run=True
+[2026-08-19 16:31:52 EDT] schedule_games_total=912
+[2026-08-19 16:31:52 EDT] existing_games=956
+[2026-08-19 16:31:52 EDT] existing_rows=165850
+[2026-08-19 16:31:52 EDT] future_games_skipped=0
+[2026-08-19 16:31:52 EDT] already_stored_skipped=0
+[2026-08-19 16:31:52 EDT] games_to_process=1
+[2026-08-19 16:32:04 EDT] dry_run_games=1
+[2026-08-19 16:32:04 EDT] dry_run_rows=169
+[2026-08-19 16:32:04 EDT] dry_run_columns=493
+[2026-08-19 16:32:04 EDT] games_skipped=0
+[2026-08-19 16:32:04 EDT] status=dry_run_success
+[2026-08-19 16:32:04 EDT] ================================================================================

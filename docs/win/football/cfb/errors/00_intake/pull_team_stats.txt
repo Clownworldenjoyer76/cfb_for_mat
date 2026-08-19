@@ -1,7 +1,7 @@
 ================================================================================
-[2026-08-19 20:12:23 UTC] pull_team_stats.py started | season=2025
+[2026-08-19 21:01:48 UTC] pull_team_stats.py started | season=2025
 source=sportsdataverse_native_cfb_pbp
-input=C:\Users\Mat\cfb_historical_source\play_by_play_2025.parquet
+input=C:\Users\Mat\Documents\GitHub\cfb_for_mat\docs\win\football\cfb\00_intake\pbp\2025_pbp.parquet
 output=C:\Users\Mat\Documents\GitHub\cfb_for_mat\docs\win\football\cfb\00_intake\team_stats\2025_team_stats.csv
 log=C:\Users\Mat\Documents\GitHub\cfb_for_mat\docs\win\football\cfb\errors\00_intake\pull_team_stats.txt
 pbp_rows=165850
