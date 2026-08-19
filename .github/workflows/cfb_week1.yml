@@ -49,6 +49,13 @@ jobs:
       - run: python docs/win/football/cfb/scripts/00_intake/build_travel.py
       - run: python docs/win/football/cfb/scripts/00_intake/fetch_weather.py
 
+      # Run Week 1 projection after all intake inputs are updated.
+      - run: |
+          python docs/win/football/cfb/scripts/01_merge/projection_week1.py \
+            --season 2026 \
+            --prior-season 2025 \
+            --week 1
+
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -56,5 +63,5 @@ jobs:
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m "Run CFB Week 1 intake scripts"
+          git commit -m "Run CFB Week 1 pipeline"
           git push origin "HEAD:${GITHUB_REF_NAME}"
