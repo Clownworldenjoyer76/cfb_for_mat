@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: pip install pandas numpy pyyaml
+      - run: python -m pip install pandas numpy pyyaml pyarrow polars xgboost sportsdataverse==0.0.75
 
       - run: python docs/win/football/cfb/scripts/00_intake/pull_schedule.py
       - run: python docs/win/football/cfb/scripts/00_intake/pull_odds.py
