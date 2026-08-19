@@ -1,21 +1,4 @@
 #!/usr/bin/env python3
-# docs/win/football/cfb/scripts/00_intake/pull_team_stats.py
-#
-# Builds weekly CFB team-strength stats from the local normalized ESPN PBP file.
-#
-# Input:
-#   docs/win/football/cfb/00_intake/pbp/{season}_pbp.csv.gz
-#
-# Output:
-#   docs/win/football/cfb/00_intake/team_stats/{season}_team_stats.csv
-#
-# Summary/error log:
-#   docs/win/football/cfb/errors/00_intake/pull_team_stats.txt
-#
-# The normalized CFB PBP intentionally preserves the nflverse-style columns
-# this script expects, so the underlying team-stat calculations remain the
-# same as the NFL version.
-
 from __future__ import annotations
 
 import argparse
@@ -27,7 +10,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-
 
 OUTPUT_COLUMNS = [
     "season",
@@ -47,22 +29,34 @@ OUTPUT_COLUMNS = [
     "third_down_conversion_rate",
 ]
 
-SCRIMMAGE_PLAY_TYPES = {"pass", "run"}
-
-# Normalized columns required to preserve the NFL calculation logic.
-NORMALIZED_PBP_REQUIRED_COLUMNS = [
+SDV_REQUIRED_COLUMNS = [
     "season",
     "week",
     "game_id",
-    "posteam",
-    "defteam",
-    "epa",
-    "success",
-    "yards_gained",
+    "sequenceNumber",
+    "pos_team",
+    "def_pos_team",
+    "homeTeamId",
+    "awayTeamId",
+    "homeTeamName",
+    "awayTeamName",
+    "EPA",
+    "EPA_success",
+    "statYardage",
     "down",
-    "yardline_100",
-    "posteam_score",
-    "posteam_score_post",
+    "start.yardsToEndzone",
+    "start.homeScore",
+    "start.awayScore",
+    "end.homeScore",
+    "end.awayScore",
+    "drive.id",
+    "first_down_created",
+    "touchdown",
+    "offense_score_play",
+    "defense_score_play",
+    "pass_td",
+    "rush_td",
+    "scrimmage_play",
 ]
 
 
@@ -82,17 +76,15 @@ class RunLog:
 
 def resolve_paths() -> tuple[Path, Path, Path, Path]:
     cfb_root = Path(__file__).resolve().parents[2]
-
     pbp_dir = cfb_root / "00_intake" / "pbp"
     output_dir = cfb_root / "00_intake" / "team_stats"
     error_dir = cfb_root / "errors" / "00_intake"
-
     return cfb_root, pbp_dir, output_dir, error_dir
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build CFB weekly team stats from local normalized ESPN PBP."
+        description="Build CFB weekly team stats from native SportsDataverse PBP."
     )
     parser.add_argument(
         "--season",
@@ -100,17 +92,24 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="CFB season. If omitted, CFB_SEASON environment variable is used.",
     )
+    parser.add_argument(
+        "--pbp-path",
+        type=str,
+        default=None,
+        help=(
+            "Optional explicit PBP path. Supports .parquet and .csv/.csv.gz. "
+            "If omitted, 00_intake/pbp/{season}_pbp.parquet is used."
+        ),
+    )
     return parser.parse_args()
 
 
 def get_season(cli_season: str | None) -> str:
     if cli_season:
         return str(cli_season)
-
     env_season = os.getenv("CFB_SEASON")
     if env_season:
         return str(env_season)
-
     raise SystemExit("Missing season. Pass --season or set CFB_SEASON.")
 
 
@@ -123,36 +122,20 @@ def read_pbp(pbp_path: Path) -> pd.DataFrame:
     if not pbp_path.exists():
         raise FileNotFoundError(f"PBP input file not found: {pbp_path}")
 
-    try:
-        return pd.read_csv(pbp_path, low_memory=False)
-    except pd.errors.EmptyDataError:
-        return pd.DataFrame()
+    suffixes = [s.lower() for s in pbp_path.suffixes]
 
+    if pbp_path.suffix.lower() == ".parquet":
+        return pd.read_parquet(pbp_path)
 
-def coerce_numeric_columns(df: pd.DataFrame) -> pd.DataFrame:
-    numeric_columns = [
-        "season",
-        "week",
-        "epa",
-        "success",
-        "yards_gained",
-        "down",
-        "yardline_100",
-        "posteam_score",
-        "posteam_score_post",
-        "touchdown",
-        "pass_touchdown",
-        "rush_touchdown",
-        "third_down_converted",
-        "third_down_failed",
-        "first_down",
-    ]
+    if ".csv" in suffixes:
+        try:
+            return pd.read_csv(pbp_path, low_memory=False)
+        except pd.errors.EmptyDataError:
+            return pd.DataFrame()
 
-    for col in numeric_columns:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
-
-    return df
+    raise ValueError(
+        f"Unsupported PBP format: {pbp_path}. Expected .parquet, .csv, or .csv.gz."
+    )
 
 
 def require_columns(df: pd.DataFrame, columns: list[str], context: str) -> None:
@@ -161,27 +144,166 @@ def require_columns(df: pd.DataFrame, columns: list[str], context: str) -> None:
         raise ValueError(f"Missing required columns for {context}: {missing}")
 
 
-def validate_normalized_pbp(pbp: pd.DataFrame) -> None:
+def _full_team_name(name: object, mascot: object = None) -> str | None:
+    if pd.isna(name):
+        return None
+
+    base = str(name).strip()
+    if not base:
+        return None
+
+    if mascot is None or pd.isna(mascot):
+        return base
+
+    nick = str(mascot).strip()
+    if not nick:
+        return base
+
+    if base.casefold().endswith(nick.casefold()):
+        return base
+
+    return f"{base} {nick}"
+
+
+def _team_names_from_ids(pbp: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
+    home_ids = pd.to_numeric(pbp["homeTeamId"], errors="coerce")
+    away_ids = pd.to_numeric(pbp["awayTeamId"], errors="coerce")
+    pos_ids = pd.to_numeric(pbp["pos_team"], errors="coerce")
+    def_ids = pd.to_numeric(pbp["def_pos_team"], errors="coerce")
+
+    if "homeTeamMascot" in pbp.columns:
+        home_names = pd.Series(
+            [
+                _full_team_name(name, mascot)
+                for name, mascot in zip(pbp["homeTeamName"], pbp["homeTeamMascot"])
+            ],
+            index=pbp.index,
+            dtype="object",
+        )
+    else:
+        home_names = pbp["homeTeamName"].astype("object")
+
+    if "awayTeamMascot" in pbp.columns:
+        away_names = pd.Series(
+            [
+                _full_team_name(name, mascot)
+                for name, mascot in zip(pbp["awayTeamName"], pbp["awayTeamMascot"])
+            ],
+            index=pbp.index,
+            dtype="object",
+        )
+    else:
+        away_names = pbp["awayTeamName"].astype("object")
+
+    posteam = pd.Series(pd.NA, index=pbp.index, dtype="object")
+    defteam = pd.Series(pd.NA, index=pbp.index, dtype="object")
+
+    home_pos = pos_ids.eq(home_ids)
+    away_pos = pos_ids.eq(away_ids)
+    home_def = def_ids.eq(home_ids)
+    away_def = def_ids.eq(away_ids)
+
+    posteam.loc[home_pos] = home_names.loc[home_pos]
+    posteam.loc[away_pos] = away_names.loc[away_pos]
+
+    defteam.loc[home_def] = home_names.loc[home_def]
+    defteam.loc[away_def] = away_names.loc[away_def]
+
+    return posteam, defteam
+
+
+def _offense_score(
+    team_ids: pd.Series,
+    home_ids: pd.Series,
+    away_ids: pd.Series,
+    home_score: pd.Series,
+    away_score: pd.Series,
+) -> pd.Series:
+    result = pd.Series(np.nan, index=team_ids.index, dtype="float64")
+
+    is_home = team_ids.eq(home_ids)
+    is_away = team_ids.eq(away_ids)
+
+    result.loc[is_home] = pd.to_numeric(home_score.loc[is_home], errors="coerce")
+    result.loc[is_away] = pd.to_numeric(away_score.loc[is_away], errors="coerce")
+
+    return result
+
+
+def adapt_sportsdataverse_pbp(pbp: pd.DataFrame) -> pd.DataFrame:
     require_columns(
         pbp,
-        NORMALIZED_PBP_REQUIRED_COLUMNS,
-        "normalized CFB PBP compatibility",
+        SDV_REQUIRED_COLUMNS,
+        "native SportsDataverse CFB PBP",
     )
 
-    if "fixed_drive" not in pbp.columns and "drive" not in pbp.columns:
-        raise ValueError(
-            "Missing required drive column for normalized CFB PBP: "
-            "fixed_drive or drive"
-        )
+    out = pd.DataFrame(index=pbp.index)
 
+    posteam, defteam = _team_names_from_ids(pbp)
 
-def get_drive_column(df: pd.DataFrame) -> str:
-    if "fixed_drive" in df.columns:
-        return "fixed_drive"
-    if "drive" in df.columns:
-        return "drive"
+    pos_ids = pd.to_numeric(pbp["pos_team"], errors="coerce")
+    home_ids = pd.to_numeric(pbp["homeTeamId"], errors="coerce")
+    away_ids = pd.to_numeric(pbp["awayTeamId"], errors="coerce")
 
-    raise ValueError("Missing required drive column: fixed_drive or drive")
+    out["season"] = pd.to_numeric(pbp["season"], errors="coerce")
+    out["week"] = pd.to_numeric(pbp["week"], errors="coerce")
+    out["game_id"] = pbp["game_id"]
+    out["espn_sequence_number"] = pd.to_numeric(
+        pbp["sequenceNumber"],
+        errors="coerce",
+    )
+
+    out["posteam"] = posteam
+    out["defteam"] = defteam
+
+    out["epa"] = pd.to_numeric(pbp["EPA"], errors="coerce")
+    out["success"] = pd.to_numeric(pbp["EPA_success"], errors="coerce")
+    out["yards_gained"] = pd.to_numeric(pbp["statYardage"], errors="coerce")
+    out["down"] = pd.to_numeric(pbp["down"], errors="coerce")
+    out["yardline_100"] = pd.to_numeric(
+        pbp["start.yardsToEndzone"],
+        errors="coerce",
+    )
+
+    out["drive"] = pbp["drive.id"]
+    out["first_down"] = pd.to_numeric(
+        pbp["first_down_created"],
+        errors="coerce",
+    )
+
+    out["touchdown"] = pd.to_numeric(pbp["touchdown"], errors="coerce")
+    out["pass_touchdown"] = pd.to_numeric(pbp["pass_td"], errors="coerce")
+    out["rush_touchdown"] = pd.to_numeric(pbp["rush_td"], errors="coerce")
+    out["scrimmage_play"] = pbp["scrimmage_play"].fillna(False).astype(bool)
+
+    out["posteam_score"] = _offense_score(
+        pos_ids,
+        home_ids,
+        away_ids,
+        pbp["start.homeScore"],
+        pbp["start.awayScore"],
+    )
+    out["posteam_score_post"] = _offense_score(
+        pos_ids,
+        home_ids,
+        away_ids,
+        pbp["end.homeScore"],
+        pbp["end.awayScore"],
+    )
+
+    offense_score = pbp["offense_score_play"].fillna(False).astype(bool)
+    defense_score = pbp["defense_score_play"].fillna(False).astype(bool)
+    touchdown = pbp["touchdown"].fillna(False).astype(bool)
+
+    out["td_team"] = pd.NA
+    out.loc[touchdown & offense_score, "td_team"] = out.loc[
+        touchdown & offense_score, "posteam"
+    ]
+    out.loc[touchdown & defense_score, "td_team"] = out.loc[
+        touchdown & defense_score, "defteam"
+    ]
+
+    return out
 
 
 def build_valid_scrimmage_plays(pbp: pd.DataFrame) -> pd.DataFrame:
@@ -196,24 +318,21 @@ def build_valid_scrimmage_plays(pbp: pd.DataFrame) -> pd.DataFrame:
             "success",
             "yards_gained",
             "down",
+            "scrimmage_play",
         ],
         "scrimmage-play team stats",
     )
 
-    df = pbp.copy()
-
     mask = (
-        df["season"].notna()
-        & df["week"].notna()
-        & df["posteam"].notna()
-        & df["defteam"].notna()
-        & df["epa"].notna()
+        pbp["season"].notna()
+        & pbp["week"].notna()
+        & pbp["posteam"].notna()
+        & pbp["defteam"].notna()
+        & pbp["epa"].notna()
+        & pbp["scrimmage_play"].eq(True)
     )
 
-    if "play_type" in df.columns:
-        mask &= df["play_type"].isin(SCRIMMAGE_PLAY_TYPES)
-
-    return df.loc[mask].copy()
+    return pbp.loc[mask].copy()
 
 
 def build_offense_stats(valid_plays: pd.DataFrame) -> pd.DataFrame:
@@ -256,66 +375,13 @@ def build_defense_stats(valid_plays: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def build_third_down_stats(
-    pbp: pd.DataFrame,
-    valid_plays: pd.DataFrame,
-) -> pd.DataFrame:
-    if {"third_down_converted", "third_down_failed"}.issubset(pbp.columns):
-        require_columns(
-            pbp,
-            ["season", "week", "posteam"],
-            "third-down conversion rate",
-        )
+def build_third_down_stats(valid_plays: pd.DataFrame) -> pd.DataFrame:
+    third = valid_plays[
+        valid_plays["posteam"].notna()
+        & valid_plays["down"].eq(3)
+    ].copy()
 
-        third = pbp[
-            pbp["season"].notna()
-            & pbp["week"].notna()
-            & pbp["posteam"].notna()
-            & (
-                (pbp["third_down_converted"] == 1)
-                | (pbp["third_down_failed"] == 1)
-            )
-        ].copy()
-
-        if third.empty:
-            return pd.DataFrame(
-                columns=[
-                    "season",
-                    "week",
-                    "team",
-                    "third_down_conversion_rate",
-                ]
-            )
-
-        third["third_down_conversion_flag"] = np.where(
-            third["third_down_converted"] == 1,
-            1.0,
-            0.0,
-        )
-
-    elif {"down", "first_down"}.issubset(valid_plays.columns):
-        third = valid_plays[
-            valid_plays["posteam"].notna()
-            & valid_plays["down"].eq(3)
-        ].copy()
-
-        if third.empty:
-            return pd.DataFrame(
-                columns=[
-                    "season",
-                    "week",
-                    "team",
-                    "third_down_conversion_rate",
-                ]
-            )
-
-        third["third_down_conversion_flag"] = np.where(
-            third["first_down"] == 1,
-            1.0,
-            0.0,
-        )
-
-    else:
+    if third.empty:
         return pd.DataFrame(
             columns=[
                 "season",
@@ -324,6 +390,12 @@ def build_third_down_stats(
                 "third_down_conversion_rate",
             ]
         )
+
+    third["third_down_conversion_flag"] = np.where(
+        third["first_down"].eq(1),
+        1.0,
+        0.0,
+    )
 
     return (
         third.groupby(["season", "week", "posteam"], dropna=False)
@@ -336,37 +408,27 @@ def build_third_down_stats(
 def build_drive_points_stats(
     pbp: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    drive_col = get_drive_column(pbp)
-
     require_columns(
         pbp,
         [
             "season",
             "week",
             "game_id",
-            drive_col,
+            "drive",
             "posteam",
             "defteam",
             "posteam_score",
             "posteam_score_post",
+            "espn_sequence_number",
         ],
         "points per drive",
     )
-
-    sort_columns = ["season", "week", "game_id", drive_col]
-
-    # ESPN play ids are identifiers rather than a guaranteed numeric ordering
-    # field. Prefer the normalized ESPN sequence when present.
-    if "espn_sequence_number" in pbp.columns:
-        sort_columns.append("espn_sequence_number")
-    elif "play_id" in pbp.columns:
-        sort_columns.append("play_id")
 
     drives = pbp[
         pbp["season"].notna()
         & pbp["week"].notna()
         & pbp["game_id"].notna()
-        & pbp[drive_col].notna()
+        & pbp["drive"].notna()
         & pbp["posteam"].notna()
         & pbp["defteam"].notna()
     ].copy()
@@ -380,13 +442,15 @@ def build_drive_points_stats(
         )
         return empty_off, empty_def
 
-    drives = drives.sort_values(sort_columns)
+    drives = drives.sort_values(
+        ["season", "week", "game_id", "drive", "espn_sequence_number"]
+    )
 
     drive_keys = [
         "season",
         "week",
         "game_id",
-        drive_col,
+        "drive",
         "posteam",
         "defteam",
     ]
@@ -403,7 +467,6 @@ def build_drive_points_stats(
     drive_scores["drive_points"] = (
         drive_scores["drive_end_score"] - drive_scores["drive_start_score"]
     )
-
     drive_scores.loc[drive_scores["drive_points"] < 0, "drive_points"] = 0
 
     off_points = (
@@ -426,58 +489,36 @@ def build_drive_points_stats(
 def add_offensive_touchdown_flag(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
-    if {"touchdown", "td_team"}.issubset(df.columns):
-        df["offensive_touchdown_flag"] = np.where(
-            (df["touchdown"] == 1) & (df["td_team"] == df["posteam"]),
-            1.0,
-            0.0,
-        )
-        return df
+    same_team = (
+        df["td_team"].fillna("").astype(str)
+        == df["posteam"].fillna("").astype(str)
+    )
 
-    touchdown_parts = []
-
-    if "pass_touchdown" in df.columns:
-        touchdown_parts.append(df["pass_touchdown"].fillna(0).eq(1))
-
-    if "rush_touchdown" in df.columns:
-        touchdown_parts.append(df["rush_touchdown"].fillna(0).eq(1))
-
-    if touchdown_parts:
-        flag = touchdown_parts[0]
-
-        for part in touchdown_parts[1:]:
-            flag = flag | part
-
-        df["offensive_touchdown_flag"] = np.where(flag, 1.0, 0.0)
-        return df
-
-    if "touchdown" in df.columns:
-        df["offensive_touchdown_flag"] = np.where(
-            df["touchdown"] == 1,
-            1.0,
-            0.0,
-        )
-        return df
-
-    df["offensive_touchdown_flag"] = np.nan
+    df["offensive_touchdown_flag"] = np.where(
+        df["touchdown"].eq(1)
+        & df["posteam"].notna()
+        & same_team,
+        1.0,
+        0.0,
+    )
     return df
 
 
 def build_red_zone_stats(
     pbp: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    drive_col = get_drive_column(pbp)
-
     require_columns(
         pbp,
         [
             "season",
             "week",
             "game_id",
-            drive_col,
+            "drive",
             "posteam",
             "defteam",
             "yardline_100",
+            "touchdown",
+            "td_team",
         ],
         "red-zone touchdown rate",
     )
@@ -486,7 +527,7 @@ def build_red_zone_stats(
         pbp["season"].notna()
         & pbp["week"].notna()
         & pbp["game_id"].notna()
-        & pbp[drive_col].notna()
+        & pbp["drive"].notna()
         & pbp["posteam"].notna()
         & pbp["defteam"].notna()
     ].copy()
@@ -506,7 +547,7 @@ def build_red_zone_stats(
         "season",
         "week",
         "game_id",
-        drive_col,
+        "drive",
         "posteam",
         "defteam",
     ]
@@ -587,12 +628,11 @@ def merge_stat_frames(frames: list[pd.DataFrame]) -> pd.DataFrame:
     return result
 
 
-def build_team_stats(pbp: pd.DataFrame) -> pd.DataFrame:
-    if pbp.empty:
+def build_team_stats(native_pbp: pd.DataFrame) -> pd.DataFrame:
+    if native_pbp.empty:
         return pd.DataFrame(columns=OUTPUT_COLUMNS)
 
-    validate_normalized_pbp(pbp)
-    pbp = coerce_numeric_columns(pbp)
+    pbp = adapt_sportsdataverse_pbp(native_pbp)
 
     valid_plays = build_valid_scrimmage_plays(pbp)
 
@@ -601,11 +641,11 @@ def build_team_stats(pbp: pd.DataFrame) -> pd.DataFrame:
 
     offense_stats = build_offense_stats(valid_plays)
     defense_stats = build_defense_stats(valid_plays)
-    third_down_stats = build_third_down_stats(pbp, valid_plays)
+    third_down_stats = build_third_down_stats(valid_plays)
     off_points, def_points = build_drive_points_stats(pbp)
     off_rz, def_rz = build_red_zone_stats(pbp)
 
-    team_stats = merge_stat_frames(
+    return merge_stat_frames(
         [
             offense_stats,
             defense_stats,
@@ -617,8 +657,6 @@ def build_team_stats(pbp: pd.DataFrame) -> pd.DataFrame:
         ]
     )
 
-    return team_stats
-
 
 def run() -> int:
     args = parse_args()
@@ -626,7 +664,12 @@ def run() -> int:
 
     _, pbp_dir, output_dir, error_dir = resolve_paths()
 
-    pbp_path = pbp_dir / f"{season}_pbp.csv.gz"
+    pbp_path = (
+        Path(args.pbp_path).expanduser()
+        if args.pbp_path
+        else pbp_dir / f"{season}_pbp.parquet"
+    )
+
     output_path = output_dir / f"{season}_team_stats.csv"
     log_path = error_dir / "pull_team_stats.txt"
 
@@ -641,7 +684,7 @@ def run() -> int:
             f"[{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}] "
             f"pull_team_stats.py started | season={season}"
         )
-        log.write_line("source=normalized_espn_cfb_pbp")
+        log.write_line("source=sportsdataverse_native_cfb_pbp")
         log.write_line(f"input={pbp_path}")
         log.write_line(f"output={output_path}")
         log.write_line(f"log={log_path}")
@@ -657,15 +700,17 @@ def run() -> int:
             log.write_line("=" * 80)
             return 0
 
-        validate_normalized_pbp(pbp)
-
-        drive_col = get_drive_column(pbp)
-        log.write_line(f"drive_column={drive_col}")
+        require_columns(
+            pbp,
+            SDV_REQUIRED_COLUMNS,
+            "native SportsDataverse CFB PBP",
+        )
 
         team_stats = build_team_stats(pbp)
         team_stats.to_csv(output_path, index=False)
 
         log.write_line(f"pbp_rows={len(pbp)}")
+        log.write_line(f"pbp_columns={len(pbp.columns)}")
         log.write_line(f"output_rows={len(team_stats)}")
         log.write_line(f"output_columns={len(team_stats.columns)}")
         log.write_line("status=success")
