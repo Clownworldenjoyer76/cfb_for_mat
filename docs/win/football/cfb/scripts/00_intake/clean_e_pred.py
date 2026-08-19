@@ -21,10 +21,29 @@ OUT_HEADERS = [
 log = []
 
 
-def to_decimal_prob(raw):
-    """Percentage string -> decimal string truncated to 4 places."""
-    d = Decimal(str(raw).strip()) / Decimal(100)
-    return str(d.quantize(Decimal("0.0001"), rounding=ROUND_DOWN))
+def to_decimal_prob(raw, allow_blank=False):
+    """
+    Percentage string -> decimal string truncated to 4 places.
+
+    If allow_blank=True, a blank/None value returns an empty string
+    instead of raising decimal.InvalidOperation.
+    """
+    value = "" if raw is None else str(raw).strip()
+
+    if not value:
+        if allow_blank:
+            return ""
+
+        raise ValueError("blank probability value")
+
+    d = Decimal(value) / Decimal(100)
+
+    return str(
+        d.quantize(
+            Decimal("0.0001"),
+            rounding=ROUND_DOWN,
+        )
+    )
 
 
 def main():
@@ -60,34 +79,61 @@ def main():
                     rows_read += 1
 
                     try:
-                        process_row(path, lineno, row, games, order)
+                        process_row(
+                            path,
+                            lineno,
+                            row,
+                            games,
+                            order,
+                        )
                     except Exception as e:
                         log.append(
                             "ROW ERROR %s line %d: %s"
-                            % (path, lineno, e)
+                            % (
+                                path,
+                                lineno,
+                                e,
+                            )
                         )
 
         except Exception as e:
-            log.append("FILE ERROR %s: %s" % (path, e))
+            log.append(
+                "FILE ERROR %s: %s"
+                % (
+                    path,
+                    e,
+                )
+            )
 
     files_written = 0
     games_written = 0
 
     for key in sorted(order.keys()):
         season, season_type, week = key
+
         out_name = "%s_%s_%s_predictions.csv" % (
             season,
             season_type,
             week,
         )
-        out_path = os.path.join(OUT_DIR, out_name)
+
+        out_path = os.path.join(
+            OUT_DIR,
+            out_name,
+        )
 
         try:
-            with open(out_path, "w", newline="", encoding="utf-8") as fh:
+            with open(
+                out_path,
+                "w",
+                newline="",
+                encoding="utf-8",
+            ) as fh:
                 writer = csv.DictWriter(
                     fh,
                     fieldnames=OUT_HEADERS,
                 )
+
                 writer.writeheader()
 
                 for gid in order[key]:
@@ -126,7 +172,10 @@ def main():
         except Exception as e:
             log.append(
                 "WRITE ERROR %s: %s"
-                % (out_path, e)
+                % (
+                    out_path,
+                    e,
+                )
             )
 
     log.append(
@@ -144,19 +193,52 @@ def main():
     write_log()
 
 
-def process_row(path, lineno, row, games, order):
-    gid = (row.get("game_id") or "").strip()
+def process_row(
+    path,
+    lineno,
+    row,
+    games,
+    order,
+):
+    gid = (
+        row.get("game_id")
+        or ""
+    ).strip()
 
     if not gid:
-        raise ValueError("blank game_id")
+        raise ValueError(
+            "blank game_id"
+        )
 
-    season = (row.get("season") or "").strip()
-    season_type = (row.get("season_type") or "").strip()
-    week = (row.get("week") or "").strip()
-    game_name = (row.get("game_name") or "").strip()
-    side = (row.get("home_away") or "").strip()
+    season = (
+        row.get("season")
+        or ""
+    ).strip()
 
-    if side not in ("homeTeam", "awayTeam"):
+    season_type = (
+        row.get("season_type")
+        or ""
+    ).strip()
+
+    week = (
+        row.get("week")
+        or ""
+    ).strip()
+
+    game_name = (
+        row.get("game_name")
+        or ""
+    ).strip()
+
+    side = (
+        row.get("home_away")
+        or ""
+    ).strip()
+
+    if side not in (
+        "homeTeam",
+        "awayTeam",
+    ):
         raise ValueError(
             "unrecognized home_away value %r"
             % side
@@ -170,10 +252,17 @@ def process_row(path, lineno, row, games, order):
 
     away_team, home_team = [
         p.strip()
-        for p in game_name.split(" at ", 1)
+        for p in game_name.split(
+            " at ",
+            1,
+        )
     ]
 
-    key = (season, season_type, week)
+    key = (
+        season,
+        season_type,
+        week,
+    )
 
     if gid not in games:
         games[gid] = {
@@ -186,7 +275,8 @@ def process_row(path, lineno, row, games, order):
             "home_team": home_team,
             "away_team": away_team,
             "matchupQuality": (
-                row.get("matchupQuality") or ""
+                row.get("matchupQuality")
+                or ""
             ).strip(),
             "game_name": game_name,
             "season": season,
@@ -247,34 +337,38 @@ def process_row(path, lineno, row, games, order):
     )
 
     rec[opp_prefix + "_rating"] = (
-        row.get("oppSeasonStrengthRating") or ""
+        row.get("oppSeasonStrengthRating")
+        or ""
     ).strip()
 
     rec[prefix + "_PtDiff"] = (
-        row.get("teamPredPtDiff") or ""
+        row.get("teamPredPtDiff")
+        or ""
     ).strip()
 
     tie = to_decimal_prob(
-        row.get("teamChanceTie")
+        row.get("teamChanceTie"),
+        allow_blank=True,
     )
 
-    if (
-        rec["tie_prob"]
-        and rec["tie_prob"] != tie
-    ):
-        log.append(
-            "TIE MISMATCH %s line %d: game_id %s "
-            "had %s, now %s"
-            % (
-                path,
-                lineno,
-                gid,
-                rec["tie_prob"],
-                tie,
+    if tie:
+        if (
+            rec["tie_prob"]
+            and rec["tie_prob"] != tie
+        ):
+            log.append(
+                "TIE MISMATCH %s line %d: game_id %s "
+                "had %s, now %s"
+                % (
+                    path,
+                    lineno,
+                    gid,
+                    rec["tie_prob"],
+                    tie,
+                )
             )
-        )
 
-    rec["tie_prob"] = tie
+        rec["tie_prob"] = tie
 
 
 def write_log():
