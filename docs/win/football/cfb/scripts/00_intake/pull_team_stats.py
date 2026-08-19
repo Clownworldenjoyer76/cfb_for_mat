@@ -57,6 +57,7 @@ SDV_REQUIRED_COLUMNS = [
     "pass_td",
     "rush_td",
     "scrimmage_play",
+    "is_home",
 ]
 
 
@@ -165,17 +166,28 @@ def _full_team_name(name: object, mascot: object = None) -> str | None:
     return f"{base} {nick}"
 
 
-def _team_names_from_ids(pbp: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
-    home_ids = pd.to_numeric(pbp["homeTeamId"], errors="coerce")
-    away_ids = pd.to_numeric(pbp["awayTeamId"], errors="coerce")
-    pos_ids = pd.to_numeric(pbp["pos_team"], errors="coerce")
-    def_ids = pd.to_numeric(pbp["def_pos_team"], errors="coerce")
+def _native_team_names(pbp: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
+    """
+    Published SportsDataverse season Parquets currently store pos_team and
+    def_pos_team as full display-name strings (for example, "Ohio State Buckeyes").
+    Use those native values directly.
+    """
+    posteam = pbp["pos_team"].astype("object")
+    defteam = pbp["def_pos_team"].astype("object")
+    return posteam, defteam
 
+
+def _home_away_display_names(
+    pbp: pd.DataFrame,
+) -> tuple[pd.Series, pd.Series]:
     if "homeTeamMascot" in pbp.columns:
         home_names = pd.Series(
             [
                 _full_team_name(name, mascot)
-                for name, mascot in zip(pbp["homeTeamName"], pbp["homeTeamMascot"])
+                for name, mascot in zip(
+                    pbp["homeTeamName"],
+                    pbp["homeTeamMascot"],
+                )
             ],
             index=pbp.index,
             dtype="object",
@@ -187,7 +199,10 @@ def _team_names_from_ids(pbp: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
         away_names = pd.Series(
             [
                 _full_team_name(name, mascot)
-                for name, mascot in zip(pbp["awayTeamName"], pbp["awayTeamMascot"])
+                for name, mascot in zip(
+                    pbp["awayTeamName"],
+                    pbp["awayTeamMascot"],
+                )
             ],
             index=pbp.index,
             dtype="object",
@@ -195,40 +210,28 @@ def _team_names_from_ids(pbp: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
     else:
         away_names = pbp["awayTeamName"].astype("object")
 
-    posteam = pd.Series(pd.NA, index=pbp.index, dtype="object")
-    defteam = pd.Series(pd.NA, index=pbp.index, dtype="object")
+    return home_names, away_names
 
-    home_pos = pos_ids.eq(home_ids)
-    away_pos = pos_ids.eq(away_ids)
-    home_def = def_ids.eq(home_ids)
-    away_def = def_ids.eq(away_ids)
-
-    posteam.loc[home_pos] = home_names.loc[home_pos]
-    posteam.loc[away_pos] = away_names.loc[away_pos]
-
-    defteam.loc[home_def] = home_names.loc[home_def]
-    defteam.loc[away_def] = away_names.loc[away_def]
-
-    return posteam, defteam
-
-
-def _offense_score(
-    team_ids: pd.Series,
-    home_ids: pd.Series,
-    away_ids: pd.Series,
+def _offense_score_from_is_home(
+    is_home: pd.Series,
     home_score: pd.Series,
     away_score: pd.Series,
 ) -> pd.Series:
-    result = pd.Series(np.nan, index=team_ids.index, dtype="float64")
+    """
+    Return the score for the possession team at play start using the native
+    SportsDataverse is_home flag. This avoids reconstructing or matching team
+    names for score perspective.
+    """
+    home_flag = is_home.fillna(False).astype(bool)
 
-    is_home = team_ids.eq(home_ids)
-    is_away = team_ids.eq(away_ids)
+    home_vals = pd.to_numeric(home_score, errors="coerce")
+    away_vals = pd.to_numeric(away_score, errors="coerce")
 
-    result.loc[is_home] = pd.to_numeric(home_score.loc[is_home], errors="coerce")
-    result.loc[is_away] = pd.to_numeric(away_score.loc[is_away], errors="coerce")
-
-    return result
-
+    return pd.Series(
+        np.where(home_flag, home_vals, away_vals),
+        index=is_home.index,
+        dtype="float64",
+    )
 
 def adapt_sportsdataverse_pbp(pbp: pd.DataFrame) -> pd.DataFrame:
     require_columns(
@@ -239,11 +242,7 @@ def adapt_sportsdataverse_pbp(pbp: pd.DataFrame) -> pd.DataFrame:
 
     out = pd.DataFrame(index=pbp.index)
 
-    posteam, defteam = _team_names_from_ids(pbp)
-
-    pos_ids = pd.to_numeric(pbp["pos_team"], errors="coerce")
-    home_ids = pd.to_numeric(pbp["homeTeamId"], errors="coerce")
-    away_ids = pd.to_numeric(pbp["awayTeamId"], errors="coerce")
+    posteam, defteam = _native_team_names(pbp)
 
     out["season"] = pd.to_numeric(pbp["season"], errors="coerce")
     out["week"] = pd.to_numeric(pbp["week"], errors="coerce")
@@ -276,17 +275,13 @@ def adapt_sportsdataverse_pbp(pbp: pd.DataFrame) -> pd.DataFrame:
     out["rush_touchdown"] = pd.to_numeric(pbp["rush_td"], errors="coerce")
     out["scrimmage_play"] = pbp["scrimmage_play"].fillna(False).astype(bool)
 
-    out["posteam_score"] = _offense_score(
-        pos_ids,
-        home_ids,
-        away_ids,
+    out["posteam_score"] = _offense_score_from_is_home(
+        pbp["is_home"],
         pbp["start.homeScore"],
         pbp["start.awayScore"],
     )
-    out["posteam_score_post"] = _offense_score(
-        pos_ids,
-        home_ids,
-        away_ids,
+    out["posteam_score_post"] = _offense_score_from_is_home(
+        pbp["is_home"],
         pbp["end.homeScore"],
         pbp["end.awayScore"],
     )
@@ -637,7 +632,10 @@ def build_team_stats(native_pbp: pd.DataFrame) -> pd.DataFrame:
     valid_plays = build_valid_scrimmage_plays(pbp)
 
     if valid_plays.empty:
-        return pd.DataFrame(columns=OUTPUT_COLUMNS)
+        raise ValueError(
+            "No valid scrimmage plays after SportsDataverse adaptation. "
+            f"adapted_rows={len(pbp)}"
+        )
 
     offense_stats = build_offense_stats(valid_plays)
     defense_stats = build_defense_stats(valid_plays)
@@ -707,6 +705,13 @@ def run() -> int:
         )
 
         team_stats = build_team_stats(pbp)
+
+        if len(pbp) > 0 and team_stats.empty:
+            raise ValueError(
+                "PBP contained rows but team-stat output was empty. "
+                "Refusing to report success."
+            )
+
         team_stats.to_csv(output_path, index=False)
 
         log.write_line(f"pbp_rows={len(pbp)}")
