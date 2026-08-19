@@ -30,7 +30,7 @@ jobs:
       - run: python docs/win/football/cfb/scripts/00_intake/pull_raw_roster.py
       - run: python docs/win/football/cfb/scripts/00_intake/roster_cleanup.py
       # - run: python docs/win/football/cfb/scripts/00_intake/depth_chart.py
-      - run: python docs/win/football/cfb/scripts/00_intake/depth_cleanup.py
+      # - run: python docs/win/football/cfb/scripts/00_intake/depth_cleanup.py
       - run: python docs/win/football/cfb/scripts/00_intake/coaches.py
       - run: python docs/win/football/cfb/scripts/00_intake/team_power_index.py
       - run: python docs/win/football/cfb/scripts/00_intake/pull_injuries.py
