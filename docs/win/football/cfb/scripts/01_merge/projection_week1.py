@@ -14,8 +14,10 @@ Inputs
 1. docs/win/football/cfb/00_intake/schedule/weekly/week_{week}_CFB_weekly_schedule.csv
 2. docs/win/football/cfb/00_intake/team_stats/{prior_season}_team_stats.csv
 3. docs/win/football/cfb/data/team_power_index/team_power_index_{season}.csv
-4. docs/win/football/cfb/00_intake/injuries/{season}_injuries.csv
-5. docs/win/football/cfb/config/mapping/team_map.csv
+4. docs/win/football/cfb/00_intake/predictions/final/{season}_*_{week}_clean_predictions.csv
+5. docs/win/football/cfb/00_intake/injuries/{season}_injuries.csv
+6. docs/win/football/cfb/config/mapping/team_map.csv
+7. docs/win/football/cfb/config/mapping/stadium_map.csv
 
 Output
 ------
@@ -33,11 +35,17 @@ Method
   yards/play, red-zone rate, early-down EPA, and third-down conversion rate.
 - The prior rating is scaled to the current ESPN FPI rating distribution so
   it is expressed on a point-like scale.
-- Projected margin blends:
-      45% current market spread
-      35% current ESPN FPI margin
-      20% prior-season team-strength margin
-  Available components are automatically reweighted if one is missing.
+- A schedule row marked neutral is corrected to non-neutral when the listed
+  stadium matches the home team's mapped home stadium. The original flag and
+  correction are retained in the output for audit.
+- Projected margin blends four pregame components:
+      36% current market spread
+      28% current ESPN FPI margin
+      20% finalized ESPN predictor home point differential
+      16% prior-season team-strength margin
+  These defaults preserve the old 45/35/20 market/FPI/prior proportions after
+  reserving 20% for the finalized ESPN predictor. Available components are
+  automatically reweighted when one is missing.
 - Projected total blends:
       75% current market total
       25% prior-season points-per-drive estimate
@@ -46,9 +54,9 @@ Method
   relative to the scheduled game. Stale historical injury rows are ignored.
 - No current-season game result or current-season PBP is read.
 
-This is an auditable Week 1 baseline. All component projections and blend
-weights are written to the output so later backtesting can replace the fixed
-weights with trained weights.
+This is an auditable Week 1 baseline. All component projections, validation
+flags, and effective blend weights are written to the output so later
+backtesting can replace the fixed weights with trained weights.
 """
 
 from __future__ import annotations
@@ -65,13 +73,9 @@ import numpy as np
 import pandas as pd
 
 
-SCRIPT_VERSION = "cfb-week1-v2-2026-08-20"
-
-# The 2025 prior-team-week distribution has a natural gap:
-# sparse teams have only 1-3 weeks, while full-season teams have 11-13.
-# Requiring 10 weeks prevents partial/FCS samples from being treated as
-# representative full-season priors.
+SCRIPT_VERSION = "cfb-week1-v3-2026-08-20"
 MIN_PRIOR_TEAM_WEEKS = 10
+ESPN_MARGIN_SYMMETRY_TOLERANCE = 0.25
 
 TEAM_METRICS = [
     "off_epa_per_play",
@@ -151,96 +155,213 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Build CFB Week 1 cold-start final-score projections."
     )
+
     parser.add_argument(
         "--season",
         type=int,
         default=None,
         help="Target season. Defaults to CFB_SEASON, then 2026.",
     )
+
     parser.add_argument(
         "--prior-season",
         type=int,
         default=None,
         help="Prior season used for team-strength priors. Defaults to season-1.",
     )
-    parser.add_argument("--week", type=int, default=1)
-    parser.add_argument("--home-field", type=float, default=2.5)
-    parser.add_argument("--drives-per-team", type=float, default=11.5)
-    parser.add_argument("--market-margin-weight", type=float, default=0.45)
-    parser.add_argument("--fpi-margin-weight", type=float, default=0.35)
-    parser.add_argument("--prior-margin-weight", type=float, default=0.20)
-    parser.add_argument("--market-total-weight", type=float, default=0.75)
-    parser.add_argument("--fresh-injury-days", type=int, default=60)
+
+    parser.add_argument(
+        "--week",
+        type=int,
+        default=1,
+    )
+
+    parser.add_argument(
+        "--home-field",
+        type=float,
+        default=2.5,
+    )
+
+    parser.add_argument(
+        "--drives-per-team",
+        type=float,
+        default=11.5,
+    )
+
+    parser.add_argument(
+        "--market-margin-weight",
+        type=float,
+        default=0.36,
+    )
+
+    parser.add_argument(
+        "--fpi-margin-weight",
+        type=float,
+        default=0.28,
+    )
+
+    parser.add_argument(
+        "--espn-margin-weight",
+        type=float,
+        default=0.20,
+    )
+
+    parser.add_argument(
+        "--prior-margin-weight",
+        type=float,
+        default=0.16,
+    )
+
+    parser.add_argument(
+        "--market-total-weight",
+        type=float,
+        default=0.75,
+    )
+
+    parser.add_argument(
+        "--fresh-injury-days",
+        type=int,
+        default=60,
+    )
+
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Build and validate projections but do not write output.",
     )
+
     return parser.parse_args()
 
 
 def clean(value: object) -> str:
     if value is None:
         return ""
+
     try:
         if pd.isna(value):
             return ""
     except Exception:
         pass
+
     text = str(value).strip()
-    if text.casefold() in {"", "nan", "none", "null", "<na>", "nat"}:
+
+    if text.casefold() in {
+        "",
+        "nan",
+        "none",
+        "null",
+        "<na>",
+        "nat",
+    }:
         return ""
+
     return text
 
 
 def normalize_key(value: object) -> str:
-    text = unicodedata.normalize("NFKD", clean(value))
-    text = "".join(ch for ch in text if not unicodedata.combining(ch))
-    text = text.casefold().replace("&", " and ")
-    text = re.sub(r"[^a-z0-9]+", " ", text)
-    return " ".join(text.split())
+    text = unicodedata.normalize(
+        "NFKD",
+        clean(value),
+    )
+
+    text = "".join(
+        ch
+        for ch in text
+        if not unicodedata.combining(ch)
+    )
+
+    text = (
+        text.casefold()
+        .replace("&", " and ")
+    )
+
+    text = re.sub(
+        r"[^a-z0-9]+",
+        " ",
+        text,
+    )
+
+    return " ".join(
+        text.split()
+    )
 
 
 def as_bool(value: object) -> bool:
-    text = clean(value).casefold()
-    return text in {"1", "true", "t", "yes", "y"}
+    return (
+        clean(value).casefold()
+        in {
+            "1",
+            "true",
+            "t",
+            "yes",
+            "y",
+        }
+    )
 
 
 def as_float(value: object) -> float | None:
-    text = clean(value).replace(",", "").replace("%", "")
+    text = (
+        clean(value)
+        .replace(",", "")
+        .replace("%", "")
+    )
+
     if not text:
         return None
+
     try:
         number = float(text)
     except ValueError:
         return None
-    return number if math.isfinite(number) else None
+
+    if not math.isfinite(number):
+        return None
+
+    return number
 
 
 def repo_cfb_root() -> Path:
     here = Path(__file__).resolve()
 
-    for parent in [here.parent, *here.parents]:
-        candidate = parent / "docs" / "win" / "football" / "cfb"
+    for parent in [
+        here.parent,
+        *here.parents,
+    ]:
+        candidate = (
+            parent
+            / "docs"
+            / "win"
+            / "football"
+            / "cfb"
+        )
+
         if candidate.is_dir():
             return candidate
 
-    # Expected installed location:
-    # docs/win/football/cfb/scripts/01_merge/projection_week1.py
     try:
         candidate = here.parents[2]
     except IndexError as exc:
-        raise RuntimeError(f"Cannot resolve CFB root from {here}") from exc
+        raise RuntimeError(
+            f"Cannot resolve CFB root from {here}"
+        ) from exc
 
     if candidate.name != "cfb":
-        raise RuntimeError(f"Cannot resolve CFB root from {here}")
+        raise RuntimeError(
+            f"Cannot resolve CFB root from {here}"
+        )
 
     return candidate
 
 
-def read_csv(path: Path, required: list[str], label: str) -> pd.DataFrame:
+def read_csv(
+    path: Path,
+    required: list[str],
+    label: str,
+) -> pd.DataFrame:
     if not path.is_file():
-        raise FileNotFoundError(f"Missing {label}: {path}")
+        raise FileNotFoundError(
+            f"Missing {label}: {path}"
+        )
 
     df = pd.read_csv(
         path,
@@ -264,21 +385,41 @@ def read_csv(path: Path, required: list[str], label: str) -> pd.DataFrame:
 
 
 class TeamResolver:
-    def __init__(self, team_map: pd.DataFrame) -> None:
-        required = ["team_id", "canonical_team"]
+    def __init__(
+        self,
+        team_map: pd.DataFrame,
+    ) -> None:
+        required = [
+            "team_id",
+            "canonical_team",
+        ]
+
         missing = [
-            c
-            for c in required
-            if c not in team_map.columns
+            column
+            for column in required
+            if column not in team_map.columns
         ]
 
         if missing:
             raise ValueError(
-                f"team_map.csv missing required columns: {missing}"
+                "team_map.csv missing required "
+                f"columns: {missing}"
             )
 
-        self.alias_to_team: dict[str, str] = {}
-        self.team_to_id: dict[str, str] = {}
+        self.alias_to_team: dict[
+            str,
+            str,
+        ] = {}
+
+        self.team_to_id: dict[
+            str,
+            str,
+        ] = {}
+
+        self.id_to_team: dict[
+            str,
+            str,
+        ] = {}
 
         alias_columns = [
             "canonical_team",
@@ -290,8 +431,13 @@ class TeamResolver:
         ]
 
         for _, row in team_map.iterrows():
-            canonical = clean(row.get("canonical_team"))
-            team_id = clean(row.get("team_id"))
+            canonical = clean(
+                row.get("canonical_team")
+            )
+
+            team_id = clean(
+                row.get("team_id")
+            )
 
             if not canonical:
                 continue
@@ -301,16 +447,34 @@ class TeamResolver:
                 team_id,
             )
 
-            values: list[str] = [canonical]
+            if team_id:
+                self.id_to_team.setdefault(
+                    team_id,
+                    canonical,
+                )
+
+            values: list[str] = [
+                canonical
+            ]
 
             for column in alias_columns:
-                if column in team_map.columns:
-                    value = clean(row.get(column))
-                    if value:
-                        values.append(value)
+                if column not in team_map.columns:
+                    continue
 
-            location = clean(row.get("location"))
-            nickname = clean(row.get("nickname"))
+                value = clean(
+                    row.get(column)
+                )
+
+                if value:
+                    values.append(value)
+
+            location = clean(
+                row.get("location")
+            )
+
+            nickname = clean(
+                row.get("nickname")
+            )
 
             if location and nickname:
                 values.append(
@@ -318,17 +482,30 @@ class TeamResolver:
                 )
 
             for value in values:
-                key = normalize_key(value)
+                key = normalize_key(
+                    value
+                )
 
                 if not key:
                     continue
 
-                prior = self.alias_to_team.get(key)
+                prior = (
+                    self.alias_to_team
+                    .get(key)
+                )
 
-                if prior is None or prior == canonical:
-                    self.alias_to_team[key] = canonical
+                if (
+                    prior is None
+                    or prior == canonical
+                ):
+                    self.alias_to_team[
+                        key
+                    ] = canonical
 
-    def resolve(self, value: object) -> str:
+    def resolve(
+        self,
+        value: object,
+    ) -> str:
         raw = clean(value)
 
         if not raw:
@@ -339,8 +516,14 @@ class TeamResolver:
             raw,
         )
 
-    def team_id(self, value: object) -> str:
-        canonical = self.resolve(value)
+    def team_id(
+        self,
+        value: object,
+    ) -> str:
+        canonical = self.resolve(
+            value
+        )
+
         return self.team_to_id.get(
             canonical,
             "",
@@ -358,13 +541,22 @@ def shrink_metric(
         errors="coerce",
     ).fillna(0.0)
 
-    weight = count / (
-        count + strength
+    weight = (
+        count
+        / (
+            count
+            + strength
+        )
     )
 
     return (
-        weight * team_mean
-        + (1.0 - weight) * global_mean
+        weight
+        * team_mean
+        + (
+            1.0
+            - weight
+        )
+        * global_mean
     )
 
 
@@ -374,8 +566,11 @@ def build_prior_table(
 ) -> pd.DataFrame:
     work = team_stats.copy()
 
-    work["team"] = work["team"].map(
-        resolver.resolve
+    work["team"] = (
+        work["team"]
+        .map(
+            resolver.resolve
+        )
     )
 
     for metric in TEAM_METRICS:
@@ -385,12 +580,15 @@ def build_prior_table(
         )
 
     work = work[
-        work["team"].map(clean).ne("")
+        work["team"]
+        .map(clean)
+        .ne("")
     ].copy()
 
     if work.empty:
         raise ValueError(
-            "Prior team-stats file has no usable team rows."
+            "Prior team-stats file "
+            "has no usable team rows."
         )
 
     grouped_mean = (
@@ -409,7 +607,8 @@ def build_prior_table(
         .size()
         .rename(
             columns={
-                "size": "prior_team_weeks"
+                "size":
+                "prior_team_weeks"
             }
         )
     )
@@ -422,43 +621,70 @@ def build_prior_table(
 
     for metric in TEAM_METRICS:
         global_mean = float(
-            work[metric].mean(
+            work[metric]
+            .mean(
                 skipna=True
             )
         )
 
-        if not math.isfinite(global_mean):
+        if not math.isfinite(
+            global_mean
+        ):
             global_mean = 0.0
 
-        prior[metric] = shrink_metric(
-            prior[metric],
-            prior["prior_team_weeks"],
-            global_mean,
+        prior[metric] = (
+            shrink_metric(
+                prior[metric],
+                prior[
+                    "prior_team_weeks"
+                ],
+                global_mean,
+            )
         )
 
     prior["net_epa"] = (
-        prior["off_epa_per_play"]
-        - prior["def_epa_per_play"]
+        prior[
+            "off_epa_per_play"
+        ]
+        - prior[
+            "def_epa_per_play"
+        ]
     )
 
     prior["success_edge"] = (
-        prior["off_success_rate"]
-        - prior["def_success_rate"]
+        prior[
+            "off_success_rate"
+        ]
+        - prior[
+            "def_success_rate"
+        ]
     )
 
     prior["ypp_edge"] = (
-        prior["yards_per_play"]
-        - prior["yards_per_play_allowed"]
+        prior[
+            "yards_per_play"
+        ]
+        - prior[
+            "yards_per_play_allowed"
+        ]
     )
 
     prior["ppd_edge"] = (
-        prior["points_per_drive"]
-        - prior["points_per_drive_allowed"]
+        prior[
+            "points_per_drive"
+        ]
+        - prior[
+            "points_per_drive_allowed"
+        ]
     )
 
     prior["red_zone_edge"] = (
-        prior["red_zone_td_rate"]
-        - prior["red_zone_td_rate_allowed"]
+        prior[
+            "red_zone_td_rate"
+        ]
+        - prior[
+            "red_zone_td_rate_allowed"
+        ]
     )
 
     strength_parts = {
@@ -471,9 +697,14 @@ def build_prior_table(
         "third_down_conversion_rate": 0.05,
     }
 
-    prior["prior_strength_raw"] = 0.0
+    prior[
+        "prior_strength_raw"
+    ] = 0.0
 
-    for metric, weight in strength_parts.items():
+    for (
+        metric,
+        weight,
+    ) in strength_parts.items():
         values = pd.to_numeric(
             prior[metric],
             errors="coerce",
@@ -500,33 +731,51 @@ def build_prior_table(
                 0.0,
                 index=prior.index,
             )
+
         else:
             z = (
-                values.fillna(mean) - mean
+                values.fillna(mean)
+                - mean
             ) / std
 
-        prior["prior_strength_raw"] += (
-            weight * z
+        prior[
+            "prior_strength_raw"
+        ] += (
+            weight
+            * z
         )
 
     raw_mean = float(
-        prior["prior_strength_raw"].mean()
+        prior[
+            "prior_strength_raw"
+        ].mean()
     )
 
     raw_std = float(
-        prior["prior_strength_raw"].std(
+        prior[
+            "prior_strength_raw"
+        ].std(
             ddof=0
         )
     )
 
     if (
-        not math.isfinite(raw_std)
+        not math.isfinite(
+            raw_std
+        )
         or raw_std < 1e-9
     ):
-        prior["prior_strength_z"] = 0.0
+        prior[
+            "prior_strength_z"
+        ] = 0.0
+
     else:
-        prior["prior_strength_z"] = (
-            prior["prior_strength_raw"]
+        prior[
+            "prior_strength_z"
+        ] = (
+            prior[
+                "prior_strength_raw"
+            ]
             - raw_mean
         ) / raw_std
 
@@ -540,7 +789,8 @@ def load_fpi(
     if not path.is_file():
         print(
             "WARNING: FPI file not found; "
-            f"FPI component disabled: {path}"
+            "FPI component disabled: "
+            f"{path}"
         )
 
         return pd.DataFrame(
@@ -555,24 +805,25 @@ def load_fpi(
 
     fpi = read_csv(
         path,
-        ["team_id", "fpi"],
+        [
+            "team_id",
+            "fpi",
+        ],
         "team power index",
     )
 
-    fpi["team_id"] = fpi["team_id"].map(
-        clean
+    fpi["team_id"] = (
+        fpi["team_id"]
+        .map(clean)
     )
 
-    id_to_team = {
-        team_id: team
-        for team, team_id
-        in resolver.team_to_id.items()
-        if team_id
-    }
-
     fpi["team"] = (
-        fpi["team_id"]
-        .map(id_to_team)
+        fpi[
+            "team_id"
+        ]
+        .map(
+            resolver.id_to_team
+        )
         .fillna("")
     )
 
@@ -584,18 +835,22 @@ def load_fpi(
         if column not in fpi.columns:
             fpi[column] = np.nan
 
-        fpi[column] = pd.to_numeric(
-            fpi[column],
-            errors="coerce",
+        fpi[column] = (
+            pd.to_numeric(
+                fpi[column],
+                errors="coerce",
+            )
         )
 
     fpi = fpi[
         fpi["team"].ne("")
     ].copy()
 
-    fpi = fpi.drop_duplicates(
-        "team",
-        keep="last",
+    fpi = (
+        fpi.drop_duplicates(
+            "team",
+            keep="last",
+        )
     )
 
     return fpi[
@@ -619,30 +874,325 @@ def scale_prior_to_fpi(
         pd.to_numeric(
             fpi.get("fpi"),
             errors="coerce",
-        ).std(
+        )
+        .std(
             ddof=0
         )
     )
 
     if (
-        not math.isfinite(fpi_std)
+        not math.isfinite(
+            fpi_std
+        )
         or fpi_std < 1.0
     ):
         fpi_std = 10.0
 
-    result["prior_rating"] = (
-        result["prior_strength_z"]
+    result[
+        "prior_rating"
+    ] = (
+        result[
+            "prior_strength_z"
+        ]
         * fpi_std
     )
 
     return result
 
 
-def position_cost(position: object) -> float:
+def load_espn_predictions(
+    predictions_dir: Path,
+    season: int,
+    week: int,
+    resolver: TeamResolver,
+) -> pd.DataFrame:
+    files = sorted(
+        predictions_dir.glob(
+            f"{season}_*_{week}"
+            "_clean_predictions.csv"
+        )
+    )
+
+    if not files:
+        print(
+            "WARNING: no finalized ESPN "
+            "prediction file found; "
+            "ESPN predictor component disabled: "
+            f"{predictions_dir}"
+        )
+
+        return pd.DataFrame()
+
+    required = [
+        "game_id",
+        "home_team",
+        "away_team",
+        "home_PtDiff",
+        "away_PtDiff",
+        "home_prob",
+        "away_prob",
+        "matchupQuality",
+    ]
+
+    frames: list[
+        pd.DataFrame
+    ] = []
+
+    for path in files:
+        frame = read_csv(
+            path,
+            required,
+            "finalized ESPN predictions",
+        )
+
+        if (
+            "season"
+            in frame.columns
+        ):
+            frame = frame[
+                pd.to_numeric(
+                    frame["season"],
+                    errors="coerce",
+                ).eq(season)
+            ].copy()
+
+        if (
+            "week"
+            in frame.columns
+        ):
+            frame = frame[
+                pd.to_numeric(
+                    frame["week"],
+                    errors="coerce",
+                ).eq(week)
+            ].copy()
+
+        frames.append(
+            frame
+        )
+
+    predictions = pd.concat(
+        frames,
+        ignore_index=True,
+    )
+
+    if predictions.empty:
+        print(
+            "WARNING: finalized ESPN "
+            "prediction files contained "
+            "no matching rows."
+        )
+
+        return pd.DataFrame()
+
+    predictions[
+        "game_id"
+    ] = (
+        predictions[
+            "game_id"
+        ]
+        .map(clean)
+    )
+
+    predictions[
+        "home_team_resolved"
+    ] = (
+        predictions[
+            "home_team"
+        ]
+        .map(
+            resolver.resolve
+        )
+    )
+
+    predictions[
+        "away_team_resolved"
+    ] = (
+        predictions[
+            "away_team"
+        ]
+        .map(
+            resolver.resolve
+        )
+    )
+
+    predictions = predictions[
+        predictions[
+            "game_id"
+        ].ne("")
+    ].copy()
+
+    duplicate_mask = (
+        predictions[
+            "game_id"
+        ]
+        .duplicated(
+            keep=False
+        )
+    )
+
+    if duplicate_mask.any():
+        duplicates = (
+            predictions.loc[
+                duplicate_mask,
+                "game_id",
+            ]
+            .tolist()
+        )
+
+        raise ValueError(
+            "Duplicate game_id values "
+            "in finalized ESPN predictions: "
+            f"{duplicates[:10]}"
+        )
+
+    return predictions
+
+
+def build_home_stadium_lookup(
+    stadium_map_path: Path,
+    resolver: TeamResolver,
+) -> dict[str, set[str]]:
+    if not stadium_map_path.is_file():
+        print(
+            "WARNING: stadium_map.csv not found; "
+            "neutral-site sanity correction "
+            "disabled: "
+            f"{stadium_map_path}"
+        )
+
+        return {}
+
+    stadium_map = read_csv(
+        stadium_map_path,
+        [
+            "team_id",
+            "stadium",
+        ],
+        "stadium map",
+    )
+
+    lookup: dict[
+        str,
+        set[str],
+    ] = {}
+
+    stadium_columns = [
+        "stadium",
+        "venue_full_name",
+    ]
+
+    for _, row in stadium_map.iterrows():
+        team = ""
+
+        if (
+            "team"
+            in stadium_map.columns
+        ):
+            team = resolver.resolve(
+                row.get("team")
+            )
+
+        if not team:
+            team = (
+                resolver.id_to_team
+                .get(
+                    clean(
+                        row.get(
+                            "team_id"
+                        )
+                    ),
+                    "",
+                )
+            )
+
+        if not team:
+            continue
+
+        names = lookup.setdefault(
+            team,
+            set(),
+        )
+
+        for column in stadium_columns:
+            if (
+                column
+                not in stadium_map.columns
+            ):
+                continue
+
+            key = normalize_key(
+                row.get(column)
+            )
+
+            if key:
+                names.add(key)
+
+    return lookup
+
+
+def resolve_neutral_site(
+    sched_row: pd.Series,
+    home_team: str,
+    home_stadium_lookup: dict[
+        str,
+        set[str],
+    ],
+) -> tuple[
+    bool,
+    bool,
+    bool,
+    bool,
+]:
+    original_neutral = as_bool(
+        sched_row.get(
+            "neutral_site"
+        )
+    )
+
+    stadium_key = normalize_key(
+        sched_row.get(
+            "stadium"
+        )
+    )
+
+    home_stadium_match = bool(
+        stadium_key
+        and stadium_key
+        in home_stadium_lookup.get(
+            home_team,
+            set(),
+        )
+    )
+
+    corrected = (
+        original_neutral
+        and home_stadium_match
+    )
+
+    effective_neutral = (
+        original_neutral
+        and not corrected
+    )
+
+    return (
+        original_neutral,
+        effective_neutral,
+        corrected,
+        home_stadium_match,
+    )
+
+
+def position_cost(
+    position: object,
+) -> float:
     pos = (
         clean(position)
         .upper()
-        .replace(" ", "")
+        .replace(
+            " ",
+            "",
+        )
     )
 
     return POSITION_POINT_COST.get(
@@ -654,11 +1204,14 @@ def position_cost(position: object) -> float:
 def injury_status_multiplier(
     status: object,
 ) -> float:
-    text = clean(status).casefold()
+    text = clean(
+        status
+    ).casefold()
 
-    for key, multiplier in (
-        OUT_STATUS_MULTIPLIER.items()
-    ):
+    for (
+        key,
+        multiplier,
+    ) in OUT_STATUS_MULTIPLIER.items():
         if key in text:
             return multiplier
 
@@ -676,6 +1229,7 @@ def build_injury_lookup(
             "injury adjustment disabled: "
             f"{injuries_path}"
         )
+
         return {}
 
     injuries = read_csv(
@@ -689,39 +1243,74 @@ def build_injury_lookup(
         "injuries",
     )
 
-    injuries["team"] = injuries["team"].map(
-        resolver.resolve
+    injuries[
+        "team"
+    ] = (
+        injuries[
+            "team"
+        ]
+        .map(
+            resolver.resolve
+        )
     )
 
-    injuries["report_ts"] = pd.to_datetime(
-        injuries["report_date"],
+    injuries[
+        "report_ts"
+    ] = pd.to_datetime(
+        injuries[
+            "report_date"
+        ],
         errors="coerce",
         utc=True,
     )
 
-    injuries["status_multiplier"] = (
-        injuries["game_status"].map(
+    injuries[
+        "status_multiplier"
+    ] = (
+        injuries[
+            "game_status"
+        ]
+        .map(
             injury_status_multiplier
         )
     )
 
-    injuries["position_cost"] = (
-        injuries["position"].map(
+    injuries[
+        "position_cost"
+    ] = (
+        injuries[
+            "position"
+        ]
+        .map(
             position_cost
         )
     )
 
-    injuries["raw_penalty"] = (
-        injuries["status_multiplier"]
-        * injuries["position_cost"]
+    injuries[
+        "raw_penalty"
+    ] = (
+        injuries[
+            "status_multiplier"
+        ]
+        * injuries[
+            "position_cost"
+        ]
     )
 
-    lookup: dict[str, pd.DataFrame] = {}
+    lookup: dict[
+        str,
+        pd.DataFrame,
+    ] = {}
 
-    for team, group in injuries.groupby(
+    for (
+        team,
+        group,
+    ) in injuries.groupby(
         "team"
     ):
-        lookup[team] = group.copy()
+        lookup[
+            team
+        ] = group.copy()
 
     return lookup
 
@@ -729,70 +1318,127 @@ def build_injury_lookup(
 def injury_summary_for_game(
     team: str,
     game_date: object,
-    injury_lookup: dict[str, pd.DataFrame],
+    injury_lookup: dict[
+        str,
+        pd.DataFrame,
+    ],
     fresh_days: int,
-) -> tuple[int, int, int, float]:
-    group = injury_lookup.get(team)
+) -> tuple[
+    int,
+    int,
+    int,
+    float,
+]:
+    group = (
+        injury_lookup
+        .get(team)
+    )
 
-    if group is None or group.empty:
-        return 0, 0, 0, 0.0
+    if (
+        group is None
+        or group.empty
+    ):
+        return (
+            0,
+            0,
+            0,
+            0.0,
+        )
 
     game_ts = pd.to_datetime(
-        clean(game_date),
+        clean(
+            game_date
+        ),
         errors="coerce",
         utc=True,
     )
 
-    if pd.isna(game_ts):
-        return 0, 0, 0, 0.0
+    if pd.isna(
+        game_ts
+    ):
+        return (
+            0,
+            0,
+            0,
+            0.0,
+        )
 
     age_days = (
-        game_ts - group["report_ts"]
+        game_ts
+        - group[
+            "report_ts"
+        ]
     ).dt.total_seconds() / 86400.0
 
     fresh = group[
-        group["report_ts"].notna()
+        group[
+            "report_ts"
+        ].notna()
         & age_days.ge(0)
         & age_days.le(
-            float(fresh_days)
+            float(
+                fresh_days
+            )
         )
-        & group["status_multiplier"].gt(0)
+        & group[
+            "status_multiplier"
+        ].gt(0)
     ].copy()
 
     if fresh.empty:
-        return 0, 0, 0, 0.0
+        return (
+            0,
+            0,
+            0,
+            0.0,
+        )
 
-    statuses = fresh[
-        "game_status"
-    ].map(
-        lambda x: clean(x).casefold()
+    statuses = (
+        fresh[
+            "game_status"
+        ]
+        .map(
+            lambda value:
+            clean(
+                value
+            ).casefold()
+        )
     )
 
     out_count = int(
-        statuses.str.contains(
+        statuses
+        .str.contains(
             "out",
             regex=False,
-        ).sum()
+        )
+        .sum()
     )
 
     doubtful_count = int(
-        statuses.str.contains(
+        statuses
+        .str.contains(
             "doubtful",
             regex=False,
-        ).sum()
+        )
+        .sum()
     )
 
     questionable_count = int(
-        statuses.str.contains(
+        statuses
+        .str.contains(
             "questionable",
             regex=False,
-        ).sum()
+        )
+        .sum()
     )
 
     penalty = min(
         7.0,
         float(
-            fresh["raw_penalty"].sum()
+            fresh[
+                "raw_penalty"
+            ]
+            .sum()
         ),
     )
 
@@ -806,57 +1452,98 @@ def injury_summary_for_game(
 
 def weighted_blend(
     components: list[
-        tuple[float | None, float]
+        tuple[
+            float | None,
+            float,
+        ]
     ],
 ) -> tuple[
     float | None,
     list[float],
 ]:
     valid = [
-        (value, weight)
-        for value, weight in components
-        if value is not None
-        and math.isfinite(float(value))
-        and weight > 0
+        (
+            value,
+            weight,
+        )
+        for (
+            value,
+            weight,
+        )
+        in components
+        if (
+            value is not None
+            and math.isfinite(
+                float(value)
+            )
+            and weight > 0
+        )
     ]
 
     if not valid:
         return (
             None,
-            [0.0 for _ in components],
+            [
+                0.0
+                for _
+                in components
+            ],
         )
 
     weight_sum = sum(
         weight
-        for _, weight in valid
+        for (
+            _,
+            weight,
+        )
+        in valid
     )
 
-    normalized: list[float] = []
+    normalized: list[
+        float
+    ] = []
+
     numerator = 0.0
 
-    for value, weight in components:
+    for (
+        value,
+        weight,
+    ) in components:
         if (
             value is None
             or not math.isfinite(
-                float(value)
+                float(
+                    value
+                )
             )
             or weight <= 0
         ):
-            normalized.append(0.0)
+            normalized.append(
+                0.0
+            )
+
             continue
 
-        effective = weight / weight_sum
+        effective = (
+            weight
+            / weight_sum
+        )
 
         normalized.append(
             effective
         )
 
         numerator += (
-            float(value)
+            float(
+                value
+            )
             * effective
         )
 
-    return numerator, normalized
+    return (
+        numerator,
+        normalized,
+    )
 
 
 def prior_total_estimate(
@@ -866,7 +1553,9 @@ def prior_total_estimate(
 ) -> float | None:
     values = [
         as_float(
-            home.get("points_per_drive")
+            home.get(
+                "points_per_drive"
+            )
         ),
         as_float(
             away.get(
@@ -874,7 +1563,9 @@ def prior_total_estimate(
             )
         ),
         as_float(
-            away.get("points_per_drive")
+            away.get(
+                "points_per_drive"
+            )
         ),
         as_float(
             home.get(
@@ -890,15 +1581,18 @@ def prior_total_estimate(
         return None
 
     home_ppd = (
-        values[0] + values[1]
+        values[0]
+        + values[1]
     ) / 2.0
 
     away_ppd = (
-        values[2] + values[3]
+        values[2]
+        + values[3]
     ) / 2.0
 
     total = (
-        home_ppd + away_ppd
+        home_ppd
+        + away_ppd
     ) * drives_per_team
 
     return float(
@@ -914,8 +1608,16 @@ def build_projection(
     schedule: pd.DataFrame,
     prior: pd.DataFrame,
     fpi: pd.DataFrame,
+    espn_predictions: pd.DataFrame,
     resolver: TeamResolver,
-    injury_lookup: dict[str, pd.DataFrame],
+    home_stadium_lookup: dict[
+        str,
+        set[str],
+    ],
+    injury_lookup: dict[
+        str,
+        pd.DataFrame,
+    ],
     args: argparse.Namespace,
 ) -> pd.DataFrame:
     prior_lookup = prior.set_index(
@@ -932,17 +1634,23 @@ def build_projection(
         else None
     )
 
+    espn_lookup = (
+        espn_predictions
+        .set_index(
+            "game_id",
+            drop=False,
+        )
+        if not espn_predictions.empty
+        else None
+    )
+
     output_rows: list[
-        dict[str, object]
+        dict[
+            str,
+            object,
+        ]
     ] = []
 
-    # Neutral national-average prior used when:
-    # 1. a team has no prior-season stats, or
-    # 2. a team has fewer than MIN_PRIOR_TEAM_WEEKS.
-    #
-    # This is particularly important for FCS teams that may appear in only
-    # one to three ESPN PBP games against FBS opponents. Those partial samples
-    # are not representative full-season priors.
     fallback_prior = prior.mean(
         numeric_only=True
     )
@@ -955,18 +1663,36 @@ def build_projection(
         "prior_rating"
     ] = 0.0
 
-    for _, sched_row in schedule.iterrows():
+    for (
+        _,
+        sched_row,
+    ) in schedule.iterrows():
+        game_id = clean(
+            sched_row.get(
+                "game_id"
+            )
+        )
+
         home_team = resolver.resolve(
-            sched_row.get("home_team")
+            sched_row.get(
+                "home_team"
+            )
         )
 
         away_team = resolver.resolve(
-            sched_row.get("away_team")
+            sched_row.get(
+                "away_team"
+            )
         )
 
-        if home_team in prior_lookup.index:
+        if (
+            home_team
+            in prior_lookup.index
+        ):
             home_source_prior = (
-                prior_lookup.loc[home_team]
+                prior_lookup.loc[
+                    home_team
+                ]
             )
 
             home_prior_team_weeks = int(
@@ -974,13 +1700,19 @@ def build_projection(
                     "prior_team_weeks"
                 ]
             )
+
         else:
             home_source_prior = None
             home_prior_team_weeks = 0
 
-        if away_team in prior_lookup.index:
+        if (
+            away_team
+            in prior_lookup.index
+        ):
             away_source_prior = (
-                prior_lookup.loc[away_team]
+                prior_lookup.loc[
+                    away_team
+                ]
             )
 
             away_prior_team_weeks = int(
@@ -988,6 +1720,7 @@ def build_projection(
                     "prior_team_weeks"
                 ]
             )
+
         else:
             away_source_prior = None
             away_prior_team_weeks = 0
@@ -1016,15 +1749,20 @@ def build_projection(
             else away_source_prior
         )
 
-        neutral = as_bool(
-            sched_row.get(
-                "neutral_site"
-            )
+        (
+            original_neutral,
+            effective_neutral,
+            neutral_corrected,
+            home_stadium_match,
+        ) = resolve_neutral_site(
+            sched_row,
+            home_team,
+            home_stadium_lookup,
         )
 
         home_field = (
             0.0
-            if neutral
+            if effective_neutral
             else float(
                 args.home_field
             )
@@ -1048,18 +1786,32 @@ def build_projection(
         away_fpi = None
 
         if fpi_lookup is not None:
-            if home_team in fpi_lookup.index:
+            if (
+                home_team
+                in fpi_lookup.index
+            ):
                 home_fpi = as_float(
                     fpi_lookup
-                    .loc[home_team]
-                    .get("fpi")
+                    .loc[
+                        home_team
+                    ]
+                    .get(
+                        "fpi"
+                    )
                 )
 
-            if away_team in fpi_lookup.index:
+            if (
+                away_team
+                in fpi_lookup.index
+            ):
                 away_fpi = as_float(
                     fpi_lookup
-                    .loc[away_team]
-                    .get("fpi")
+                    .loc[
+                        away_team
+                    ]
+                    .get(
+                        "fpi"
+                    )
                 )
 
         fpi_margin = None
@@ -1086,6 +1838,115 @@ def build_projection(
             else None
         )
 
+        espn_match_valid = False
+        espn_margin_consistent = False
+        espn_home_margin = None
+        espn_home_ptdiff = None
+        espn_away_ptdiff = None
+        espn_home_prob = None
+        espn_away_prob = None
+        espn_tie_prob = None
+        espn_matchup_quality = None
+
+        if (
+            espn_lookup is not None
+            and game_id
+            in espn_lookup.index
+        ):
+            espn_row = (
+                espn_lookup.loc[
+                    game_id
+                ]
+            )
+
+            espn_home_team = (
+                resolver.resolve(
+                    espn_row.get(
+                        "home_team"
+                    )
+                )
+            )
+
+            espn_away_team = (
+                resolver.resolve(
+                    espn_row.get(
+                        "away_team"
+                    )
+                )
+            )
+
+            espn_match_valid = (
+                espn_home_team
+                == home_team
+                and espn_away_team
+                == away_team
+            )
+
+            espn_home_ptdiff = as_float(
+                espn_row.get(
+                    "home_PtDiff"
+                )
+            )
+
+            espn_away_ptdiff = as_float(
+                espn_row.get(
+                    "away_PtDiff"
+                )
+            )
+
+            espn_home_prob = as_float(
+                espn_row.get(
+                    "home_prob"
+                )
+            )
+
+            espn_away_prob = as_float(
+                espn_row.get(
+                    "away_prob"
+                )
+            )
+
+            espn_tie_prob = as_float(
+                espn_row.get(
+                    "tie_prob"
+                )
+            )
+
+            espn_matchup_quality = (
+                as_float(
+                    espn_row.get(
+                        "matchupQuality"
+                    )
+                )
+            )
+
+            if (
+                espn_home_ptdiff
+                is not None
+            ):
+                if (
+                    espn_away_ptdiff
+                    is None
+                ):
+                    espn_margin_consistent = True
+
+                else:
+                    espn_margin_consistent = (
+                        abs(
+                            espn_home_ptdiff
+                            + espn_away_ptdiff
+                        )
+                        <= ESPN_MARGIN_SYMMETRY_TOLERANCE
+                    )
+
+            if (
+                espn_match_valid
+                and espn_margin_consistent
+            ):
+                espn_home_margin = (
+                    espn_home_ptdiff
+                )
+
         (
             blended_margin,
             margin_weights,
@@ -1100,6 +1961,10 @@ def build_projection(
                     args.fpi_margin_weight,
                 ),
                 (
+                    espn_home_margin,
+                    args.espn_margin_weight,
+                ),
+                (
                     prior_margin,
                     args.prior_margin_weight,
                 ),
@@ -1109,8 +1974,7 @@ def build_projection(
         if blended_margin is None:
             raise RuntimeError(
                 "No usable margin component "
-                "for game_id="
-                f"{clean(sched_row.get('game_id'))}"
+                f"for game_id={game_id}"
             )
 
         (
@@ -1160,7 +2024,9 @@ def build_projection(
         )
 
         market_total = as_float(
-            sched_row.get("total")
+            sched_row.get(
+                "total"
+            )
         )
 
         (
@@ -1186,15 +2052,15 @@ def build_projection(
         if projected_total is None:
             raise RuntimeError(
                 "No usable total component "
-                "for game_id="
-                f"{clean(sched_row.get('game_id'))}"
+                f"for game_id={game_id}"
             )
 
-        # Keep both projected scores non-negative while preserving the final
-        # margin and total relationship.
         projected_total = max(
             projected_total,
-            abs(projected_margin) + 2.0,
+            abs(
+                projected_margin
+            )
+            + 2.0,
         )
 
         projected_home_score = (
@@ -1212,7 +2078,9 @@ def build_projection(
             object,
         ] = {
             column: clean(
-                sched_row.get(column)
+                sched_row.get(
+                    column
+                )
             )
             for column
             in OUTPUT_BASE_COLUMNS
@@ -1220,13 +2088,33 @@ def build_projection(
 
         rec.update(
             {
+                "neutral_site_original": int(
+                    original_neutral
+                ),
+                "neutral_site": int(
+                    effective_neutral
+                ),
+                "neutral_site_corrected": int(
+                    neutral_corrected
+                ),
+                "home_stadium_match": int(
+                    home_stadium_match
+                ),
+                "home_field_points": round(
+                    home_field,
+                    4,
+                ),
                 "home_team": home_team,
                 "away_team": away_team,
-                "home_team_id": resolver.team_id(
-                    home_team
+                "home_team_id": (
+                    resolver.team_id(
+                        home_team
+                    )
                 ),
-                "away_team_id": resolver.team_id(
-                    away_team
+                "away_team_id": (
+                    resolver.team_id(
+                        away_team
+                    )
                 ),
                 "home_prior_team_weeks": (
                     home_prior_team_weeks
@@ -1284,6 +2172,72 @@ def build_projection(
                         4,
                     )
                 ),
+                "espn_prediction_match_valid": int(
+                    espn_match_valid
+                ),
+                "espn_margin_consistent": int(
+                    espn_margin_consistent
+                ),
+                "espn_matchup_quality": (
+                    None
+                    if espn_matchup_quality
+                    is None
+                    else round(
+                        espn_matchup_quality,
+                        4,
+                    )
+                ),
+                "espn_home_prob": (
+                    None
+                    if espn_home_prob is None
+                    else round(
+                        espn_home_prob,
+                        6,
+                    )
+                ),
+                "espn_away_prob": (
+                    None
+                    if espn_away_prob is None
+                    else round(
+                        espn_away_prob,
+                        6,
+                    )
+                ),
+                "espn_tie_prob": (
+                    None
+                    if espn_tie_prob is None
+                    else round(
+                        espn_tie_prob,
+                        6,
+                    )
+                ),
+                "espn_home_ptdiff": (
+                    None
+                    if espn_home_ptdiff
+                    is None
+                    else round(
+                        espn_home_ptdiff,
+                        4,
+                    )
+                ),
+                "espn_away_ptdiff": (
+                    None
+                    if espn_away_ptdiff
+                    is None
+                    else round(
+                        espn_away_ptdiff,
+                        4,
+                    )
+                ),
+                "espn_home_margin": (
+                    None
+                    if espn_home_margin
+                    is None
+                    else round(
+                        espn_home_margin,
+                        4,
+                    )
+                ),
                 "market_home_margin": (
                     None
                     if market_margin is None
@@ -1300,8 +2254,12 @@ def build_projection(
                     margin_weights[1],
                     4,
                 ),
-                "margin_weight_prior": round(
+                "margin_weight_espn": round(
                     margin_weights[2],
+                    4,
+                ),
+                "margin_weight_prior": round(
+                    margin_weights[3],
                     4,
                 ),
                 "home_out_count": home_out,
@@ -1376,16 +2334,14 @@ def build_projection(
             }
         )
 
-        # Include the actual prior-season statistics used for
-        # audit/backtesting. For sparse teams these are the neutral fallback
-        # statistics, while prior_team_weeks preserves the team's real source
-        # sample size and prior_fallback identifies the substitution.
         for metric in TEAM_METRICS:
             rec[
                 f"home_prior_{metric}"
             ] = round(
                 float(
-                    home_prior[metric]
+                    home_prior[
+                        metric
+                    ]
                 ),
                 6,
             )
@@ -1394,12 +2350,16 @@ def build_projection(
                 f"away_prior_{metric}"
             ] = round(
                 float(
-                    away_prior[metric]
+                    away_prior[
+                        metric
+                    ]
                 ),
                 6,
             )
 
-        output_rows.append(rec)
+        output_rows.append(
+            rec
+        )
 
     result = pd.DataFrame(
         output_rows
@@ -1407,24 +2367,34 @@ def build_projection(
 
     if result.empty:
         raise RuntimeError(
-            "No Week 1 games could be projected."
+            "No Week 1 games "
+            "could be projected."
         )
 
-    if result[
-        "game_id"
-    ].duplicated().any():
-        duplicates = result.loc[
-            result[
-                "game_id"
-            ].duplicated(
-                keep=False
-            ),
-            "game_id",
-        ].tolist()
+    if (
+        result[
+            "game_id"
+        ]
+        .duplicated()
+        .any()
+    ):
+        duplicates = (
+            result.loc[
+                result[
+                    "game_id"
+                ]
+                .duplicated(
+                    keep=False
+                ),
+                "game_id",
+            ]
+            .tolist()
+        )
 
         raise ValueError(
             "Duplicate game_id values "
-            f"in output: {duplicates[:10]}"
+            "in output: "
+            f"{duplicates[:10]}"
         )
 
     return result
@@ -1436,6 +2406,7 @@ def validate_args(
     weights = [
         args.market_margin_weight,
         args.fpi_margin_weight,
+        args.espn_margin_weight,
         args.prior_margin_weight,
         args.market_total_weight,
     ]
@@ -1445,12 +2416,14 @@ def validate_args(
         for weight in weights
     ):
         raise ValueError(
-            "Projection weights cannot be negative."
+            "Projection weights "
+            "cannot be negative."
         )
 
     if (
         args.market_margin_weight
         + args.fpi_margin_weight
+        + args.espn_margin_weight
         + args.prior_margin_weight
         <= 0
     ):
@@ -1469,22 +2442,40 @@ def validate_args(
             "be between 0 and 1."
         )
 
-    if args.drives_per_team <= 0:
+    if (
+        args.drives_per_team
+        <= 0
+    ):
         raise ValueError(
-            "--drives-per-team must "
-            "be positive."
+            "--drives-per-team "
+            "must be positive."
         )
 
-    if args.fresh_injury_days < 0:
+    if (
+        args.fresh_injury_days
+        < 0
+    ):
         raise ValueError(
-            "--fresh-injury-days cannot "
-            "be negative."
+            "--fresh-injury-days "
+            "cannot be negative."
+        )
+
+    if (
+        args.home_field
+        < 0
+    ):
+        raise ValueError(
+            "--home-field "
+            "cannot be negative."
         )
 
 
 def main() -> None:
     args = parse_args()
-    validate_args(args)
+
+    validate_args(
+        args
+    )
 
     season = args.season
 
@@ -1498,7 +2489,10 @@ def main() -> None:
 
     prior_season = (
         args.prior_season
-        or (season - 1)
+        or (
+            season
+            - 1
+        )
     )
 
     root = repo_cfb_root()
@@ -1518,7 +2512,10 @@ def main() -> None:
         root
         / "00_intake"
         / "team_stats"
-        / f"{prior_season}_team_stats.csv"
+        / (
+            f"{prior_season}"
+            "_team_stats.csv"
+        )
     )
 
     fpi_path = (
@@ -1526,16 +2523,26 @@ def main() -> None:
         / "data"
         / "team_power_index"
         / (
-            f"team_power_index_"
+            "team_power_index_"
             f"{season}.csv"
         )
+    )
+
+    predictions_dir = (
+        root
+        / "00_intake"
+        / "predictions"
+        / "final"
     )
 
     injuries_path = (
         root
         / "00_intake"
         / "injuries"
-        / f"{season}_injuries.csv"
+        / (
+            f"{season}"
+            "_injuries.csv"
+        )
     )
 
     team_map_path = (
@@ -1543,6 +2550,13 @@ def main() -> None:
         / "config"
         / "mapping"
         / "team_map.csv"
+    )
+
+    stadium_map_path = (
+        root
+        / "config"
+        / "mapping"
+        / "stadium_map.csv"
     )
 
     output_path = (
@@ -1565,6 +2579,7 @@ def main() -> None:
             "away_team",
             "home_team",
             "neutral_site",
+            "stadium",
             "home_spread",
             "total",
         ],
@@ -1573,13 +2588,19 @@ def main() -> None:
 
     schedule = schedule[
         pd.to_numeric(
-            schedule["season"],
+            schedule[
+                "season"
+            ],
             errors="coerce",
         ).eq(season)
         & pd.to_numeric(
-            schedule["week"],
+            schedule[
+                "week"
+            ],
             errors="coerce",
-        ).eq(args.week)
+        ).eq(
+            args.week
+        )
     ].copy()
 
     if schedule.empty:
@@ -1616,9 +2637,13 @@ def main() -> None:
 
     team_stats = team_stats[
         pd.to_numeric(
-            team_stats["season"],
+            team_stats[
+                "season"
+            ],
             errors="coerce",
-        ).eq(prior_season)
+        ).eq(
+            prior_season
+        )
     ].copy()
 
     if team_stats.empty:
@@ -1643,6 +2668,22 @@ def main() -> None:
         fpi,
     )
 
+    espn_predictions = (
+        load_espn_predictions(
+            predictions_dir,
+            season,
+            args.week,
+            resolver,
+        )
+    )
+
+    home_stadium_lookup = (
+        build_home_stadium_lookup(
+            stadium_map_path,
+            resolver,
+        )
+    )
+
     injury_lookup = (
         build_injury_lookup(
             injuries_path,
@@ -1655,7 +2696,9 @@ def main() -> None:
         schedule,
         prior,
         fpi,
+        espn_predictions,
         resolver,
+        home_stadium_lookup,
         injury_lookup,
         args,
     )
@@ -1697,18 +2740,28 @@ def main() -> None:
     )
 
     print(
+        "neutral_site_corrections="
+        f"{int(projected['neutral_site_corrected'].sum())}"
+    )
+
+    print(
         "with_market_spread="
         f"{int(projected['market_home_margin'].notna().sum())}"
     )
 
     print(
-        "with_market_total="
-        f"{int(projected['market_total'].notna().sum())}"
+        "with_fpi="
+        f"{int(projected['fpi_home_margin'].notna().sum())}"
     )
 
     print(
-        "with_fpi="
-        f"{int(projected['fpi_home_margin'].notna().sum())}"
+        "with_espn="
+        f"{int(projected['espn_home_margin'].notna().sum())}"
+    )
+
+    print(
+        "with_market_total="
+        f"{int(projected['market_total'].notna().sum())}"
     )
 
     print(
@@ -1720,9 +2773,11 @@ def main() -> None:
         print(
             "output_modified=no"
         )
+
         print(
             "status=dry_run_success"
         )
+
         return
 
     output_path.parent.mkdir(
@@ -1748,9 +2803,11 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
+
     except Exception as exc:
         print(
             f"ERROR: {exc}",
             file=sys.stderr,
         )
+
         raise
