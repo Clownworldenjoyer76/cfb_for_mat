@@ -251,8 +251,8 @@ game_id,odds_provider_game_id,market_type,bet_side,opening_line,opening_odds_ame
 401858422,401858422,spreads,home,-43.5,-110,,DraftKings,-43.5,-43.5,0,,,,,,,ok,,200
 401858422,401858422,totals,over,,-112,,DraftKings,,,,,,,,,,missing,opening_total_missing,200
 401858422,401858422,totals,under,,-108,,DraftKings,,,,,,,,,,missing,opening_total_missing,200
-401858423,401858423,h2h,away,,3000,,DraftKings,,,,,,,3000,2000,-1000,ok,,200
-401858423,401858423,h2h,home,,-10000,,DraftKings,,,,,,,-10000,-6500,3500,ok,,200
+401858423,401858423,h2h,away,,3000,,DraftKings,,,,,,,3000,2500,-500,ok,,200
+401858423,401858423,h2h,home,,-10000,,DraftKings,,,,,,,-10000,-9000,1000,ok,,200
 401858423,401858423,spreads,away,30.5,-110,,DraftKings,30.5,30.5,0,,,,,,,ok,,200
 401858423,401858423,spreads,home,-30.5,-110,,DraftKings,-30.5,-30.5,0,,,,,,,ok,,200
 401858423,401858423,totals,over,55.5,-110,,DraftKings,,,,55.5,53.5,-2,,,,ok,,200
@@ -409,8 +409,8 @@ game_id,odds_provider_game_id,market_type,bet_side,opening_line,opening_odds_ame
 401862698,401862698,totals,under,51.5,-108,,DraftKings,,,,51.5,51.5,0,,,,ok,,200
 401862699,401862699,h2h,away,,340,,DraftKings,,,,,,,340,390,50,ok,,200
 401862699,401862699,h2h,home,,-440,,DraftKings,,,,,,,-440,-520,-80,ok,,200
-401862699,401862699,spreads,away,12.5,-110,,DraftKings,12.5,12.5,0,,,,,,,ok,,200
-401862699,401862699,spreads,home,-12.5,-110,,DraftKings,-12.5,-12.5,0,,,,,,,ok,,200
+401862699,401862699,spreads,away,12.5,-110,,DraftKings,12.5,13.5,1,,,,,,,ok,,200
+401862699,401862699,spreads,home,-12.5,-110,,DraftKings,-12.5,-13.5,-1,,,,,,,ok,,200
 401862699,401862699,totals,over,54.5,-108,,DraftKings,,,,54.5,54.5,0,,,,ok,,200
 401862699,401862699,totals,under,54.5,-112,,DraftKings,,,,54.5,54.5,0,,,,ok,,200
 401862700,401862700,h2h,away,,2500,,DraftKings,,,,,,,2500,2500,0,ok,,200
