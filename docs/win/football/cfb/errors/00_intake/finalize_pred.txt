@@ -1,5 +1,5 @@
 INFO: loaded 5298 schedule game_ids from 6 file(s)
-INFO: loaded totals for 94 game_ids from 1 file(s)
+INFO: loaded totals for 99 game_ids from 1 file(s)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_10_predictions.csv line 2: game_id 401866453 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_10_predictions.csv line 3: game_id 401866454 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_10_predictions.csv line 4: game_id 401866457 (projected pts blank)
@@ -266,11 +266,6 @@ NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_13_predi
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_13_predictions.csv line 65: game_id 401864547 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_13_predictions.csv line 66: game_id 401864548 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_15_predictions.csv line 2: game_id 401862844 (projected pts blank)
-NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_1_predictions.csv line 12: game_id 401856767 (projected pts blank)
-NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_1_predictions.csv line 15: game_id 401858422 (projected pts blank)
-NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_1_predictions.csv line 38: game_id 401862701 (projected pts blank)
-NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_1_predictions.csv line 48: game_id 401856667 (projected pts blank)
-NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_1_predictions.csv line 89: game_id 401870790 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_2_predictions.csv line 2: game_id 401858213 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_2_predictions.csv line 3: game_id 401856678 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_2_predictions.csv line 4: game_id 401858215 (projected pts blank)
@@ -794,4 +789,4 @@ NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_9_predic
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_9_predictions.csv line 55: game_id 401860909 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_9_predictions.csv line 56: game_id 401864530 (projected pts blank)
 NO TOTAL MATCH docs/win/football/cfb/00_intake/predictions/clean/2026_2_9_predictions.csv line 57: game_id 401860908 (projected pts blank)
-SUMMARY: pred_files=14 files_written=14 rows_written=888 no_schedule_match=0 no_total_match=794 check_failures=0
+SUMMARY: pred_files=14 files_written=14 rows_written=888 no_schedule_match=0 no_total_match=789 check_failures=0

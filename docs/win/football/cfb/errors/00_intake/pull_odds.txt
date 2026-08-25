@@ -1,11 +1,10 @@
-[2026-08-20T15:27:41.480225+00:00] ODDS_EMPTY game_id=401870790 status=200
-[2026-08-20T15:27:42.610524+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
-[2026-08-20T15:27:42.610565+00:00] Selected schedule group: ('2026', '2', '1')
-[2026-08-20T15:27:42.610591+00:00] Snapshot ID: 2026_08_20_152732_446101
-[2026-08-20T15:27:42.610613+00:00] Snapshot fetched at: 2026-08-20T15:27:32.446101+00:00
-[2026-08-20T15:27:42.610635+00:00] ESPN odds events returned: 98
-[2026-08-20T15:27:42.610658+00:00] CSV rows written: 538
-[2026-08-20T15:27:42.610680+00:00] Current raw JSON written: docs/win/football/cfb/00_intake/odds/raw/2026_08_20_cfb_odds.json
-[2026-08-20T15:27:42.610702+00:00] Current normalized CSV written: docs/win/football/cfb/00_intake/odds/2026_08_20_CFB_odds.csv
-[2026-08-20T15:27:42.610723+00:00] Archived raw JSON written: docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_08_20_152732_446101_cfb_odds.json
-[2026-08-20T15:27:42.610744+00:00] Archived normalized CSV written: docs/win/football/cfb/00_intake/odds/snapshots/2026_08_20_152732_446101_CFB_odds.csv
+[2026-08-25T20:23:54.800387+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
+[2026-08-25T20:23:54.800432+00:00] Selected schedule group: ('2026', '2', '1')
+[2026-08-25T20:23:54.800445+00:00] Snapshot ID: 2026_08_25_202337_545439
+[2026-08-25T20:23:54.800457+00:00] Snapshot fetched at: 2026-08-25T20:23:37.545439+00:00
+[2026-08-25T20:23:54.800470+00:00] ESPN odds events returned: 99
+[2026-08-25T20:23:54.800489+00:00] CSV rows written: 544
+[2026-08-25T20:23:54.800504+00:00] Current raw JSON written: docs/win/football/cfb/00_intake/odds/raw/2026_08_25_cfb_odds.json
+[2026-08-25T20:23:54.800515+00:00] Current normalized CSV written: docs/win/football/cfb/00_intake/odds/2026_08_25_CFB_odds.csv
+[2026-08-25T20:23:54.800525+00:00] Archived raw JSON written: docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_08_25_202337_545439_cfb_odds.json
+[2026-08-25T20:23:54.800536+00:00] Archived normalized CSV written: docs/win/football/cfb/00_intake/odds/snapshots/2026_08_25_202337_545439_CFB_odds.csv

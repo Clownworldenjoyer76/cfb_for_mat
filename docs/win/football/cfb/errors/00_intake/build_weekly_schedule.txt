@@ -1,15 +1,15 @@
-[2026-08-20T15:27:42.666887+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
-[2026-08-20T15:27:42.666936+00:00] Odds CSV input: docs/win/football/cfb/00_intake/odds/2026_08_20_CFB_odds.csv
-[2026-08-20T15:27:42.666965+00:00] Raw odds input: docs/win/football/cfb/00_intake/odds/raw/2026_08_20_cfb_odds.json
-[2026-08-20T15:27:42.706731+00:00] Schedule rows loaded: 892
-[2026-08-20T15:27:42.706766+00:00] Raw odds events loaded: 98
-[2026-08-20T15:27:42.706792+00:00] Raw odds objects loaded: 98
-[2026-08-20T15:27:42.706815+00:00] Odds CSV rows loaded: 538
-[2026-08-20T15:27:42.706837+00:00] Schedule matches from raw odds events: 98
-[2026-08-20T15:27:42.706882+00:00] Unmatched raw odds events: 0
-[2026-08-20T15:27:42.706908+00:00] Target week: season=2026, season_type=2, week=1
-[2026-08-20T15:27:42.706951+00:00] Weekly schedule rows written: 99
-[2026-08-20T15:27:42.706976+00:00] Rows with odds: 98
-[2026-08-20T15:27:42.706998+00:00] Rows with event but no odds: 0
-[2026-08-20T15:27:42.707019+00:00] Rows with no odds event match: 1
-[2026-08-20T15:27:42.707041+00:00] Output written: docs/win/football/cfb/00_intake/schedule/weekly/week_1_CFB_weekly_schedule.csv
+[2026-08-25T20:23:54.852321+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
+[2026-08-25T20:23:54.852361+00:00] Odds CSV input: docs/win/football/cfb/00_intake/odds/2026_08_25_CFB_odds.csv
+[2026-08-25T20:23:54.852375+00:00] Raw odds input: docs/win/football/cfb/00_intake/odds/raw/2026_08_25_cfb_odds.json
+[2026-08-25T20:23:54.887162+00:00] Schedule rows loaded: 892
+[2026-08-25T20:23:54.887188+00:00] Raw odds events loaded: 99
+[2026-08-25T20:23:54.887200+00:00] Raw odds objects loaded: 99
+[2026-08-25T20:23:54.887212+00:00] Odds CSV rows loaded: 544
+[2026-08-25T20:23:54.887223+00:00] Schedule matches from raw odds events: 99
+[2026-08-25T20:23:54.887234+00:00] Unmatched raw odds events: 0
+[2026-08-25T20:23:54.887245+00:00] Target week: season=2026, season_type=2, week=1
+[2026-08-25T20:23:54.887256+00:00] Weekly schedule rows written: 99
+[2026-08-25T20:23:54.887267+00:00] Rows with odds: 99
+[2026-08-25T20:23:54.887277+00:00] Rows with event but no odds: 0
+[2026-08-25T20:23:54.887287+00:00] Rows with no odds event match: 0
+[2026-08-25T20:23:54.887298+00:00] Output written: docs/win/football/cfb/00_intake/schedule/weekly/week_1_CFB_weekly_schedule.csv
