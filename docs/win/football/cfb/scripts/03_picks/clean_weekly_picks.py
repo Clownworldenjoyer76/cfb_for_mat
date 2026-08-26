@@ -16,6 +16,15 @@ Example:
     ML North Carolina +250 |
     SPREAD North Carolina +7.5 (-105) |
     TOTAL UNDER 47.5 (-108)
+
+Probability columns:
+    ml_probability
+    spread_probability
+    total_probability
+
+These contain the model probability for the ACTUAL selected wager
+in that market. If no wager was selected for that market, the value
+is blank.
 """
 
 from __future__ import annotations
@@ -60,16 +69,19 @@ REQUIRED_COLUMNS = [
     "ml_selected",
     "ml_selection",
     "ml_odds_american",
+    "ml_model_probability",
 
     "spread_selected",
     "spread_selection",
     "spread_line",
     "spread_odds_american",
+    "spread_model_probability",
 
     "total_selected",
     "total_selection",
     "total_line",
     "total_odds_american",
+    "total_model_probability",
 ]
 
 
@@ -82,11 +94,22 @@ OUTPUT_COLUMNS = [
     "game_time",
     "away_team",
     "home_team",
+
+    # Actual selections
     "PICKS",
+
+    # Model probability for each selected market
+    "ml_probability",
+    "spread_probability",
+    "total_probability",
+
+    # Projection
     "predicted_away_score",
     "predicted_home_score",
     "predicted_total",
     "predicted_margin",
+
+    # Market
     "away_moneyline",
     "home_moneyline",
     "home_spread",
@@ -153,6 +176,21 @@ def format_number(
     return text.rstrip("0").rstrip(".")
 
 
+def format_probability(value) -> str:
+    """
+    Preserve model probability as a 0-1 decimal.
+
+    Example:
+        0.673287 -> 0.6733
+    """
+    number = to_float(value)
+
+    if number is None:
+        return ""
+
+    return f"{number:.4f}"
+
+
 def format_signed(
     value,
     decimals: int = 1,
@@ -203,7 +241,10 @@ def team_for_side(
 def build_picks(row) -> str:
     picks = []
 
+    # --------------------------------------------------
     # MONEYLINE
+    # --------------------------------------------------
+
     if selected(row["ml_selected"]):
         side = clean_text(
             row["ml_selection"]
@@ -225,7 +266,10 @@ def build_picks(row) -> str:
 
         picks.append(text)
 
+    # --------------------------------------------------
     # SPREAD
+    # --------------------------------------------------
+
     if selected(row["spread_selected"]):
         side = clean_text(
             row["spread_selection"]
@@ -255,7 +299,10 @@ def build_picks(row) -> str:
 
         picks.append(text)
 
+    # --------------------------------------------------
     # TOTAL
+    # --------------------------------------------------
+
     if selected(row["total_selected"]):
         side = clean_text(
             row["total_selection"]
@@ -284,6 +331,26 @@ def build_picks(row) -> str:
         return "NO PICK"
 
     return " | ".join(picks)
+
+
+def selected_probability(
+    row,
+    selected_column: str,
+    probability_column: str,
+) -> str:
+    """
+    Return the model probability only when the market
+    was actually selected.
+    """
+
+    if not selected(
+        row[selected_column]
+    ):
+        return ""
+
+    return format_probability(
+        row[probability_column]
+    )
 
 
 def load_csv(path: Path) -> pd.DataFrame:
@@ -322,6 +389,10 @@ def build_output(
 
     output = pd.DataFrame()
 
+    # --------------------------------------------------
+    # GAME IDENTITY
+    # --------------------------------------------------
+
     output["season"] = df["season"]
     output["season_type"] = df["season_type"]
     output["week"] = df["week"]
@@ -331,35 +402,89 @@ def build_output(
     output["away_team"] = df["away_team"]
     output["home_team"] = df["home_team"]
 
-    # MOST IMPORTANT COLUMN
+    # --------------------------------------------------
+    # ACTUAL PICKS
+    # --------------------------------------------------
+
     output["PICKS"] = df.apply(
         build_picks,
         axis=1,
     )
 
+    # --------------------------------------------------
+    # MODEL PROBABILITY FOR ACTUAL PICKS
+    # --------------------------------------------------
+
+    output["ml_probability"] = df.apply(
+        lambda row: selected_probability(
+            row,
+            "ml_selected",
+            "ml_model_probability",
+        ),
+        axis=1,
+    )
+
+    output["spread_probability"] = df.apply(
+        lambda row: selected_probability(
+            row,
+            "spread_selected",
+            "spread_model_probability",
+        ),
+        axis=1,
+    )
+
+    output["total_probability"] = df.apply(
+        lambda row: selected_probability(
+            row,
+            "total_selected",
+            "total_model_probability",
+        ),
+        axis=1,
+    )
+
+    # --------------------------------------------------
+    # MODEL PROJECTIONS
+    # --------------------------------------------------
+
     output["predicted_away_score"] = (
         df["predicted_away_score"].map(
-            lambda x: format_number(x, 2)
+            lambda x: format_number(
+                x,
+                2,
+            )
         )
     )
 
     output["predicted_home_score"] = (
         df["predicted_home_score"].map(
-            lambda x: format_number(x, 2)
+            lambda x: format_number(
+                x,
+                2,
+            )
         )
     )
 
     output["predicted_total"] = (
         df["predicted_total"].map(
-            lambda x: format_number(x, 2)
+            lambda x: format_number(
+                x,
+                2,
+            )
         )
     )
 
     output["predicted_margin"] = (
         df["predicted_margin"].map(
-            lambda x: format_number(x, 2)
+            lambda x: format_number(
+                x,
+                2,
+            )
         )
     )
+
+    # --------------------------------------------------
+    # CURRENT MARKET
+    # --------------------------------------------------
 
     output["away_moneyline"] = (
         df["ml_away_odds_american"].map(
@@ -375,13 +500,19 @@ def build_output(
 
     output["home_spread"] = (
         df["home_spread"].map(
-            lambda x: format_signed(x, 1)
+            lambda x: format_signed(
+                x,
+                1,
+            )
         )
     )
 
     output["market_total"] = (
         df["total"].map(
-            lambda x: format_number(x, 1)
+            lambda x: format_number(
+                x,
+                1,
+            )
         )
     )
 
@@ -403,7 +534,9 @@ def week_from_filename(
             f"{path.name}"
         )
 
-    return int(match.group(1))
+    return int(
+        match.group(1)
+    )
 
 
 def process_file(
@@ -411,6 +544,22 @@ def process_file(
 ) -> None:
 
     df = load_csv(path)
+
+    # --------------------------------------------------
+    # VALIDATE GAME IDS
+    # --------------------------------------------------
+
+    blank_game_ids = (
+        df["game_id"]
+        .astype(str)
+        .str.strip()
+        .eq("")
+    )
+
+    if blank_game_ids.any():
+        fail(
+            f"{path} contains blank game_ids"
+        )
 
     duplicates = df[
         df["game_id"].duplicated(
@@ -423,7 +572,15 @@ def process_file(
             f"{path} contains duplicate game_ids"
         )
 
+    # --------------------------------------------------
+    # BUILD CLEAN OUTPUT
+    # --------------------------------------------------
+
     output = build_output(df)
+
+    # --------------------------------------------------
+    # SORT CHRONOLOGICALLY
+    # --------------------------------------------------
 
     output["_date"] = pd.to_datetime(
         output["game_date"],
@@ -452,6 +609,10 @@ def process_file(
         ]
     )
 
+    # --------------------------------------------------
+    # OUTPUT PATH
+    # --------------------------------------------------
+
     week = week_from_filename(path)
 
     OUTPUT_DIR.mkdir(
@@ -471,6 +632,10 @@ def process_file(
         lineterminator="\n",
     )
 
+    # --------------------------------------------------
+    # SUMMARY
+    # --------------------------------------------------
+
     games_with_picks = (
         output["PICKS"]
         .ne("NO PICK")
@@ -481,10 +646,28 @@ def process_file(
         output["PICKS"]
         .str.count(r"\|")
         .add(
-            output["PICKS"].ne(
-                "NO PICK"
-            ).astype(int)
+            output["PICKS"]
+            .ne("NO PICK")
+            .astype(int)
         )
+        .sum()
+    )
+
+    ml_picks = (
+        output["ml_probability"]
+        .ne("")
+        .sum()
+    )
+
+    spread_picks = (
+        output["spread_probability"]
+        .ne("")
+        .sum()
+    )
+
+    total_market_picks = (
+        output["total_probability"]
+        .ne("")
         .sum()
     )
 
@@ -492,17 +675,28 @@ def process_file(
         f"Wrote {len(output)} games to "
         f"{output_path} "
         f"| games_with_picks={games_with_picks} "
-        f"| total_picks={total_picks}"
+        f"| total_picks={total_picks} "
+        f"| ml_picks={ml_picks} "
+        f"| spread_picks={spread_picks} "
+        f"| total_market_picks={total_market_picks}"
     )
 
 
 def parse_args():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=(
+            "Create human-readable weekly CFB picks."
+        )
+    )
 
     parser.add_argument(
         "--week",
         type=int,
         default=None,
+        help=(
+            "Optional week number. "
+            "If omitted, process all weekly picks files."
+        ),
     )
 
     return parser.parse_args()
