@@ -29,6 +29,15 @@ Inputs
 
 7. docs/win/football/cfb/config/mapping/stadium_map.csv
 
+8. docs/win/football/cfb/data/travel/
+   {season}_week_{week}_travel.csv
+
+9. docs/win/football/cfb/data/weather/
+   week_{week}_CFB_weekly_weather.csv
+
+10. docs/win/football/cfb/config/
+    travel_weather_coefficients.csv
+
 Output
 ------
 docs/win/football/cfb/01_merge/week_{week}_CFB_enriched.csv
@@ -55,7 +64,9 @@ The shared projection logic uses:
 - finalized ESPN predictions
 - completed current-season team-strength statistics
 - current injuries
+- fitted travel adjustment
 - current market total
+- fitted outdoor-weather adjustment
 - current-season points-per-drive information
 
 For Week 2+, fields containing "prior" in the shared projection output mean
@@ -77,7 +88,7 @@ import pandas as pd
 import projection_week1 as base
 
 
-SCRIPT_VERSION = "cfb-inseason-v1-2026-08-26"
+SCRIPT_VERSION = "cfb-inseason-v2-2026-08-26"
 
 WEEKLY_FILE_RE = re.compile(
     r"^week_(\d+)_CFB_weekly_schedule\.csv$"
@@ -811,6 +822,26 @@ def main() -> int:
         / f"{season}_injuries.csv"
     )
 
+    travel_path = (
+        cfb_root
+        / "data"
+        / "travel"
+        / f"{season}_week_{week}_travel.csv"
+    )
+
+    weather_path = (
+        cfb_root
+        / "data"
+        / "weather"
+        / f"week_{week}_CFB_weekly_weather.csv"
+    )
+
+    travel_weather_coefficients_path = (
+        cfb_root
+        / "config"
+        / "travel_weather_coefficients.csv"
+    )
+
     schedule = load_target_schedule(
         schedule_path,
         season,
@@ -878,6 +909,24 @@ def main() -> int:
         )
     )
 
+    travel = base.load_game_feature_file(
+        travel_path,
+        base.TRAVEL_REQUIRED_COLUMNS,
+        "weekly travel",
+    )
+
+    weather = base.load_game_feature_file(
+        weather_path,
+        base.WEATHER_REQUIRED_COLUMNS,
+        "weekly weather",
+    )
+
+    travel_weather_coefficients = (
+        base.load_travel_weather_coefficients(
+            travel_weather_coefficients_path
+        )
+    )
+
     # projection_week1.py uses these module globals when determining
     # whether the team-strength component is reliable and when writing
     # the projection-version audit field.
@@ -897,6 +946,9 @@ def main() -> int:
         resolver,
         home_stadium_lookup,
         injury_lookup,
+        travel,
+        weather,
+        travel_weather_coefficients,
         args,
     )
 
@@ -1009,6 +1061,16 @@ def main() -> int:
     print(
         "fresh_injury_adjustments="
         f"{int(projected['injury_margin_adjustment'].abs().gt(0).sum())}"
+    )
+
+    print(
+        "travel_adjustments="
+        f"{int(projected['travel_margin_adjustment'].abs().gt(0).sum())}"
+    )
+
+    print(
+        "weather_adjustments="
+        f"{int(projected['weather_total_adjustment'].abs().gt(0).sum())}"
     )
 
     print(

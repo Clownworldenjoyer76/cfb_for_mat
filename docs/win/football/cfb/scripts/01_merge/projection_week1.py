@@ -50,7 +50,7 @@ import numpy as np
 import pandas as pd
 
 
-SCRIPT_VERSION = "cfb-week1-v5-2026-08-26"
+SCRIPT_VERSION = "cfb-week1-v6-2026-08-26"
 MIN_PRIOR_TEAM_WEEKS = 10
 ESPN_MARGIN_SYMMETRY_TOLERANCE = 0.25
 DEFAULT_MARGIN_SD = 14.0
@@ -102,6 +102,61 @@ REQUIRED_PREDICTION_COLUMNS = [
     "over_probability",
     "under_probability",
 ]
+
+
+TRAVEL_REQUIRED_COLUMNS = [
+    "game_id",
+    "away_miles_traveled",
+    "home_miles_traveled",
+    "away_time_zones_crossed",
+    "home_time_zones_crossed",
+    "away_east_to_west",
+    "home_east_to_west",
+    "away_west_to_east",
+    "home_west_to_east",
+    "international_flag",
+]
+
+WEATHER_REQUIRED_COLUMNS = [
+    "game_id",
+    "temperature",
+    "wind_speed",
+    "wind_gust",
+    "humidity",
+    "rain_flag",
+    "snow_flag",
+    "roof",
+    "roof_type",
+    "dome_flag",
+    "retractable_roof_flag",
+    "open_air_flag",
+    "weather_timestep_utc",
+]
+
+COEFFICIENT_REQUIRED_COLUMNS = [
+    "target",
+    "feature",
+    "selected",
+    "coefficient",
+    "center",
+]
+
+SUPPORTED_TRAVEL_FEATURES = {
+    "travel_net_miles_1000",
+    "travel_net_time_zones",
+    "travel_net_east_to_west",
+    "travel_net_west_to_east",
+    "travel_international",
+}
+
+SUPPORTED_WEATHER_FEATURES = {
+    "weather_temperature_c",
+    "weather_wind_speed_ms",
+    "weather_wind_gust_ms",
+    "weather_humidity_pct",
+    "weather_rain_flag",
+    "weather_snow_flag",
+}
 
 OUT_STATUS_MULTIPLIER = {
     "out": 1.00,
@@ -424,6 +479,550 @@ def read_csv(
         )
 
     return df
+
+
+def normalize_game_id(
+    value: object,
+) -> str:
+    text = clean(
+        value
+    )
+
+    if text.endswith(
+        ".0"
+    ):
+        text = text[
+            :-2
+        ]
+
+    return text
+
+
+def load_game_feature_file(
+    path: Path,
+    required: list[str],
+    label: str,
+) -> pd.DataFrame:
+    df = read_csv(
+        path,
+        required,
+        label,
+    ).copy()
+
+    df[
+        "game_id"
+    ] = df[
+        "game_id"
+    ].map(
+        normalize_game_id
+    )
+
+    df = df[
+        df[
+            "game_id"
+        ].ne(
+            ""
+        )
+    ].copy()
+
+    duplicate_mask = df[
+        "game_id"
+    ].duplicated(
+        keep=False
+    )
+
+    if duplicate_mask.any():
+        duplicates = (
+            df.loc[
+                duplicate_mask,
+                "game_id",
+            ]
+            .drop_duplicates()
+            .tolist()
+        )
+
+        raise ValueError(
+            f"{label} contains duplicate game_id values: "
+            f"{duplicates[:10]}"
+        )
+
+    return df
+
+
+def load_travel_weather_coefficients(
+    path: Path,
+) -> dict[
+    str,
+    dict[
+        str,
+        dict[
+            str,
+            float,
+        ],
+    ],
+]:
+    coefficients = read_csv(
+        path,
+        COEFFICIENT_REQUIRED_COLUMNS,
+        "travel/weather coefficients",
+    )
+
+    selected = coefficients[
+        coefficients[
+            "selected"
+        ].map(
+            as_bool
+        )
+    ].copy()
+
+    result: dict[
+        str,
+        dict[
+            str,
+            dict[
+                str,
+                float,
+            ],
+        ],
+    ] = {
+        "margin": {},
+        "total": {},
+    }
+
+    for _, row in selected.iterrows():
+        target = clean(
+            row.get(
+                "target"
+            )
+        ).casefold()
+
+        feature = clean(
+            row.get(
+                "feature"
+            )
+        )
+
+        coefficient = as_float(
+            row.get(
+                "coefficient"
+            )
+        )
+
+        center = as_float(
+            row.get(
+                "center"
+            )
+        )
+
+        if target not in result:
+            raise ValueError(
+                "Unsupported travel/weather coefficient target: "
+                f"{target!r}"
+            )
+
+        supported = (
+            SUPPORTED_TRAVEL_FEATURES
+            if target == "margin"
+            else SUPPORTED_WEATHER_FEATURES
+        )
+
+        if feature not in supported:
+            raise ValueError(
+                "Unsupported selected travel/weather feature: "
+                f"{feature!r}"
+            )
+
+        if coefficient is None:
+            raise ValueError(
+                "Selected travel/weather coefficient is not numeric: "
+                f"target={target} feature={feature}"
+            )
+
+        result[
+            target
+        ][
+            feature
+        ] = {
+            "coefficient": float(
+                coefficient
+            ),
+            "center": float(
+                center
+                if center is not None
+                else 0.0
+            ),
+        }
+
+    return result
+
+
+def _series_value(
+    row: pd.Series | None,
+    column: str,
+) -> float | None:
+    if row is None:
+        return None
+
+    return as_float(
+        row.get(
+            column
+        )
+    )
+
+
+def build_travel_features(
+    row: pd.Series | None,
+) -> dict[
+    str,
+    float | None,
+]:
+    if row is None:
+        return {
+            feature: None
+            for feature
+            in SUPPORTED_TRAVEL_FEATURES
+        }
+
+    away_miles = _series_value(
+        row,
+        "away_miles_traveled",
+    )
+
+    home_miles = _series_value(
+        row,
+        "home_miles_traveled",
+    )
+
+    away_tz = _series_value(
+        row,
+        "away_time_zones_crossed",
+    )
+
+    home_tz = _series_value(
+        row,
+        "home_time_zones_crossed",
+    )
+
+    away_e2w = _series_value(
+        row,
+        "away_east_to_west",
+    )
+
+    home_e2w = _series_value(
+        row,
+        "home_east_to_west",
+    )
+
+    away_w2e = _series_value(
+        row,
+        "away_west_to_east",
+    )
+
+    home_w2e = _series_value(
+        row,
+        "home_west_to_east",
+    )
+
+    international = _series_value(
+        row,
+        "international_flag",
+    )
+
+    return {
+        "travel_net_miles_1000":
+            (
+                None
+                if (
+                    away_miles is None
+                    or home_miles is None
+                )
+                else (
+                    away_miles
+                    - home_miles
+                ) / 1000.0
+            ),
+        "travel_net_time_zones":
+            (
+                None
+                if (
+                    away_tz is None
+                    or home_tz is None
+                )
+                else (
+                    away_tz
+                    - home_tz
+                )
+            ),
+        "travel_net_east_to_west":
+            (
+                None
+                if (
+                    away_e2w is None
+                    or home_e2w is None
+                )
+                else (
+                    away_e2w
+                    - home_e2w
+                )
+            ),
+        "travel_net_west_to_east":
+            (
+                None
+                if (
+                    away_w2e is None
+                    or home_w2e is None
+                )
+                else (
+                    away_w2e
+                    - home_w2e
+                )
+            ),
+        "travel_international":
+            international,
+    }
+
+
+def weather_is_exposed(
+    row: pd.Series | None,
+) -> bool:
+    if row is None:
+        return False
+
+    roof = clean(
+        row.get(
+            "roof"
+        )
+    ).casefold()
+
+    roof_type = clean(
+        row.get(
+            "roof_type"
+        )
+    ).casefold()
+
+    dome_flag = _series_value(
+        row,
+        "dome_flag",
+    )
+
+    open_air_flag = _series_value(
+        row,
+        "open_air_flag",
+    )
+
+    if (
+        dome_flag == 1.0
+        or "dome" in roof
+        or "indoor" in roof
+        or "closed" in roof
+        or "dome" in roof_type
+        or "indoor" in roof_type
+        or "closed" in roof_type
+    ):
+        return False
+
+    if open_air_flag == 1.0:
+        return True
+
+    return (
+        "open_air" in roof
+        or "open air" in roof
+        or "outdoor" in roof
+    )
+
+
+def build_weather_features(
+    row: pd.Series | None,
+) -> dict[
+    str,
+    float | None,
+]:
+    if row is None:
+        return {
+            feature: None
+            for feature
+            in SUPPORTED_WEATHER_FEATURES
+        }
+
+    return {
+        "weather_temperature_c":
+            _series_value(
+                row,
+                "temperature",
+            ),
+        "weather_wind_speed_ms":
+            _series_value(
+                row,
+                "wind_speed",
+            ),
+        "weather_wind_gust_ms":
+            _series_value(
+                row,
+                "wind_gust",
+            ),
+        "weather_humidity_pct":
+            _series_value(
+                row,
+                "humidity",
+            ),
+        "weather_rain_flag":
+            _series_value(
+                row,
+                "rain_flag",
+            ),
+        "weather_snow_flag":
+            _series_value(
+                row,
+                "snow_flag",
+            ),
+    }
+
+
+def calculate_feature_adjustment(
+    features: dict[
+        str,
+        float | None,
+    ],
+    coefficients: dict[
+        str,
+        dict[
+            str,
+            float,
+        ],
+    ],
+) -> tuple[
+    float,
+    int,
+]:
+    adjustment = 0.0
+    used = 0
+
+    for (
+        feature,
+        settings,
+    ) in coefficients.items():
+        value = features.get(
+            feature
+        )
+
+        if value is None:
+            continue
+
+        coefficient = float(
+            settings[
+                "coefficient"
+            ]
+        )
+
+        center = float(
+            settings.get(
+                "center",
+                0.0,
+            )
+        )
+
+        adjustment += (
+            (
+                float(
+                    value
+                )
+                - center
+            )
+            * coefficient
+        )
+
+        used += 1
+
+    return (
+        float(
+            adjustment
+        ),
+        used,
+    )
+
+
+def calculate_travel_adjustment(
+    row: pd.Series | None,
+    coefficients: dict[
+        str,
+        dict[
+            str,
+            float,
+        ],
+    ],
+) -> tuple[
+    dict[
+        str,
+        float | None,
+    ],
+    float,
+    int,
+]:
+    features = build_travel_features(
+        row
+    )
+
+    adjustment, used = (
+        calculate_feature_adjustment(
+            features,
+            coefficients,
+        )
+    )
+
+    return (
+        features,
+        adjustment,
+        used,
+    )
+
+
+def calculate_weather_adjustment(
+    row: pd.Series | None,
+    coefficients: dict[
+        str,
+        dict[
+            str,
+            float,
+        ],
+    ],
+) -> tuple[
+    dict[
+        str,
+        float | None,
+    ],
+    bool,
+    float,
+    int,
+]:
+    features = build_weather_features(
+        row
+    )
+
+    exposed = weather_is_exposed(
+        row
+    )
+
+    if not exposed:
+        return (
+            features,
+            False,
+            0.0,
+            0,
+        )
+
+    adjustment, used = (
+        calculate_feature_adjustment(
+            features,
+            coefficients,
+        )
+    )
+
+    return (
+        features,
+        True,
+        adjustment,
+        used,
+    )
 
 
 class TeamResolver:
@@ -1888,6 +2487,18 @@ def build_projection(
         str,
         pd.DataFrame,
     ],
+    travel: pd.DataFrame,
+    weather: pd.DataFrame,
+    travel_weather_coefficients: dict[
+        str,
+        dict[
+            str,
+            dict[
+                str,
+                float,
+            ],
+        ],
+    ],
     args: argparse.Namespace,
 ) -> pd.DataFrame:
     prior_lookup = prior.set_index(
@@ -1913,6 +2524,38 @@ def build_projection(
         else None
     )
 
+    travel_lookup = (
+        travel.set_index(
+            "game_id",
+            drop=False,
+        )
+        if not travel.empty
+        else None
+    )
+
+    weather_lookup = (
+        weather.set_index(
+            "game_id",
+            drop=False,
+        )
+        if not weather.empty
+        else None
+    )
+
+    margin_feature_coefficients = (
+        travel_weather_coefficients.get(
+            "margin",
+            {},
+        )
+    )
+
+    total_feature_coefficients = (
+        travel_weather_coefficients.get(
+            "total",
+            {},
+        )
+    )
+
     output_rows: list[
         dict[
             str,
@@ -1933,7 +2576,7 @@ def build_projection(
     ] = 0.0
 
     for _, sched_row in schedule.iterrows():
-        game_id = clean(
+        game_id = normalize_game_id(
             sched_row.get(
                 "game_id"
             )
@@ -2215,6 +2858,26 @@ def build_projection(
                 f"for game_id={game_id}"
             )
 
+        travel_row = (
+            travel_lookup.loc[
+                game_id
+            ]
+            if (
+                travel_lookup is not None
+                and game_id in travel_lookup.index
+            )
+            else None
+        )
+
+        (
+            travel_features,
+            travel_margin_adjustment,
+            travel_features_used,
+        ) = calculate_travel_adjustment(
+            travel_row,
+            margin_feature_coefficients,
+        )
+
         (
             home_out,
             home_doubtful,
@@ -2248,9 +2911,14 @@ def build_projection(
             - home_injury_penalty
         )
 
-        predicted_margin = (
+        predicted_margin_before_travel = (
             blended_margin
             + injury_adjustment
+        )
+
+        predicted_margin = (
+            predicted_margin_before_travel
+            + travel_margin_adjustment
         )
 
         prior_total = prior_total_estimate(
@@ -2290,6 +2958,36 @@ def build_projection(
                 "No usable total component "
                 f"for game_id={game_id}"
             )
+
+        predicted_total_before_weather = float(
+            predicted_total
+        )
+
+        weather_row = (
+            weather_lookup.loc[
+                game_id
+            ]
+            if (
+                weather_lookup is not None
+                and game_id in weather_lookup.index
+            )
+            else None
+        )
+
+        (
+            weather_features,
+            weather_exposed,
+            weather_total_adjustment,
+            weather_features_used,
+        ) = calculate_weather_adjustment(
+            weather_row,
+            total_feature_coefficients,
+        )
+
+        predicted_total = (
+            predicted_total_before_weather
+            + weather_total_adjustment
+        )
 
         predicted_total = max(
             predicted_total,
@@ -2620,6 +3318,73 @@ def build_projection(
                         4,
                     ),
 
+                "travel_data_available":
+                    int(
+                        travel_row is not None
+                    ),
+
+                "away_miles_traveled":
+                    (
+                        None
+                        if travel_row is None
+                        else as_float(
+                            travel_row.get(
+                                "away_miles_traveled"
+                            )
+                        )
+                    ),
+
+                "home_miles_traveled":
+                    (
+                        None
+                        if travel_row is None
+                        else as_float(
+                            travel_row.get(
+                                "home_miles_traveled"
+                            )
+                        )
+                    ),
+
+                "travel_net_miles_1000":
+                    travel_features.get(
+                        "travel_net_miles_1000"
+                    ),
+
+                "travel_net_time_zones":
+                    travel_features.get(
+                        "travel_net_time_zones"
+                    ),
+
+                "travel_net_east_to_west":
+                    travel_features.get(
+                        "travel_net_east_to_west"
+                    ),
+
+                "travel_net_west_to_east":
+                    travel_features.get(
+                        "travel_net_west_to_east"
+                    ),
+
+                "travel_international":
+                    travel_features.get(
+                        "travel_international"
+                    ),
+
+                "travel_features_used":
+                    travel_features_used,
+
+                "travel_margin_adjustment":
+                    round(
+                        travel_margin_adjustment,
+                        4,
+                    ),
+
+                "predicted_margin_before_travel":
+                    round(
+                        predicted_margin_before_travel,
+                        4,
+                    ),
+
                 "prior_total":
                     (
                         None
@@ -2653,6 +3418,61 @@ def build_projection(
                         total_weights[
                             1
                         ],
+                        4,
+                    ),
+
+                "weather_data_available":
+                    int(
+                        weather_row is not None
+                    ),
+
+                "weather_exposed":
+                    int(
+                        weather_exposed
+                    ),
+
+                "weather_temperature_c":
+                    weather_features.get(
+                        "weather_temperature_c"
+                    ),
+
+                "weather_wind_speed_ms":
+                    weather_features.get(
+                        "weather_wind_speed_ms"
+                    ),
+
+                "weather_wind_gust_ms":
+                    weather_features.get(
+                        "weather_wind_gust_ms"
+                    ),
+
+                "weather_humidity_pct":
+                    weather_features.get(
+                        "weather_humidity_pct"
+                    ),
+
+                "weather_rain_flag":
+                    weather_features.get(
+                        "weather_rain_flag"
+                    ),
+
+                "weather_snow_flag":
+                    weather_features.get(
+                        "weather_snow_flag"
+                    ),
+
+                "weather_features_used":
+                    weather_features_used,
+
+                "weather_total_adjustment":
+                    round(
+                        weather_total_adjustment,
+                        4,
+                    ),
+
+                "predicted_total_before_weather":
+                    round(
+                        predicted_total_before_weather,
                         4,
                     ),
 
@@ -2975,6 +3795,26 @@ def main() -> None:
         / "stadium_map.csv"
     )
 
+    travel_path = (
+        root
+        / "data"
+        / "travel"
+        / f"{season}_week_{args.week}_travel.csv"
+    )
+
+    weather_path = (
+        root
+        / "data"
+        / "weather"
+        / f"week_{args.week}_CFB_weekly_weather.csv"
+    )
+
+    travel_weather_coefficients_path = (
+        root
+        / "config"
+        / "travel_weather_coefficients.csv"
+    )
+
     output_path = (
         root
         / "01_merge"
@@ -3107,6 +3947,24 @@ def main() -> None:
         )
     )
 
+    travel = load_game_feature_file(
+        travel_path,
+        TRAVEL_REQUIRED_COLUMNS,
+        "weekly travel",
+    )
+
+    weather = load_game_feature_file(
+        weather_path,
+        WEATHER_REQUIRED_COLUMNS,
+        "weekly weather",
+    )
+
+    travel_weather_coefficients = (
+        load_travel_weather_coefficients(
+            travel_weather_coefficients_path
+        )
+    )
+
     predictions = build_projection(
         schedule,
         prior,
@@ -3115,6 +3973,9 @@ def main() -> None:
         resolver,
         home_stadium_lookup,
         injury_lookup,
+        travel,
+        weather,
+        travel_weather_coefficients,
         args,
     )
 
@@ -3202,6 +4063,16 @@ def main() -> None:
     print(
         "fresh_injury_adjustments="
         f"{int(predictions['injury_margin_adjustment'].abs().gt(0).sum())}"
+    )
+
+    print(
+        "travel_adjustments="
+        f"{int(predictions['travel_margin_adjustment'].abs().gt(0).sum())}"
+    )
+
+    print(
+        "weather_adjustments="
+        f"{int(predictions['weather_total_adjustment'].abs().gt(0).sum())}"
     )
 
     if args.dry_run:

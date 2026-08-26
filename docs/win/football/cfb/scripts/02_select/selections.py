@@ -7,16 +7,16 @@ READS:
   docs/win/football/cfb/01_merge/week_{week}_CFB_enriched.csv
   docs/win/football/cfb/00_intake/schedule/weekly/
       week_{week}_CFB_weekly_schedule.csv
-  docs/win/football/cfb/data/weather/
-      week_{week}_CFB_weekly_weather.csv  (optional)
 
 WRITES:
   docs/win/football/cfb/02_select/week_{week}_CFB_selected.csv
 
-This step does NOT apply betting filters or choose a bet.
+Weather/travel are NOT loaded or adjusted here. They are already incorporated
+upstream into predicted_margin and predicted_total by the projection scripts.
 
-It preserves the existing enriched input columns and appends raw candidate
-metrics for every available side:
+This step does NOT apply betting filters or choose a bet. It preserves the
+existing enriched input columns and appends raw candidate metrics for every
+available side:
 
   moneyline: HOME / AWAY
   spread:    HOME / AWAY
@@ -24,8 +24,6 @@ metrics for every available side:
 
 The existing final selection columns are retained for downstream compatibility,
 but this step leaves them unselected and marks them as DEFERRED_TO_FILTER.
-A later filtering step can use the raw candidate columns to apply odds, edge,
-EV, Kelly, probability, side, line, weather, or other betting rules.
 
 The *_implied_probability candidate columns contain the no-vig fair market
 probability.
@@ -40,7 +38,6 @@ import argparse
 import math
 import os
 import re
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -51,7 +48,6 @@ import yaml
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
-
 DEFAULT_SETTINGS_PATH = CFB_ROOT / "config/settings.yaml"
 
 PREDICTION_COLUMNS = [
@@ -158,12 +154,9 @@ CANDIDATE_COLUMNS = [
 ]
 
 SEASON_TYPE_ALIASES = {
-    # ESPN football season-type values.
     "1": "pre",
     "2": "reg",
     "3": "post",
-
-    # Text aliases used by settings/config files.
     "reg": "reg",
     "regular": "reg",
     "regularseason": "reg",
@@ -207,6 +200,7 @@ def parse_float(value: Any) -> float | None:
 
     try:
         number = float(text)
+
     except (TypeError, ValueError):
         return None
 
@@ -222,46 +216,6 @@ def parse_int(value: Any) -> int | None:
     return int(number)
 
 
-def parse_bool(
-    value: Any,
-    *,
-    key: str,
-) -> bool:
-    if isinstance(value, bool):
-        return value
-
-    if (
-        isinstance(value, (int, np.integer))
-        and value in {0, 1}
-    ):
-        return bool(value)
-
-    text = clean(value).casefold()
-
-    if text in {
-        "true",
-        "yes",
-        "y",
-        "1",
-        "on",
-    }:
-        return True
-
-    if text in {
-        "false",
-        "no",
-        "n",
-        "0",
-        "off",
-    }:
-        return False
-
-    fail(
-        f"{key} must be true/false; "
-        f"found {value!r}"
-    )
-
-
 def normalize_game_id(value: Any) -> str:
     return re.sub(
         r"\.0$",
@@ -272,31 +226,23 @@ def normalize_game_id(value: Any) -> str:
 
 def normalize_season_type(value: Any) -> str:
     raw = clean(value)
-
     numeric = parse_float(raw)
 
-    if (
-        numeric is not None
-        and float(numeric).is_integer()
-    ):
-        numeric_key = str(
-            int(numeric)
-        )
+    if numeric is not None and float(numeric).is_integer():
+        key = str(int(numeric))
 
-        if numeric_key in SEASON_TYPE_ALIASES:
-            return SEASON_TYPE_ALIASES[
-                numeric_key
-            ]
+        if key in SEASON_TYPE_ALIASES:
+            return SEASON_TYPE_ALIASES[key]
 
-    text = re.sub(
+    key = re.sub(
         r"[\s_-]+",
         "",
         raw.casefold(),
     )
 
     return SEASON_TYPE_ALIASES.get(
-        text,
-        text,
+        key,
+        key,
     )
 
 
@@ -314,8 +260,7 @@ def read_yaml(
 ) -> dict[str, Any]:
     if not path.is_file():
         fail(
-            f"Missing {label}: "
-            f"{path}"
+            f"Missing {label}: {path}"
         )
 
     with path.open(
@@ -326,8 +271,7 @@ def read_yaml(
 
     if not isinstance(data, dict):
         fail(
-            f"{label} must contain "
-            f"a YAML mapping: {path}"
+            f"{label} must contain a YAML mapping: {path}"
         )
 
     return data
@@ -336,16 +280,10 @@ def read_yaml(
 def read_csv(
     path: Path,
     label: str,
-    *,
-    optional: bool = False,
-) -> pd.DataFrame | None:
+) -> pd.DataFrame:
     if not path.is_file():
-        if optional:
-            return None
-
         fail(
-            f"Missing {label}: "
-            f"{path}"
+            f"Missing {label}: {path}"
         )
 
     df = pd.read_csv(
@@ -357,10 +295,9 @@ def read_csv(
         low_memory=False,
     )
 
-    if df.empty and not optional:
+    if df.empty:
         fail(
-            f"{label} contains no "
-            f"data rows: {path}"
+            f"{label} contains no data rows: {path}"
         )
 
     return df
@@ -379,8 +316,7 @@ def require_columns(
 
     if missing:
         fail(
-            f"{label} missing required "
-            f"columns: {missing}"
+            f"{label} missing required columns: {missing}"
         )
 
 
@@ -390,12 +326,13 @@ def validate_unique_game_ids(
 ) -> None:
     ids = df[
         "game_id"
-    ].map(normalize_game_id)
+    ].map(
+        normalize_game_id
+    )
 
     if ids.eq("").any():
         fail(
-            f"{label} contains "
-            "blank game_id values"
+            f"{label} contains blank game_id values"
         )
 
     if ids.duplicated().any():
@@ -404,8 +341,7 @@ def validate_unique_game_ids(
         ].head(10).tolist()
 
         fail(
-            f"{label} contains duplicate "
-            f"game_id values: {examples}"
+            f"{label} contains duplicate game_id values: {examples}"
         )
 
     df["game_id"] = ids
@@ -460,8 +396,7 @@ def no_vig_probabilities(
         or total_raw <= 0
     ):
         fail(
-            "Unable to calculate no-vig "
-            "probabilities from odds "
+            "Unable to calculate no-vig probabilities from odds "
             f"{first_odds!r}, {second_odds!r}"
         )
 
@@ -477,14 +412,12 @@ def no_vig_probabilities(
 
     if not 0.0 <= first_fair <= 1.0:
         fail(
-            "Invalid first no-vig "
-            f"probability: {first_fair}"
+            f"Invalid first no-vig probability: {first_fair}"
         )
 
     if not 0.0 <= second_fair <= 1.0:
         fail(
-            "Invalid second no-vig "
-            f"probability: {second_fair}"
+            f"Invalid second no-vig probability: {second_fair}"
         )
 
     return (
@@ -498,24 +431,14 @@ def calculate_metrics(
     odds_american: float,
     fair_market_probability: float,
 ) -> dict[str, float]:
-    if not (
-        0.0
-        <= model_probability
-        <= 1.0
-    ):
+    if not 0.0 <= model_probability <= 1.0:
         fail(
-            "Model probability outside "
-            f"[0,1]: {model_probability}"
+            f"Model probability outside [0,1]: {model_probability}"
         )
 
-    if not (
-        0.0
-        <= fair_market_probability
-        <= 1.0
-    ):
+    if not 0.0 <= fair_market_probability <= 1.0:
         fail(
-            "Fair market probability "
-            "outside [0,1]: "
+            "Fair market probability outside [0,1]: "
             f"{fair_market_probability}"
         )
 
@@ -523,15 +446,6 @@ def calculate_metrics(
         american_to_decimal(
             odds_american
         )
-    )
-
-    implied_probability = (
-        fair_market_probability
-    )
-
-    edge = (
-        model_probability
-        - fair_market_probability
     )
 
     net_win = (
@@ -542,6 +456,11 @@ def calculate_metrics(
     loss_probability = (
         1.0
         - model_probability
+    )
+
+    edge = (
+        model_probability
+        - fair_market_probability
     )
 
     ev = (
@@ -559,16 +478,18 @@ def calculate_metrics(
         / net_win
     )
 
-    full_kelly = max(
-        0.0,
-        raw_kelly,
-    )
-
     return {
-        "implied_probability": implied_probability,
-        "edge": edge,
-        "ev": ev,
-        "full_kelly": full_kelly,
+        "implied_probability":
+            fair_market_probability,
+        "edge":
+            edge,
+        "ev":
+            ev,
+        "full_kelly":
+            max(
+                0.0,
+                raw_kelly,
+            ),
     }
 
 
@@ -577,7 +498,9 @@ def numeric_probability(
     column: str,
 ) -> float:
     value = parse_float(
-        row[column]
+        row[
+            column
+        ]
     )
 
     if (
@@ -586,8 +509,7 @@ def numeric_probability(
     ):
         fail(
             f"game_id={row['game_id']}: "
-            f"{column} must be a finite "
-            "probability in [0,1]; "
+            f"{column} must be a finite probability in [0,1]; "
             f"found {row[column]!r}"
         )
 
@@ -605,10 +527,7 @@ def odds_value(
         )
     )
 
-    if (
-        value is None
-        or value == 0
-    ):
+    if value is None or value == 0:
         return None
 
     return value
@@ -621,24 +540,16 @@ def make_candidate(
     fair_market_probability: float,
     *,
     line: float | None = None,
-    is_favorite: bool = False,
-    is_underdog: bool = False,
 ) -> dict[str, Any]:
     return {
-        "selection": selection,
-        "line": line,
-        "odds_american": (
-            odds_american
-        ),
-        "model_probability": (
-            model_probability
-        ),
-        "is_favorite": (
-            is_favorite
-        ),
-        "is_underdog": (
-            is_underdog
-        ),
+        "selection":
+            selection,
+        "line":
+            line,
+        "odds_american":
+            odds_american,
+        "model_probability":
+            model_probability,
         **calculate_metrics(
             model_probability,
             odds_american,
@@ -654,16 +565,26 @@ def deferred_market(
     line: float | None = None,
 ) -> dict[str, Any]:
     output = {
-        f"{prefix}_selected": 0,
-        f"{prefix}_selection": "",
-        f"{prefix}_selection_reason": reason,
-        f"{prefix}_odds_american": np.nan,
-        f"{prefix}_model_probability": np.nan,
-        f"{prefix}_implied_probability": np.nan,
-        f"{prefix}_edge": np.nan,
-        f"{prefix}_ev": np.nan,
-        f"{prefix}_full_kelly": np.nan,
-        f"{prefix}_kelly": np.nan,
+        f"{prefix}_selected":
+            0,
+        f"{prefix}_selection":
+            "",
+        f"{prefix}_selection_reason":
+            reason,
+        f"{prefix}_odds_american":
+            np.nan,
+        f"{prefix}_model_probability":
+            np.nan,
+        f"{prefix}_implied_probability":
+            np.nan,
+        f"{prefix}_edge":
+            np.nan,
+        f"{prefix}_ev":
+            np.nan,
+        f"{prefix}_full_kelly":
+            np.nan,
+        f"{prefix}_kelly":
+            np.nan,
     }
 
     if prefix in {
@@ -687,14 +608,22 @@ def blank_candidate(
     line: float | None = None,
 ) -> dict[str, Any]:
     output = {
-        f"{prefix}_available": 0,
-        f"{prefix}_odds_american": np.nan,
-        f"{prefix}_model_probability": np.nan,
-        f"{prefix}_implied_probability": np.nan,
-        f"{prefix}_edge": np.nan,
-        f"{prefix}_ev": np.nan,
-        f"{prefix}_full_kelly": np.nan,
-        f"{prefix}_kelly": np.nan,
+        f"{prefix}_available":
+            0,
+        f"{prefix}_odds_american":
+            np.nan,
+        f"{prefix}_model_probability":
+            np.nan,
+        f"{prefix}_implied_probability":
+            np.nan,
+        f"{prefix}_edge":
+            np.nan,
+        f"{prefix}_ev":
+            np.nan,
+        f"{prefix}_full_kelly":
+            np.nan,
+        f"{prefix}_kelly":
+            np.nan,
     }
 
     if (
@@ -723,28 +652,36 @@ def candidate_columns(
     include_line: bool,
 ) -> dict[str, Any]:
     output = {
-        f"{prefix}_available": 1,
-        f"{prefix}_odds_american": candidate[
-            "odds_american"
-        ],
-        f"{prefix}_model_probability": candidate[
-            "model_probability"
-        ],
-        f"{prefix}_implied_probability": candidate[
-            "implied_probability"
-        ],
-        f"{prefix}_edge": candidate[
-            "edge"
-        ],
-        f"{prefix}_ev": candidate[
-            "ev"
-        ],
-        f"{prefix}_full_kelly": candidate[
-            "full_kelly"
-        ],
-        f"{prefix}_kelly": candidate[
-            "full_kelly"
-        ],
+        f"{prefix}_available":
+            1,
+        f"{prefix}_odds_american":
+            candidate[
+                "odds_american"
+            ],
+        f"{prefix}_model_probability":
+            candidate[
+                "model_probability"
+            ],
+        f"{prefix}_implied_probability":
+            candidate[
+                "implied_probability"
+            ],
+        f"{prefix}_edge":
+            candidate[
+                "edge"
+            ],
+        f"{prefix}_ev":
+            candidate[
+                "ev"
+            ],
+        f"{prefix}_full_kelly":
+            candidate[
+                "full_kelly"
+            ],
+        f"{prefix}_kelly":
+            candidate[
+                "full_kelly"
+            ],
     }
 
     if include_line:
@@ -824,16 +761,6 @@ def evaluate_moneyline(
             ),
         }
 
-    home_probability = numeric_probability(
-        row,
-        "home_win_probability",
-    )
-
-    away_probability = numeric_probability(
-        row,
-        "away_win_probability",
-    )
-
     (
         home_fair,
         away_fair,
@@ -844,14 +771,20 @@ def evaluate_moneyline(
 
     home_candidate = make_candidate(
         "HOME",
-        home_probability,
+        numeric_probability(
+            row,
+            "home_win_probability",
+        ),
         home_odds,
         home_fair,
     )
 
     away_candidate = make_candidate(
         "AWAY",
-        away_probability,
+        numeric_probability(
+            row,
+            "away_win_probability",
+        ),
         away_odds,
         away_fair,
     )
@@ -942,8 +875,6 @@ def evaluate_spread(
         home_odds,
         home_fair,
         line=home_line,
-        is_favorite=home_line < 0,
-        is_underdog=home_line > 0,
     )
 
     away_candidate = make_candidate(
@@ -955,8 +886,6 @@ def evaluate_spread(
         away_odds,
         away_fair,
         line=away_line,
-        is_favorite=away_line < 0,
-        is_underdog=away_line > 0,
     )
 
     return {
@@ -975,86 +904,6 @@ def evaluate_spread(
             include_line=True,
         ),
     }
-
-
-def roof_is_dome(
-    row: pd.Series,
-) -> bool:
-    dome_flag = parse_int(
-        row.get(
-            "wx_dome_flag",
-            "",
-        )
-    )
-
-    if dome_flag is not None:
-        return dome_flag == 1
-
-    roof = clean(
-        row.get(
-            "sched_roof",
-            "",
-        )
-    ).casefold()
-
-    return roof in {
-        "dome",
-        "indoor",
-        "indoors",
-        "closed",
-        "retractable_closed",
-        "retractable-closed",
-    }
-
-
-def roof_is_open_air(
-    row: pd.Series,
-) -> bool:
-    open_flag = parse_int(
-        row.get(
-            "wx_open_air_flag",
-            "",
-        )
-    )
-
-    if open_flag is not None:
-        return open_flag == 1
-
-    roof = clean(
-        row.get(
-            "sched_roof",
-            "",
-        )
-    ).casefold()
-
-    return roof in {
-        "open_air",
-        "open-air",
-        "outdoor",
-        "outdoors",
-        "open",
-    }
-
-
-def weather_available(
-    row: pd.Series,
-) -> bool:
-    return any(
-        clean(
-            row.get(
-                column,
-                "",
-            )
-        )
-        for column in [
-            "wx_temperature",
-            "wx_wind_speed",
-            "wx_wind_gust",
-            "wx_precip_probability",
-            "wx_rain_flag",
-            "wx_snow_flag",
-        ]
-    )
 
 
 def evaluate_total(
@@ -1188,8 +1037,7 @@ def validate_probability_pairs(
             or b.isna().any()
         ):
             fail(
-                f"{label} probability "
-                "columns contain "
+                f"{label} probability columns contain "
                 "blank/non-numeric values"
             )
 
@@ -1202,8 +1050,7 @@ def validate_probability_pairs(
             ).any()
         ):
             fail(
-                f"{label} probability "
-                "outside [0,1]"
+                f"{label} probability outside [0,1]"
             )
 
         if not np.allclose(
@@ -1218,9 +1065,8 @@ def validate_probability_pairs(
             atol=1e-9,
         ):
             fail(
-                f"{label} complementary "
-                "probabilities do not "
-                "sum to 1"
+                f"{label} complementary probabilities "
+                "do not sum to 1"
             )
 
 
@@ -1236,8 +1082,7 @@ def validate_settings(
 ]:
     season = (
         season_override
-        if season_override
-        is not None
+        if season_override is not None
         else parse_int(
             settings.get(
                 "season"
@@ -1247,8 +1092,7 @@ def validate_settings(
 
     week = (
         week_override
-        if week_override
-        is not None
+        if week_override is not None
         else parse_int(
             settings.get(
                 "week"
@@ -1256,19 +1100,13 @@ def validate_settings(
         )
     )
 
-    if (
-        season is None
-        or season < 1900
-    ):
+    if season is None or season < 1900:
         fail(
             f"Invalid season: "
             f"{settings.get('season')!r}"
         )
 
-    if (
-        week is None
-        or week <= 0
-    ):
+    if week is None or week <= 0:
         fail(
             f"Invalid week: "
             f"{settings.get('week')!r}"
@@ -1299,8 +1137,7 @@ def validate_settings(
 
     if not sportsbook:
         fail(
-            "settings.yaml sportsbook "
-            "is required"
+            "settings.yaml sportsbook is required"
         )
 
     odds_format = clean(
@@ -1312,8 +1149,7 @@ def validate_settings(
 
     if odds_format != "american":
         fail(
-            "selections.py requires "
-            "odds_format: american"
+            "selections.py requires odds_format: american"
         )
 
     return (
@@ -1381,8 +1217,7 @@ def validate_combined(
         season
     }:
         fail(
-            f"{label}: expected only "
-            f"season={season}; "
+            f"{label}: expected only season={season}; "
             f"found {seasons}"
         )
 
@@ -1390,8 +1225,7 @@ def validate_combined(
         week
     }:
         fail(
-            f"{label}: expected only "
-            f"week={week}; "
+            f"{label}: expected only week={week}; "
             f"found {weeks}"
         )
 
@@ -1399,9 +1233,7 @@ def validate_combined(
         season_type
     }:
         fail(
-            f"{label}: expected "
-            "season_type="
-            f"{season_type!r}; "
+            f"{label}: expected season_type={season_type!r}; "
             f"found {types}"
         )
 
@@ -1468,48 +1300,38 @@ def merge_schedule(
     )
 
     schedule = schedule.loc[
-        (
-            season_values
-            == season
+        season_values.eq(
+            season
         )
-        & (
-            week_values
-            == week
+        & week_values.eq(
+            week
         )
-        & (
-            type_values
-            == season_type
+        & type_values.eq(
+            season_type
         )
     ].copy()
 
     if schedule.empty:
         fail(
-            "Weekly schedule has "
-            "no rows for "
+            "Weekly schedule has no rows for "
             f"season={season}, "
             f"week={week}, "
-            "season_type="
-            f"{season_type}"
+            f"season_type={season_type}"
         )
 
-    configured_book = normalize_bookmaker(
-        sportsbook
-    )
-
-    odds_available = (
-        pd.to_numeric(
-            schedule[
-                "odds_available"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0
+    configured_book = (
+        normalize_bookmaker(
+            sportsbook
         )
     )
 
-    available_rows = odds_available.eq(
-        1
+    odds_available = pd.to_numeric(
+        schedule[
+            "odds_available"
+        ],
+        errors="coerce",
+    ).fillna(
+        0
     )
 
     bad_book = (
@@ -1522,7 +1344,9 @@ def merge_schedule(
         .ne(
             configured_book
         )
-        & available_rows
+        & odds_available.eq(
+            1
+        )
     )
 
     if bad_book.any():
@@ -1543,10 +1367,8 @@ def merge_schedule(
         )
 
         fail(
-            "Weekly schedule bookmaker "
-            "does not match settings "
-            f"sportsbook {sportsbook!r}: "
-            f"{examples}"
+            "Weekly schedule bookmaker does not match settings "
+            f"sportsbook {sportsbook!r}: {examples}"
         )
 
     base_ids = set(
@@ -1569,9 +1391,8 @@ def merge_schedule(
     if missing:
         fail(
             "Weekly schedule missing "
-            f"{len(missing)} projected "
-            "games; examples="
-            f"{missing[:10]}"
+            f"{len(missing)} projected games; "
+            f"examples={missing[:10]}"
         )
 
     columns = [
@@ -1597,56 +1418,14 @@ def merge_schedule(
 
     source = source.rename(
         columns={
-            column: (
+            column:
                 f"sched_{column}"
-            )
             for column in columns
             if column != "game_id"
         }
     )
 
     return combined.merge(
-        source,
-        on="game_id",
-        how="left",
-        validate="one_to_one",
-    )
-
-
-def merge_weather(
-    working: pd.DataFrame,
-    weather: pd.DataFrame | None,
-) -> pd.DataFrame:
-    if (
-        weather is None
-        or weather.empty
-    ):
-        return working
-
-    require_columns(
-        weather,
-        [
-            "game_id"
-        ],
-        "weekly weather",
-    )
-
-    validate_unique_game_ids(
-        weather,
-        "weekly weather",
-    )
-
-    source = weather.rename(
-        columns={
-            column: (
-                f"wx_{column}"
-            )
-            for column in weather.columns
-            if column != "game_id"
-        }
-    )
-
-    return working.merge(
         source,
         on="game_id",
         how="left",
@@ -1697,9 +1476,10 @@ def build_output(
 
         candidate_rows.append(
             {
-                "game_id": row[
-                    "game_id"
-                ],
+                "game_id":
+                    row[
+                        "game_id"
+                    ],
                 **result,
             }
         )
@@ -1884,8 +1664,7 @@ def main() -> int:
         dict,
     ):
         fail(
-            "settings.yaml must contain "
-            "selection_defaults"
+            "settings.yaml must contain selection_defaults"
         )
 
     max_kelly = parse_float(
@@ -1947,8 +1726,6 @@ def main() -> int:
         "projected combined enriched file",
     )
 
-    assert combined is not None
-
     prior_output_columns = [
         column
         for column in (
@@ -1986,8 +1763,6 @@ def main() -> int:
         "weekly schedule",
     )
 
-    assert schedule is not None
-
     working = merge_schedule(
         combined.copy(),
         schedule,
@@ -1995,24 +1770,6 @@ def main() -> int:
         week,
         season_type,
         sportsbook,
-    )
-
-    weather_path = (
-        CFB_ROOT
-        / "data"
-        / "weather"
-        / f"week_{week}_CFB_weekly_weather.csv"
-    )
-
-    weather = read_csv(
-        weather_path,
-        "weekly weather",
-        optional=True,
-    )
-
-    working = merge_weather(
-        working,
-        weather,
     )
 
     output = build_output(

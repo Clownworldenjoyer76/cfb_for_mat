@@ -2,31 +2,26 @@
 """
 fetch_weather.py
 
-Fetches weather forecast data from api.met.no for CFB games in a given
-week's schedule file, and writes/updates:
-    docs/win/football/cfb/data/weather/week_{week}_CFB_weekly_weather.csv
+Fetches CFB kickoff weather from api.met.no.
 
-Input:
-    docs/win/football/cfb/00_intake/schedule/weekly/week_{week}_CFB_weekly_schedule.csv
+Reads:
+    docs/win/football/cfb/00_intake/schedule/weekly/
+        week_{week}_CFB_weekly_schedule.csv
 
-Stadium/location data joined from:
     docs/win/football/cfb/config/mapping/stadium_map.csv
-    (joined on stadium, home_team -> team, and game_date)
 
-Weather source:
-    https://api.met.no/weatherapi/locationforecast/2.0/complete
+Writes:
+    docs/win/football/cfb/data/weather/
+        week_{week}_CFB_weekly_weather.csv
 
 Behavior:
-    - Only fetches/updates rows for games that have not yet happened
-      (game date/time in the future, using game_timezone).
-    - If the output file already exists, past-game rows already present
-      are left untouched.
-    - If weather data is not available for a game (e.g. game is more
-      than 9 days out, outside met.no forecast range), weather columns
-      are left blank, but all other attainable columns are still
-      written.
-    - Logs any issues or failed matches to:
-        docs/win/football/cfb/errors/00_intake/fetch_weather.txt
+    - Resolves the ACTUAL scheduled stadium by stadium name.
+    - Uses the actual venue latitude/longitude.
+    - Uses the scheduled kickoff timestamp.
+    - Handles neutral-site games without assuming the listed home team's stadium.
+    - Preserves temperature, wind, gusts, precipitation, rain/snow, humidity,
+      and roof information.
+    - Existing weather for completed games is preserved.
 """
 
 import csv
@@ -35,16 +30,16 @@ import json
 import os
 import re
 import time
+import unicodedata
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
-# ─────────────────────────────────────────────
-# CONFIG
-# ─────────────────────────────────────────────
 
-METNO_URL = "https://api.met.no/weatherapi/locationforecast/2.0/complete"
+METNO_URL = (
+    "https://api.met.no/weatherapi/locationforecast/2.0/complete"
+)
 
 METNO_USER_AGENT = os.environ.get(
     "METNO_USER_AGENT",
@@ -55,34 +50,43 @@ REQUEST_TIMEOUT = 20
 REQUEST_SLEEP_SECONDS = 1.25
 
 BASE_DIR = "docs/win/football/cfb"
+
 SCHEDULE_DIR = os.path.join(
     BASE_DIR,
     "00_intake/schedule/weekly",
 )
+
 STADIUM_MAP_PATH = os.path.join(
     BASE_DIR,
     "config/mapping/stadium_map.csv",
 )
+
 OUTPUT_DIR = os.path.join(
     BASE_DIR,
     "data/weather",
 )
+
 ERROR_LOG_DIR = os.path.join(
     BASE_DIR,
     "errors/00_intake",
 )
+
 ERROR_LOG_PATH = os.path.join(
     ERROR_LOG_DIR,
     "fetch_weather.txt",
 )
 
+
 OUTPUT_HEADERS = [
     "game_id",
     "stadium",
+    "venue_resolution_status",
     "latitude",
     "longitude",
     "game_time",
     "game_timezone",
+    "kickoff_utc",
+    "weather_timestep_utc",
     "temperature",
     "wind_speed",
     "wind_gust",
@@ -90,6 +94,7 @@ OUTPUT_HEADERS = [
     "rain_flag",
     "snow_flag",
     "humidity",
+    "roof",
     "roof_type",
     "dome_flag",
     "retractable_roof_flag",
@@ -98,45 +103,363 @@ OUTPUT_HEADERS = [
 ]
 
 
+WEATHER_COLUMNS = [
+    "weather_timestep_utc",
+    "temperature",
+    "wind_speed",
+    "wind_gust",
+    "precip_probability",
+    "rain_flag",
+    "snow_flag",
+    "humidity",
+]
+
+
+def clean(value):
+    if value is None:
+        return ""
+
+    return str(value).strip()
+
+
+def normalize_key(value):
+    text = clean(value)
+
+    if not text:
+        return ""
+
+    text = unicodedata.normalize(
+        "NFKD",
+        text,
+    )
+
+    text = "".join(
+        ch
+        for ch in text
+        if not unicodedata.combining(ch)
+    )
+
+    text = text.casefold()
+
+    return re.sub(
+        r"[^a-z0-9]+",
+        "",
+        text,
+    )
+
+
+def strip_parenthetical(value):
+    return re.sub(
+        r"\s*\([^)]*\)\s*$",
+        "",
+        clean(value),
+    ).strip()
+
+
 def load_csv(path):
     with open(
         path,
         newline="",
-        encoding="utf-8",
+        encoding="utf-8-sig",
     ) as f:
-        return list(csv.DictReader(f))
+        return list(
+            csv.DictReader(f)
+        )
+
+
+def same_coordinates(row_a, row_b):
+    try:
+        return (
+            abs(
+                float(row_a["latitude"])
+                - float(row_b["latitude"])
+            )
+            < 1e-7
+            and
+            abs(
+                float(row_a["longitude"])
+                - float(row_b["longitude"])
+            )
+            < 1e-7
+        )
+
+    except Exception:
+        return False
+
+
+def dedupe_venue_rows(rows):
+    unique = []
+
+    for row in rows:
+        if not any(
+            same_coordinates(
+                row,
+                existing,
+            )
+            for existing in unique
+        ):
+            unique.append(row)
+
+    return unique
 
 
 def load_stadium_map():
-    """
-    Keyed by (stadium, team) since join is on stadium + home_team + game_date;
-    game_date isn't part of the stadium map itself, so it's matched separately.
-    """
-    rows = load_csv(STADIUM_MAP_PATH)
-    lookup = {}
+    rows = load_csv(
+        STADIUM_MAP_PATH
+    )
+
+    venue_lookup = {}
 
     for row in rows:
-        key = (
-            row["stadium"].strip(),
-            row["team"].strip(),
-        )
-        lookup[key] = row
+        names = {
+            clean(
+                row.get(
+                    "stadium",
+                    "",
+                )
+            ),
+            clean(
+                row.get(
+                    "venue_full_name",
+                    "",
+                )
+            ),
+            strip_parenthetical(
+                row.get(
+                    "stadium",
+                    "",
+                )
+            ),
+            strip_parenthetical(
+                row.get(
+                    "venue_full_name",
+                    "",
+                )
+            ),
+        }
 
-    return lookup
+        for name in names:
+            key = normalize_key(
+                name
+            )
+
+            if not key:
+                continue
+
+            venue_lookup.setdefault(
+                key,
+                [],
+            ).append(
+                row
+            )
+
+    return venue_lookup
 
 
-def is_future_game(
-    game_date,
-    game_time,
-    game_timezone,
+def resolve_venue(
+    game,
+    venue_lookup,
     log_lines,
 ):
-    """
-    Returns True if the game's date/time (in game_timezone) is in the future
-    relative to now. Returns False if it's in the past. Returns None if the
-    timezone/date/time could not be parsed (treated as unknown/skip).
-    """
-    if not game_date or not game_time or not game_timezone:
+    game_id = clean(
+        game.get(
+            "game_id",
+            "",
+        )
+    )
+
+    stadium = clean(
+        game.get(
+            "stadium",
+            "",
+        )
+    )
+
+    game_timezone = clean(
+        game.get(
+            "game_timezone",
+            "",
+        )
+    )
+
+    if not stadium:
+        log_lines.append(
+            f"ERROR: game_id={game_id} "
+            "schedule has no stadium"
+        )
+
+        return (
+            None,
+            "missing_schedule_stadium",
+        )
+
+    candidates = []
+
+    for name in {
+        stadium,
+        strip_parenthetical(
+            stadium
+        ),
+    }:
+        key = normalize_key(
+            name
+        )
+
+        candidates.extend(
+            venue_lookup.get(
+                key,
+                [],
+            )
+        )
+
+    candidates = dedupe_venue_rows(
+        candidates
+    )
+
+    if len(candidates) == 1:
+        return (
+            candidates[0],
+            "resolved_schedule_stadium",
+        )
+
+    if (
+        len(candidates) > 1
+        and game_timezone
+    ):
+        timezone_matches = [
+            row
+            for row in candidates
+            if clean(
+                row.get(
+                    "timezone",
+                    "",
+                )
+            )
+            == game_timezone
+        ]
+
+        timezone_matches = (
+            dedupe_venue_rows(
+                timezone_matches
+            )
+        )
+
+        if len(
+            timezone_matches
+        ) == 1:
+            return (
+                timezone_matches[0],
+                "resolved_schedule_stadium_timezone",
+            )
+
+    if len(candidates) > 1:
+        log_lines.append(
+            f"ERROR: game_id={game_id} "
+            f"ambiguous stadium='{stadium}' "
+            f"matches={len(candidates)}"
+        )
+
+        return (
+            None,
+            "ambiguous_schedule_stadium",
+        )
+
+    log_lines.append(
+        f"ERROR: game_id={game_id} "
+        f"actual venue not found in stadium_map.csv: "
+        f"stadium='{stadium}'"
+    )
+
+    return (
+        None,
+        "unresolved_schedule_stadium",
+    )
+
+
+def parse_iso_utc(value):
+    text = clean(value)
+
+    if not text:
+        return None
+
+    try:
+        if text.endswith("Z"):
+            text = (
+                text[:-1]
+                + "+00:00"
+            )
+
+        dt = datetime.fromisoformat(
+            text
+        )
+
+        if dt.tzinfo is None:
+            return None
+
+        return dt.astimezone(
+            timezone.utc
+        )
+
+    except Exception:
+        return None
+
+
+def resolve_kickoff_utc(
+    game,
+    log_lines,
+):
+    game_id = clean(
+        game.get(
+            "game_id",
+            "",
+        )
+    )
+
+    commence_time = clean(
+        game.get(
+            "commence_time",
+            "",
+        )
+    )
+
+    kickoff = parse_iso_utc(
+        commence_time
+    )
+
+    if kickoff is not None:
+        return kickoff
+
+    game_date = clean(
+        game.get(
+            "game_date",
+            "",
+        )
+    )
+
+    game_time = clean(
+        game.get(
+            "game_time",
+            "",
+        )
+    )
+
+    game_timezone = clean(
+        game.get(
+            "game_timezone",
+            "",
+        )
+    )
+
+    if not (
+        game_date
+        and game_time
+        and game_timezone
+    ):
+        log_lines.append(
+            f"WARNING: game_id={game_id} "
+            "missing kickoff date/time/timezone"
+        )
+
         return None
 
     try:
@@ -144,16 +467,23 @@ def is_future_game(
             f"{game_date} {game_time}",
             "%Y-%m-%d %H:%M",
         )
-        tz = ZoneInfo(game_timezone)
-        game_dt = naive.replace(tzinfo=tz)
 
-        return game_dt > datetime.now(timezone.utc)
-
-    except Exception as e:
-        log_lines.append(
-            "WARNING: could not parse game date/time/timezone "
-            f"({game_date} {game_time} {game_timezone}): {e}"
+        local_dt = naive.replace(
+            tzinfo=ZoneInfo(
+                game_timezone
+            )
         )
+
+        return local_dt.astimezone(
+            timezone.utc
+        )
+
+    except Exception as exc:
+        log_lines.append(
+            f"ERROR: game_id={game_id} "
+            f"failed parsing kickoff: {exc}"
+        )
+
         return None
 
 
@@ -163,104 +493,135 @@ def fetch_weather(
     log_lines,
     game_id,
 ):
-    url = f"{METNO_URL}?lat={lat}&lon={lon}"
+    url = (
+        f"{METNO_URL}"
+        f"?lat={lat}"
+        f"&lon={lon}"
+    )
 
-    req = urllib.request.Request(
+    request = urllib.request.Request(
         url,
         headers={
-            "User-Agent": METNO_USER_AGENT,
+            "User-Agent": (
+                METNO_USER_AGENT
+            ),
         },
     )
 
     try:
         with urllib.request.urlopen(
-            req,
+            request,
             timeout=REQUEST_TIMEOUT,
         ) as response:
+
             return json.loads(
                 response.read().decode()
             )
 
-    except urllib.error.HTTPError as e:
+    except urllib.error.HTTPError as exc:
         log_lines.append(
             f"ERROR: game_id={game_id} "
             "met.no request failed "
-            f"(HTTP {e.code}) for lat={lat}, lon={lon}"
+            f"HTTP={exc.code} "
+            f"lat={lat} lon={lon}"
         )
-        return None
 
-    except Exception as e:
+    except Exception as exc:
         log_lines.append(
             f"ERROR: game_id={game_id} "
             "met.no request failed "
-            f"for lat={lat}, lon={lon}: {e}"
+            f"lat={lat} lon={lon}: {exc}"
         )
-        return None
+
+    return None
+
+
+def parse_weather_time(value):
+    return parse_iso_utc(
+        value
+    )
 
 
 def find_closest_timestep(
     weather_json,
-    target_dt_utc,
+    kickoff_utc,
 ):
-    """
-    Returns the timeseries entry whose 'time' is closest to target_dt_utc,
-    or None if no timeseries data exists (e.g. lookup failed) or the target
-    is out of the ~9 day forecast range covered by the response.
-    """
     if not weather_json:
-        return None
+        return (
+            None,
+            None,
+        )
 
     timeseries = (
         weather_json
-        .get("properties", {})
-        .get("timeseries", [])
+        .get(
+            "properties",
+            {},
+        )
+        .get(
+            "timeseries",
+            [],
+        )
     )
 
-    if not timeseries:
-        return None
-
-    best = None
+    best_entry = None
+    best_time = None
     best_diff = None
 
     for entry in timeseries:
-        try:
-            entry_time = datetime.strptime(
-                entry["time"],
-                "%Y-%m-%dT%H:%M:%SZ",
-            ).replace(
-                tzinfo=timezone.utc,
+        entry_time = (
+            parse_weather_time(
+                entry.get(
+                    "time",
+                    "",
+                )
             )
-        except Exception:
+        )
+
+        if entry_time is None:
             continue
 
-        diff = abs(
+        difference = abs(
             (
                 entry_time
-                - target_dt_utc
+                - kickoff_utc
             ).total_seconds()
         )
 
         if (
             best_diff is None
-            or diff < best_diff
+            or difference < best_diff
         ):
-            best_diff = diff
-            best = entry
+            best_entry = entry
+            best_time = entry_time
+            best_diff = difference
 
-    # If closest available timestep is more than ~12 hours off, treat as
-    # out of forecast range (met.no only forecasts ~9 days out).
     if (
-        best is not None
-        and best_diff is not None
-        and best_diff > 12 * 3600
+        best_entry is None
+        or best_diff is None
     ):
-        return None
+        return (
+            None,
+            None,
+        )
 
-    return best
+    # Reject forecasts that are nowhere near kickoff.
+    if best_diff > 12 * 3600:
+        return (
+            None,
+            None,
+        )
+
+    return (
+        best_entry,
+        best_time,
+    )
 
 
-def extract_precip_probability(entry):
-    details = entry.get(
+def extract_precip_probability(
+    entry,
+):
+    data = entry.get(
         "data",
         {},
     )
@@ -270,27 +631,31 @@ def extract_precip_probability(entry):
         "next_6_hours",
         "next_12_hours",
     ):
-        period = details.get(
-            period_key,
-            {},
-        )
-
-        prob = (
-            period
-            .get("details", {})
+        probability = (
+            data
+            .get(
+                period_key,
+                {},
+            )
+            .get(
+                "details",
+                {},
+            )
             .get(
                 "probability_of_precipitation"
             )
         )
 
-        if prob is not None:
-            return prob
+        if probability is not None:
+            return probability
 
     return None
 
 
-def extract_symbol_code(entry):
-    details = entry.get(
+def extract_symbol_code(
+    entry,
+):
+    data = entry.get(
         "data",
         {},
     )
@@ -300,86 +665,102 @@ def extract_symbol_code(entry):
         "next_6_hours",
         "next_12_hours",
     ):
-        period = details.get(
-            period_key,
-            {},
+        symbol = (
+            data
+            .get(
+                period_key,
+                {},
+            )
+            .get(
+                "summary",
+                {},
+            )
+            .get(
+                "symbol_code"
+            )
         )
 
-        code = (
-            period
-            .get("summary", {})
-            .get("symbol_code")
-        )
-
-        if code:
-            return code
+        if symbol:
+            return symbol
 
     return ""
 
 
-def derive_rain_snow_flags(symbol_code):
-    code = symbol_code.lower()
-
-    rain_flag = (
-        1
-        if "rain" in code or "sleet" in code
-        else 0
-    )
-
-    snow_flag = (
-        1
-        if "snow" in code
-        else 0
-    )
-
-    return rain_flag, snow_flag
-
-
-def get_weather_row_values(
-    lat,
-    lon,
-    target_dt_utc,
-    log_lines,
-    game_id,
+def derive_rain_snow_flags(
+    symbol_code,
 ):
-    weather_json = fetch_weather(
-        lat,
-        lon,
-        log_lines,
-        game_id,
+    code = clean(
+        symbol_code
+    ).casefold()
+
+    rain_flag = int(
+        "rain" in code
+        or "sleet" in code
     )
 
-    entry = find_closest_timestep(
+    snow_flag = int(
+        "snow" in code
+    )
+
+    return (
+        rain_flag,
+        snow_flag,
+    )
+
+
+def blank_weather():
+    return {
+        "weather_timestep_utc": "",
+        "temperature": "",
+        "wind_speed": "",
+        "wind_gust": "",
+        "precip_probability": "",
+        "rain_flag": "",
+        "snow_flag": "",
+        "humidity": "",
+    }
+
+
+def extract_weather_values(
+    weather_json,
+    kickoff_utc,
+    game_id,
+    log_lines,
+):
+    (
+        entry,
+        timestep,
+    ) = find_closest_timestep(
         weather_json,
-        target_dt_utc,
+        kickoff_utc,
     )
 
     if entry is None:
         log_lines.append(
             f"INFO: game_id={game_id} "
-            "no weather data available "
-            "(outside forecast range or fetch failed) — "
-            "weather columns left blank."
+            "no kickoff weather available "
+            "(outside forecast range or fetch failed)"
         )
 
-        return {
-            "temperature": "",
-            "wind_speed": "",
-            "wind_gust": "",
-            "precip_probability": "",
-            "rain_flag": "",
-            "snow_flag": "",
-            "humidity": "",
-        }
+        return blank_weather()
 
     instant = (
         entry
-        .get("data", {})
-        .get("instant", {})
-        .get("details", {})
+        .get(
+            "data",
+            {},
+        )
+        .get(
+            "instant",
+            {},
+        )
+        .get(
+            "details",
+            {},
+        )
     )
 
-    precip_prob = (
+    precip_probability = (
         extract_precip_probability(
             entry
         )
@@ -391,13 +772,19 @@ def get_weather_row_values(
         )
     )
 
-    rain_flag, snow_flag = (
-        derive_rain_snow_flags(
-            symbol_code
-        )
+    (
+        rain_flag,
+        snow_flag,
+    ) = derive_rain_snow_flags(
+        symbol_code
     )
 
     return {
+        "weather_timestep_utc": (
+            timestep.isoformat()
+            if timestep is not None
+            else ""
+        ),
         "temperature": instant.get(
             "air_temperature",
             "",
@@ -411,8 +798,9 @@ def get_weather_row_values(
             "",
         ),
         "precip_probability": (
-            precip_prob
-            if precip_prob is not None
+            precip_probability
+            if precip_probability
+            is not None
             else ""
         ),
         "rain_flag": rain_flag,
@@ -424,45 +812,65 @@ def get_weather_row_values(
     }
 
 
-def build_row(
+def build_base_row(
     game,
-    stadium_row,
-    log_lines,
+    venue_row,
+    venue_status,
+    kickoff_utc,
     weather_fetched_at,
 ):
-    game_id = game["game_id"]
-
-    if stadium_row is None:
-        log_lines.append(
-            f"ERROR: game_id={game_id} "
-            "no stadium_map match for "
-            f"stadium='{game.get('stadium')}' "
-            f"home_team='{game.get('home_team')}'"
+    stadium = clean(
+        game.get(
+            "stadium",
+            "",
         )
+    )
 
+    roof = clean(
+        game.get(
+            "roof",
+            "",
+        )
+    )
+
+    game_timezone = clean(
+        game.get(
+            "game_timezone",
+            "",
+        )
+    )
+
+    if venue_row is None:
         return {
-            "game_id": game_id,
-            "stadium": game.get(
-                "stadium",
-                "",
+            "game_id": clean(
+                game.get(
+                    "game_id",
+                    "",
+                )
+            ),
+            "stadium": stadium,
+            "venue_resolution_status": (
+                venue_status
             ),
             "latitude": "",
             "longitude": "",
-            "game_time": game.get(
-                "game_time",
-                "",
+            "game_time": clean(
+                game.get(
+                    "game_time",
+                    "",
+                )
             ),
-            "game_timezone": game.get(
-                "game_timezone",
-                "",
+            "game_timezone": (
+                game_timezone
             ),
-            "temperature": "",
-            "wind_speed": "",
-            "wind_gust": "",
-            "precip_probability": "",
-            "rain_flag": "",
-            "snow_flag": "",
-            "humidity": "",
+            "kickoff_utc": (
+                kickoff_utc.isoformat()
+                if kickoff_utc
+                is not None
+                else ""
+            ),
+            **blank_weather(),
+            "roof": roof,
             "roof_type": "",
             "dome_flag": "",
             "retractable_roof_flag": "",
@@ -472,117 +880,75 @@ def build_row(
             ),
         }
 
-    lat = stadium_row["latitude"]
-    lon = stadium_row["longitude"]
-
-    game_date = game.get(
-        "game_date",
-        "",
-    )
-    game_time_str = game.get(
-        "game_time",
-        "",
-    )
-    game_timezone = game.get(
-        "game_timezone",
-        "",
-    )
-
-    weather_values = {
-        "temperature": "",
-        "wind_speed": "",
-        "wind_gust": "",
-        "precip_probability": "",
-        "rain_flag": "",
-        "snow_flag": "",
-        "humidity": "",
-    }
-
-    if (
-        lat
-        and lon
-        and game_date
-        and game_time_str
-        and game_timezone
-    ):
-        try:
-            naive = datetime.strptime(
-                f"{game_date} {game_time_str}",
-                "%Y-%m-%d %H:%M",
+    return {
+        "game_id": clean(
+            game.get(
+                "game_id",
+                "",
             )
-
-            tz = ZoneInfo(
-                game_timezone
+        ),
+        "stadium": stadium,
+        "venue_resolution_status": (
+            venue_status
+        ),
+        "latitude": clean(
+            venue_row.get(
+                "latitude",
+                "",
             )
-
-            target_dt_utc = (
-                naive
-                .replace(tzinfo=tz)
-                .astimezone(timezone.utc)
+        ),
+        "longitude": clean(
+            venue_row.get(
+                "longitude",
+                "",
             )
-
-            weather_values = (
-                get_weather_row_values(
-                    lat,
-                    lon,
-                    target_dt_utc,
-                    log_lines,
-                    game_id,
+        ),
+        "game_time": clean(
+            game.get(
+                "game_time",
+                "",
+            )
+        ),
+        "game_timezone": (
+            game_timezone
+            or clean(
+                venue_row.get(
+                    "timezone",
+                    "",
                 )
             )
-
-            time.sleep(
-                REQUEST_SLEEP_SECONDS
+        ),
+        "kickoff_utc": (
+            kickoff_utc.isoformat()
+            if kickoff_utc
+            is not None
+            else ""
+        ),
+        **blank_weather(),
+        "roof": roof,
+        "roof_type": clean(
+            venue_row.get(
+                "roof_type",
+                "",
             )
-
-        except Exception as e:
-            log_lines.append(
-                f"ERROR: game_id={game_id} "
-                "failed computing target "
-                f"datetime for weather lookup: {e}"
+        ),
+        "dome_flag": clean(
+            venue_row.get(
+                "dome_flag",
+                "",
             )
-
-    else:
-        log_lines.append(
-            f"WARNING: game_id={game_id} "
-            "missing lat/lon/date/time/"
-            "timezone — weather columns left blank."
-        )
-
-    return {
-        "game_id": game_id,
-        "stadium": game.get(
-            "stadium",
-            "",
         ),
-        "latitude": lat,
-        "longitude": lon,
-        "game_time": game.get(
-            "game_time",
-            "",
-        ),
-        "game_timezone": game.get(
-            "game_timezone",
-            "",
-        ),
-        **weather_values,
-        "roof_type": stadium_row.get(
-            "roof_type",
-            "",
-        ),
-        "dome_flag": stadium_row.get(
-            "dome_flag",
-            "",
-        ),
-        "retractable_roof_flag": (
-            stadium_row.get(
+        "retractable_roof_flag": clean(
+            venue_row.get(
                 "retractable_roof_flag",
                 "",
             )
         ),
-        "open_air_flag": stadium_row.get(
-            "open_air_flag",
-            "",
+        "open_air_flag": clean(
+            venue_row.get(
+                "open_air_flag",
+                "",
+            )
         ),
         "weather_fetched_at": (
             weather_fetched_at
@@ -593,9 +959,9 @@ def build_row(
 def process_week(
     week,
     schedule_path,
-    log_lines,
+    venue_lookup,
     weather_fetched_at,
-    stadium_lookup,
+    log_lines,
 ):
     output_path = os.path.join(
         OUTPUT_DIR,
@@ -606,7 +972,7 @@ def process_week(
         schedule_path
     )
 
-    existing_rows_by_id = {}
+    existing_rows = {}
 
     if os.path.exists(
         output_path
@@ -614,122 +980,173 @@ def process_week(
         for row in load_csv(
             output_path
         ):
-            existing_rows_by_id[
-                row["game_id"]
+            existing_rows[
+                clean(
+                    row.get(
+                        "game_id",
+                        "",
+                    )
+                )
             ] = row
 
     output_rows = []
 
+    # Avoid repeated met.no calls when multiple games use the same venue.
+    weather_cache = {}
+
     for game in schedule_rows:
-        game_id = game["game_id"]
-        game_date = game.get(
-            "game_date",
-            "",
-        )
-        game_time_str = game.get(
-            "game_time",
-            "",
-        )
-        game_timezone = game.get(
-            "game_timezone",
-            "",
+        game_id = clean(
+            game.get(
+                "game_id",
+                "",
+            )
         )
 
-        future = is_future_game(
-            game_date,
-            game_time_str,
-            game_timezone,
+        (
+            venue_row,
+            venue_status,
+        ) = resolve_venue(
+            game,
+            venue_lookup,
             log_lines,
         )
 
-        if (
-            future is False
-            and game_id in existing_rows_by_id
-        ):
-            # Past game already present in output — leave untouched.
+        kickoff_utc = (
+            resolve_kickoff_utc(
+                game,
+                log_lines,
+            )
+        )
+
+        row = build_base_row(
+            game,
+            venue_row,
+            venue_status,
+            kickoff_utc,
+            weather_fetched_at,
+        )
+
+        if kickoff_utc is None:
             output_rows.append(
-                existing_rows_by_id[
-                    game_id
-                ]
+                row
             )
             continue
 
+        future = (
+            kickoff_utc
+            > datetime.now(
+                timezone.utc
+            )
+        )
+
         if (
-            future is False
-            and game_id not in existing_rows_by_id
+            not future
+            and game_id
+            in existing_rows
         ):
-            # Past game not yet in output — still record attainable data,
-            # but do not attempt a weather fetch (game already happened).
-            log_lines.append(
-                f"INFO: game_id={game_id} "
-                "game is in the past and "
-                "not in existing output — "
-                "recording non-weather fields only."
-            )
+            old_row = existing_rows[
+                game_id
+            ]
 
-            stadium_key = (
-                game.get(
-                    "stadium",
-                    "",
-                ).strip(),
-                game.get(
-                    "home_team",
-                    "",
-                ).strip(),
-            )
+            # Preserve historical weather, but refresh venue/roof metadata.
+            for column in WEATHER_COLUMNS:
+                row[column] = clean(
+                    old_row.get(
+                        column,
+                        "",
+                    )
+                )
 
-            stadium_row = (
-                stadium_lookup.get(
-                    stadium_key
+            row[
+                "weather_fetched_at"
+            ] = clean(
+                old_row.get(
+                    "weather_fetched_at",
+                    "",
                 )
             )
-
-            row = build_row(
-                game,
-                stadium_row,
-                log_lines,
-                weather_fetched_at,
-            )
-
-            for col in [
-                "temperature",
-                "wind_speed",
-                "wind_gust",
-                "precip_probability",
-                "rain_flag",
-                "snow_flag",
-                "humidity",
-            ]:
-                row[col] = ""
 
             output_rows.append(
                 row
             )
             continue
 
-        # Future game (or unknown/unparseable date-time) — fetch/update weather.
-        stadium_key = (
-            game.get(
-                "stadium",
-                "",
-            ).strip(),
-            game.get(
-                "home_team",
-                "",
-            ).strip(),
-        )
+        if not future:
+            log_lines.append(
+                f"INFO: game_id={game_id} "
+                "game already completed and no "
+                "stored weather exists"
+            )
 
-        stadium_row = (
-            stadium_lookup.get(
-                stadium_key
+            output_rows.append(
+                row
+            )
+            continue
+
+        if venue_row is None:
+            output_rows.append(
+                row
+            )
+            continue
+
+        lat = clean(
+            venue_row.get(
+                "latitude",
+                "",
             )
         )
 
-        row = build_row(
-            game,
-            stadium_row,
-            log_lines,
-            weather_fetched_at,
+        lon = clean(
+            venue_row.get(
+                "longitude",
+                "",
+            )
+        )
+
+        if not lat or not lon:
+            log_lines.append(
+                f"ERROR: game_id={game_id} "
+                "resolved venue has no "
+                "latitude/longitude"
+            )
+
+            output_rows.append(
+                row
+            )
+            continue
+
+        cache_key = (
+            lat,
+            lon,
+        )
+
+        if cache_key not in weather_cache:
+            weather_cache[
+                cache_key
+            ] = fetch_weather(
+                lat,
+                lon,
+                log_lines,
+                game_id,
+            )
+
+            time.sleep(
+                REQUEST_SLEEP_SECONDS
+            )
+
+        weather_values = (
+            extract_weather_values(
+                weather_cache[
+                    cache_key
+                ],
+                kickoff_utc,
+                game_id,
+                log_lines,
+            )
+        )
+
+        row.update(
+            weather_values
         )
 
         output_rows.append(
@@ -751,31 +1168,39 @@ def process_week(
             f,
             fieldnames=OUTPUT_HEADERS,
         )
-        writer.writeheader()
 
-        for row in output_rows:
-            writer.writerow(
-                row
-            )
+        writer.writeheader()
+        writer.writerows(
+            output_rows
+        )
+
+    resolved = sum(
+        1
+        for row in output_rows
+        if row[
+            "venue_resolution_status"
+        ].startswith(
+            "resolved_"
+        )
+    )
 
     print(
         f"Wrote {len(output_rows)} rows "
-        f"to {output_path}"
+        f"to {output_path} | "
+        f"venues_resolved={resolved}"
     )
 
 
 def main():
     log_lines = []
 
-    weather_fetched_at = datetime.now(
-        ZoneInfo(
-            "America/New_York"
-        )
-    ).strftime(
-        "%Y-%m-%d %H:%M:%S %Z"
+    weather_fetched_at = (
+        datetime.now(
+            timezone.utc
+        ).isoformat()
     )
 
-    stadium_lookup = (
+    venue_lookup = (
         load_stadium_map()
     )
 
@@ -790,24 +1215,25 @@ def main():
 
     if not schedule_files:
         print(
-            f"WARNING: no weekly schedule files "
-            f"found in {SCHEDULE_DIR}"
+            "WARNING: no weekly schedule "
+            f"files found in {SCHEDULE_DIR}"
         )
+        return
 
     for schedule_path in schedule_files:
         filename = os.path.basename(
             schedule_path
         )
 
-        match = re.match(
+        match = re.fullmatch(
             r"week_(\d+)_CFB_weekly_schedule\.csv",
             filename,
         )
 
         if not match:
             log_lines.append(
-                "WARNING: skipped unrecognized "
-                f"file name: {filename}"
+                "WARNING: skipped "
+                f"unrecognized file: {filename}"
             )
             continue
 
@@ -818,9 +1244,9 @@ def main():
         process_week(
             week,
             schedule_path,
-            log_lines,
+            venue_lookup,
             weather_fetched_at,
-            stadium_lookup,
+            log_lines,
         )
 
     os.makedirs(
@@ -834,13 +1260,15 @@ def main():
         encoding="utf-8",
     ) as f:
         f.write(
-            f"\n--- Run at {weather_fetched_at} ---\n"
+            "\n--- Run at "
+            f"{weather_fetched_at} ---\n"
         )
 
         if log_lines:
             for line in log_lines:
                 f.write(
-                    line + "\n"
+                    line
+                    + "\n"
                 )
         else:
             f.write(
@@ -848,7 +1276,8 @@ def main():
             )
 
     print(
-        f"Log written to {ERROR_LOG_PATH}"
+        f"Log written to "
+        f"{ERROR_LOG_PATH}"
     )
 
 
