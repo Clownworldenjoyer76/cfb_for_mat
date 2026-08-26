@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-Step 15 NFL candidate enrichment engine.
+Step 15 CFB candidate enrichment engine.
 
 READS:
-  docs/win/football/nfl/config/settings.yaml
-  docs/win/football/nfl/01_merge/week_{week}_NFL_enriched.csv
-  docs/win/football/nfl/00_intake/schedule/weekly/
-      week_{week}_NFL_weekly_schedule.csv
-  docs/win/football/nfl/data/weather/
-      week_{week}_NFL_weekly_weather.csv  (optional)
+  docs/win/football/cfb/config/settings.yaml
+  docs/win/football/cfb/01_merge/week_{week}_CFB_enriched.csv
+  docs/win/football/cfb/00_intake/schedule/weekly/
+      week_{week}_CFB_weekly_schedule.csv
+  docs/win/football/cfb/data/weather/
+      week_{week}_CFB_weekly_weather.csv  (optional)
 
 WRITES:
-  docs/win/football/nfl/02_select/week_{week}_NFL_selected.csv
+  docs/win/football/cfb/02_select/week_{week}_CFB_selected.csv
 
 This step does NOT apply betting filters or choose a bet.
 
@@ -50,9 +50,9 @@ import yaml
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-NFL_ROOT = SCRIPT_DIR.parents[1]
+CFB_ROOT = SCRIPT_DIR.parents[1]
 
-DEFAULT_SETTINGS_PATH = NFL_ROOT / "config/settings.yaml"
+DEFAULT_SETTINGS_PATH = CFB_ROOT / "config/settings.yaml"
 
 PREDICTION_COLUMNS = [
     "predicted_margin",
@@ -158,6 +158,12 @@ CANDIDATE_COLUMNS = [
 ]
 
 SEASON_TYPE_ALIASES = {
+    # ESPN football season-type values.
+    "1": "pre",
+    "2": "reg",
+    "3": "post",
+
+    # Text aliases used by settings/config files.
     "reg": "reg",
     "regular": "reg",
     "regularseason": "reg",
@@ -216,7 +222,11 @@ def parse_int(value: Any) -> int | None:
     return int(number)
 
 
-def parse_bool(value: Any, *, key: str) -> bool:
+def parse_bool(
+    value: Any,
+    *,
+    key: str,
+) -> bool:
     if isinstance(value, bool):
         return value
 
@@ -261,10 +271,27 @@ def normalize_game_id(value: Any) -> str:
 
 
 def normalize_season_type(value: Any) -> str:
+    raw = clean(value)
+
+    numeric = parse_float(raw)
+
+    if (
+        numeric is not None
+        and float(numeric).is_integer()
+    ):
+        numeric_key = str(
+            int(numeric)
+        )
+
+        if numeric_key in SEASON_TYPE_ALIASES:
+            return SEASON_TYPE_ALIASES[
+                numeric_key
+            ]
+
     text = re.sub(
         r"[\s_-]+",
         "",
-        clean(value).casefold(),
+        raw.casefold(),
     )
 
     return SEASON_TYPE_ALIASES.get(
@@ -639,9 +666,16 @@ def deferred_market(
         f"{prefix}_kelly": np.nan,
     }
 
-    if prefix in {"spread", "total"}:
-        output[f"{prefix}_line"] = (
-            np.nan if line is None else line
+    if prefix in {
+        "spread",
+        "total",
+    }:
+        output[
+            f"{prefix}_line"
+        ] = (
+            np.nan
+            if line is None
+            else line
         )
 
     return output
@@ -663,9 +697,20 @@ def blank_candidate(
         f"{prefix}_kelly": np.nan,
     }
 
-    if prefix.startswith("spread_") or prefix.startswith("total_"):
-        output[f"{prefix}_line"] = (
-            np.nan if line is None else line
+    if (
+        prefix.startswith(
+            "spread_"
+        )
+        or prefix.startswith(
+            "total_"
+        )
+    ):
+        output[
+            f"{prefix}_line"
+        ] = (
+            np.nan
+            if line is None
+            else line
         )
 
     return output
@@ -679,17 +724,35 @@ def candidate_columns(
 ) -> dict[str, Any]:
     output = {
         f"{prefix}_available": 1,
-        f"{prefix}_odds_american": candidate["odds_american"],
-        f"{prefix}_model_probability": candidate["model_probability"],
-        f"{prefix}_implied_probability": candidate["implied_probability"],
-        f"{prefix}_edge": candidate["edge"],
-        f"{prefix}_ev": candidate["ev"],
-        f"{prefix}_full_kelly": candidate["full_kelly"],
-        f"{prefix}_kelly": candidate["full_kelly"],
+        f"{prefix}_odds_american": candidate[
+            "odds_american"
+        ],
+        f"{prefix}_model_probability": candidate[
+            "model_probability"
+        ],
+        f"{prefix}_implied_probability": candidate[
+            "implied_probability"
+        ],
+        f"{prefix}_edge": candidate[
+            "edge"
+        ],
+        f"{prefix}_ev": candidate[
+            "ev"
+        ],
+        f"{prefix}_full_kelly": candidate[
+            "full_kelly"
+        ],
+        f"{prefix}_kelly": candidate[
+            "full_kelly"
+        ],
     }
 
     if include_line:
-        output[f"{prefix}_line"] = candidate["line"]
+        output[
+            f"{prefix}_line"
+        ] = candidate[
+            "line"
+        ]
 
     return output
 
@@ -698,15 +761,36 @@ def empty_candidate_set(
     reason: str,
 ) -> dict[str, Any]:
     return {
-        **deferred_market("ml", reason),
-        **deferred_market("spread", reason),
-        **deferred_market("total", reason),
-        **blank_candidate("ml_home"),
-        **blank_candidate("ml_away"),
-        **blank_candidate("spread_home"),
-        **blank_candidate("spread_away"),
-        **blank_candidate("total_over"),
-        **blank_candidate("total_under"),
+        **deferred_market(
+            "ml",
+            reason,
+        ),
+        **deferred_market(
+            "spread",
+            reason,
+        ),
+        **deferred_market(
+            "total",
+            reason,
+        ),
+        **blank_candidate(
+            "ml_home"
+        ),
+        **blank_candidate(
+            "ml_away"
+        ),
+        **blank_candidate(
+            "spread_home"
+        ),
+        **blank_candidate(
+            "spread_away"
+        ),
+        **blank_candidate(
+            "total_over"
+        ),
+        **blank_candidate(
+            "total_under"
+        ),
     }
 
 
@@ -717,31 +801,43 @@ def evaluate_moneyline(
         row,
         "sched_home_moneyline_american",
     )
+
     away_odds = odds_value(
         row,
         "sched_away_moneyline_american",
     )
 
-    if home_odds is None or away_odds is None:
+    if (
+        home_odds is None
+        or away_odds is None
+    ):
         return {
             **deferred_market(
                 "ml",
                 "CURRENT_LINE_MISSING",
             ),
-            **blank_candidate("ml_home"),
-            **blank_candidate("ml_away"),
+            **blank_candidate(
+                "ml_home"
+            ),
+            **blank_candidate(
+                "ml_away"
+            ),
         }
 
     home_probability = numeric_probability(
         row,
         "home_win_probability",
     )
+
     away_probability = numeric_probability(
         row,
         "away_win_probability",
     )
 
-    home_fair, away_fair = no_vig_probabilities(
+    (
+        home_fair,
+        away_fair,
+    ) = no_vig_probabilities(
         home_odds,
         away_odds,
     )
@@ -752,6 +848,7 @@ def evaluate_moneyline(
         home_odds,
         home_fair,
     )
+
     away_candidate = make_candidate(
         "AWAY",
         away_probability,
@@ -781,15 +878,24 @@ def evaluate_spread(
     row: pd.Series,
 ) -> dict[str, Any]:
     home_line = parse_float(
-        row.get("sched_home_spread", "")
+        row.get(
+            "sched_home_spread",
+            "",
+        )
     )
+
     away_line = parse_float(
-        row.get("sched_away_spread", "")
+        row.get(
+            "sched_away_spread",
+            "",
+        )
     )
+
     home_odds = odds_value(
         row,
         "sched_home_spread_american",
     )
+
     away_odds = odds_value(
         row,
         "sched_away_spread_american",
@@ -819,7 +925,10 @@ def evaluate_spread(
             ),
         }
 
-    home_fair, away_fair = no_vig_probabilities(
+    (
+        home_fair,
+        away_fair,
+    ) = no_vig_probabilities(
         home_odds,
         away_odds,
     )
@@ -836,6 +945,7 @@ def evaluate_spread(
         is_favorite=home_line < 0,
         is_underdog=home_line > 0,
     )
+
     away_candidate = make_candidate(
         "AWAY",
         numeric_probability(
@@ -951,12 +1061,17 @@ def evaluate_total(
     row: pd.Series,
 ) -> dict[str, Any]:
     total_line = parse_float(
-        row.get("sched_total", "")
+        row.get(
+            "sched_total",
+            "",
+        )
     )
+
     over_odds = odds_value(
         row,
         "sched_over_american",
     )
+
     under_odds = odds_value(
         row,
         "sched_under_american",
@@ -983,7 +1098,10 @@ def evaluate_total(
             ),
         }
 
-    over_fair, under_fair = no_vig_probabilities(
+    (
+        over_fair,
+        under_fair,
+    ) = no_vig_probabilities(
         over_odds,
         under_odds,
     )
@@ -998,6 +1116,7 @@ def evaluate_total(
         over_fair,
         line=total_line,
     )
+
     under_candidate = make_candidate(
         "UNDER",
         numeric_probability(
@@ -1155,12 +1274,10 @@ def validate_settings(
             f"{settings.get('week')!r}"
         )
 
-    season_type = (
-        normalize_season_type(
-            settings.get(
-                "season_type",
-                "reg",
-            )
+    season_type = normalize_season_type(
+        settings.get(
+            "season_type",
+            "reg",
         )
     )
 
@@ -1234,14 +1351,18 @@ def validate_combined(
     )
 
     seasons = {
-        parse_int(value)
+        parse_int(
+            value
+        )
         for value in df[
             "season"
         ]
     }
 
     weeks = {
-        parse_int(value)
+        parse_int(
+            value
+        )
         for value in df[
             "week"
         ]
@@ -1256,21 +1377,27 @@ def validate_combined(
         ]
     }
 
-    if seasons != {season}:
+    if seasons != {
+        season
+    }:
         fail(
             f"{label}: expected only "
             f"season={season}; "
             f"found {seasons}"
         )
 
-    if weeks != {week}:
+    if weeks != {
+        week
+    }:
         fail(
             f"{label}: expected only "
             f"week={week}; "
             f"found {weeks}"
         )
 
-    if types != {season_type}:
+    if types != {
+        season_type
+    }:
         fail(
             f"{label}: expected "
             "season_type="
@@ -1321,12 +1448,16 @@ def merge_schedule(
     )
 
     season_values = pd.to_numeric(
-        schedule["season"],
+        schedule[
+            "season"
+        ],
         errors="coerce",
     )
 
     week_values = pd.to_numeric(
-        schedule["week"],
+        schedule[
+            "week"
+        ],
         errors="coerce",
     )
 
@@ -1361,10 +1492,8 @@ def merge_schedule(
             f"{season_type}"
         )
 
-    configured_book = (
-        normalize_bookmaker(
-            sportsbook
-        )
+    configured_book = normalize_bookmaker(
+        sportsbook
     )
 
     odds_available = (
@@ -1374,11 +1503,13 @@ def merge_schedule(
             ],
             errors="coerce",
         )
-        .fillna(0)
+        .fillna(
+            0
+        )
     )
 
-    available_rows = (
-        odds_available.eq(1)
+    available_rows = odds_available.eq(
+        1
     )
 
     bad_book = (
@@ -1403,7 +1534,9 @@ def merge_schedule(
                     "bookmaker",
                 ],
             ]
-            .head(10)
+            .head(
+                10
+            )
             .to_dict(
                 "records"
             )
@@ -1467,10 +1600,8 @@ def merge_schedule(
             column: (
                 f"sched_{column}"
             )
-            for column
-            in columns
-            if column
-            != "game_id"
+            for column in columns
+            if column != "game_id"
         }
     )
 
@@ -1494,7 +1625,9 @@ def merge_weather(
 
     require_columns(
         weather,
-        ["game_id"],
+        [
+            "game_id"
+        ],
         "weekly weather",
     )
 
@@ -1508,10 +1641,8 @@ def merge_weather(
             column: (
                 f"wx_{column}"
             )
-            for column
-            in weather.columns
-            if column
-            != "game_id"
+            for column in weather.columns
+            if column != "game_id"
         }
     )
 
@@ -1528,7 +1659,12 @@ def build_output(
     working: pd.DataFrame,
     max_kelly: float,
 ) -> pd.DataFrame:
-    candidate_rows: list[dict[str, Any]] = []
+    candidate_rows: list[
+        dict[
+            str,
+            Any,
+        ]
+    ] = []
 
     for _, row in working.iterrows():
         odds_available = (
@@ -1545,16 +1681,25 @@ def build_output(
             result = empty_candidate_set(
                 "CURRENT_ODDS_UNAVAILABLE"
             )
+
         else:
             result = {
-                **evaluate_moneyline(row),
-                **evaluate_spread(row),
-                **evaluate_total(row),
+                **evaluate_moneyline(
+                    row
+                ),
+                **evaluate_spread(
+                    row
+                ),
+                **evaluate_total(
+                    row
+                ),
             }
 
         candidate_rows.append(
             {
-                "game_id": row["game_id"],
+                "game_id": row[
+                    "game_id"
+                ],
                 **result,
             }
         )
@@ -1595,7 +1740,11 @@ def build_output(
             )
         )
 
-    if len(candidate_frame) != len(original):
+    if len(
+        candidate_frame
+    ) != len(
+        original
+    ):
         fail(
             "Internal candidate row-count mismatch"
         )
@@ -1605,16 +1754,29 @@ def build_output(
         "candidate results",
     )
 
-    original_ids = set(original["game_id"])
-    candidate_ids = set(candidate_frame["game_id"])
+    original_ids = set(
+        original[
+            "game_id"
+        ]
+    )
+
+    candidate_ids = set(
+        candidate_frame[
+            "game_id"
+        ]
+    )
 
     if candidate_ids != original_ids:
         missing_ids = sorted(
-            original_ids - candidate_ids
+            original_ids
+            - candidate_ids
         )
+
         extra_ids = sorted(
-            candidate_ids - original_ids
+            candidate_ids
+            - original_ids
         )
+
         fail(
             "Candidate game_id mismatch: "
             f"missing={missing_ids[:10]} "
@@ -1622,7 +1784,11 @@ def build_output(
         )
 
     candidate_frame = (
-        original[["game_id"]]
+        original[
+            [
+                "game_id"
+            ]
+        ]
         .merge(
             candidate_frame,
             on="game_id",
@@ -1635,9 +1801,11 @@ def build_output(
     output = original.copy()
 
     for column in appended_columns:
-        output[column] = (
-            candidate_frame[column].to_numpy()
-        )
+        output[
+            column
+        ] = candidate_frame[
+            column
+        ].to_numpy()
 
     return output
 
@@ -1651,11 +1819,9 @@ def write_atomic_csv(
         exist_ok=True,
     )
 
-    temporary = (
-        path.with_suffix(
-            path.suffix
-            + ".tmp"
-        )
+    temporary = path.with_suffix(
+        path.suffix
+        + ".tmp"
     )
 
     df.to_csv(
@@ -1677,21 +1843,25 @@ def main() -> int:
         type=int,
         default=None,
     )
+
     parser.add_argument(
         "--week",
         type=int,
         default=None,
     )
+
     parser.add_argument(
         "--settings",
         type=Path,
         default=DEFAULT_SETTINGS_PATH,
     )
+
     parser.add_argument(
         "--input",
         type=Path,
         default=None,
     )
+
     parser.add_argument(
         "--output",
         type=Path,
@@ -1749,9 +1919,9 @@ def main() -> int:
         args.input.resolve()
         if args.input is not None
         else (
-            NFL_ROOT
+            CFB_ROOT
             / "01_merge"
-            / f"week_{week}_NFL_enriched.csv"
+            / f"week_{week}_CFB_enriched.csv"
         )
     )
 
@@ -1759,9 +1929,9 @@ def main() -> int:
         args.output.resolve()
         if args.output is not None
         else (
-            NFL_ROOT
+            CFB_ROOT
             / "02_select"
-            / f"week_{week}_NFL_selected.csv"
+            / f"week_{week}_CFB_selected.csv"
         )
     )
 
@@ -1776,6 +1946,7 @@ def main() -> int:
         input_path,
         "projected combined enriched file",
     )
+
     assert combined is not None
 
     prior_output_columns = [
@@ -1797,19 +1968,24 @@ def main() -> int:
         season,
         week,
         season_type,
-        str(input_path),
+        str(
+            input_path
+        ),
     )
 
     schedule_path = (
-        NFL_ROOT
-        / "00_intake/schedule/weekly"
-        / f"week_{week}_NFL_weekly_schedule.csv"
+        CFB_ROOT
+        / "00_intake"
+        / "schedule"
+        / "weekly"
+        / f"week_{week}_CFB_weekly_schedule.csv"
     )
 
     schedule = read_csv(
         schedule_path,
         "weekly schedule",
     )
+
     assert schedule is not None
 
     working = merge_schedule(
@@ -1822,9 +1998,10 @@ def main() -> int:
     )
 
     weather_path = (
-        NFL_ROOT
-        / "data/weather"
-        / f"week_{week}_NFL_weekly_weather.csv"
+        CFB_ROOT
+        / "data"
+        / "weather"
+        / f"week_{week}_CFB_weekly_weather.csv"
     )
 
     weather = read_csv(
@@ -1845,20 +2022,28 @@ def main() -> int:
     )
 
     expected_columns = (
-        list(combined.columns)
+        list(
+            combined.columns
+        )
         + SELECTION_COLUMNS
         + CANDIDATE_COLUMNS
     )
 
-    if list(output.columns) != expected_columns:
+    if list(
+        output.columns
+    ) != expected_columns:
         fail(
             "Final candidate column "
             "order/integrity check failed"
         )
 
     if (
-        output["game_id"].tolist()
-        != combined["game_id"].tolist()
+        output[
+            "game_id"
+        ].tolist()
+        != combined[
+            "game_id"
+        ].tolist()
     ):
         fail(
             "game_id order changed during "
@@ -1866,8 +2051,12 @@ def main() -> int:
         )
 
     if (
-        output["away_team"].tolist()
-        != combined["away_team"].tolist()
+        output[
+            "away_team"
+        ].tolist()
+        != combined[
+            "away_team"
+        ].tolist()
     ):
         fail(
             "away_team changed during "
@@ -1875,8 +2064,12 @@ def main() -> int:
         )
 
     if (
-        output["home_team"].tolist()
-        != combined["home_team"].tolist()
+        output[
+            "home_team"
+        ].tolist()
+        != combined[
+            "home_team"
+        ].tolist()
     ):
         fail(
             "home_team changed during "
@@ -1889,36 +2082,63 @@ def main() -> int:
     )
 
     print(
-        "Step 15 candidate enrichment complete: "
+        "CFB candidate enrichment complete: "
         f"season={season} "
         f"week={week} "
         f"games={len(output)}"
     )
 
     for column, label in [
-        ("ml_home_available", "ml_home"),
-        ("ml_away_available", "ml_away"),
-        ("spread_home_available", "spread_home"),
-        ("spread_away_available", "spread_away"),
-        ("total_over_available", "total_over"),
-        ("total_under_available", "total_under"),
+        (
+            "ml_home_available",
+            "ml_home",
+        ),
+        (
+            "ml_away_available",
+            "ml_away",
+        ),
+        (
+            "spread_home_available",
+            "spread_home",
+        ),
+        (
+            "spread_away_available",
+            "spread_away",
+        ),
+        (
+            "total_over_available",
+            "total_over",
+        ),
+        (
+            "total_under_available",
+            "total_under",
+        ),
     ]:
         count = int(
             pd.to_numeric(
-                output[column],
+                output[
+                    column
+                ],
                 errors="coerce",
             )
-            .fillna(0)
+            .fillna(
+                0
+            )
             .sum()
         )
+
         print(
             f"{label}_candidates={count}"
         )
 
-    print(f"Updated: {output_path}")
+    print(
+        f"Updated: {output_path}"
+    )
 
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(
+        main()
+    )
