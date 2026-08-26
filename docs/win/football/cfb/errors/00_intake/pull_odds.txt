@@ -1,10 +1,10 @@
-[2026-08-26T18:54:20.234913+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
-[2026-08-26T18:54:20.234970+00:00] Selected schedule group: ('2026', '2', '1')
-[2026-08-26T18:54:20.234998+00:00] Snapshot ID: 2026_08_26_185404_307539
-[2026-08-26T18:54:20.235021+00:00] Snapshot fetched at: 2026-08-26T18:54:04.307539+00:00
-[2026-08-26T18:54:20.235045+00:00] ESPN odds events returned: 99
-[2026-08-26T18:54:20.235068+00:00] CSV rows written: 544
-[2026-08-26T18:54:20.235090+00:00] Current raw JSON written: docs/win/football/cfb/00_intake/odds/raw/2026_08_26_cfb_odds.json
-[2026-08-26T18:54:20.235112+00:00] Current normalized CSV written: docs/win/football/cfb/00_intake/odds/2026_08_26_CFB_odds.csv
-[2026-08-26T18:54:20.235134+00:00] Archived raw JSON written: docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_08_26_185404_307539_cfb_odds.json
-[2026-08-26T18:54:20.235155+00:00] Archived normalized CSV written: docs/win/football/cfb/00_intake/odds/snapshots/2026_08_26_185404_307539_CFB_odds.csv
+[2026-08-26T20:12:11.964638+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
+[2026-08-26T20:12:11.964683+00:00] Selected schedule group: ('2026', '2', '1')
+[2026-08-26T20:12:11.964703+00:00] Snapshot ID: 2026_08_26_201207_592107
+[2026-08-26T20:12:11.964720+00:00] Snapshot fetched at: 2026-08-26T20:12:07.592107+00:00
+[2026-08-26T20:12:11.964738+00:00] ESPN odds events returned: 99
+[2026-08-26T20:12:11.964755+00:00] CSV rows written: 544
+[2026-08-26T20:12:11.964771+00:00] Current raw JSON written: docs/win/football/cfb/00_intake/odds/raw/2026_08_26_cfb_odds.json
+[2026-08-26T20:12:11.964787+00:00] Current normalized CSV written: docs/win/football/cfb/00_intake/odds/2026_08_26_CFB_odds.csv
+[2026-08-26T20:12:11.964803+00:00] Archived raw JSON written: docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_08_26_201207_592107_cfb_odds.json
+[2026-08-26T20:12:11.964819+00:00] Archived normalized CSV written: docs/win/football/cfb/00_intake/odds/snapshots/2026_08_26_201207_592107_CFB_odds.csv
