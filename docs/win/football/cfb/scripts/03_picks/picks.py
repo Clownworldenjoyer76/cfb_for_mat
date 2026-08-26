@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-NFL selection layer.
+CFB selection layer.
 
 READS:
-  docs/win/football/nfl/02_select/*NFL_selected.csv
-  docs/win/football/nfl/config/markets.yaml
+  docs/win/football/cfb/02_select/*CFB_selected.csv
+  docs/win/football/cfb/config/markets.yaml
 
 WRITES:
-  docs/win/football/nfl/03_picks/*NFL_picks.csv
+  docs/win/football/cfb/03_picks/*CFB_picks.csv
 
 Behavior:
 - Preserves every input column.
@@ -35,12 +35,12 @@ import yaml
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-NFL_ROOT = SCRIPT_DIR.parents[1]
+CFB_ROOT = SCRIPT_DIR.parents[1]
 
-DEFAULT_INPUT_DIR = NFL_ROOT / "02_select"
-DEFAULT_MARKETS_PATH = NFL_ROOT / "config/markets.yaml"
-DEFAULT_OUTPUT_DIR = NFL_ROOT / "03_picks"
-DEFAULT_PATTERN = "*NFL_selected.csv"
+DEFAULT_INPUT_DIR = CFB_ROOT / "02_select"
+DEFAULT_MARKETS_PATH = CFB_ROOT / "config/markets.yaml"
+DEFAULT_OUTPUT_DIR = CFB_ROOT / "03_picks"
+DEFAULT_PATTERN = "*CFB_selected.csv"
 
 THRESHOLD_KEYS = {
     "min_ev",
@@ -1331,8 +1331,11 @@ def process_file(
     )
 
     output = df.copy()
+
     for column in selection_columns():
-        output[column] = output[column].astype(object)
+        output[column] = output[
+            column
+        ].astype(object)
 
     original_columns = list(
         df.columns
@@ -1431,7 +1434,7 @@ def output_name(
     input_path: Path,
 ) -> str:
     suffix = (
-        "NFL_selected.csv"
+        "CFB_selected.csv"
     )
 
     if not input_path.name.endswith(
@@ -1446,7 +1449,7 @@ def output_name(
         input_path.name[
             :-len(suffix)
         ]
-        + "NFL_picks.csv"
+        + "CFB_picks.csv"
     )
 
 
@@ -1603,7 +1606,7 @@ def main() -> int:
         )
 
     print(
-        "NFL selection layer complete: "
+        "CFB selection layer complete: "
         f"files={len(input_files)} "
         f"games={totals['games']} "
         f"ml_picks={totals['ml']} "
