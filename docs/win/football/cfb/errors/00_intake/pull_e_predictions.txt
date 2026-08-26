@@ -28,3 +28,33 @@ wrote 130 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026
 wrote 2 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_15_e_predictions.csv
 games_processed=892 resolved=888 failed=4 files_written=14
 
+--- run 2026-08-26T18:24:27.068231+00:00 ---
+game_id=401860927 predictor unavailable: HTTP Error 400: Bad Request
+
+--- run 2026-08-26T18:24:27.151565+00:00 ---
+game_id=401860929 predictor unavailable: HTTP Error 400: Bad Request
+
+--- run 2026-08-26T18:24:27.538265+00:00 ---
+game_id=401860926 predictor unavailable: HTTP Error 400: Bad Request
+
+--- run 2026-08-26T18:24:27.632296+00:00 ---
+game_id=401860928 predictor unavailable: HTTP Error 400: Bad Request
+
+--- run 2026-08-26T18:24:31.585038+00:00 ---
+season=2026
+wrote 198 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_1_e_predictions.csv
+wrote 172 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_2_e_predictions.csv
+wrote 150 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_3_e_predictions.csv
+wrote 142 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_4_e_predictions.csv
+wrote 118 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_5_e_predictions.csv
+wrote 116 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_6_e_predictions.csv
+wrote 124 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_7_e_predictions.csv
+wrote 112 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_8_e_predictions.csv
+wrote 112 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_9_e_predictions.csv
+wrote 126 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_10_e_predictions.csv
+wrote 134 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_11_e_predictions.csv
+wrote 140 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_12_e_predictions.csv
+wrote 130 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_13_e_predictions.csv
+wrote 2 rows to docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_15_e_predictions.csv
+games_processed=892 resolved=888 failed=4 files_written=14
+
