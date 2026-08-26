@@ -28,11 +28,35 @@ jobs:
           python -m pip install pandas numpy pyyaml pyarrow polars xgboost sportsdataverse==0.0.75
 
       # ----------------------------------------------------------------------
-      # CURRENT SCHEDULE + COMPLETED GAME DATA
+      # SCHEDULE
       # ----------------------------------------------------------------------
 
       - name: Pull CFB schedule
         run: python docs/win/football/cfb/scripts/00_intake/pull_schedule.py
+
+      # ----------------------------------------------------------------------
+      # FINAL SCORES + GRADING FOR PREVIOUS PICKS
+      #
+      # When this workflow is run for Week 2, Week 1 picks already exist.
+      # Final Week 1 scores are pulled and Week 1 bets are graded here.
+      #
+      # When run for Week 3, existing Week 1 + Week 2 picks are refreshed
+      # against ESPN finals, etc.
+      # ----------------------------------------------------------------------
+
+      - name: Pull final CFB scores
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/pull_final_scores.py \
+            --season "$CFB_SEASON"
+
+      - name: Grade existing CFB picks
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/grade_picks.py \
+            --season "$CFB_SEASON"
+
+      # ----------------------------------------------------------------------
+      # COMPLETED GAME DATA FOR NEXT-WEEK MODEL
+      # ----------------------------------------------------------------------
 
       - name: Pull completed CFB play-by-play
         run: |
@@ -96,6 +120,7 @@ jobs:
         run: python docs/win/football/cfb/scripts/00_intake/roster_cleanup.py
 
       # Depth charts remain excluded from the current CFB pipeline.
+      #
       # - name: Pull depth charts
       #   run: python docs/win/football/cfb/scripts/00_intake/depth_chart.py
       #
@@ -173,7 +198,7 @@ jobs:
             --week "$CFB_WEEK"
 
       # ----------------------------------------------------------------------
-      # VERIFY EXPECTED OUTPUTS
+      # VERIFY CURRENT-WEEK OUTPUTS
       # ----------------------------------------------------------------------
 
       - name: Verify pipeline outputs
@@ -186,7 +211,15 @@ jobs:
           echo "CFB Week ${CFB_WEEK} pipeline outputs verified."
 
       # ----------------------------------------------------------------------
-      # COMMIT OUTPUTS
+      # COMMIT EVERYTHING
+      #
+      # Includes:
+      # - final scores
+      # - graded previous-week picks
+      # - season grading summary
+      # - PBP/team stats
+      # - current-week projections
+      # - current-week selections/picks
       # ----------------------------------------------------------------------
 
       - name: Commit and push CFB pipeline outputs
