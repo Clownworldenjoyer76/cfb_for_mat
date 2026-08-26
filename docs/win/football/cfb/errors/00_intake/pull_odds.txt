@@ -1,0 +1,10 @@
+[2026-08-26T16:31:56.569972+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
+[2026-08-26T16:31:56.570030+00:00] Selected schedule group: ('2026', '2', '1')
+[2026-08-26T16:31:56.570058+00:00] Snapshot ID: 2026_08_26_163147_775564
+[2026-08-26T16:31:56.570081+00:00] Snapshot fetched at: 2026-08-26T16:31:47.775564+00:00
+[2026-08-26T16:31:56.570104+00:00] ESPN odds events returned: 99
+[2026-08-26T16:31:56.570126+00:00] CSV rows written: 544
+[2026-08-26T16:31:56.570148+00:00] Current raw JSON written: docs/win/football/cfb/00_intake/odds/raw/2026_08_26_cfb_odds.json
+[2026-08-26T16:31:56.570170+00:00] Current normalized CSV written: docs/win/football/cfb/00_intake/odds/2026_08_26_CFB_odds.csv
+[2026-08-26T16:31:56.570192+00:00] Archived raw JSON written: docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_08_26_163147_775564_cfb_odds.json
+[2026-08-26T16:31:56.570214+00:00] Archived normalized CSV written: docs/win/football/cfb/00_intake/odds/snapshots/2026_08_26_163147_775564_CFB_odds.csv
