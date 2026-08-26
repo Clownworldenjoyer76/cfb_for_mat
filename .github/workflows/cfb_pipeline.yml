@@ -189,6 +189,15 @@ jobs:
             --pattern "week_${CFB_WEEK}_CFB_selected.csv"
 
       # ----------------------------------------------------------------------
+      # CLEAN HUMAN-READABLE WEEKLY PICKS
+      # ----------------------------------------------------------------------
+
+      - name: Build clean weekly picks output
+        run: |
+          python docs/win/football/cfb/scripts/03_picks/clean_weekly_picks.py \
+            --week "$CFB_WEEK"
+
+      # ----------------------------------------------------------------------
       # COMPACT ALL-GAMES OUTPUT
       # ----------------------------------------------------------------------
 
@@ -206,6 +215,7 @@ jobs:
           test -f "docs/win/football/cfb/01_merge/week_${CFB_WEEK}_CFB_enriched.csv"
           test -f "docs/win/football/cfb/02_select/week_${CFB_WEEK}_CFB_selected.csv"
           test -f "docs/win/football/cfb/03_picks/week_${CFB_WEEK}_CFB_picks.csv"
+          test -f "docs/win/football/cfb/03_picks/cleaned/week_${CFB_WEEK}_CFB_clean_picks.csv"
           test -f "docs/win/football/cfb/03_picks/all_games/all_week_${CFB_WEEK}_CFB_picks.csv"
 
           echo "CFB Week ${CFB_WEEK} pipeline outputs verified."
@@ -220,6 +230,7 @@ jobs:
       # - PBP/team stats
       # - current-week projections
       # - current-week selections/picks
+      # - clean human-readable weekly picks
       # ----------------------------------------------------------------------
 
       - name: Commit and push CFB pipeline outputs
