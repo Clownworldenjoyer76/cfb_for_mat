@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Build compact all-game NFL projection picks output.
+Build compact all-game CFB projection picks output.
 
 READS:
-  docs/win/football/nfl/02_select/week_{week}_NFL_selected.csv
+  docs/win/football/cfb/02_select/week_{week}_CFB_selected.csv
 
 WRITES:
-  docs/win/football/nfl/03_picks/all_games/all_week_{week}_NFL_picks.csv
+  docs/win/football/cfb/03_picks/all_games/all_week_{week}_CFB_picks.csv
 
 OUTPUT COLUMNS:
   season
@@ -20,10 +20,10 @@ OUTPUT COLUMNS:
   predicted_home_spread
   predicted_away_spread
 
-The projected away score, home score, and total use the original model
-projection values and are displayed to exactly 1 decimal place.
+The predicted away score, home score, and total use the original model
+prediction values and are displayed to exactly 1 decimal place.
 
-The projected spreads are calculated from the displayed 1-decimal projected
+The predicted spreads are calculated from the displayed 1-decimal predicted
 scores.
 
 Spread definitions:
@@ -46,10 +46,10 @@ import pandas as pd
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-NFL_ROOT = SCRIPT_DIR.parents[1]
+CFB_ROOT = SCRIPT_DIR.parents[1]
 
-DEFAULT_INPUT_DIR = NFL_ROOT / "02_select"
-DEFAULT_OUTPUT_DIR = NFL_ROOT / "03_picks" / "all_games"
+DEFAULT_INPUT_DIR = CFB_ROOT / "02_select"
+DEFAULT_OUTPUT_DIR = CFB_ROOT / "03_picks" / "all_games"
 
 OUTPUT_COLUMNS = [
     "season",
@@ -154,9 +154,14 @@ def validate_game_ids(
     df: pd.DataFrame,
     label: str,
 ) -> None:
-    game_ids = df["game_id"].map(clean)
+    game_ids = df[
+        "game_id"
+    ].map(clean)
 
-    if (game_ids == "").any():
+    if (
+        game_ids
+        == ""
+    ).any():
         fail(
             f"{label}: blank game_id found"
         )
@@ -181,7 +186,10 @@ def validate_game_ids(
 def round_one_decimal(
     value: float,
 ) -> float:
-    return round(value, 1)
+    return round(
+        value,
+        1,
+    )
 
 
 def format_one_decimal(
@@ -193,26 +201,46 @@ def format_one_decimal(
 def build_output(
     source: pd.DataFrame,
 ) -> pd.DataFrame:
-    rows: list[dict[str, Any]] = []
+    rows: list[
+        dict[
+            str,
+            Any,
+        ]
+    ] = []
 
     for index, row in source.iterrows():
-        row_number = index + 2
+        row_number = (
+            index
+            + 2
+        )
 
         away_score = parse_float(
-            row["predicted_away_score"],
-            column="predicted_away_score",
+            row[
+                "predicted_away_score"
+            ],
+            column=(
+                "predicted_away_score"
+            ),
             row_number=row_number,
         )
 
         home_score = parse_float(
-            row["predicted_home_score"],
-            column="predicted_home_score",
+            row[
+                "predicted_home_score"
+            ],
+            column=(
+                "predicted_home_score"
+            ),
             row_number=row_number,
         )
 
         predicted_total = parse_float(
-            row["predicted_total"],
-            column="predicted_total",
+            row[
+                "predicted_total"
+            ],
+            column=(
+                "predicted_total"
+            ),
             row_number=row_number,
         )
 
@@ -241,19 +269,29 @@ def build_output(
         rows.append(
             {
                 "season": clean(
-                    row["season"]
+                    row[
+                        "season"
+                    ]
                 ),
                 "week": clean(
-                    row["week"]
+                    row[
+                        "week"
+                    ]
                 ),
                 "game_id": clean(
-                    row["game_id"]
+                    row[
+                        "game_id"
+                    ]
                 ),
                 "away_team": clean(
-                    row["away_team"]
+                    row[
+                        "away_team"
+                    ]
                 ),
                 "home_team": clean(
-                    row["home_team"]
+                    row[
+                        "home_team"
+                    ]
                 ),
                 "predicted_away_score": (
                     format_one_decimal(
@@ -283,12 +321,10 @@ def build_output(
             }
         )
 
-    output = pd.DataFrame(
+    return pd.DataFrame(
         rows,
         columns=OUTPUT_COLUMNS,
     )
-
-    return output
 
 
 def write_atomic_csv(
@@ -301,7 +337,8 @@ def write_atomic_csv(
     )
 
     temporary = path.with_suffix(
-        path.suffix + ".tmp"
+        path.suffix
+        + ".tmp"
     )
 
     df.to_csv(
@@ -316,13 +353,18 @@ def write_atomic_csv(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=(
+            "Build compact all-game "
+            "CFB prediction output."
+        )
+    )
 
     parser.add_argument(
         "--week",
         type=int,
         required=True,
-        help="NFL week number",
+        help="CFB week number",
     )
 
     args = parser.parse_args()
@@ -334,17 +376,23 @@ def main() -> int:
 
     input_path = (
         DEFAULT_INPUT_DIR
-        / f"week_{args.week}_NFL_selected.csv"
+        / (
+            f"week_{args.week}"
+            "_CFB_selected.csv"
+        )
     )
 
     output_path = (
         DEFAULT_OUTPUT_DIR
-        / f"all_week_{args.week}_NFL_picks.csv"
+        / (
+            f"all_week_{args.week}"
+            "_CFB_picks.csv"
+        )
     )
 
     if not input_path.is_file():
         fail(
-            f"Input file not found: "
+            "Input file not found: "
             f"{input_path}"
         )
 
@@ -352,37 +400,55 @@ def main() -> int:
         input_path,
         dtype=str,
         keep_default_na=False,
+        encoding="utf-8-sig",
+        low_memory=False,
     )
 
     require_columns(
         source,
         REQUIRED_INPUT_COLUMNS,
-        str(input_path),
+        str(
+            input_path
+        ),
     )
 
     validate_game_ids(
         source,
-        str(input_path),
+        str(
+            input_path
+        ),
     )
 
     output = build_output(
         source
     )
 
-    if len(output) != len(source):
+    if len(
+        output
+    ) != len(
+        source
+    ):
         fail(
             "Output row count does not match "
             "input row count"
         )
 
-    if list(output.columns) != OUTPUT_COLUMNS:
+    if list(
+        output.columns
+    ) != OUTPUT_COLUMNS:
         fail(
             "Output column integrity check failed"
         )
 
     if (
-        output["game_id"].tolist()
-        != source["game_id"].map(clean).tolist()
+        output[
+            "game_id"
+        ].tolist()
+        != source[
+            "game_id"
+        ].map(
+            clean
+        ).tolist()
     ):
         fail(
             "game_id order changed during processing"
@@ -402,4 +468,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(
+        main()
+    )
