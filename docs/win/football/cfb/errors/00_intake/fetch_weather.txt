@@ -76,3 +76,272 @@ INFO: game_id=401858437 no kickoff weather available (outside forecast range or 
 INFO: game_id=401856661 no kickoff weather available (outside forecast range or fetch failed)
 INFO: game_id=401858438 no kickoff weather available (outside forecast range or fetch failed)
 INFO: game_id=401858212 no kickoff weather available (outside forecast range or fetch failed)
+
+--- Run at 2026-08-26T17:14:36.811910+00:00 ---
+ERROR: game_id=401856766 met.no request failed lat=32.7096604 lon=-97.3680835: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856766 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864494 met.no request failed lat=34.014167 lon=-118.287778: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864494 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858202 met.no request failed lat=38.0311801 lon=-78.5137897: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858202 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858201 met.no request failed lat=37.4345556 lon=-122.1611271: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858201 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864577 met.no request failed lat=46.9029938 lon=-96.8003251: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864577 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401866408 met.no request failed lat=42.256126 lon=-83.647285: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401866408 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862693 met.no request failed lat=36.0908 lon=-115.1830: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862693 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864570 met.no request failed lat=30.4381692 lon=-84.3044032: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864570 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858423 met.no request failed lat=40.5462553 lon=-74.4660408: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858423 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858204 met.no request failed lat=36.1305507 lon=-80.2545851: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858204 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856663 met.no request failed lat=38.9358491 lon=-92.3332009: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856663 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856767 met.no request failed lat=28.6079765 lon=-81.1927233: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856767 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858422 met.no request failed lat=44.976525 lon=-93.2245462: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858422 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856768 met.no request failed lat=40.7599724 lon=-111.8488255: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856768 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864424 met.no request failed lat=39.6617428 lon=-75.7488224: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864424 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401866409 met.no request failed lat=42.9991334 lon=-78.7775113: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401866409 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864425 met.no request failed lat=34.0289318 lon=-84.5676234: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864425 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856776 met.no request failed lat=33.7724449 lon=-84.3928054: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856776 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858424 met.no request failed lat=40.0993268 lon=-88.2359569: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858424 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858436 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858206 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401864495 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858435 met.no request failed lat=40.4352253 lon=-86.9186843: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858435 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856769 met.no request failed lat=38.9629418 lon=-95.2463686: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856769 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401866623 met.no request failed lat=33.735267 lon=-84.389949: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401866623 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856664 met.no request failed lat=35.2058537 lon=-97.4423145: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856664 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858429 met.no request failed lat=42.7281474 lon=-84.4848526: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858429 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864496 met.no request failed lat=38.9969701 lon=-104.8436165: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864496 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856634 met.no request failed lat=33.2082752 lon=-87.5503836: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856634 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858430 met.no request failed lat=40.820682 lon=-96.705594: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858430 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856778 met.no request failed lat=29.7219885 lon=-95.3491623: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856778 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862701 met.no request failed lat=41.3874924 lon=-73.9640891: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862701 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856780 met.no request failed lat=39.6502744 lon=-79.9551873: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856780 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401861962 met.no request failed lat=41.7595675 lon=-72.6187728: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401861962 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401869960 met.no request failed lat=38.4352919 lon=-78.8729349: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401869960 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858208 met.no request failed lat=43.0362269 lon=-76.1363161: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858208 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858425 met.no request failed lat=39.1808959 lon=-86.5256217: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858425 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856779 met.no request failed lat=42.0139977 lon=-93.6357716: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856779 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401866410 met.no request failed lat=41.3780114 lon=-83.6225: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401866410 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858432 met.no request failed lat=40.0016447 lon=-83.0197266: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858432 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858433 met.no request failed lat=44.0582712 lon=-123.0684883: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858433 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858207 met.no request failed lat=40.4467648 lon=-80.0157603: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858207 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856665 met.no request failed lat=33.9730239 lon=-81.0191726: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856665 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856659 met.no request failed lat=38.0220905 lon=-84.5053408: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856659 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862698 met.no request failed lat=39.9007995 lon=-75.1675414: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862698 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856636 met.no request failed lat=32.6025532 lon=-85.4897479: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856636 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401864499 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856667 met.no request failed lat=30.2836813 lon=-97.7325345: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856667 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862700 met.no request failed lat=29.4169834 lon=-98.4788143: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862700 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856772 met.no request failed lat=36.1489175 lon=-95.9437853: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856772 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856658 met.no request failed lat=33.9498197 lon=-83.3733813: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856658 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856635 met.no request failed lat=36.0680662 lon=-94.1789534: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856635 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858426 met.no request failed lat=41.6586045 lon=-91.5510829: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858426 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856777 met.no request failed lat=39.1312495 lon=-84.5161913: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856777 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856666 met.no request failed lat=35.9550131 lon=-83.9250128: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856666 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401866627 met.no request failed lat=36.2114267 lon=-81.6854278: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401866627 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858434 met.no request failed lat=40.8121958 lon=-77.8561023: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858434 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862694 met.no request failed lat=35.3105033 lon=-80.7401194: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862694 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862696 met.no request failed lat=38.9846985 lon=-76.5076335: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862696 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858209 met.no request failed lat=35.9953688 lon=-78.9417564: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858209 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401868356 met.no request failed lat=31.3289321 lon=-89.3318118: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401868356 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864497 met.no request failed lat=21.294294 lon=-157.819338: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864497 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401860878 met.no request failed lat=40.570015 lon=-105.088435: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401860878 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401860880 met.no request failed lat=41.7517394 lon=-111.8116007: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401860880 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856770 met.no request failed lat=33.5910518 lon=-101.8728824: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856770 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862695 met.no request failed lat=35.1209429 lon=-89.977147: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862695 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856669 met.no request failed lat=36.1440455 lon=-86.8088942: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856669 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401868140 met.no request failed lat=33.8201052 lon=-85.76647: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401868140 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862697 met.no request failed lat=29.7163297 lon=-95.4093261: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862697 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856668 met.no request failed lat=30.6098891 lon=-96.3403828: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856668 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401867866 met.no request failed lat=35.8511463 lon=-86.3681649: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401867866 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856771 met.no request failed lat=39.2020096 lon=-96.5938395: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856771 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401867973 met.no request failed lat=36.8889533 lon=-76.3049175: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401867973 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401868316 met.no request failed lat=30.6943566 lon=-88.0430541: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401868316 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401870763 met.no request failed lat=31.7995565 lon=-85.9518328: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401870763 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856775 met.no request failed lat=40.2575347 lon=-111.6545247: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856775 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856660 met.no request failed lat=30.412035 lon=-91.1838163: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856660 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856773 met.no request failed lat=32.2288054 lon=-110.9488677: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856773 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401869129 met.no request failed lat=32.5321487 lon=-92.6560019: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401869129 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401860879 met.no request failed lat=32.784444 lon=-117.122833: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401860879 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856662 met.no request failed lat=33.4563403 lon=-88.7933652: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856662 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401868170 met.no request failed lat=32.4122471 lon=-81.7849296: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401868170 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401862699 met.no request failed lat=27.9758691 lon=-82.5033344: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401862699 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401869142 met.no request failed lat=30.2158434 lon=-92.0417371: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401869142 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401870790 met.no request failed lat=32.2796202 lon=-106.7411148: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401870790 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401866411 met.no request failed lat=38.5556718 lon=-121.4229607: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401866411 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856774 met.no request failed lat=33.4264471 lon=-111.9325005: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856774 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858431 met.no request failed lat=42.0653994 lon=-87.6924751: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858431 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858210 met.no request failed lat=37.8710434 lon=-122.2507729: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858210 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858211 met.no request failed lat=37.2199873 lon=-80.4180643: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858211 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864432 met.no request failed lat=39.5469459 lon=-119.8175435: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864432 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858428 met.no request failed lat=42.2658365 lon=-83.7486956: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858428 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856637 met.no request failed lat=29.6499357 lon=-82.3485788: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856637 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401864498 met.no request failed lat=35.0669479 lon=-106.6283225: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401864498 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858427 met.no request failed lat=38.9903332 lon=-76.9473792: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858427 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858437 met.no request failed lat=47.6503235 lon=-122.3015746: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858437 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401856661 met.no request failed lat=34.3619837 lon=-89.5342076: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401856661 no kickoff weather available (outside forecast range or fetch failed)
+ERROR: game_id=401858438 met.no request failed lat=41.698378 lon=-86.2339425: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>
+INFO: game_id=401858438 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858212 no kickoff weather available (outside forecast range or fetch failed)
+
+--- Run at 2026-08-26T17:23:02.459425+00:00 ---
+INFO: game_id=401864496 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856634 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858430 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856778 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401862701 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856780 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401861962 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401869960 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858208 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858425 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856779 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401866410 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858432 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858433 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858207 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856665 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856659 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401862698 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856636 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401864499 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856667 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401862700 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856772 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856658 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856635 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858426 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856777 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856666 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401866627 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858434 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401862694 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401862696 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858209 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401868356 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401864497 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401860878 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401860880 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856770 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401862695 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856669 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401868140 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401862697 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856668 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401867866 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856771 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401867973 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401868316 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401870763 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856775 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856660 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856773 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401869129 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401860879 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856662 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401868170 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401862699 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401869142 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401870790 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401866411 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856774 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858431 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858210 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858211 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401864432 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858428 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856637 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401864498 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858427 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858437 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401856661 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858438 no kickoff weather available (outside forecast range or fetch failed)
+INFO: game_id=401858212 no kickoff weather available (outside forecast range or fetch failed)
