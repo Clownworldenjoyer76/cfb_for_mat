@@ -65,10 +65,23 @@ jobs:
       # Apply markets.yaml filters and create final selections.
       - run: python docs/win/football/cfb/scripts/03_picks/picks.py
 
+      # Build readable weekly picks output.
+      - run: |
+          python docs/win/football/cfb/scripts/03_picks/clean_weekly_picks.py \
+            --week 1
+
       # Build compact all-games projection output.
       - run: |
           python docs/win/football/cfb/scripts/03_picks/all_games_picks.py \
             --week 1
+
+      # Verify Week 1 outputs.
+      - run: |
+          test -f "docs/win/football/cfb/01_merge/week_1_CFB_enriched.csv"
+          test -f "docs/win/football/cfb/02_select/week_1_CFB_selected.csv"
+          test -f "docs/win/football/cfb/03_picks/week_1_CFB_picks.csv"
+          test -f "docs/win/football/cfb/03_picks/cleaned/week_1_CFB_clean_picks.csv"
+          test -f "docs/win/football/cfb/03_picks/all_games/all_week_1_CFB_picks.csv"
 
       - run: |
           git config user.name "github-actions[bot]"
