@@ -7,13 +7,24 @@ market selection. Replays the current projection structure with historical
 pregame market data, ESPN predictor data, prior-week team stats, and historical
 travel/weather, then grades bets from historical PBP finals.
 
-Thresholds are learned on 2021-2024 and evaluated on 2025. markets.yaml is
-never modified.
+Default historical sportsbook mapping:
+    2021-2023: DraftKings
+    2024-2025: ESPN BET
 
-Historical limitations: point-in-time FPI and injury snapshots are not stored
-for 2021-2025, so those components use the current projection's missing-data
-behavior. --travel-weather-mode current uses today's fitted coefficients
-retrospectively; use "none" for a leakage-safer sensitivity run.
+Thresholds are learned on 2021-2024 and evaluated on 2025.
+markets.yaml is never modified.
+
+Historical limitations:
+- Point-in-time historical FPI snapshots are not stored, so FPI is disabled.
+- Point-in-time historical injury snapshots are not stored, so injury adjustment is 0.
+- --travel-weather-mode current uses today's fitted travel/weather coefficients
+  retrospectively. Use "none" for a leakage-safer sensitivity run.
+
+Provider integrity:
+- Sportsbooks are matched by exact normalized provider NAME only.
+- ESPN provider-ID fallback is intentionally NOT used.
+- Live-odds providers are never accepted for pregame backtesting.
+- Contaminated cached OK rows are automatically removed and refetched.
 """
 
 from __future__ import annotations
@@ -97,12 +108,6 @@ MARKETS = (
     / "markets.yaml"
 )
 
-SETTINGS = (
-    CFB_ROOT
-    / "config"
-    / "settings.yaml"
-)
-
 TW_COEFS = (
     CFB_ROOT
     / "config"
@@ -150,14 +155,24 @@ HOLDOUT = 2025
 
 SEASON_TYPE = 2
 
+
+DEFAULT_PROVIDER_BY_SEASON = {
+    2021: "draftkings",
+    2022: "draftkings",
+    2023: "draftkings",
+    2024: "espnbet",
+    2025: "espnbet",
+}
+
+
 HOME_FIELD = 2.5
 DRIVES = 11.5
 
 MARGIN_WEIGHTS = (
-    0.36,  # market
-    0.28,  # FPI
-    0.20,  # ESPN predictor
-    0.16,  # team stats
+    0.36,
+    0.28,
+    0.20,
+    0.16,
 )
 
 TOTAL_MARKET_WEIGHT = 0.75
@@ -196,25 +211,6 @@ USER_AGENT = (
     "(Windows NT 10.0; Win64; x64) "
     "Chrome/126.0"
 )
-
-KNOWN_PROVIDER_IDS = {
-    "draftkings": {
-        "40",
-        "41",
-    },
-    "fanduel": {
-        "37",
-    },
-    "caesars": {
-        "38",
-    },
-    "betmgm": {
-        "58",
-    },
-    "espnbet": {
-        "68",
-    },
-}
 
 
 def load_module(
@@ -467,7 +463,6 @@ def fetch_json(
     timeout: int,
     retries: int,
 ) -> dict[str, Any]:
-
     if url.startswith(
         "http://"
     ):
@@ -545,7 +540,6 @@ def resolve_item(
     timeout: int,
     retries: int,
 ) -> dict[str, Any] | None:
-
     if not isinstance(
         item,
         dict,
@@ -638,25 +632,55 @@ def provider_info(
 
 def provider_match(
     name: str,
-    provider_id: str,
     requested: str,
 ) -> bool:
+    """
+    Exact sportsbook-name matching only.
 
-    key = norm(
+    Provider IDs are NOT used because historical ESPN provider IDs can map
+    inconsistently across sportsbook brands.
+
+    Live-odds provider names will not match.
+    """
+
+    requested_key = norm(
         requested
     )
 
-    if norm(
+    actual_key = norm(
         name
-    ) == key:
-        return True
+    )
+
+    exact_names = {
+        "draftkings": {
+            "draftkings",
+        },
+        "espnbet": {
+            "espnbet",
+        },
+        "fanduel": {
+            "fanduel",
+        },
+        "caesars": {
+            "caesarssportsbook",
+            "caesars",
+        },
+        "betmgm": {
+            "betmgm",
+            "mgm",
+        },
+    }
+
+    allowed = exact_names.get(
+        requested_key,
+        {
+            requested_key,
+        },
+    )
 
     return (
-        provider_id
-        in KNOWN_PROVIDER_IDS.get(
-            key,
-            set(),
-        )
+        actual_key
+        in allowed
     )
 
 
@@ -664,7 +688,6 @@ def blank_odds(
     status: str,
     available: str = "",
 ) -> dict[str, Any]:
-
     return {
         "odds_status":
             status,
@@ -716,7 +739,6 @@ def parse_odds(
     timeout: int,
     retries: int,
 ) -> dict[str, Any]:
-
     raw_items = payload.get(
         "items",
         [],
@@ -754,7 +776,6 @@ def parse_odds(
 
         if provider_match(
             name,
-            provider_id,
             requested,
         ):
             chosen = item
@@ -786,6 +807,16 @@ def parse_odds(
     ) = provider_info(
         chosen
     )
+
+    if not provider_match(
+        provider_name,
+        requested,
+    ):
+        raise RuntimeError(
+            "Internal provider mismatch: "
+            f"requested={requested!r} "
+            f"resolved={provider_name!r}"
+        )
 
     home = (
         chosen.get(
@@ -824,8 +855,7 @@ def parse_odds(
             "OK",
 
         "provider":
-            provider_name
-            or requested,
+            provider_name,
 
         "provider_id":
             provider_id,
@@ -907,7 +937,6 @@ def parse_odds(
 def stat_map(
     side: Any,
 ) -> dict[str, Any]:
-
     if not isinstance(
         side,
         dict,
@@ -956,7 +985,6 @@ def stat_map(
 def parse_predictor(
     payload: dict[str, Any],
 ) -> dict[str, Any]:
-
     home = stat_map(
         payload.get(
             "homeTeam"
@@ -1051,7 +1079,6 @@ def fetch_game(
     timeout: int,
     retries: int,
 ) -> dict[str, Any]:
-
     row = {
         "game_id":
             gid,
@@ -1125,6 +1152,33 @@ def fetch_game(
     return row
 
 
+def provider_for_season(
+    season: int,
+    override: str | None,
+) -> str:
+    if clean(
+        override
+    ):
+        return clean(
+            override
+        )
+
+    if (
+        season
+        not in DEFAULT_PROVIDER_BY_SEASON
+    ):
+        raise RuntimeError(
+            "No default provider configured "
+            f"for season={season}"
+        )
+
+    return (
+        DEFAULT_PROVIDER_BY_SEASON[
+            season
+        ]
+    )
+
+
 def espn_cache(
     season: int,
     gids: list[str],
@@ -1134,7 +1188,6 @@ def espn_cache(
     retries: int,
     refresh: bool,
 ) -> pd.DataFrame:
-
     CACHE_DIR.mkdir(
         parents=True,
         exist_ok=True,
@@ -1160,7 +1213,7 @@ def espn_cache(
             low_memory=False,
         )
 
-        if "game_id" in cache:
+        if "game_id" in cache.columns:
             cache[
                 "game_id"
             ] = cache[
@@ -1170,11 +1223,71 @@ def espn_cache(
             )
 
             cache = (
-                cache.drop_duplicates(
+                cache
+                .drop_duplicates(
                     "game_id",
                     keep="last",
                 )
             )
+
+        if (
+            not cache.empty
+            and "odds_status"
+            in cache.columns
+        ):
+            status = (
+                cache[
+                    "odds_status"
+                ]
+                .map(
+                    clean
+                )
+            )
+
+            if "provider" in cache.columns:
+                provider_ok = (
+                    cache[
+                        "provider"
+                    ]
+                    .map(
+                        lambda value:
+                            provider_match(
+                                clean(
+                                    value
+                                ),
+                                provider,
+                            )
+                    )
+                )
+
+            else:
+                provider_ok = pd.Series(
+                    False,
+                    index=cache.index,
+                )
+
+            contaminated = (
+                status.eq(
+                    "OK"
+                )
+                & ~provider_ok
+            )
+
+            contaminated_count = int(
+                contaminated.sum()
+            )
+
+            if contaminated_count:
+                print(
+                    f"{season}: removing "
+                    f"{contaminated_count} "
+                    "contaminated cached "
+                    f"{provider} rows"
+                )
+
+                cache = cache.loc[
+                    ~contaminated
+                ].copy()
 
     have = set(
         cache.get(
@@ -1182,15 +1295,18 @@ def espn_cache(
             pd.Series(
                 dtype=str
             ),
-        ).astype(
+        )
+        .astype(
             str
         )
     )
 
     missing = [
         gid
-        for gid in gids
-        if gid not in have
+        for gid
+        in gids
+        if gid
+        not in have
     ]
 
     if missing:
@@ -1206,7 +1322,6 @@ def espn_cache(
         with ThreadPoolExecutor(
             max_workers=workers
         ) as executor:
-
             futures = {
                 executor.submit(
                     fetch_game,
@@ -1241,6 +1356,9 @@ def espn_cache(
                         {
                             "game_id":
                                 gid,
+
+                            "requested_provider":
+                                provider,
 
                             "odds_status":
                                 "UNHANDLED:"
@@ -1312,7 +1430,7 @@ def espn_cache(
             ]
         )
 
-    return cache[
+    result = cache[
         cache[
             "game_id"
         ].isin(
@@ -1320,11 +1438,67 @@ def espn_cache(
         )
     ].copy()
 
+    if (
+        "odds_status"
+        in result.columns
+    ):
+        ok_rows = result[
+            result[
+                "odds_status"
+            ].map(
+                clean
+            ).eq(
+                "OK"
+            )
+        ]
+
+        if not ok_rows.empty:
+            bad_provider = ok_rows[
+                ~ok_rows[
+                    "provider"
+                ]
+                .map(
+                    lambda value:
+                        provider_match(
+                            clean(
+                                value
+                            ),
+                            provider,
+                        )
+                )
+            ]
+
+            if not bad_provider.empty:
+                examples = (
+                    bad_provider[
+                        [
+                            "game_id",
+                            "provider",
+                            "provider_id",
+                        ]
+                    ]
+                    .head(
+                        10
+                    )
+                    .to_dict(
+                        "records"
+                    )
+                )
+
+                raise RuntimeError(
+                    f"{season}: sportsbook "
+                    "validation failed for "
+                    f"requested provider "
+                    f"{provider!r}: "
+                    f"{examples}"
+                )
+
+    return result
+
 
 def load_schedule(
     season: int,
 ) -> pd.DataFrame:
-
     path = (
         SCHEDULE_DIR
         / f"{season}_schedule.csv"
@@ -1415,7 +1589,6 @@ def load_schedule(
 def load_finals(
     season: int,
 ) -> pd.DataFrame:
-
     path = (
         PBP_DIR
         / f"{season}_pbp.parquet"
@@ -1426,16 +1599,14 @@ def load_finals(
             path
         )
 
-    columns = [
-        "game_id",
-        "sequenceNumber",
-        "end.homeScore",
-        "end.awayScore",
-    ]
-
     df = pd.read_parquet(
         path,
-        columns=columns,
+        columns=[
+            "game_id",
+            "sequenceNumber",
+            "end.homeScore",
+            "end.awayScore",
+        ],
     )
 
     df[
@@ -1512,7 +1683,6 @@ def load_finals(
 def load_features(
     season: int,
 ) -> pd.DataFrame:
-
     df = read_csv(
         HIST_DIR
         / (
@@ -1543,7 +1713,6 @@ def load_features(
 def load_team_stats(
     season: int,
 ) -> pd.DataFrame:
-
     return read_csv(
         TEAM_STATS_DIR
         / (
@@ -1568,7 +1737,6 @@ def prepare_prior(
         pd.DataFrame,
     ],
 ):
-
     if week <= 1:
         source_season = (
             season
@@ -1698,7 +1866,6 @@ def prior_for_game(
     away: str,
     hfa: float,
 ):
-
     lookup = prior.set_index(
         "team",
         drop=False,
@@ -1853,7 +2020,6 @@ def candidate_selection(
         Any,
     ],
 ) -> dict[str, Any]:
-
     row = pd.Series(
         {
             "game_id":
@@ -1954,7 +2120,6 @@ def candidate_selection(
 def win_profit(
     odds: float,
 ) -> float:
-
     if odds > 0:
         return (
             odds
@@ -1976,7 +2141,6 @@ def grade(
     home_final: float,
     away_final: float,
 ) -> str:
-
     side = selection.upper()
 
     if market == "moneyline":
@@ -2074,7 +2238,6 @@ def bet_row(
     prefix: str,
     chosen: dict[str, Any],
 ) -> dict[str, Any]:
-
     odds = fnum(
         chosen.get(
             f"{prefix}_"
@@ -2169,6 +2332,11 @@ def bet_row(
         "home_team":
             game[
                 "home_team"
+            ],
+
+        "requested_provider":
+            game[
+                "requested_provider"
             ],
 
         "provider":
@@ -2270,7 +2438,6 @@ def replay_season(
     coefficients,
     stats_cache,
 ):
-
     finals_lookup = (
         finals.set_index(
             "game_id",
@@ -2415,6 +2582,20 @@ def replay_season(
                 "home_team":
                     home_team,
 
+                "requested_provider":
+                    clean(
+                        market_row.get(
+                            "requested_provider"
+                        )
+                    ),
+
+                "provider":
+                    clean(
+                        market_row.get(
+                            "provider"
+                        )
+                    ),
+
                 "odds_status":
                     clean(
                         market_row.get(
@@ -2503,21 +2684,21 @@ def replay_season(
 
             espn_margin = None
 
-            if espn_home is not None:
-                if (
+            if (
+                espn_home is not None
+                and (
                     espn_away is None
                     or abs(
                         espn_home
                         + espn_away
                     )
                     <= ESPN_SYMMETRY_TOL
-                ):
-                    espn_margin = (
-                        espn_home
-                    )
+                )
+            ):
+                espn_margin = (
+                    espn_home
+                )
 
-            # No historical point-in-time
-            # FPI snapshot is available.
             fpi_margin = None
 
             (
@@ -2583,8 +2764,6 @@ def replay_season(
                 )
             )
 
-            # No historical point-in-time
-            # injury snapshot is available.
             injury_adjustment = 0.0
 
             predicted_margin_before_travel = (
@@ -2712,13 +2891,6 @@ def replay_season(
 
             record = {
                 **base_record,
-
-                "provider":
-                    clean(
-                        market_row.get(
-                            "provider"
-                        )
-                    ),
 
                 "provider_id":
                     clean(
@@ -2964,7 +3136,6 @@ def replay_season(
                         f"{prefix}_selected"
                     )
                 ) == 1:
-
                     bets.append(
                         bet_row(
                             record,
@@ -2987,9 +3158,9 @@ def replay_season(
 def perf(
     df: pd.DataFrame,
     season: str,
+    provider: str,
     market: str,
 ) -> dict[str, Any]:
-
     graded = df[
         df[
             "result"
@@ -3037,6 +3208,9 @@ def perf(
     return {
         "season":
             season,
+
+        "provider":
+            provider,
 
         "market":
             market,
@@ -3093,7 +3267,6 @@ def perf(
 def summary_table(
     bets: pd.DataFrame,
 ) -> pd.DataFrame:
-
     rows = []
 
     seasons = sorted(
@@ -3122,12 +3295,38 @@ def summary_table(
             )
         ]
 
+        providers = sorted(
+            {
+                clean(
+                    value
+                )
+                for value
+                in frame[
+                    "provider"
+                ]
+                if clean(
+                    value
+                )
+            }
+        )
+
+        provider = (
+            providers[
+                0
+            ]
+            if len(
+                providers
+            ) == 1
+            else "MIXED"
+        )
+
         rows.append(
             perf(
                 frame,
                 str(
                     season
                 ),
+                provider,
                 "ALL",
             )
         )
@@ -3149,6 +3348,62 @@ def summary_table(
                     str(
                         season
                     ),
+                    provider,
+                    market,
+                )
+            )
+
+    providers = sorted(
+        {
+            clean(
+                value
+            )
+            for value
+            in bets[
+                "provider"
+            ]
+            if clean(
+                value
+            )
+        }
+    )
+
+    for provider in providers:
+        frame = bets[
+            bets[
+                "provider"
+            ].map(
+                clean
+            ).eq(
+                provider
+            )
+        ]
+
+        rows.append(
+            perf(
+                frame,
+                "ALL",
+                provider,
+                "ALL",
+            )
+        )
+
+        for market in [
+            "moneyline",
+            "spread",
+            "total",
+        ]:
+            rows.append(
+                perf(
+                    frame[
+                        frame[
+                            "market"
+                        ].eq(
+                            market
+                        )
+                    ],
+                    "ALL",
+                    provider,
                     market,
                 )
             )
@@ -3157,6 +3412,7 @@ def summary_table(
         perf(
             bets,
             "ALL",
+            "MIXED",
             "ALL",
         )
     )
@@ -3176,6 +3432,7 @@ def summary_table(
                     )
                 ],
                 "ALL",
+                "MIXED",
                 market,
             )
         )
@@ -3190,7 +3447,6 @@ def corr(
     y: pd.Series,
     method: str,
 ) -> float:
-
     frame = pd.DataFrame(
         {
             "x":
@@ -3235,7 +3491,6 @@ def corr(
 def correlation_table(
     bets: pd.DataFrame,
 ) -> pd.DataFrame:
-
     rows = []
 
     groups = [
@@ -3266,7 +3521,6 @@ def correlation_table(
         market,
         frame,
     ) in groups:
-
         graded = frame[
             frame[
                 "result"
@@ -3363,7 +3617,6 @@ def correlation_table(
 def bin_table(
     bets: pd.DataFrame,
 ) -> pd.DataFrame:
-
     rows = []
 
     for market in [
@@ -3453,7 +3706,6 @@ def bin_table(
                 bucket,
                 group,
             ) in grouped:
-
                 settled = group[
                     group[
                         "result"
@@ -3577,7 +3829,6 @@ def bin_table(
 def validate_uniform_thresholds(
     config: dict[str, Any],
 ) -> None:
-
     keys = [
         "min_ev",
         "min_edge",
@@ -3589,7 +3840,6 @@ def validate_uniform_thresholds(
         market,
         spec,
     ) in picks.MARKETS.items():
-
         values = []
 
         for side in spec[
@@ -3639,7 +3889,6 @@ def floors(
     config: dict[str, Any],
     market: str,
 ) -> dict[str, float]:
-
     side = next(
         iter(
             picks.MARKETS[
@@ -3699,7 +3948,6 @@ def cutoffs(
     series: pd.Series,
     floor: float,
 ) -> list[float]:
-
     values = pd.to_numeric(
         series,
         errors="coerce",
@@ -3752,7 +4000,6 @@ def cutoffs(
 def profit_stats(
     values: np.ndarray,
 ) -> dict[str, float]:
-
     count = len(
         values
     )
@@ -3825,7 +4072,6 @@ def apply_thresholds(
     df: pd.DataFrame,
     thresholds: dict[str, float],
 ) -> pd.DataFrame:
-
     mask = np.ones(
         len(
             df
@@ -3867,7 +4113,6 @@ def threshold_market(
     config: dict[str, Any],
     min_train: int,
 ):
-
     frame = bets[
         bets[
             "market"
@@ -4014,62 +4259,43 @@ def threshold_market(
         ev_cut,
         kelly_cut,
     ) in combinations:
+        mask = valid.copy()
 
-        mask = (
-            valid
-            & np.isfinite(
-                arrays[
-                    "model_probability"
-                ]
+        for (
+            metric,
+            cutoff,
+        ) in [
+            (
+                "model_probability",
+                probability_cut,
+            ),
+            (
+                "edge",
+                edge_cut,
+            ),
+            (
+                "ev",
+                ev_cut,
+            ),
+            (
+                "kelly",
+                kelly_cut,
+            ),
+        ]:
+            mask &= (
+                np.isfinite(
+                    arrays[
+                        metric
+                    ]
+                )
+                & (
+                    arrays[
+                        metric
+                    ]
+                    >= cutoff
+                    - 1e-12
+                )
             )
-            & np.isfinite(
-                arrays[
-                    "edge"
-                ]
-            )
-            & np.isfinite(
-                arrays[
-                    "ev"
-                ]
-            )
-            & np.isfinite(
-                arrays[
-                    "kelly"
-                ]
-            )
-        )
-
-        mask &= (
-            arrays[
-                "model_probability"
-            ]
-            >= probability_cut
-            - 1e-12
-        )
-
-        mask &= (
-            arrays[
-                "edge"
-            ]
-            >= edge_cut
-            - 1e-12
-        )
-
-        mask &= (
-            arrays[
-                "ev"
-            ]
-            >= ev_cut
-            - 1e-12
-        )
-
-        mask &= (
-            arrays[
-                "kelly"
-            ]
-            >= kelly_cut
-            - 1e-12
-        )
 
         stats = profit_stats(
             profits[
@@ -4323,26 +4549,54 @@ def threshold_market(
         )
 
     elif (
-        recommended_train_stats[
+        not math.isfinite(
+            recommended_train_stats[
+                "roi"
+            ]
+        )
+        or recommended_train_stats[
+            "roi"
+        ] <= 0
+        or not math.isfinite(
+            recommended_train_stats[
+                "lcb"
+            ]
+        )
+        or recommended_train_stats[
             "lcb"
-        ]
-        > baseline_train_stats[
-            "lcb"
-        ]
-        and recommended_holdout_stats[
+        ] <= 0
+    ):
+        status = (
+            "REJECTED_TRAIN"
+        )
+
+    elif (
+        not math.isfinite(
+            recommended_holdout_stats[
+                "roi"
+            ]
+        )
+        or recommended_holdout_stats[
+            "roi"
+        ] <= 0
+        or recommended_holdout_stats[
+            "roi"
+        ] < baseline_holdout_stats[
             "roi"
         ]
-        >= baseline_holdout_stats[
+        or recommended_train_stats[
+            "roi"
+        ] <= baseline_train_stats[
             "roi"
         ]
     ):
         status = (
-            "SUPPORTED"
+            "REJECTED_HOLDOUT"
         )
 
     else:
         status = (
-            "REJECTED_HOLDOUT"
+            "SUPPORTED"
         )
 
     recommendation = {
@@ -4358,8 +4612,17 @@ def threshold_market(
         "train_seasons":
             "2021-2024",
 
+        "train_providers":
+            (
+                "DraftKings 2021-2023 | "
+                "ESPN BET 2024"
+            ),
+
         "holdout_season":
             2025,
+
+        "holdout_provider":
+            "ESPN BET",
 
         "base_min_model_prob":
             base[
@@ -4471,7 +4734,6 @@ def learn_thresholds(
     config: dict[str, Any],
     min_train: int,
 ):
-
     validate_uniform_thresholds(
         config
     )
@@ -4523,39 +4785,18 @@ def learn_thresholds(
     )
 
 
-def sportsbook_from_settings() -> str:
-
-    if not SETTINGS.is_file():
-        return "draftkings"
-
-    with SETTINGS.open(
-        "r",
-        encoding="utf-8",
-    ) as handle:
-        data = (
-            yaml.safe_load(
-                handle
-            )
-            or {}
-        )
-
-    return (
-        clean(
-            data.get(
-                "sportsbook"
-            )
-        )
-        or "draftkings"
-    )
-
-
 def parse_args():
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
         "--provider",
         default=None,
+        help=(
+            "Optional single sportsbook override "
+            "for every season. If omitted, uses "
+            "DraftKings for 2021-2023 and ESPN BET "
+            "for 2024-2025."
+        ),
     )
 
     parser.add_argument(
@@ -4600,7 +4841,6 @@ def parse_args():
 
 
 def main() -> int:
-
     args = parse_args()
 
     if args.workers < 1:
@@ -4623,16 +4863,15 @@ def main() -> int:
             "--min-train-bets must be >= 2"
         )
 
-    provider = (
-        clean(
-            args.provider
-        )
-        or sportsbook_from_settings()
-    )
-
-    print(
-        f"provider={provider}"
-    )
+    provider_map = {
+        season:
+            provider_for_season(
+                season,
+                args.provider,
+            )
+        for season
+        in SEASONS
+    }
 
     print(
         "seasons=2021-2025"
@@ -4644,6 +4883,23 @@ def main() -> int:
 
     print(
         "threshold_holdout=2025"
+    )
+
+    print(
+        "provider_map="
+        + " | ".join(
+            (
+                f"{season}:"
+                f"{provider_map[season]}"
+            )
+            for season
+            in SEASONS
+        )
+    )
+
+    print(
+        "provider_match_mode="
+        "exact_name_only"
     )
 
     print(
@@ -4710,8 +4966,15 @@ def main() -> int:
     bet_frames = []
 
     for season in SEASONS:
+        provider = (
+            provider_map[
+                season
+            ]
+        )
+
         print(
-            f"\n=== {season} ==="
+            f"\n=== {season} "
+            f"| {provider} ==="
         )
 
         schedule = load_schedule(
@@ -4763,6 +5026,100 @@ def main() -> int:
             args.retries,
             args.refresh_cache,
         )
+
+        odds_status = (
+            market.get(
+                "odds_status",
+                pd.Series(
+                    dtype=str
+                ),
+            )
+        )
+
+        odds_ok = int(
+            odds_status.eq(
+                "OK"
+            ).sum()
+        )
+
+        provider_missing = int(
+            odds_status.eq(
+                "PROVIDER_NOT_AVAILABLE"
+            ).sum()
+        )
+
+        fetch_errors = int(
+            odds_status
+            .astype(
+                str
+            )
+            .str.startswith(
+                "FETCH_ERROR"
+            )
+            .sum()
+        )
+
+        actual_ok_providers = sorted(
+            {
+                clean(
+                    value
+                )
+                for value
+                in market.loc[
+                    odds_status.eq(
+                        "OK"
+                    ),
+                    "provider",
+                ]
+                if clean(
+                    value
+                )
+            }
+        )
+
+        print(
+            f"odds_ok={odds_ok} "
+            "provider_missing="
+            f"{provider_missing} "
+            "fetch_errors="
+            f"{fetch_errors}"
+        )
+
+        print(
+            "actual_ok_providers="
+            + (
+                "|".join(
+                    actual_ok_providers
+                )
+                if actual_ok_providers
+                else "NONE"
+            )
+        )
+
+        if len(
+            actual_ok_providers
+        ) > 1:
+            raise RuntimeError(
+                f"{season}: multiple providers "
+                "present in OK rows: "
+                f"{actual_ok_providers}"
+            )
+
+        if (
+            actual_ok_providers
+            and not provider_match(
+                actual_ok_providers[
+                    0
+                ],
+                provider,
+            )
+        ):
+            raise RuntimeError(
+                f"{season}: actual provider "
+                f"{actual_ok_providers[0]!r} "
+                "does not match requested "
+                f"{provider!r}"
+            )
 
         (
             games,
@@ -4844,6 +5201,60 @@ def main() -> int:
             "Ungradable bets found: "
             f"{bad[['game_id', 'market', 'result']].head(10).to_dict('records')}"
         )
+
+    for season in SEASONS:
+        requested = (
+            provider_map[
+                season
+            ]
+        )
+
+        season_bets = bets[
+            pd.to_numeric(
+                bets[
+                    "season"
+                ],
+                errors="coerce",
+            ).eq(
+                season
+            )
+        ]
+
+        bad_provider = season_bets[
+            ~season_bets[
+                "provider"
+            ].map(
+                lambda value:
+                    provider_match(
+                        clean(
+                            value
+                        ),
+                        requested,
+                    )
+            )
+        ]
+
+        if not bad_provider.empty:
+            examples = (
+                bad_provider[
+                    [
+                        "game_id",
+                        "provider",
+                    ]
+                ]
+                .head(
+                    10
+                )
+                .to_dict(
+                    "records"
+                )
+            )
+
+            raise RuntimeError(
+                f"{season}: selected bets "
+                "contain wrong sportsbook: "
+                f"{examples}"
+            )
 
     summary = summary_table(
         bets
