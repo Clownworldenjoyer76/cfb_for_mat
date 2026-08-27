@@ -18,6 +18,8 @@ markets:
   moneyline:
     enabled: true
     pick_preference: best_ev
+    min_model_prob: 0.27
+    min_kelly: 0.016
 
     home:
       enabled: true
