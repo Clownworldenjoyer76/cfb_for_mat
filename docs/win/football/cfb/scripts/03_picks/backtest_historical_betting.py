@@ -1,37 +1,84 @@
 #!/usr/bin/env python3
 """
-Historical CFB betting backtest, 2021-2025.
+Wide-open historical CFB betting backtest, 2021-2025.
 
-Uses the live selections.py + picks.py logic for candidate metrics and final
-market selection. Replays the current projection structure with historical
-pregame market data, ESPN predictor data, prior-week team stats, and historical
-travel/weather, then grades bets from historical PBP finals.
+Purpose
+-------
+Measure historical results for EVERY available candidate side with no betting
+selection thresholds applied.
 
-Default historical sportsbook mapping:
-    2021-2023: DraftKings
-    2024-2025: ESPN BET
+Sportsbook mapping
+------------------
+2021-2023: DraftKings
+2024-2025: ESPN BET
 
-Thresholds are learned on 2021-2024 and evaluated on 2025.
-markets.yaml is never modified.
+Candidate sides
+---------------
+MONEYLINE
+    HOME
+    AWAY
 
-Historical limitations:
+SPREAD
+    HOME
+    AWAY
+
+TOTAL
+    OVER
+    UNDER
+
+Metrics binned exactly as configured below
+-------------------------------------------
+EV:              0.05
+Kelly:           0.05
+Win probability: 0.05 (5 percentage points)
+American odds:   50
+Spread line:     1 point
+Total line:      5 points
+
+Wide-open means
+---------------
+- no minimum EV
+- no minimum Kelly
+- no minimum win probability
+- no minimum edge
+- no odds filter
+- no line filter
+- no best_ev / best_prob / best_kelly side selection
+- all available candidate sides are graded
+
+Kelly in this report is FULL KELLY from selections.py, not a capped live Kelly
+value. This prevents a live configuration cap from altering the historical
+binning study.
+
+Outputs
+-------
+docs/win/football/cfb/data/historical_betting/
+    historical_wide_open_candidates_2021_2025.csv
+    historical_wide_open_bins_2021_2025.csv
+    historical_wide_open_bins_by_season.csv
+    historical_wide_open_game_audit_2021_2025.csv
+
+The binned outputs contain, for each market/side/metric/bin:
+    bets
+    wins
+    losses
+    pushes
+    win_rate
+    profit_units
+    roi_per_unit_risk
+
+Historical limitations
+----------------------
 - Point-in-time historical FPI snapshots are not stored, so FPI is disabled.
 - Point-in-time historical injury snapshots are not stored, so injury adjustment is 0.
-- --travel-weather-mode current uses today's fitted travel/weather coefficients
-  retrospectively. Use "none" for a leakage-safer sensitivity run.
-
-Provider integrity:
-- Sportsbooks are matched by exact normalized provider NAME only.
-- ESPN provider-ID fallback is intentionally NOT used.
-- Live-odds providers are never accepted for pregame backtesting.
-- Contaminated cached OK rows are automatically removed and refetched.
+- --travel-weather-mode current uses the current fitted travel/weather
+  coefficients retrospectively.
 """
 
 from __future__ import annotations
 
 import argparse
 import importlib.util
-import itertools
 import json
 import math
 import os
@@ -47,114 +94,27 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-import yaml
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
 
-SCHEDULE_DIR = (
-    CFB_ROOT
-    / "00_intake"
-    / "schedule"
-)
+SCHEDULE_DIR = CFB_ROOT / "00_intake" / "schedule"
+TEAM_STATS_DIR = CFB_ROOT / "00_intake" / "team_stats"
+PBP_DIR = CFB_ROOT / "00_intake" / "pbp"
+HIST_DIR = CFB_ROOT / "data" / "historical_features"
+OUT_DIR = CFB_ROOT / "data" / "historical_betting"
+CACHE_DIR = OUT_DIR / "cache"
 
-TEAM_STATS_DIR = (
-    CFB_ROOT
-    / "00_intake"
-    / "team_stats"
-)
+TEAM_MAP = CFB_ROOT / "config" / "mapping" / "team_map.csv"
+STADIUM_MAP = CFB_ROOT / "config" / "mapping" / "stadium_map.csv"
+TW_COEFS = CFB_ROOT / "config" / "travel_weather_coefficients.csv"
 
-PBP_DIR = (
-    CFB_ROOT
-    / "00_intake"
-    / "pbp"
-)
+PROJ_PATH = CFB_ROOT / "scripts" / "01_merge" / "projection_week1.py"
+SEL_PATH = CFB_ROOT / "scripts" / "02_select" / "selections.py"
 
-HIST_DIR = (
-    CFB_ROOT
-    / "data"
-    / "historical_features"
-)
-
-OUT_DIR = (
-    CFB_ROOT
-    / "data"
-    / "historical_betting"
-)
-
-CACHE_DIR = (
-    OUT_DIR
-    / "cache"
-)
-
-TEAM_MAP = (
-    CFB_ROOT
-    / "config"
-    / "mapping"
-    / "team_map.csv"
-)
-
-STADIUM_MAP = (
-    CFB_ROOT
-    / "config"
-    / "mapping"
-    / "stadium_map.csv"
-)
-
-MARKETS = (
-    CFB_ROOT
-    / "config"
-    / "markets.yaml"
-)
-
-TW_COEFS = (
-    CFB_ROOT
-    / "config"
-    / "travel_weather_coefficients.csv"
-)
-
-PROJ_PATH = (
-    CFB_ROOT
-    / "scripts"
-    / "01_merge"
-    / "projection_week1.py"
-)
-
-SEL_PATH = (
-    CFB_ROOT
-    / "scripts"
-    / "02_select"
-    / "selections.py"
-)
-
-PICKS_PATH = (
-    CFB_ROOT
-    / "scripts"
-    / "03_picks"
-    / "picks.py"
-)
-
-
-SEASONS = [
-    2021,
-    2022,
-    2023,
-    2024,
-    2025,
-]
-
-TRAIN = [
-    2021,
-    2022,
-    2023,
-    2024,
-]
-
-HOLDOUT = 2025
-
+SEASONS = [2021, 2022, 2023, 2024, 2025]
 SEASON_TYPE = 2
-
 
 DEFAULT_PROVIDER_BY_SEASON = {
     2021: "draftkings",
@@ -163,7 +123,6 @@ DEFAULT_PROVIDER_BY_SEASON = {
     2024: "espnbet",
     2025: "espnbet",
 }
-
 
 HOME_FIELD = 2.5
 DRIVES = 11.5
@@ -182,13 +141,12 @@ TOTAL_SD = 14.0
 
 ESPN_SYMMETRY_TOL = 0.25
 
-METRICS = [
-    "model_probability",
-    "edge",
-    "ev",
-    "kelly",
-]
-
+EV_BIN = 0.05
+KELLY_BIN = 0.05
+PROB_BIN = 0.05
+ODDS_BIN = 50.0
+SPREAD_LINE_BIN = 1.0
+TOTAL_LINE_BIN = 5.0
 
 ODDS_URL = (
     "https://sports.core.api.espn.com/"
@@ -212,75 +170,89 @@ USER_AGENT = (
     "Chrome/126.0"
 )
 
+CANDIDATE_SPECS = [
+    {
+        "market": "moneyline",
+        "side": "HOME",
+        "prefix": "ml_home",
+        "line_source": None,
+    },
+    {
+        "market": "moneyline",
+        "side": "AWAY",
+        "prefix": "ml_away",
+        "line_source": None,
+    },
+    {
+        "market": "spread",
+        "side": "HOME",
+        "prefix": "spread_home",
+        "line_source": "home_spread",
+    },
+    {
+        "market": "spread",
+        "side": "AWAY",
+        "prefix": "spread_away",
+        "line_source": "away_spread",
+    },
+    {
+        "market": "total",
+        "side": "OVER",
+        "prefix": "total_over",
+        "line_source": "total",
+    },
+    {
+        "market": "total",
+        "side": "UNDER",
+        "prefix": "total_under",
+        "line_source": "total",
+    },
+]
 
-def load_module(
-    name: str,
-    path: Path,
-):
+
+def load_module(name: str, path: Path):
     if not path.is_file():
-        raise FileNotFoundError(
-            path
-        )
+        raise FileNotFoundError(path)
 
-    spec = (
-        importlib.util
-        .spec_from_file_location(
-            name,
-            path,
-        )
+    spec = importlib.util.spec_from_file_location(
+        name,
+        path,
     )
 
-    if (
-        spec is None
-        or spec.loader is None
-    ):
+    if spec is None or spec.loader is None:
         raise RuntimeError(
             f"Cannot import {path}"
         )
 
-    mod = (
-        importlib.util
-        .module_from_spec(
-            spec
-        )
+    module = importlib.util.module_from_spec(
+        spec
     )
 
-    sys.modules[
-        name
-    ] = mod
+    sys.modules[name] = module
 
     spec.loader.exec_module(
-        mod
+        module
     )
 
-    return mod
+    return module
 
 
 projection = load_module(
-    "cfb_projection_hist",
+    "cfb_projection_hist_wide",
     PROJ_PATH,
 )
 
 selections = load_module(
-    "cfb_selections_hist",
+    "cfb_selections_hist_wide",
     SEL_PATH,
 )
 
-picks = load_module(
-    "cfb_picks_hist",
-    PICKS_PATH,
-)
 
-
-def clean(
-    value: Any,
-) -> str:
+def clean(value: Any) -> str:
     if value is None:
         return ""
 
-    text = str(
-        value
-    ).strip()
+    text = str(value).strip()
 
     if text.casefold() in {
         "",
@@ -295,38 +267,26 @@ def clean(
     return text
 
 
-def game_id(
-    value: Any,
-) -> str:
+def game_id(value: Any) -> str:
     return re.sub(
         r"\.0$",
         "",
-        clean(
-            value
-        ),
+        clean(value),
     )
 
 
-def norm(
-    value: Any,
-) -> str:
+def norm(value: Any) -> str:
     return re.sub(
         r"[^a-z0-9]+",
         "",
-        clean(
-            value
-        ).casefold(),
+        clean(value).casefold(),
     )
 
 
-def fnum(
-    value: Any,
-) -> float | None:
+def fnum(value: Any) -> float | None:
     try:
         number = float(
-            clean(
-                value
-            )
+            clean(value)
         )
 
     except (
@@ -343,29 +303,7 @@ def fnum(
     return number
 
 
-def inum(
-    value: Any,
-) -> int | None:
-    number = fnum(
-        value
-    )
-
-    if (
-        number is not None
-        and float(
-            number
-        ).is_integer()
-    ):
-        return int(
-            number
-        )
-
-    return None
-
-
-def american(
-    value: Any,
-) -> float | None:
+def american(value: Any) -> float | None:
     number = fnum(
         value
     )
@@ -386,6 +324,7 @@ def read_csv(
     path: Path,
     required: list[str] | None = None,
 ) -> pd.DataFrame:
+
     if not path.is_file():
         raise FileNotFoundError(
             path
@@ -399,10 +338,8 @@ def read_csv(
     if required:
         missing = [
             column
-            for column
-            in required
-            if column
-            not in df.columns
+            for column in required
+            if column not in df.columns
         ]
 
         if missing:
@@ -418,6 +355,7 @@ def write_csv(
     df: pd.DataFrame,
     path: Path,
 ) -> None:
+
     path.parent.mkdir(
         parents=True,
         exist_ok=True,
@@ -463,6 +401,7 @@ def fetch_json(
     timeout: int,
     retries: int,
 ) -> dict[str, Any]:
+
     if url.startswith(
         "http://"
     ):
@@ -479,16 +418,14 @@ def fetch_json(
         retries + 1
     ):
         try:
-            request = (
-                urllib.request.Request(
-                    url,
-                    headers={
-                        "User-Agent":
-                            USER_AGENT,
-                        "Accept":
-                            "application/json",
-                    },
-                )
+            request = urllib.request.Request(
+                url,
+                headers={
+                    "User-Agent":
+                        USER_AGENT,
+                    "Accept":
+                        "application/json",
+                },
             )
 
             with urllib.request.urlopen(
@@ -496,6 +433,7 @@ def fetch_json(
                 timeout=timeout,
                 context=SSL_CTX,
             ) as response:
+
                 payload = json.loads(
                     response
                     .read()
@@ -540,6 +478,7 @@ def resolve_item(
     timeout: int,
     retries: int,
 ) -> dict[str, Any] | None:
+
     if not isinstance(
         item,
         dict,
@@ -582,6 +521,7 @@ def provider_info(
     str,
     str,
 ]:
+
     provider = (
         item.get(
             "provider"
@@ -634,14 +574,6 @@ def provider_match(
     name: str,
     requested: str,
 ) -> bool:
-    """
-    Exact sportsbook-name matching only.
-
-    Provider IDs are NOT used because historical ESPN provider IDs can map
-    inconsistently across sportsbook brands.
-
-    Live-odds provider names will not match.
-    """
 
     requested_key = norm(
         requested
@@ -671,16 +603,14 @@ def provider_match(
         },
     }
 
-    allowed = exact_names.get(
-        requested_key,
-        {
-            requested_key,
-        },
-    )
-
     return (
         actual_key
-        in allowed
+        in exact_names.get(
+            requested_key,
+            {
+                requested_key,
+            },
+        )
     )
 
 
@@ -688,6 +618,7 @@ def blank_odds(
     status: str,
     available: str = "",
 ) -> dict[str, Any]:
+
     return {
         "odds_status":
             status,
@@ -739,6 +670,7 @@ def parse_odds(
     timeout: int,
     retries: int,
 ) -> dict[str, Any]:
+
     raw_items = payload.get(
         "items",
         [],
@@ -769,7 +701,7 @@ def parse_odds(
     for item in items:
         (
             name,
-            provider_id,
+            _,
         ) = provider_info(
             item
         )
@@ -937,6 +869,7 @@ def parse_odds(
 def stat_map(
     side: Any,
 ) -> dict[str, Any]:
+
     if not isinstance(
         side,
         dict,
@@ -985,6 +918,7 @@ def stat_map(
 def parse_predictor(
     payload: dict[str, Any],
 ) -> dict[str, Any]:
+
     home = stat_map(
         payload.get(
             "homeTeam"
@@ -1079,6 +1013,7 @@ def fetch_game(
     timeout: int,
     retries: int,
 ) -> dict[str, Any]:
+
     row = {
         "game_id":
             gid,
@@ -1156,6 +1091,7 @@ def provider_for_season(
     season: int,
     override: str | None,
 ) -> str:
+
     if clean(
         override
     ):
@@ -1188,6 +1124,7 @@ def espn_cache(
     retries: int,
     refresh: bool,
 ) -> pd.DataFrame:
+
     CACHE_DIR.mkdir(
         parents=True,
         exist_ok=True,
@@ -1295,18 +1232,15 @@ def espn_cache(
             pd.Series(
                 dtype=str
             ),
-        )
-        .astype(
+        ).astype(
             str
         )
     )
 
     missing = [
         gid
-        for gid
-        in gids
-        if gid
-        not in have
+        for gid in gids
+        if gid not in have
     ]
 
     if missing:
@@ -1322,6 +1256,7 @@ def espn_cache(
         with ThreadPoolExecutor(
             max_workers=workers
         ) as executor:
+
             futures = {
                 executor.submit(
                     fetch_game,
@@ -1332,8 +1267,7 @@ def espn_cache(
                 ):
                     gid
 
-                for gid
-                in missing
+                for gid in missing
             }
 
             for number, future in enumerate(
@@ -1499,6 +1433,7 @@ def espn_cache(
 def load_schedule(
     season: int,
 ) -> pd.DataFrame:
+
     path = (
         SCHEDULE_DIR
         / f"{season}_schedule.csv"
@@ -1589,6 +1524,7 @@ def load_schedule(
 def load_finals(
     season: int,
 ) -> pd.DataFrame:
+
     path = (
         PBP_DIR
         / f"{season}_pbp.parquet"
@@ -1683,6 +1619,7 @@ def load_finals(
 def load_features(
     season: int,
 ) -> pd.DataFrame:
+
     df = read_csv(
         HIST_DIR
         / (
@@ -1713,6 +1650,7 @@ def load_features(
 def load_team_stats(
     season: int,
 ) -> pd.DataFrame:
+
     return read_csv(
         TEAM_STATS_DIR
         / (
@@ -1737,6 +1675,7 @@ def prepare_prior(
         pd.DataFrame,
     ],
 ):
+
     if week <= 1:
         source_season = (
             season
@@ -1866,6 +1805,7 @@ def prior_for_game(
     away: str,
     hfa: float,
 ):
+
     lookup = prior.set_index(
         "team",
         drop=False,
@@ -2008,18 +1948,15 @@ def prior_for_game(
     }
 
 
-def candidate_selection(
+def evaluate_candidates(
     gid: str,
     probabilities: dict[
         str,
         float,
     ],
     market: pd.Series,
-    config: dict[
-        str,
-        Any,
-    ],
 ) -> dict[str, Any]:
+
     row = pd.Series(
         {
             "game_id":
@@ -2074,7 +2011,7 @@ def candidate_selection(
         }
     )
 
-    candidates = {
+    return {
         **selections
         .evaluate_moneyline(
             row
@@ -2091,35 +2028,11 @@ def candidate_selection(
         ),
     }
 
-    pick_row = pd.Series(
-        {
-            "game_id":
-                gid,
-
-            **candidates,
-        }
-    )
-
-    chosen = {}
-
-    for market_name in picks.MARKETS:
-        chosen.update(
-            picks.evaluate_market(
-                pick_row,
-                market_name,
-                config,
-            )
-        )
-
-    return {
-        **candidates,
-        **chosen,
-    }
-
 
 def win_profit(
     odds: float,
 ) -> float:
+
     if odds > 0:
         return (
             odds
@@ -2136,12 +2049,13 @@ def win_profit(
 
 def grade(
     market: str,
-    selection: str,
+    side: str,
     line: float | None,
     home_final: float,
     away_final: float,
 ) -> str:
-    side = selection.upper()
+
+    side = side.upper()
 
     if market == "moneyline":
         if home_final == away_final:
@@ -2182,21 +2096,18 @@ def grade(
             )
 
         else:
-            value = math.nan
+            return "UNGRADABLE"
 
-        if math.isfinite(
+        if abs(
             value
-        ):
-            if abs(
-                value
-            ) < 1e-9:
-                return "PUSH"
+        ) < 1e-9:
+            return "PUSH"
 
-            return (
-                "WIN"
-                if value > 0
-                else "LOSS"
-            )
+        return (
+            "WIN"
+            if value > 0
+            else "LOSS"
+        )
 
     if (
         market == "total"
@@ -2232,46 +2143,125 @@ def grade(
     return "UNGRADABLE"
 
 
-def bet_row(
+def candidate_row(
     game: dict[str, Any],
-    market: str,
-    prefix: str,
-    chosen: dict[str, Any],
-) -> dict[str, Any]:
+    market_row: pd.Series,
+    metrics: dict[str, Any],
+    spec: dict[str, Any],
+) -> dict[str, Any] | None:
+
+    prefix = spec[
+        "prefix"
+    ]
+
+    market_name = spec[
+        "market"
+    ]
+
+    side = spec[
+        "side"
+    ]
+
+    model_probability = fnum(
+        metrics.get(
+            f"{prefix}_"
+            "model_probability"
+        )
+    )
+
+    ev = fnum(
+        metrics.get(
+            f"{prefix}_ev"
+        )
+    )
+
+    kelly = fnum(
+        metrics.get(
+            f"{prefix}_"
+            "full_kelly"
+        )
+    )
+
     odds = fnum(
-        chosen.get(
+        metrics.get(
             f"{prefix}_"
             "odds_american"
         )
     )
 
-    line = (
-        fnum(
-            chosen.get(
+    if odds is None:
+        if market_name == "moneyline":
+            odds = fnum(
+                market_row.get(
+                    "home_moneyline_american"
+                    if side == "HOME"
+                    else "away_moneyline_american"
+                )
+            )
+
+        elif market_name == "spread":
+            odds = fnum(
+                market_row.get(
+                    "home_spread_american"
+                    if side == "HOME"
+                    else "away_spread_american"
+                )
+            )
+
+        elif market_name == "total":
+            odds = fnum(
+                market_row.get(
+                    "over_american"
+                    if side == "OVER"
+                    else "under_american"
+                )
+            )
+
+    if spec[
+        "line_source"
+    ] is None:
+        line = None
+
+    else:
+        line = fnum(
+            metrics.get(
                 f"{prefix}_line"
             )
         )
-        if prefix in {
-            "spread",
-            "total",
-        }
-        else None
-    )
 
-    if odds is None:
-        raise RuntimeError(
-            "Selected bet missing "
-            f"odds: {game['game_id']} "
-            f"{market}"
+        if line is None:
+            line = fnum(
+                market_row.get(
+                    spec[
+                        "line_source"
+                    ]
+                )
+            )
+
+    required = [
+        model_probability,
+        ev,
+        kelly,
+        odds,
+    ]
+
+    if market_name in {
+        "spread",
+        "total",
+    }:
+        required.append(
+            line
         )
 
+    if any(
+        value is None
+        for value in required
+    ):
+        return None
+
     result = grade(
-        market,
-        clean(
-            chosen.get(
-                f"{prefix}_selection"
-            )
-        ),
+        market_name,
+        side,
         line,
         float(
             game[
@@ -2287,21 +2277,23 @@ def bet_row(
 
     if result == "WIN":
         profit = win_profit(
-            odds
+            float(
+                odds
+            )
         )
-        win = 1.0
+
+        win_indicator = 1.0
 
     elif result == "LOSS":
         profit = -1.0
-        win = 0.0
+        win_indicator = 0.0
 
     elif result == "PUSH":
         profit = 0.0
-        win = np.nan
+        win_indicator = np.nan
 
     else:
-        profit = np.nan
-        win = np.nan
+        return None
 
     return {
         "season":
@@ -2334,92 +2326,59 @@ def bet_row(
                 "home_team"
             ],
 
-        "requested_provider":
-            game[
-                "requested_provider"
-            ],
-
         "provider":
             game[
                 "provider"
             ],
 
         "market":
-            market,
+            market_name,
 
-        "selection":
-            clean(
-                chosen.get(
-                    f"{prefix}_selection"
-                )
+        "side":
+            side,
+
+        "ev":
+            float(
+                ev
+            ),
+
+        "kelly":
+            float(
+                kelly
+            ),
+
+        "win_probability":
+            float(
+                model_probability
+            ),
+
+        "odds_american":
+            float(
+                odds
             ),
 
         "line":
             line,
 
-        "odds_american":
-            odds,
-
-        "model_probability":
-            fnum(
-                chosen.get(
-                    f"{prefix}_"
-                    "model_probability"
-                )
-            ),
-
-        "implied_probability":
-            fnum(
-                chosen.get(
-                    f"{prefix}_"
-                    "implied_probability"
-                )
-            ),
-
-        "edge":
-            fnum(
-                chosen.get(
-                    f"{prefix}_edge"
-                )
-            ),
-
-        "ev":
-            fnum(
-                chosen.get(
-                    f"{prefix}_ev"
-                )
-            ),
-
-        "full_kelly":
-            fnum(
-                chosen.get(
-                    f"{prefix}_"
-                    "full_kelly"
-                )
-            ),
-
-        "kelly":
-            fnum(
-                chosen.get(
-                    f"{prefix}_kelly"
-                )
-            ),
-
         "home_final":
-            game[
-                "home_final"
-            ],
+            float(
+                game[
+                    "home_final"
+                ]
+            ),
 
         "away_final":
-            game[
-                "away_final"
-            ],
+            float(
+                game[
+                    "away_final"
+                ]
+            ),
 
         "result":
             result,
 
         "win_indicator":
-            win,
+            win_indicator,
 
         "profit_units":
             profit,
@@ -2434,10 +2393,10 @@ def replay_season(
     espn: pd.DataFrame,
     resolver,
     stadium_lookup,
-    config,
     coefficients,
     stats_cache,
 ):
+
     finals_lookup = (
         finals.set_index(
             "game_id",
@@ -2459,14 +2418,15 @@ def replay_season(
         )
     )
 
-    games = []
-    bets = []
+    candidates = []
+    audit_rows = []
 
     for week in sorted(
         schedule[
             "week"
         ].unique()
     ):
+
         (
             prior,
             min_weeks,
@@ -2482,8 +2442,9 @@ def replay_season(
 
         if prior is None:
             print(
-                f"{season} week {week}: "
-                f"skipped - {prior_source}"
+                f"{season} week "
+                f"{week}: skipped - "
+                f"{prior_source}"
             )
 
         week_schedule = schedule[
@@ -2505,8 +2466,7 @@ def replay_season(
 
             if (
                 gid not in finals_lookup.index
-                or gid
-                not in market_lookup.index
+                or gid not in market_lookup.index
             ):
                 continue
 
@@ -2547,12 +2507,9 @@ def replay_season(
                 )
             )
 
-            base_record = {
+            base = {
                 "season":
                     season,
-
-                "season_type":
-                    SEASON_TYPE,
 
                 "week":
                     int(
@@ -2569,25 +2526,11 @@ def replay_season(
                         )
                     ),
 
-                "game_time":
-                    clean(
-                        sched_row.get(
-                            "game_time"
-                        )
-                    ),
-
                 "away_team":
                     away_team,
 
                 "home_team":
                     home_team,
-
-                "requested_provider":
-                    clean(
-                        market_row.get(
-                            "requested_provider"
-                        )
-                    ),
 
                 "provider":
                     clean(
@@ -2609,14 +2552,32 @@ def replay_season(
                             "predictor_status"
                         )
                     ),
+
+                "home_final":
+                    float(
+                        final_row[
+                            "home_final"
+                        ]
+                    ),
+
+                "away_final":
+                    float(
+                        final_row[
+                            "away_final"
+                        ]
+                    ),
             }
 
             if prior is None:
-                games.append(
+                audit_rows.append(
                     {
-                        **base_record,
+                        **base,
+
                         "projection_status":
                             prior_source,
+
+                        "candidate_count":
+                            0,
                     }
                 )
 
@@ -2703,7 +2664,7 @@ def replay_season(
 
             (
                 blended_margin,
-                margin_weights,
+                _,
             ) = (
                 projection
                 .weighted_blend(
@@ -2739,20 +2700,24 @@ def replay_season(
             )
 
             if blended_margin is None:
-                games.append(
+                audit_rows.append(
                     {
-                        **base_record,
+                        **base,
+
                         "projection_status":
                             "NO_MARGIN_COMPONENT",
+
+                        "candidate_count":
+                            0,
                     }
                 )
 
                 continue
 
             (
-                travel_features,
+                _,
                 travel_adjustment,
-                travel_used,
+                _,
             ) = (
                 projection
                 .calculate_travel_adjustment(
@@ -2764,23 +2729,16 @@ def replay_season(
                 )
             )
 
-            injury_adjustment = 0.0
-
-            predicted_margin_before_travel = (
+            predicted_margin = (
                 float(
                     blended_margin
                 )
-                + injury_adjustment
-            )
-
-            predicted_margin = (
-                predicted_margin_before_travel
                 + travel_adjustment
             )
 
             (
                 predicted_total,
-                total_weights,
+                _,
             ) = (
                 projection
                 .weighted_blend(
@@ -2801,27 +2759,25 @@ def replay_season(
             )
 
             if predicted_total is None:
-                games.append(
+                audit_rows.append(
                     {
-                        **base_record,
+                        **base,
+
                         "projection_status":
                             "NO_TOTAL_COMPONENT",
+
+                        "candidate_count":
+                            0,
                     }
                 )
 
                 continue
 
-            predicted_total_before_weather = (
-                float(
-                    predicted_total
-                )
-            )
-
             (
-                weather_features,
-                weather_exposed,
+                _,
+                _,
                 weather_adjustment,
-                weather_used,
+                _,
             ) = (
                 projection
                 .calculate_weather_adjustment(
@@ -2834,7 +2790,9 @@ def replay_season(
             )
 
             predicted_total = (
-                predicted_total_before_weather
+                float(
+                    predicted_total
+                )
                 + weather_adjustment
             )
 
@@ -2845,16 +2803,6 @@ def replay_season(
                 )
                 + 2.0,
             )
-
-            predicted_home_score = (
-                predicted_total
-                + predicted_margin
-            ) / 2.0
-
-            predicted_away_score = (
-                predicted_total
-                - predicted_margin
-            ) / 2.0
 
             probabilities = (
                 projection
@@ -2868,313 +2816,268 @@ def replay_season(
                 )
             )
 
-            chosen = (
-                candidate_selection(
+            metrics = (
+                evaluate_candidates(
                     gid,
                     probabilities,
                     market_row,
-                    config,
                 )
             )
 
-            home_final = float(
-                final_row[
-                    "home_final"
-                ]
-            )
+            game_candidate_count = 0
 
-            away_final = float(
-                final_row[
-                    "away_final"
-                ]
-            )
-
-            record = {
-                **base_record,
-
-                "provider_id":
-                    clean(
-                        market_row.get(
-                            "provider_id"
-                        )
-                    ),
-
-                "projection_status":
-                    "OK",
-
-                "prior_source":
-                    prior_source,
-
-                "neutral_site_original":
-                    int(
-                        neutral_original
-                    ),
-
-                "neutral_site":
-                    int(
-                        neutral
-                    ),
-
-                "neutral_site_corrected":
-                    int(
-                        neutral_corrected
-                    ),
-
-                "home_stadium_match":
-                    int(
-                        home_stadium_match
-                    ),
-
-                "home_final":
-                    home_final,
-
-                "away_final":
-                    away_final,
-
-                "actual_margin":
-                    home_final
-                    - away_final,
-
-                "actual_total":
-                    home_final
-                    + away_final,
-
-                "home_spread":
-                    home_spread,
-
-                "away_spread":
-                    fnum(
-                        market_row.get(
-                            "away_spread"
-                        )
-                    ),
-
-                "market_total":
-                    total_line,
-
-                "home_moneyline_american":
-                    fnum(
-                        market_row.get(
-                            "home_moneyline_american"
-                        )
-                    ),
-
-                "away_moneyline_american":
-                    fnum(
-                        market_row.get(
-                            "away_moneyline_american"
-                        )
-                    ),
-
-                "home_spread_american":
-                    fnum(
-                        market_row.get(
-                            "home_spread_american"
-                        )
-                    ),
-
-                "away_spread_american":
-                    fnum(
-                        market_row.get(
-                            "away_spread_american"
-                        )
-                    ),
-
-                "over_american":
-                    fnum(
-                        market_row.get(
-                            "over_american"
-                        )
-                    ),
-
-                "under_american":
-                    fnum(
-                        market_row.get(
-                            "under_american"
-                        )
-                    ),
-
-                "market_home_margin":
-                    market_margin,
-
-                "espn_home_margin":
-                    espn_margin,
-
-                "prior_home_margin":
-                    prior_context[
-                        "margin"
-                    ],
-
-                "home_prior_team_weeks":
-                    prior_context[
-                        "home_weeks"
-                    ],
-
-                "away_prior_team_weeks":
-                    prior_context[
-                        "away_weeks"
-                    ],
-
-                "home_prior_fallback":
-                    prior_context[
-                        "home_fallback"
-                    ],
-
-                "away_prior_fallback":
-                    prior_context[
-                        "away_fallback"
-                    ],
-
-                "market_margin_weight_used":
-                    margin_weights[
-                        0
-                    ],
-
-                "fpi_margin_weight_used":
-                    margin_weights[
-                        1
-                    ],
-
-                "espn_margin_weight_used":
-                    margin_weights[
-                        2
-                    ],
-
-                "team_margin_weight_used":
-                    margin_weights[
-                        3
-                    ],
-
-                "predicted_margin_before_travel":
-                    predicted_margin_before_travel,
-
-                "travel_margin_adjustment":
-                    travel_adjustment,
-
-                "travel_features_used":
-                    travel_used,
-
-                "predicted_margin":
-                    predicted_margin,
-
-                "prior_total":
-                    prior_context[
-                        "total"
-                    ],
-
-                "market_total_weight_used":
-                    total_weights[
-                        0
-                    ],
-
-                "team_total_weight_used":
-                    total_weights[
-                        1
-                    ],
-
-                "predicted_total_before_weather":
-                    predicted_total_before_weather,
-
-                "weather_exposed":
-                    int(
-                        weather_exposed
-                    ),
-
-                "weather_total_adjustment":
-                    weather_adjustment,
-
-                "weather_features_used":
-                    weather_used,
-
-                "predicted_total":
-                    predicted_total,
-
-                "predicted_home_score":
-                    predicted_home_score,
-
-                "predicted_away_score":
-                    predicted_away_score,
-
-                **probabilities,
-                **travel_features,
-                **weather_features,
-            }
-
-            for column in (
-                picks.selection_columns()
-            ):
-                record[
-                    column
-                ] = chosen.get(
-                    column,
-                    np.nan,
+            for spec in CANDIDATE_SPECS:
+                row = candidate_row(
+                    base,
+                    market_row,
+                    metrics,
+                    spec,
                 )
 
-            games.append(
-                record
-            )
+                if row is not None:
+                    candidates.append(
+                        row
+                    )
 
-            for (
-                market_name,
-                prefix,
-            ) in [
-                (
-                    "moneyline",
-                    "ml",
-                ),
-                (
-                    "spread",
-                    "spread",
-                ),
-                (
-                    "total",
-                    "total",
-                ),
-            ]:
-                if inum(
-                    chosen.get(
-                        f"{prefix}_selected"
-                    )
-                ) == 1:
-                    bets.append(
-                        bet_row(
-                            record,
-                            market_name,
-                            prefix,
-                            chosen,
-                        )
-                    )
+                    game_candidate_count += 1
+
+            audit_rows.append(
+                {
+                    **base,
+
+                    "projection_status":
+                        "OK",
+
+                    "candidate_count":
+                        game_candidate_count,
+
+                    "neutral_site_original":
+                        int(
+                            neutral_original
+                        ),
+
+                    "neutral_site":
+                        int(
+                            neutral
+                        ),
+
+                    "neutral_site_corrected":
+                        int(
+                            neutral_corrected
+                        ),
+
+                    "home_stadium_match":
+                        int(
+                            home_stadium_match
+                        ),
+                }
+            )
 
     return (
         pd.DataFrame(
-            games
+            audit_rows
         ),
         pd.DataFrame(
-            bets
+            candidates
         ),
     )
 
 
-def perf(
-    df: pd.DataFrame,
-    season: str,
-    provider: str,
-    market: str,
-) -> dict[str, Any]:
-    graded = df[
-        df[
-            "result"
-        ].isin(
-            [
-                "WIN",
-                "LOSS",
-                "PUSH",
-            ]
-        )
-    ]
+def floor_bin(
+    value: float,
+    width: float,
+) -> tuple[
+    float,
+    float,
+]:
 
-    settled = graded[
-        graded[
+    low = (
+        math.floor(
+            (
+                value
+                + 1e-12
+            )
+            / width
+        )
+        * width
+    )
+
+    high = (
+        low
+        + width
+    )
+
+    return (
+        low,
+        high,
+    )
+
+
+def probability_bin(
+    value: float,
+) -> tuple[
+    float,
+    float,
+]:
+
+    value = min(
+        max(
+            value,
+            0.0,
+        ),
+        1.0,
+    )
+
+    if abs(
+        value
+        - 1.0
+    ) < 1e-12:
+        return (
+            1.0
+            - PROB_BIN,
+            1.0,
+        )
+
+    low = (
+        math.floor(
+            (
+                value
+                + 1e-12
+            )
+            / PROB_BIN
+        )
+        * PROB_BIN
+    )
+
+    high = min(
+        low
+        + PROB_BIN,
+        1.0,
+    )
+
+    return (
+        low,
+        high,
+    )
+
+
+def metric_bin(
+    metric: str,
+    value: float,
+    market: str,
+) -> tuple[
+    float,
+    float,
+]:
+
+    if metric == "ev":
+        return floor_bin(
+            value,
+            EV_BIN,
+        )
+
+    if metric == "kelly":
+        return floor_bin(
+            value,
+            KELLY_BIN,
+        )
+
+    if metric == (
+        "win_probability"
+    ):
+        return probability_bin(
+            value
+        )
+
+    if metric == (
+        "odds_american"
+    ):
+        return floor_bin(
+            value,
+            ODDS_BIN,
+        )
+
+    if metric == "line":
+        if market == "spread":
+            return floor_bin(
+                value,
+                SPREAD_LINE_BIN,
+            )
+
+        if market == "total":
+            return floor_bin(
+                value,
+                TOTAL_LINE_BIN,
+            )
+
+    raise ValueError(
+        "Unsupported metric/market bin: "
+        f"metric={metric} "
+        f"market={market}"
+    )
+
+
+def format_bin_label(
+    metric: str,
+    low: float,
+    high: float,
+) -> str:
+
+    if metric in {
+        "ev",
+        "kelly",
+        "win_probability",
+    }:
+        return (
+            f"{low:.2f} "
+            f"to {high:.2f}"
+        )
+
+    if metric == (
+        "odds_american"
+    ):
+        return (
+            f"{int(round(low))} "
+            f"to <{int(round(high))}"
+        )
+
+    if metric == "line":
+        if (
+            float(
+                low
+            ).is_integer()
+            and float(
+                high
+            ).is_integer()
+        ):
+            return (
+                f"{int(low)} "
+                f"to <{int(high)}"
+            )
+
+        return (
+            f"{low:g} "
+            f"to <{high:g}"
+        )
+
+    return (
+        f"{low:g} "
+        f"to <{high:g}"
+    )
+
+
+def summarize_bin_group(
+    group: pd.DataFrame,
+    metric: str,
+    market: str,
+    side: str,
+    low: float,
+    high: float,
+    season: int | str | None,
+) -> dict[str, Any]:
+
+    settled = group[
+        group[
             "result"
         ].isin(
             [
@@ -3185,35 +3088,64 @@ def perf(
     ]
 
     bets = len(
-        graded
+        group
     )
 
     wins = int(
-        graded[
+        group[
             "result"
         ].eq(
             "WIN"
         ).sum()
     )
 
+    losses = int(
+        group[
+            "result"
+        ].eq(
+            "LOSS"
+        ).sum()
+    )
+
+    pushes = int(
+        group[
+            "result"
+        ].eq(
+            "PUSH"
+        ).sum()
+    )
+
     profit = float(
         pd.to_numeric(
-            graded[
+            group[
                 "profit_units"
             ],
             errors="coerce",
         ).sum()
     )
 
-    return {
-        "season":
-            season,
-
-        "provider":
-            provider,
-
+    result = {
         "market":
             market,
+
+        "side":
+            side,
+
+        "metric":
+            metric,
+
+        "bin_low":
+            low,
+
+        "bin_high":
+            high,
+
+        "bin_label":
+            format_bin_label(
+                metric,
+                low,
+                high,
+            ),
 
         "bets":
             bets,
@@ -3222,22 +3154,10 @@ def perf(
             wins,
 
         "losses":
-            int(
-                graded[
-                    "result"
-                ].eq(
-                    "LOSS"
-                ).sum()
-            ),
+            losses,
 
         "pushes":
-            int(
-                graded[
-                    "result"
-                ].eq(
-                    "PUSH"
-                ).sum()
-            ),
+            pushes,
 
         "win_rate":
             (
@@ -3261,1540 +3181,360 @@ def perf(
                 if bets
                 else np.nan
             ),
+
+        "avg_metric_value":
+            float(
+                pd.to_numeric(
+                    group[
+                        metric
+                    ],
+                    errors="coerce",
+                ).mean()
+            ),
     }
 
+    if season is not None:
+        result = {
+            "season":
+                season,
 
-def summary_table(
-    bets: pd.DataFrame,
-) -> pd.DataFrame:
-    rows = []
-
-    seasons = sorted(
-        pd.to_numeric(
-            bets[
-                "season"
-            ],
-            errors="coerce",
-        )
-        .dropna()
-        .astype(
-            int
-        )
-        .unique()
-    )
-
-    for season in seasons:
-        frame = bets[
-            pd.to_numeric(
-                bets[
-                    "season"
-                ],
-                errors="coerce",
-            ).eq(
-                season
-            )
-        ]
-
-        providers = sorted(
-            {
-                clean(
-                    value
-                )
-                for value
-                in frame[
-                    "provider"
-                ]
-                if clean(
-                    value
-                )
-            }
-        )
-
-        provider = (
-            providers[
-                0
-            ]
-            if len(
-                providers
-            ) == 1
-            else "MIXED"
-        )
-
-        rows.append(
-            perf(
-                frame,
-                str(
-                    season
-                ),
-                provider,
-                "ALL",
-            )
-        )
-
-        for market in [
-            "moneyline",
-            "spread",
-            "total",
-        ]:
-            rows.append(
-                perf(
-                    frame[
-                        frame[
-                            "market"
-                        ].eq(
-                            market
-                        )
-                    ],
-                    str(
-                        season
-                    ),
-                    provider,
-                    market,
-                )
-            )
-
-    providers = sorted(
-        {
-            clean(
-                value
-            )
-            for value
-            in bets[
-                "provider"
-            ]
-            if clean(
-                value
-            )
+            **result,
         }
-    )
 
-    for provider in providers:
-        frame = bets[
-            bets[
-                "provider"
-            ].map(
-                clean
-            ).eq(
-                provider
-            )
-        ]
-
-        rows.append(
-            perf(
-                frame,
-                "ALL",
-                provider,
-                "ALL",
-            )
-        )
-
-        for market in [
-            "moneyline",
-            "spread",
-            "total",
-        ]:
-            rows.append(
-                perf(
-                    frame[
-                        frame[
-                            "market"
-                        ].eq(
-                            market
-                        )
-                    ],
-                    "ALL",
-                    provider,
-                    market,
-                )
-            )
-
-    rows.append(
-        perf(
-            bets,
-            "ALL",
-            "MIXED",
-            "ALL",
-        )
-    )
-
-    for market in [
-        "moneyline",
-        "spread",
-        "total",
-    ]:
-        rows.append(
-            perf(
-                bets[
-                    bets[
-                        "market"
-                    ].eq(
-                        market
-                    )
-                ],
-                "ALL",
-                "MIXED",
-                market,
-            )
-        )
-
-    return pd.DataFrame(
-        rows
-    )
+    return result
 
 
-def corr(
-    x: pd.Series,
-    y: pd.Series,
-    method: str,
-) -> float:
-    frame = pd.DataFrame(
-        {
-            "x":
-                pd.to_numeric(
-                    x,
-                    errors="coerce",
-                ),
-
-            "y":
-                pd.to_numeric(
-                    y,
-                    errors="coerce",
-                ),
-        }
-    ).dropna()
-
-    if (
-        len(
-            frame
-        ) < 3
-        or frame[
-            "x"
-        ].nunique() < 2
-        or frame[
-            "y"
-        ].nunique() < 2
-    ):
-        return np.nan
-
-    return float(
-        frame[
-            "x"
-        ].corr(
-            frame[
-                "y"
-            ],
-            method=method,
-        )
-    )
-
-
-def correlation_table(
-    bets: pd.DataFrame,
+def build_binned_results(
+    candidates: pd.DataFrame,
+    by_season: bool,
 ) -> pd.DataFrame:
+
     rows = []
 
-    groups = [
-        (
-            "ALL",
-            bets,
-        ),
-        *[
-            (
-                market,
-                bets[
-                    bets[
-                        "market"
-                    ].eq(
-                        market
-                    )
-                ],
-            )
-            for market in [
-                "moneyline",
-                "spread",
-                "total",
-            ]
-        ],
-    ]
-
-    for (
-        market,
-        frame,
-    ) in groups:
-        graded = frame[
-            frame[
-                "result"
-            ].isin(
-                [
-                    "WIN",
-                    "LOSS",
-                    "PUSH",
-                ]
-            )
+    for spec in CANDIDATE_SPECS:
+        market = spec[
+            "market"
         ]
 
-        settled = graded[
-            graded[
-                "result"
-            ].isin(
-                [
-                    "WIN",
-                    "LOSS",
-                ]
-            )
+        side = spec[
+            "side"
         ]
 
-        for metric in METRICS:
-            rows.append(
-                {
-                    "market":
-                        market,
-
-                    "metric":
-                        metric,
-
-                    "bets":
-                        len(
-                            graded
-                        ),
-
-                    "settled_bets":
-                        len(
-                            settled
-                        ),
-
-                    "pearson_vs_win":
-                        corr(
-                            settled[
-                                metric
-                            ],
-                            settled[
-                                "win_indicator"
-                            ],
-                            "pearson",
-                        ),
-
-                    "spearman_vs_win":
-                        corr(
-                            settled[
-                                metric
-                            ],
-                            settled[
-                                "win_indicator"
-                            ],
-                            "spearman",
-                        ),
-
-                    "pearson_vs_profit":
-                        corr(
-                            graded[
-                                metric
-                            ],
-                            graded[
-                                "profit_units"
-                            ],
-                            "pearson",
-                        ),
-
-                    "spearman_vs_profit":
-                        corr(
-                            graded[
-                                metric
-                            ],
-                            graded[
-                                "profit_units"
-                            ],
-                            "spearman",
-                        ),
-                }
-            )
-
-    return pd.DataFrame(
-        rows
-    )
-
-
-def bin_table(
-    bets: pd.DataFrame,
-) -> pd.DataFrame:
-    rows = []
-
-    for market in [
-        "moneyline",
-        "spread",
-        "total",
-    ]:
-        base = bets[
-            bets[
+        base = candidates[
+            candidates[
                 "market"
             ].eq(
                 market
             )
+            & candidates[
+                "side"
+            ].eq(
+                side
+            )
         ].copy()
 
-        for metric in METRICS:
-            frame = base.copy()
+        metrics = [
+            "ev",
+            "kelly",
+            "win_probability",
+            "odds_american",
+        ]
 
-            frame[
-                metric
-            ] = pd.to_numeric(
-                frame[
-                    metric
-                ],
-                errors="coerce",
+        if market in {
+            "spread",
+            "total",
+        }:
+            metrics.append(
+                "line"
             )
 
-            frame = frame.dropna(
-                subset=[
-                    metric,
-                    "profit_units",
-                ]
-            )
-
-            if frame.empty:
-                continue
-
-            if metric == (
-                "model_probability"
-            ):
-                frame[
-                    "bucket"
-                ] = pd.cut(
-                    frame[
-                        metric
-                    ],
-                    bins=np.arange(
-                        0,
-                        1.0001,
-                        0.05,
+        if by_season:
+            season_groups = [
+                (
+                    int(
+                        season
                     ),
-                    include_lowest=True,
-                    duplicates="drop",
+                    frame,
                 )
-
-            else:
-                q = min(
-                    5,
-                    frame[
-                        metric
-                    ].nunique(),
+                for (
+                    season,
+                    frame,
                 )
+                in base.groupby(
+                    "season",
+                    sort=True,
+                )
+            ]
 
-                if q >= 2:
-                    frame[
-                        "bucket"
-                    ] = pd.qcut(
+        else:
+            season_groups = [
+                (
+                    None,
+                    base,
+                )
+            ]
+
+        for (
+            season,
+            frame,
+        ) in season_groups:
+
+            for metric in metrics:
+                metric_values = (
+                    pd.to_numeric(
                         frame[
                             metric
                         ],
-                        q=q,
-                        duplicates="drop",
+                        errors="coerce",
                     )
-
-                else:
-                    frame[
-                        "bucket"
-                    ] = "ALL"
-
-            grouped = frame.groupby(
-                "bucket",
-                observed=True,
-                dropna=True,
-            )
-
-            for (
-                bucket,
-                group,
-            ) in grouped:
-                settled = group[
-                    group[
-                        "result"
-                    ].isin(
-                        [
-                            "WIN",
-                            "LOSS",
-                        ]
-                    )
-                ]
-
-                wins = int(
-                    settled[
-                        "result"
-                    ].eq(
-                        "WIN"
-                    ).sum()
                 )
 
-                profit = float(
-                    group[
-                        "profit_units"
-                    ].sum()
+                valid = frame.loc[
+                    metric_values.notna()
+                ].copy()
+
+                if valid.empty:
+                    continue
+
+                valid[
+                    metric
+                ] = pd.to_numeric(
+                    valid[
+                        metric
+                    ],
+                    errors="coerce",
                 )
 
-                rows.append(
-                    {
-                        "market":
-                            market,
-
-                        "metric":
+                valid[
+                    "_bin"
+                ] = valid[
+                    metric
+                ].map(
+                    lambda value:
+                        metric_bin(
                             metric,
-
-                        "bucket":
-                            str(
-                                bucket
-                            ),
-
-                        "bets":
-                            len(
-                                group
-                            ),
-
-                        "wins":
-                            wins,
-
-                        "losses":
-                            int(
-                                settled[
-                                    "result"
-                                ].eq(
-                                    "LOSS"
-                                ).sum()
-                            ),
-
-                        "pushes":
-                            int(
-                                group[
-                                    "result"
-                                ].eq(
-                                    "PUSH"
-                                ).sum()
-                            ),
-
-                        "avg_metric":
                             float(
-                                group[
-                                    metric
-                                ].mean()
+                                value
                             ),
-
-                        "win_rate":
-                            (
-                                wins
-                                / len(
-                                    settled
-                                )
-                                if len(
-                                    settled
-                                )
-                                else np.nan
-                            ),
-
-                        "profit_units":
-                            profit,
-
-                        "roi_per_unit_risk":
-                            profit
-                            / len(
-                                group
-                            ),
-
-                        "calibration_error":
-                            (
-                                wins
-                                / len(
-                                    settled
-                                )
-                                - float(
-                                    group[
-                                        metric
-                                    ].mean()
-                                )
-                                if (
-                                    metric
-                                    == "model_probability"
-                                    and len(
-                                        settled
-                                    )
-                                )
-                                else np.nan
-                            ),
-                    }
+                            market,
+                        )
                 )
 
-    return pd.DataFrame(
+                for (
+                    (
+                        low,
+                        high,
+                    ),
+                    group,
+                ) in valid.groupby(
+                    "_bin",
+                    sort=True,
+                ):
+
+                    rows.append(
+                        summarize_bin_group(
+                            group,
+                            metric,
+                            market,
+                            side,
+                            float(
+                                low
+                            ),
+                            float(
+                                high
+                            ),
+                            season,
+                        )
+                    )
+
+    output = pd.DataFrame(
         rows
     )
 
+    if output.empty:
+        return output
 
-def validate_uniform_thresholds(
-    config: dict[str, Any],
-) -> None:
-    keys = [
-        "min_ev",
-        "min_edge",
-        "min_kelly",
-        "min_model_prob",
-    ]
-
-    for (
-        market,
-        spec,
-    ) in picks.MARKETS.items():
-        values = []
-
-        for side in spec[
-            "sides"
-        ]:
-            thresholds = (
-                config[
-                    "markets"
-                ][
-                    market
-                ][
-                    "sides"
-                ][
-                    side
-                ][
-                    "thresholds"
-                ]
-            )
-
-            values.append(
-                tuple(
-                    float(
-                        thresholds[
-                            key
-                        ]
-                    )
-                    for key
-                    in keys
-                )
-            )
-
-        if len(
-            set(
-                values
-            )
-        ) > 1:
-            raise RuntimeError(
-                f"{market}: "
-                "side-specific current "
-                "minimum thresholds are "
-                "not supported by this "
-                "historical learner"
-            )
-
-
-def floors(
-    config: dict[str, Any],
-    market: str,
-) -> dict[str, float]:
-    side = next(
-        iter(
-            picks.MARKETS[
-                market
-            ][
-                "sides"
-            ]
-        )
-    )
-
-    thresholds = (
-        config[
-            "markets"
-        ][
-            market
-        ][
-            "sides"
-        ][
-            side
-        ][
-            "thresholds"
+    if by_season:
+        sort_columns = [
+            "season",
+            "market",
+            "side",
+            "metric",
+            "bin_low",
         ]
-    )
-
-    return {
-        "model_probability":
-            float(
-                thresholds[
-                    "min_model_prob"
-                ]
-            ),
-
-        "edge":
-            float(
-                thresholds[
-                    "min_edge"
-                ]
-            ),
-
-        "ev":
-            float(
-                thresholds[
-                    "min_ev"
-                ]
-            ),
-
-        "kelly":
-            float(
-                thresholds[
-                    "min_kelly"
-                ]
-            ),
-    }
-
-
-def cutoffs(
-    series: pd.Series,
-    floor: float,
-) -> list[float]:
-    values = pd.to_numeric(
-        series,
-        errors="coerce",
-    ).dropna()
-
-    values = values[
-        values.ge(
-            floor
-            - 1e-12
-        )
-    ]
-
-    if values.empty:
-        return [
-            floor
-        ]
-
-    generated = [
-        floor
-    ]
-
-    for quantile in np.linspace(
-        0,
-        0.90,
-        7,
-    ):
-        generated.append(
-            float(
-                values.quantile(
-                    quantile
-                )
-            )
-        )
-
-    return sorted(
-        {
-            round(
-                max(
-                    floor,
-                    value,
-                ),
-                8,
-            )
-            for value
-            in generated
-        }
-    )
-
-
-def profit_stats(
-    values: np.ndarray,
-) -> dict[str, float]:
-    count = len(
-        values
-    )
-
-    if not count:
-        return {
-            "bets":
-                0,
-
-            "profit":
-                0.0,
-
-            "roi":
-                np.nan,
-
-            "lcb":
-                np.nan,
-        }
-
-    profit = float(
-        np.sum(
-            values
-        )
-    )
-
-    roi = float(
-        np.mean(
-            values
-        )
-    )
-
-    if count >= 2:
-        standard_error = (
-            float(
-                np.std(
-                    values,
-                    ddof=1,
-                )
-            )
-            / math.sqrt(
-                count
-            )
-        )
-
-        lcb = (
-            roi
-            - 1.96
-            * standard_error
-        )
 
     else:
-        lcb = np.nan
+        sort_columns = [
+            "market",
+            "side",
+            "metric",
+            "bin_low",
+        ]
 
-    return {
-        "bets":
-            count,
-
-        "profit":
-            profit,
-
-        "roi":
-            roi,
-
-        "lcb":
-            lcb,
-    }
-
-
-def apply_thresholds(
-    df: pd.DataFrame,
-    thresholds: dict[str, float],
-) -> pd.DataFrame:
-    mask = np.ones(
-        len(
-            df
-        ),
-        dtype=bool,
+    return (
+        output
+        .sort_values(
+            sort_columns,
+            kind="stable",
+        )
+        .reset_index(
+            drop=True
+        )
     )
 
-    for metric in METRICS:
-        values = pd.to_numeric(
-            df[
-                metric
+
+def print_candidate_counts(
+    candidates: pd.DataFrame,
+) -> None:
+
+    counts = (
+        candidates
+        .groupby(
+            [
+                "market",
+                "side",
             ],
-            errors="coerce",
-        ).to_numpy(
-            dtype=float
+            as_index=False,
         )
-
-        mask &= (
-            np.isfinite(
-                values
-            )
-            & (
-                values
-                >= thresholds[
-                    metric
-                ]
-                - 1e-12
-            )
-        )
-
-    return df.loc[
-        mask
-    ].copy()
-
-
-def threshold_market(
-    market: str,
-    bets: pd.DataFrame,
-    config: dict[str, Any],
-    min_train: int,
-):
-    frame = bets[
-        bets[
-            "market"
-        ].eq(
-            market
-        )
-    ].copy()
-
-    frame[
-        "season"
-    ] = pd.to_numeric(
-        frame[
-            "season"
-        ],
-        errors="coerce",
-    )
-
-    train = frame[
-        frame[
-            "season"
-        ].isin(
-            TRAIN
-        )
-    ].copy()
-
-    holdout = frame[
-        frame[
-            "season"
-        ].eq(
-            HOLDOUT
-        )
-    ].copy()
-
-    base = floors(
-        config,
-        market,
-    )
-
-    baseline_train = (
-        apply_thresholds(
-            train,
-            base,
-        )
-    )
-
-    baseline_holdout = (
-        apply_thresholds(
-            holdout,
-            base,
-        )
-    )
-
-    baseline_train_stats = (
-        profit_stats(
-            pd.to_numeric(
-                baseline_train[
-                    "profit_units"
-                ],
-                errors="coerce",
-            )
-            .dropna()
-            .to_numpy(
-                dtype=float
-            )
-        )
-    )
-
-    baseline_holdout_stats = (
-        profit_stats(
-            pd.to_numeric(
-                baseline_holdout[
-                    "profit_units"
-                ],
-                errors="coerce",
-            )
-            .dropna()
-            .to_numpy(
-                dtype=float
-            )
-        )
-    )
-
-    cutoff_sets = {
-        metric:
-            cutoffs(
-                train[
-                    metric
-                ],
-                base[
-                    metric
-                ],
-            )
-        for metric
-        in METRICS
-    }
-
-    arrays = {
-        metric:
-            pd.to_numeric(
-                train[
-                    metric
-                ],
-                errors="coerce",
-            ).to_numpy(
-                dtype=float
-            )
-        for metric
-        in METRICS
-    }
-
-    profits = pd.to_numeric(
-        train[
-            "profit_units"
-        ],
-        errors="coerce",
-    ).to_numpy(
-        dtype=float
-    )
-
-    valid = np.isfinite(
-        profits
-    )
-
-    rows = []
-
-    combinations = itertools.product(
-        cutoff_sets[
-            "model_probability"
-        ],
-        cutoff_sets[
-            "edge"
-        ],
-        cutoff_sets[
-            "ev"
-        ],
-        cutoff_sets[
-            "kelly"
-        ],
-    )
-
-    for (
-        probability_cut,
-        edge_cut,
-        ev_cut,
-        kelly_cut,
-    ) in combinations:
-        mask = valid.copy()
-
-        for (
-            metric,
-            cutoff,
-        ) in [
-            (
-                "model_probability",
-                probability_cut,
+        .agg(
+            bets=(
+                "game_id",
+                "size",
             ),
-            (
-                "edge",
-                edge_cut,
+            wins=(
+                "result",
+                lambda s:
+                    int(
+                        (
+                            s
+                            == "WIN"
+                        ).sum()
+                    ),
             ),
-            (
-                "ev",
-                ev_cut,
+            losses=(
+                "result",
+                lambda s:
+                    int(
+                        (
+                            s
+                            == "LOSS"
+                        ).sum()
+                    ),
             ),
-            (
-                "kelly",
-                kelly_cut,
+            pushes=(
+                "result",
+                lambda s:
+                    int(
+                        (
+                            s
+                            == "PUSH"
+                        ).sum()
+                    ),
             ),
-        ]:
-            mask &= (
-                np.isfinite(
-                    arrays[
-                        metric
-                    ]
-                )
-                & (
-                    arrays[
-                        metric
-                    ]
-                    >= cutoff
-                    - 1e-12
-                )
-            )
-
-        stats = profit_stats(
-            profits[
-                mask
-            ]
+            profit_units=(
+                "profit_units",
+                "sum",
+            ),
         )
+    )
 
-        if stats[
-            "bets"
-        ] < min_train:
-            continue
-
-        settled_mask = (
-            mask
-            & train[
+    settled = (
+        candidates[
+            candidates[
                 "result"
             ].isin(
                 [
                     "WIN",
                     "LOSS",
                 ]
-            ).to_numpy(
-                dtype=bool
             )
-        )
-
-        settled = train.loc[
-            settled_mask
         ]
-
-        win_rate = (
-            float(
-                settled[
-                    "result"
-                ].eq(
-                    "WIN"
-                ).mean()
-            )
-            if len(
-                settled
-            )
-            else np.nan
-        )
-
-        rows.append(
-            {
-                "market":
-                    market,
-
-                "min_model_prob":
-                    probability_cut,
-
-                "min_edge":
-                    edge_cut,
-
-                "min_ev":
-                    ev_cut,
-
-                "min_kelly":
-                    kelly_cut,
-
-                "train_bets":
-                    stats[
-                        "bets"
-                    ],
-
-                "train_win_rate":
-                    win_rate,
-
-                "train_profit_units":
-                    stats[
-                        "profit"
-                    ],
-
-                "train_roi":
-                    stats[
-                        "roi"
-                    ],
-
-                "train_roi_lcb95":
-                    stats[
-                        "lcb"
-                    ],
-            }
-        )
-
-    search = pd.DataFrame(
-        rows
-    )
-
-    if search.empty:
-        best = base.copy()
-
-        reason = (
-            "NO_CANDIDATE_MET_"
-            "MIN_TRAIN_BETS"
-        )
-
-    else:
-        search = (
-            search
-            .sort_values(
-                [
-                    "train_roi_lcb95",
-                    "train_roi",
-                    "train_bets",
-                ],
-                ascending=[
-                    False,
-                    False,
-                    False,
-                ],
-                kind="stable",
-            )
-            .reset_index(
-                drop=True
-            )
-        )
-
-        row = search.iloc[
-            0
-        ]
-
-        best = {
-            "model_probability":
-                float(
-                    row[
-                        "min_model_prob"
-                    ]
-                ),
-
-            "edge":
-                float(
-                    row[
-                        "min_edge"
-                    ]
-                ),
-
-            "ev":
-                float(
-                    row[
-                        "min_ev"
-                    ]
-                ),
-
-            "kelly":
-                float(
-                    row[
-                        "min_kelly"
-                    ]
-                ),
-        }
-
-        reason = (
-            "MAX_TRAIN_ROI_LCB95"
-        )
-
-    recommended_train = (
-        apply_thresholds(
-            train,
-            best,
-        )
-    )
-
-    recommended_holdout = (
-        apply_thresholds(
-            holdout,
-            best,
-        )
-    )
-
-    recommended_train_stats = (
-        profit_stats(
-            pd.to_numeric(
-                recommended_train[
-                    "profit_units"
-                ],
-                errors="coerce",
-            )
-            .dropna()
-            .to_numpy(
-                dtype=float
-            )
-        )
-    )
-
-    recommended_holdout_stats = (
-        profit_stats(
-            pd.to_numeric(
-                recommended_holdout[
-                    "profit_units"
-                ],
-                errors="coerce",
-            )
-            .dropna()
-            .to_numpy(
-                dtype=float
-            )
-        )
-    )
-
-    settled = recommended_holdout[
-        recommended_holdout[
-            "result"
-        ].isin(
+        .groupby(
             [
-                "WIN",
-                "LOSS",
+                "market",
+                "side",
             ]
         )
-    ]
-
-    holdout_win_rate = (
-        float(
-            settled[
-                "result"
-            ].eq(
-                "WIN"
-            ).mean()
+        .size()
+        .rename(
+            "settled"
         )
-        if len(
-            settled
-        )
-        else np.nan
+        .reset_index()
     )
 
-    changed = any(
-        best[
-            metric
-        ]
-        > base[
-            metric
-        ]
-        + 1e-12
-        for metric
-        in METRICS
+    counts = counts.merge(
+        settled,
+        on=[
+            "market",
+            "side",
+        ],
+        how="left",
     )
 
-    if not changed:
-        status = (
-            "KEEP_CURRENT"
+    counts[
+        "settled"
+    ] = (
+        counts[
+            "settled"
+        ]
+        .fillna(
+            0
         )
+        .astype(
+            int
+        )
+    )
 
-    elif (
-        recommended_holdout_stats[
+    counts[
+        "win_rate"
+    ] = (
+        counts[
+            "wins"
+        ]
+        / counts[
+            "settled"
+        ].replace(
+            0,
+            np.nan,
+        )
+    )
+
+    counts[
+        "roi_per_unit_risk"
+    ] = (
+        counts[
+            "profit_units"
+        ]
+        / counts[
             "bets"
-        ] < 20
-    ):
-        status = (
-            "INSUFFICIENT_HOLDOUT"
-        )
-
-    elif (
-        not math.isfinite(
-            recommended_train_stats[
-                "roi"
-            ]
-        )
-        or recommended_train_stats[
-            "roi"
-        ] <= 0
-        or not math.isfinite(
-            recommended_train_stats[
-                "lcb"
-            ]
-        )
-        or recommended_train_stats[
-            "lcb"
-        ] <= 0
-    ):
-        status = (
-            "REJECTED_TRAIN"
-        )
-
-    elif (
-        not math.isfinite(
-            recommended_holdout_stats[
-                "roi"
-            ]
-        )
-        or recommended_holdout_stats[
-            "roi"
-        ] <= 0
-        or recommended_holdout_stats[
-            "roi"
-        ] < baseline_holdout_stats[
-            "roi"
         ]
-        or recommended_train_stats[
-            "roi"
-        ] <= baseline_train_stats[
-            "roi"
-        ]
-    ):
-        status = (
-            "REJECTED_HOLDOUT"
-        )
-
-    else:
-        status = (
-            "SUPPORTED"
-        )
-
-    recommendation = {
-        "market":
-            market,
-
-        "status":
-            status,
-
-        "selection_reason":
-            reason,
-
-        "train_seasons":
-            "2021-2024",
-
-        "train_providers":
-            (
-                "DraftKings 2021-2023 | "
-                "ESPN BET 2024"
-            ),
-
-        "holdout_season":
-            2025,
-
-        "holdout_provider":
-            "ESPN BET",
-
-        "base_min_model_prob":
-            base[
-                "model_probability"
-            ],
-
-        "base_min_edge":
-            base[
-                "edge"
-            ],
-
-        "base_min_ev":
-            base[
-                "ev"
-            ],
-
-        "base_min_kelly":
-            base[
-                "kelly"
-            ],
-
-        "recommended_min_model_prob":
-            best[
-                "model_probability"
-            ],
-
-        "recommended_min_edge":
-            best[
-                "edge"
-            ],
-
-        "recommended_min_ev":
-            best[
-                "ev"
-            ],
-
-        "recommended_min_kelly":
-            best[
-                "kelly"
-            ],
-
-        "baseline_train_bets":
-            baseline_train_stats[
-                "bets"
-            ],
-
-        "baseline_train_roi":
-            baseline_train_stats[
-                "roi"
-            ],
-
-        "baseline_train_roi_lcb95":
-            baseline_train_stats[
-                "lcb"
-            ],
-
-        "recommended_train_bets":
-            recommended_train_stats[
-                "bets"
-            ],
-
-        "recommended_train_roi":
-            recommended_train_stats[
-                "roi"
-            ],
-
-        "recommended_train_roi_lcb95":
-            recommended_train_stats[
-                "lcb"
-            ],
-
-        "baseline_holdout_bets":
-            baseline_holdout_stats[
-                "bets"
-            ],
-
-        "baseline_holdout_roi":
-            baseline_holdout_stats[
-                "roi"
-            ],
-
-        "recommended_holdout_bets":
-            recommended_holdout_stats[
-                "bets"
-            ],
-
-        "recommended_holdout_win_rate":
-            holdout_win_rate,
-
-        "recommended_holdout_profit_units":
-            recommended_holdout_stats[
-                "profit"
-            ],
-
-        "recommended_holdout_roi":
-            recommended_holdout_stats[
-                "roi"
-            ],
-    }
-
-    return (
-        search,
-        recommendation,
     )
 
-
-def learn_thresholds(
-    bets: pd.DataFrame,
-    config: dict[str, Any],
-    min_train: int,
-):
-    validate_uniform_thresholds(
-        config
+    print(
+        "\n=== WIDE-OPEN "
+        "CANDIDATE RESULTS ==="
     )
 
-    searches = []
-    recommendations = []
-
-    for market in [
-        "moneyline",
-        "spread",
-        "total",
-    ]:
-        (
-            search,
-            recommendation,
-        ) = threshold_market(
-            market,
-            bets,
-            config,
-            min_train,
+    print(
+        counts.to_string(
+            index=False
         )
-
-        searches.append(
-            search
-        )
-
-        recommendations.append(
-            recommendation
-        )
-
-    search_output = (
-        pd.concat(
-            searches,
-            ignore_index=True,
-        )
-        if searches
-        else pd.DataFrame()
-    )
-
-    recommendation_output = (
-        pd.DataFrame(
-            recommendations
-        )
-    )
-
-    return (
-        search_output,
-        recommendation_output,
     )
 
 
 def parse_args():
-    parser = argparse.ArgumentParser()
+    parser = (
+        argparse.ArgumentParser()
+    )
 
     parser.add_argument(
         "--provider",
         default=None,
         help=(
-            "Optional single sportsbook override "
-            "for every season. If omitted, uses "
-            "DraftKings for 2021-2023 and ESPN BET "
+            "Optional single sportsbook "
+            "override for every season. "
+            "If omitted, uses DraftKings "
+            "for 2021-2023 and ESPN BET "
             "for 2024-2025."
         ),
     )
@@ -4831,12 +3571,6 @@ def parse_args():
         default="current",
     )
 
-    parser.add_argument(
-        "--min-train-bets",
-        type=int,
-        default=50,
-    )
-
     return parser.parse_args()
 
 
@@ -4858,11 +3592,6 @@ def main() -> int:
             "--retries cannot be negative"
         )
 
-    if args.min_train_bets < 2:
-        raise ValueError(
-            "--min-train-bets must be >= 2"
-        )
-
     provider_map = {
         season:
             provider_for_season(
@@ -4878,11 +3607,17 @@ def main() -> int:
     )
 
     print(
-        "threshold_train=2021-2024"
+        "filters=NONE"
     )
 
     print(
-        "threshold_holdout=2025"
+        "candidate_mode="
+        "ALL_AVAILABLE_SIDES"
+    )
+
+    print(
+        "kelly="
+        "FULL_UNCAPPED_KELLY"
     )
 
     print(
@@ -4898,21 +3633,18 @@ def main() -> int:
     )
 
     print(
-        "provider_match_mode="
-        "exact_name_only"
-    )
-
-    print(
         "travel_weather_mode="
         f"{args.travel_weather_mode}"
     )
 
-    config = (
-        picks.normalize_config(
-            picks.load_yaml(
-                MARKETS
-            )
-        )
+    print(
+        "bins="
+        f"ev:{EV_BIN} | "
+        f"kelly:{KELLY_BIN} | "
+        f"win_probability:{PROB_BIN} | "
+        f"odds:{int(ODDS_BIN)} | "
+        f"spread_line:{SPREAD_LINE_BIN:g} | "
+        f"total_line:{TOTAL_LINE_BIN:g}"
     )
 
     team_map = (
@@ -4947,7 +3679,6 @@ def main() -> int:
         coefficients = {
             "margin":
                 {},
-
             "total":
                 {},
         }
@@ -4960,10 +3691,13 @@ def main() -> int:
             )
         )
 
-    stats_cache = {}
+    stats_cache: dict[
+        int,
+        pd.DataFrame,
+    ] = {}
 
-    game_frames = []
-    bet_frames = []
+    candidate_frames = []
+    audit_frames = []
 
     for season in SEASONS:
         provider = (
@@ -4977,16 +3711,22 @@ def main() -> int:
             f"| {provider} ==="
         )
 
-        schedule = load_schedule(
-            season
+        schedule = (
+            load_schedule(
+                season
+            )
         )
 
-        finals = load_finals(
-            season
+        finals = (
+            load_finals(
+                season
+            )
         )
 
-        features = load_features(
-            season
+        features = (
+            load_features(
+                season
+            )
         )
 
         eligible_ids = (
@@ -5096,34 +3836,9 @@ def main() -> int:
             )
         )
 
-        if len(
-            actual_ok_providers
-        ) > 1:
-            raise RuntimeError(
-                f"{season}: multiple providers "
-                "present in OK rows: "
-                f"{actual_ok_providers}"
-            )
-
-        if (
-            actual_ok_providers
-            and not provider_match(
-                actual_ok_providers[
-                    0
-                ],
-                provider,
-            )
-        ):
-            raise RuntimeError(
-                f"{season}: actual provider "
-                f"{actual_ok_providers[0]!r} "
-                "does not match requested "
-                f"{provider!r}"
-            )
-
         (
-            games,
-            bets,
+            audit,
+            candidates,
         ) = replay_season(
             season,
             schedule,
@@ -5132,60 +3847,57 @@ def main() -> int:
             market,
             resolver,
             stadium_lookup,
-            config,
             coefficients,
             stats_cache,
         )
 
-        game_frames.append(
-            games
+        audit_frames.append(
+            audit
         )
 
-        bet_frames.append(
-            bets
+        candidate_frames.append(
+            candidates
         )
 
         projected = (
             int(
-                games[
+                audit[
                     "projection_status"
                 ].eq(
                     "OK"
                 ).sum()
             )
-            if not games.empty
+            if not audit.empty
             else 0
         )
 
         print(
             "game_audit_rows="
-            f"{len(games)} "
+            f"{len(audit)} "
             "projected="
             f"{projected} "
-            "selected_bets="
-            f"{len(bets)}"
+            "candidate_sides="
+            f"{len(candidates)}"
         )
 
-    games = pd.concat(
-        game_frames,
+    candidates = pd.concat(
+        candidate_frames,
         ignore_index=True,
     )
 
-    bets = pd.concat(
-        bet_frames,
+    audit = pd.concat(
+        audit_frames,
         ignore_index=True,
     )
 
-    if bets.empty:
+    if candidates.empty:
         raise RuntimeError(
             "Historical replay produced "
-            "zero selected bets. Inspect "
-            "cache odds_status/provider "
-            "coverage."
+            "zero candidate sides"
         )
 
-    bad = bets[
-        ~bets[
+    bad_results = candidates[
+        ~candidates[
             "result"
         ].isin(
             [
@@ -5196,10 +3908,32 @@ def main() -> int:
         )
     ]
 
-    if not bad.empty:
+    if not bad_results.empty:
         raise RuntimeError(
-            "Ungradable bets found: "
-            f"{bad[['game_id', 'market', 'result']].head(10).to_dict('records')}"
+            "Ungradable candidate rows "
+            "found: "
+            f"{bad_results.head(10).to_dict('records')}"
+        )
+
+    duplicate_key = [
+        "season",
+        "game_id",
+        "market",
+        "side",
+    ]
+
+    duplicates = candidates[
+        candidates.duplicated(
+            duplicate_key,
+            keep=False,
+        )
+    ]
+
+    if not duplicates.empty:
+        raise RuntimeError(
+            "Duplicate candidate sides "
+            "found: "
+            f"{duplicates[duplicate_key].head(10).to_dict('records')}"
         )
 
     for season in SEASONS:
@@ -5209,9 +3943,9 @@ def main() -> int:
             ]
         )
 
-        season_bets = bets[
+        frame = candidates[
             pd.to_numeric(
-                bets[
+                candidates[
                     "season"
                 ],
                 errors="coerce",
@@ -5220,8 +3954,8 @@ def main() -> int:
             )
         ]
 
-        bad_provider = season_bets[
-            ~season_bets[
+        bad_provider = frame[
+            ~frame[
                 "provider"
             ].map(
                 lambda value:
@@ -5235,119 +3969,75 @@ def main() -> int:
         ]
 
         if not bad_provider.empty:
-            examples = (
-                bad_provider[
-                    [
-                        "game_id",
-                        "provider",
-                    ]
-                ]
-                .head(
-                    10
-                )
-                .to_dict(
-                    "records"
-                )
-            )
-
             raise RuntimeError(
-                f"{season}: selected bets "
+                f"{season}: candidate rows "
                 "contain wrong sportsbook: "
-                f"{examples}"
+                f"{bad_provider[['game_id', 'provider']].head(10).to_dict('records')}"
             )
 
-    summary = summary_table(
-        bets
+    combined_bins = (
+        build_binned_results(
+            candidates,
+            by_season=False,
+        )
     )
 
-    correlations = correlation_table(
-        bets
-    )
-
-    bins = bin_table(
-        bets
-    )
-
-    (
-        threshold_search,
-        recommendations,
-    ) = learn_thresholds(
-        bets,
-        config,
-        args.min_train_bets,
+    season_bins = (
+        build_binned_results(
+            candidates,
+            by_season=True,
+        )
     )
 
     outputs = {
-        "historical_betting_games_2021_2025.csv":
-            games,
+        "historical_wide_open_candidates_2021_2025.csv":
+            candidates,
 
-        "historical_bets_2021_2025.csv":
-            bets,
+        "historical_wide_open_bins_2021_2025.csv":
+            combined_bins,
 
-        "historical_betting_summary.csv":
-            summary,
+        "historical_wide_open_bins_by_season.csv":
+            season_bins,
 
-        "historical_metric_correlations.csv":
-            correlations,
-
-        "historical_metric_bins.csv":
-            bins,
-
-        "historical_threshold_search.csv":
-            threshold_search,
-
-        "historical_threshold_recommendations.csv":
-            recommendations,
+        "historical_wide_open_game_audit_2021_2025.csv":
+            audit,
     }
 
     for (
-        name,
+        filename,
         dataframe,
     ) in outputs.items():
+
         write_csv(
             dataframe,
             OUT_DIR
-            / name,
+            / filename,
+        )
+
+    print_candidate_counts(
+        candidates
+    )
+
+    print(
+        "\n=== OUTPUTS ==="
+    )
+
+    for filename in outputs:
+        print(
+            OUT_DIR
+            / filename
         )
 
     print(
-        "\n=== SUMMARY ==="
-    )
-
-    print(
-        summary.to_string(
-            index=False
-        )
-    )
-
-    print(
-        "\n=== CORRELATIONS ==="
-    )
-
-    print(
-        correlations.to_string(
-            index=False
-        )
-    )
-
-    print(
-        "\n=== THRESHOLD "
-        "RECOMMENDATIONS ==="
-    )
-
-    print(
-        recommendations.to_string(
-            index=False
-        )
-    )
-
-    print(
-        "\noutputs="
-        f"{OUT_DIR}"
+        "markets.yaml_read=no"
     )
 
     print(
         "markets.yaml_modified=no"
+    )
+
+    print(
+        "selection_thresholds_applied=NONE"
     )
 
     if (
@@ -5355,10 +4045,10 @@ def main() -> int:
         == "current"
     ):
         print(
-            "NOTE: travel/weather "
+            "NOTE: current travel/weather "
             "coefficients are retrospective "
-            "because the current coefficients "
-            "were fitted on 2021-2025."
+            "because they were fitted on "
+            "2021-2025."
         )
 
     return 0
