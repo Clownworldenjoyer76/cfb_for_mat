@@ -1,12 +1,12 @@
 selection_defaults:
-  min_ev: 0.00
-  min_edge: 0.00
+  min_ev: -1.00
+  min_edge: -1.00
   min_kelly: 0.00
-  max_kelly: 0.25
-  min_odds_american: -1000
-  max_odds_american: 1000
-  min_model_prob: 0.05
-  max_model_prob: 0.95
+  max_kelly: 1.00
+  min_odds_american: -100000
+  max_odds_american: 100000
+  min_model_prob: 0.00
+  max_model_prob: 1.00
 
 
 markets:
@@ -18,14 +18,17 @@ markets:
   moneyline:
     enabled: true
     pick_preference: best_ev
-    min_model_prob: 0.27
-    min_kelly: 0.016
 
     home:
       enabled: true
+      min_ev: -0.05
+      odds_bands:
+        - [-20000, 1549]
 
     away:
       enabled: true
+      min_ev: 0.00
+      min_model_prob: 0.55
 
 
   ###################################################
@@ -39,9 +42,14 @@ markets:
 
     home:
       enabled: true
+      min_kelly: 0.10
+      line_bands:
+        - [-9.0, 13.999999]
 
     away:
       enabled: true
+      line_bands:
+        - [-21.0, -14.000001]
 
 
   ###################################################
@@ -51,11 +59,22 @@ markets:
   total:
     enabled: true
     pick_preference: best_ev
-    min_total: 35.0
-    max_total: 80.0
+    min_total: 0.0
+    max_total: 100.0
 
     over:
       enabled: true
+      min_ev: -0.15
+      min_model_prob: 0.45
+      odds_bands:
+        - [-150, -101]
+      line_bands:
+        - [35.0, 54.999999]
 
     under:
       enabled: true
+      min_ev: 0.00
+      odds_bands:
+        - [-150, -101]
+      line_bands:
+        - [55.0, 84.999999]
