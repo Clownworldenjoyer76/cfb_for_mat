@@ -7,8 +7,8 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,13,401856879,TCU Horned Frogs at Texas Tech Red Raiders,awayTeam,2628,12.559999999999999,79.679,10.0,20.016,87.44,,-16.541
 2026,2,13,401862838,Temple Owls at Memphis Tigers,homeTeam,235,75.52,39.89,102.0,-8.6,24.48,,9.604
 2026,2,13,401862838,Temple Owls at Memphis Tigers,awayTeam,218,24.48,39.89,74.0,-1.917,75.52,,-9.604
-2026,2,13,401862837,Florida Atlantic Owls at East Carolina Pirates,homeTeam,151,83.66,37.357,115.0,-11.256,16.34,,13.921
-2026,2,13,401862837,Florida Atlantic Owls at East Carolina Pirates,awayTeam,2226,16.34,37.357,68.0,-0.564,83.66,,-13.921
+2026,2,13,401862837,Florida Atlantic Owls at East Carolina Pirates,homeTeam,151,83.38,37.432,115.0,-11.256,16.619999999999997,,13.749
+2026,2,13,401862837,Florida Atlantic Owls at East Carolina Pirates,awayTeam,2226,16.619999999999997,37.432,68.0,-0.564,83.38,,-13.749
 2026,2,13,401862839,Tulane Green Wave at South Florida Bulls,homeTeam,58,47.27,53.363,56.0,2.251,52.73,,-0.93
 2026,2,13,401862839,Tulane Green Wave at South Florida Bulls,awayTeam,2655,52.73,53.363,73.0,-0.949,47.27,,0.93
 2026,2,13,401856762,Mississippi State Bulldogs at Ole Miss Rebels,homeTeam,145,84.67,74.857,49.0,4.082,15.329999999999998,,14.565
@@ -61,8 +61,8 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,13,401856877,Kansas Jayhawks at Oklahoma State Cowboys,awayTeam,2305,41.99,58.251,54.0,3.345,58.01,,-2.756
 2026,2,13,401856878,Kansas State Wildcats at Iowa State Cyclones,homeTeam,66,38.05,56.157,41.0,5.057,61.95,,-4.154
 2026,2,13,401856878,Kansas State Wildcats at Iowa State Cyclones,awayTeam,2306,61.95,56.157,72.0,-0.943,38.05,,4.154
-2026,2,13,401858537,Illinois Fighting Illini at Northwestern Wildcats,homeTeam,77,40.94,59.81,39.0,6.315,59.06,,-3.124
-2026,2,13,401858537,Illinois Fighting Illini at Northwestern Wildcats,awayTeam,356,59.06,59.81,60.0,1.414,40.94,,3.124
+2026,2,13,401858537,Illinois Fighting Illini at Northwestern Wildcats,homeTeam,77,40.33,59.816,39.0,6.315,59.67,,-3.339
+2026,2,13,401858537,Illinois Fighting Illini at Northwestern Wildcats,awayTeam,356,59.67,59.816,60.0,1.414,40.33,,3.339
 2026,2,13,401862840,Tulsa Golden Hurricane at UTSA Roadrunners,homeTeam,2636,67.69,36.026,105.0,-8.963,32.31,,6.303
 2026,2,13,401862840,Tulsa Golden Hurricane at UTSA Roadrunners,awayTeam,202,32.31,36.026,88.0,-5.31,67.69,,-6.303
 2026,2,13,401862841,Army Black Knights at Rice Owls,homeTeam,242,37.6,30.793,89.0,-5.63,62.4,,-4.318
@@ -93,10 +93,10 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,13,401858538,Purdue Boilermakers at Indiana Hoosiers,awayTeam,2509,3.88,73.102,6.0,23.14,96.12,,-27.363
 2026,2,13,401858539,Penn State Nittany Lions at Maryland Terrapins,homeTeam,120,20.9,68.178,17.0,13.716,79.10000000000001,,-11.343
 2026,2,13,401858539,Penn State Nittany Lions at Maryland Terrapins,awayTeam,213,79.10000000000001,68.178,61.0,1.024,20.9,,11.343
-2026,2,13,401858542,Michigan State Spartans at Rutgers Scarlet Knights,homeTeam,164,56.00000000000001,52.192,65.0,0.281,44.0,,2.055
-2026,2,13,401858542,Michigan State Spartans at Rutgers Scarlet Knights,awayTeam,127,44.0,52.192,67.0,-0.153,56.00000000000001,,-2.055
-2026,2,13,401862842,Navy Midshipmen at Charlotte 49ers,homeTeam,2429,19.040000000000003,34.515,69.0,-0.712,80.96,,-12.339
-2026,2,13,401862842,Navy Midshipmen at Charlotte 49ers,awayTeam,2426,80.96,34.515,126.0,-14.583,19.040000000000003,,12.339
+2026,2,13,401858542,Michigan State Spartans at Rutgers Scarlet Knights,homeTeam,164,52.42,52.203,65.0,0.281,47.58,,0.824
+2026,2,13,401858542,Michigan State Spartans at Rutgers Scarlet Knights,awayTeam,127,47.58,52.203,67.0,-0.153,52.42,,-0.824
+2026,2,13,401862842,Navy Midshipmen at Charlotte 49ers,homeTeam,2429,19.35,34.583,69.0,-0.712,80.65,,-12.166
+2026,2,13,401862842,Navy Midshipmen at Charlotte 49ers,awayTeam,2426,80.65,34.583,126.0,-14.583,19.35,,12.166
 2026,2,13,401869947,Coastal Carolina Chanticleers at James Madison Dukes,homeTeam,256,83.64,34.446,117.0,-12.093,16.36,,13.906
 2026,2,13,401869947,Coastal Carolina Chanticleers at James Madison Dukes,awayTeam,324,16.36,34.446,75.0,-2.026,83.64,,-13.906
 2026,2,13,401869954,Louisiana Tech Bulldogs at Georgia Southern Eagles,homeTeam,290,60.19,31.431,108.0,-9.556,39.81,,3.523
@@ -119,8 +119,8 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,13,401871083,New Mexico State Aggies at Middle Tennessee Blue Raiders,awayTeam,166,41.6,13.567,130.0,-16.066,58.4,,-2.891
 2026,2,13,401869939,Troy Trojans at Arkansas State Red Wolves,homeTeam,2032,51.300000000000004,34.025,95.0,-7.359,48.699999999999996,,0.445
 2026,2,13,401869939,Troy Trojans at Arkansas State Red Wolves,awayTeam,2653,48.699999999999996,34.025,107.0,-9.153,51.300000000000004,,-0.445
-2026,2,13,401871082,Sam Houston Bearkats at Florida International Panthers,homeTeam,2229,74.62,16.345,136.0,-18.422,25.380000000000003,,9.191
-2026,2,13,401871082,Sam Houston Bearkats at Florida International Panthers,awayTeam,2534,25.380000000000003,16.345,119.0,-12.58,74.62,,-9.191
+2026,2,13,401871082,Sam Houston Bearkats at Florida International Panthers,homeTeam,2229,69.17999999999999,14.842,136.0,-18.422,30.819999999999997,,6.892
+2026,2,13,401871082,Sam Houston Bearkats at Florida International Panthers,awayTeam,2534,30.819999999999997,14.842,119.0,-12.58,69.17999999999999,,-6.892
 2026,2,13,401864546,Air Force Falcons at New Mexico Lobos,homeTeam,167,65.69,40.849,93.0,-6.842,34.31,,5.536
 2026,2,13,401864546,Air Force Falcons at New Mexico Lobos,awayTeam,2005,34.31,40.849,81.0,-3.531,65.69,,-5.536
 2026,2,13,401871062,Jacksonville State Gamecocks at Delaware Blue Hens,homeTeam,48,63.43,35.349,101.0,-8.463,36.57,,4.693

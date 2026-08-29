@@ -1,8 +1,8 @@
 game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_prob,tie_prob,away_projected_pts,home_projected_pts,total_projected_pts,home_PtDiff,away_PtDiff,home_rating,away_rating,game_name,season,season_type,week,sport,league
 401871049,,,New Mexico State Aggies,Western Kentucky Hilltoppers,28.522,0.2775,0.7225,,,,,-8.156,8.156,-15.705,-4.859,Western Kentucky Hilltoppers at New Mexico State Aggies,2026,2,5,football,college-football
 401862786,,,Tulsa Golden Hurricane,North Texas Mean Green,35.526,0.4833,0.5167,,,,,-0.569,0.569,-8.963,-6.401,North Texas Mean Green at Tulsa Golden Hurricane,2026,2,5,football,college-football
-401858245,,,Virginia Tech Hokies,Pittsburgh Panthers,66.821,0.5857,0.4143,,,,,2.952,-2.952,7.384,6.616,Pittsburgh Panthers at Virginia Tech Hokies,2026,2,5,football,college-football
-401858476,,,Northwestern Wildcats,Penn State Nittany Lions,68.454,0.2262,0.7738,,,,,-10.485,10.485,1.414,13.716,Penn State Nittany Lions at Northwestern Wildcats,2026,2,5,football,college-football
+401858245,,,Virginia Tech Hokies,Pittsburgh Panthers,66.853,0.5906,0.4094,,,,,3.125,-3.125,7.384,6.616,Pittsburgh Panthers at Virginia Tech Hokies,2026,2,5,football,college-football
+401858476,,,Northwestern Wildcats,Penn State Nittany Lions,68.458,0.2258,0.7742,,,,,-10.502,10.502,1.414,13.716,Penn State Nittany Lions at Northwestern Wildcats,2026,2,5,football,college-football
 401871050,,,Delaware Blue Hens,Liberty Flames,36.527,0.5943,0.4057,,,,,3.252,-3.252,-6.555,-7.748,Liberty Flames at Delaware Blue Hens,2026,2,5,football,college-football
 401856817,,,Arizona State Sun Devils,Baylor Bears,63.843,0.5608,0.4391,,,,,2.083,-2.083,4.76,6.518,Baylor Bears at Arizona State Sun Devils,2026,2,5,football,college-football
 401856820,,,Arizona Wildcats,Cincinnati Bearcats,64.622,0.6799,0.3201,,,,,6.42,-6.42,7.155,4.406,Cincinnati Bearcats at Arizona Wildcats,2026,2,5,football,college-football
@@ -28,7 +28,7 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401871089,,,South Alabama Jaguars,UL Monroe Warhawks,17.84,0.7884,0.2116,,,,,11.21,-11.21,-10.531,-19.255,UL Monroe Warhawks at South Alabama Jaguars,2026,2,5,football,college-football
 401856705,,,Georgia Bulldogs,Vanderbilt Commodores,83.183,0.9016,0.0984,,,,,18.882,-18.882,24.837,8.986,Vanderbilt Commodores at Georgia Bulldogs,2026,2,5,football,college-football
 401856709,,,South Carolina Gamecocks,Kentucky Wildcats,71.195,0.7446,0.2554,,,,,9.122,-9.122,11.692,5.366,Kentucky Wildcats at South Carolina Gamecocks,2026,2,5,football,college-football
-401856710,,,Tennessee Volunteers,Auburn Tigers,82.682,0.6530,0.3469,,,,,5.388,-5.388,15.058,12.007,Auburn Tigers at Tennessee Volunteers,2026,2,5,football,college-football
+401856710,,,Tennessee Volunteers,Auburn Tigers,82.715,0.6484,0.3516,,,,,5.216,-5.216,15.058,12.007,Auburn Tigers at Tennessee Volunteers,2026,2,5,football,college-football
 401858248,,,NC State Wolfpack,Louisville Cardinals,65.665,0.3939,0.6061,,,,,-3.672,3.672,3.719,9.454,Louisville Cardinals at NC State Wolfpack,2026,2,5,football,college-football
 401858249,,,Clemson Tigers,Miami Hurricanes,92.41,0.3286,0.6714,,,,,-6.089,6.089,13.421,21.834,Miami Hurricanes at Clemson Tigers,2026,2,5,football,college-football
 401858250,,,North Carolina Tar Heels,Notre Dame Fighting Irish,84.234,0.1023,0.8977,,,,,-18.516,18.516,4.91,25.856,Notre Dame Fighting Irish at North Carolina Tar Heels,2026,2,5,football,college-football
@@ -57,4 +57,4 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401860921,,,Washington State Cougars,Fresno State Bulldogs,45.396,0.5310,0.4690,,,,,1.057,-1.057,-4.054,-2.498,Fresno State Bulldogs at Washington State Cougars,2026,2,5,football,college-football
 401856706,,,LSU Tigers,McNeese Cowboys,49.198,0.9977,0.0022,,,,,51.77,-51.77,20.034,-30.275,McNeese Cowboys at LSU Tigers,2026,2,5,football,college-football
 401860900,,,San Diego State Aztecs,Texas State Bobcats,48.772,0.7462,0.2538,,,,,9.194,-9.194,1.426,-4.26,Texas State Bobcats at San Diego State Aztecs,2026,2,5,football,college-football
-401858477,,,Rutgers Scarlet Knights,Indiana Hoosiers,77.041,0.0710,0.9290,,,,,-21.921,21.921,-0.153,23.14,Indiana Hoosiers at Rutgers Scarlet Knights,2026,2,5,football,college-football
+401858477,,,Rutgers Scarlet Knights,Indiana Hoosiers,76.251,0.0602,0.9397,,,,,-23.423,23.423,-0.153,23.14,Indiana Hoosiers at Rutgers Scarlet Knights,2026,2,5,football,college-football

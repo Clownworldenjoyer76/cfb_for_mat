@@ -13,8 +13,8 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401856792,Tulane Green Wave at Kansas State Wildcats,awayTeam,2655,33.87,59.746,41.0,5.057,66.13,,-5.702
 2026,2,3,401856798,Bowling Green Falcons at Iowa State Cyclones,homeTeam,66,86.61999999999999,33.639,123.0,-13.682,13.38,,15.918
 2026,2,3,401856798,Bowling Green Falcons at Iowa State Cyclones,awayTeam,189,13.38,33.639,72.0,-0.943,86.61999999999999,,-15.918
-2026,2,3,401856812,Arizona State Sun Devils at Kansas Jayhawks,homeTeam,2305,47.38,59.587,44.0,4.76,52.62,,-0.895
-2026,2,3,401856812,Arizona State Sun Devils at Kansas Jayhawks,awayTeam,9,52.62,59.587,55.0,2.759,47.38,,0.895
+2026,2,3,401856812,Arizona State Sun Devils at Kansas Jayhawks,homeTeam,2305,52.89,59.68,44.0,4.76,47.11,,0.987
+2026,2,3,401856812,Arizona State Sun Devils at Kansas Jayhawks,awayTeam,9,47.11,59.68,55.0,2.759,52.89,,-0.987
 2026,2,3,401858451,Akron Zips at Minnesota Golden Gophers,homeTeam,135,92.2,31.642,133.0,-16.854,7.8,,21.055
 2026,2,3,401858451,Akron Zips at Minnesota Golden Gophers,awayTeam,2006,7.8,31.642,63.0,0.612,92.2,,-21.055
 2026,2,3,401860889,North Texas Mean Green at Texas State Bobcats,homeTeam,326,62.63999999999999,40.653,90.0,-6.401,37.36,,4.405
@@ -57,14 +57,14 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401862774,Temple Owls at Toledo Rockets,awayTeam,218,27.3,38.906,79.0,-2.972,72.7,,-8.35
 2026,2,3,401867804,Louisiana Tech Bulldogs at Baylor Bears,homeTeam,239,90.42999999999999,47.65,108.0,-9.556,9.569999999999999,,19.143
 2026,2,3,401867804,Louisiana Tech Bulldogs at Baylor Bears,awayTeam,2348,9.569999999999999,47.65,37.0,6.518,90.42999999999999,,-19.143
-2026,2,3,401856797,Miami (OH) RedHawks at Cincinnati Bearcats,homeTeam,2132,83.67999999999999,48.768,94.0,-6.994,16.32,,13.935
-2026,2,3,401856797,Miami (OH) RedHawks at Cincinnati Bearcats,awayTeam,193,16.32,48.768,46.0,4.406,83.67999999999999,,-13.935
+2026,2,3,401856797,Miami (OH) RedHawks at Cincinnati Bearcats,homeTeam,2132,83.61,48.777,94.0,-6.994,16.39,,13.888
+2026,2,3,401856797,Miami (OH) RedHawks at Cincinnati Bearcats,awayTeam,193,16.39,48.777,46.0,4.406,83.61,,-13.888
 2026,2,3,401858230,SMU Mustangs at Louisville Cardinals,homeTeam,97,53.349999999999994,74.646,24.0,11.117,46.650000000000006,,1.144
 2026,2,3,401858230,SMU Mustangs at Louisville Cardinals,awayTeam,2567,46.650000000000006,74.646,27.0,9.454,53.349999999999994,,-1.144
 2026,2,3,401858450,UTEP Miners at Michigan Wolverines,homeTeam,130,98.83,49.79,132.0,-16.605,1.17,,37.812
 2026,2,3,401858450,UTEP Miners at Michigan Wolverines,awayTeam,2638,1.17,49.79,15.0,15.875,98.83,,-37.812
-2026,2,3,401858457,USC Trojans at Rutgers Scarlet Knights,homeTeam,164,17.57,70.486,13.0,16.982,82.43,,-13.175
-2026,2,3,401858457,USC Trojans at Rutgers Scarlet Knights,awayTeam,30,82.43,70.486,67.0,-0.153,17.57,,13.175
+2026,2,3,401858457,USC Trojans at Rutgers Scarlet Knights,homeTeam,164,9.9,71.616,13.0,16.982,90.10000000000001,,-18.827
+2026,2,3,401858457,USC Trojans at Rutgers Scarlet Knights,awayTeam,30,90.10000000000001,71.616,67.0,-0.153,9.9,,18.827
 2026,2,3,401866424,Stonehill Skyhawks at Massachusetts Minutemen,homeTeam,113,93.52000000000001,9.994,0.0,-38.711,6.4799999999999995,,22.757
 2026,2,3,401866424,Stonehill Skyhawks at Massachusetts Minutemen,awayTeam,284,6.4799999999999995,9.994,137.0,-18.834,93.52000000000001,,-22.757
 2026,2,3,401868317,SE Louisiana Lions at UL Monroe Warhawks,homeTeam,2433,57.620000000000005,11.682,0.0,-17.859,42.38,,2.62
@@ -111,10 +111,10 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401858452,North Dakota Fighting Hawks at Nebraska Cornhuskers,awayTeam,155,6.04,48.356,30.0,8.842,93.96,,-23.391
 2026,2,3,401856688,LSU Tigers at Ole Miss Rebels,homeTeam,145,44.15,93.507,9.0,20.034,55.85,,-2.003
 2026,2,3,401856688,LSU Tigers at Ole Miss Rebels,awayTeam,99,55.85,93.507,14.0,16.029,44.15,,2.003
-2026,2,3,401856690,New Mexico Lobos at Oklahoma Sooners,homeTeam,201,94.89999999999999,68.312,81.0,-3.531,5.1,,24.923
-2026,2,3,401856690,New Mexico Lobos at Oklahoma Sooners,awayTeam,167,5.1,68.312,12.0,17.782,94.89999999999999,,-24.923
-2026,2,3,401856796,Colorado Buffaloes at Northwestern Wildcats,homeTeam,77,52.55,58.108,45.0,4.546,47.449999999999996,,0.871
-2026,2,3,401856796,Colorado Buffaloes at Northwestern Wildcats,awayTeam,38,47.449999999999996,58.108,60.0,1.414,52.55,,-0.871
+2026,2,3,401856690,New Mexico Lobos at Oklahoma Sooners,homeTeam,201,94.8,68.395,81.0,-3.531,5.2,,24.751
+2026,2,3,401856690,New Mexico Lobos at Oklahoma Sooners,awayTeam,167,5.2,68.395,12.0,17.782,94.8,,-24.751
+2026,2,3,401856796,Colorado Buffaloes at Northwestern Wildcats,homeTeam,77,46.25,57.999,45.0,4.546,53.75,,-1.281
+2026,2,3,401856796,Colorado Buffaloes at Northwestern Wildcats,awayTeam,38,53.75,57.999,60.0,1.414,46.25,,1.281
 2026,2,3,401856693,UTSA Roadrunners at Texas Longhorns,homeTeam,251,98.55000000000001,68.382,88.0,-5.31,1.4500000000000002,,35.949
 2026,2,3,401856693,UTSA Roadrunners at Texas Longhorns,awayTeam,2636,1.4500000000000002,68.382,2.0,26.914,98.55000000000001,,-35.949
 2026,2,3,401856799,Arkansas State Red Wolves at TCU Horned Frogs,homeTeam,2628,90.03,48.001,107.0,-9.153,9.969999999999999,,18.759
@@ -131,8 +131,8 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401862777,Delaware State Hornets at South Florida Bulls,awayTeam,2169,1.06,29.701,73.0,-0.949,98.94,,-38.648
 2026,2,3,401856793,Northern Illinois Huskies at Arizona Wildcats,homeTeam,12,95.65,41.515,125.0,-14.51,4.35,,26.346
 2026,2,3,401856793,Northern Illinois Huskies at Arizona Wildcats,awayTeam,2459,4.35,41.515,34.0,7.155,95.65,,-26.346
-2026,2,3,401856802,West Virginia Mountaineers at Virginia Cavaliers,homeTeam,258,72.77,60.613,66.0,0.197,27.229999999999997,,8.377
-2026,2,3,401856802,West Virginia Mountaineers at Virginia Cavaliers,awayTeam,277,27.229999999999997,60.613,32.0,7.895,72.77,,-8.377
+2026,2,3,401856802,West Virginia Mountaineers at Virginia Cavaliers,homeTeam,258,76.92,61.026,66.0,0.197,23.080000000000002,,10.258
+2026,2,3,401856802,West Virginia Mountaineers at Virginia Cavaliers,awayTeam,277,23.080000000000002,61.026,32.0,7.895,76.92,,-10.258
 2026,2,3,401858232,Virginia Tech Hokies at Maryland Terrapins,homeTeam,120,36.93,60.543,33.0,7.384,63.07000000000001,,-4.561
 2026,2,3,401858232,Virginia Tech Hokies at Maryland Terrapins,awayTeam,259,63.07000000000001,60.543,61.0,1.024,36.93,,4.561
 2026,2,3,401858453,Michigan State Spartans at Notre Dame Fighting Irish,homeTeam,87,96.77,74.411,65.0,0.281,3.2300000000000004,,28.978
