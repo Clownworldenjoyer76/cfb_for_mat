@@ -75,6 +75,11 @@ jobs:
           python docs/win/football/cfb/scripts/03_picks/all_games_picks.py \
             --week 1
 
+      # Build final selected picks output.
+      - run: |
+          python docs/win/football/cfb/scripts/03_picks/final_picks.py \
+            --week 1
+
       # Verify Week 1 outputs.
       - run: |
           test -f "docs/win/football/cfb/01_merge/week_1_CFB_enriched.csv"
