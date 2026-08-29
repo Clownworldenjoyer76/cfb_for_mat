@@ -1,7 +1,7 @@
 game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_prob,tie_prob,away_projected_pts,home_projected_pts,total_projected_pts,home_PtDiff,away_PtDiff,home_rating,away_rating,game_name,season,season_type,week,sport,league
 401871090,,,Troy Trojans,Southern Miss Golden Eagles,39.059,0.4857,0.5143,,,,,-0.488,0.488,-7.359,-5.053,Southern Miss Golden Eagles at Troy Trojans,2026,2,6,football,college-football
 401871051,,,Kennesaw State Owls,Jacksonville State Gamecocks,32.756,0.5398,0.4602,,,,,1.36,-1.36,-9.012,-8.463,Jacksonville State Gamecocks at Kennesaw State Owls,2026,2,6,football,college-football
-401871066,,,Florida International Panthers,New Mexico State Aggies,19.091,0.7181,0.2818,,,,,7.969,-7.969,-12.58,-15.705,New Mexico State Aggies at Florida International Panthers,2026,2,6,football,college-football
+401871066,,,Florida International Panthers,New Mexico State Aggies,17.87,0.6183,0.3817,,,,,4.111,-4.111,-12.58,-15.705,New Mexico State Aggies at Florida International Panthers,2026,2,6,football,college-football
 401871052,,,Western Kentucky Hilltoppers,Missouri State Bears,35.08,0.6938,0.3062,,,,,6.973,-6.973,-4.859,-10.255,Missouri State Bears at Western Kentucky Hilltoppers,2026,2,6,football,college-football
 401862794,,,UTSA Roadrunners,South Florida Bulls,45.781,0.4542,0.5458,,,,,-1.566,1.566,-5.31,-0.949,South Florida Bulls at UTSA Roadrunners,2026,2,6,football,college-football
 401869933,,,Arkansas State Red Wolves,South Alabama Jaguars,29.564,0.6091,0.3909,,,,,3.781,-3.781,-9.153,-10.531,South Alabama Jaguars at Arkansas State Red Wolves,2026,2,6,football,college-football
@@ -23,7 +23,7 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401856824,,,Oklahoma State Cowboys,UCF Knights,57.871,0.6593,0.3407,,,,,5.626,-5.626,3.345,2.116,UCF Knights at Oklahoma State Cowboys,2026,2,6,football,college-football
 401856825,,,Kansas State Wildcats,Houston Cougars,64.799,0.5493,0.4507,,,,,1.686,-1.686,5.057,7.12,Houston Cougars at Kansas State Wildcats,2026,2,6,football,college-football
 401858481,,,Nebraska Cornhuskers,Indiana Hoosiers,87.349,0.1897,0.8103,,,,,-12.377,12.377,8.842,23.14,Indiana Hoosiers at Nebraska Cornhuskers,2026,2,6,football,college-football
-401858482,,,Northwestern Wildcats,Ball State Cardinals,32.007,0.9281,0.0719,,,,,21.796,-21.796,1.414,-17.282,Ball State Cardinals at Northwestern Wildcats,2026,2,6,football,college-football
+401858482,,,Northwestern Wildcats,Ball State Cardinals,31.996,0.9274,0.0726,,,,,21.714,-21.714,1.414,-17.282,Ball State Cardinals at Northwestern Wildcats,2026,2,6,football,college-football
 401862796,,,North Texas Mean Green,Charlotte 49ers,26.901,0.7995,0.2005,,,,,11.788,-11.788,-6.401,-14.583,Charlotte 49ers at North Texas Mean Green,2026,2,6,football,college-football
 401862798,,,Memphis Tigers,UAB Blazers,30.53,0.8748,0.1252,,,,,16.57,-16.57,-1.917,-15.451,UAB Blazers at Memphis Tigers,2026,2,6,football,college-football
 401869965,,,Louisiana Tech Bulldogs,Louisiana Ragin' Cajuns,32.327,0.5212,0.4787,,,,,0.726,-0.726,-9.556,-8.278,Louisiana Ragin' Cajuns at Louisiana Tech Bulldogs,2026,2,6,football,college-football
@@ -32,13 +32,13 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401856823,,,West Virginia Mountaineers,Arizona Wildcats,59.417,0.4029,0.5970,,,,,-3.354,3.354,0.197,7.155,Arizona Wildcats at West Virginia Mountaineers,2026,2,6,football,college-football
 401858255,,,Georgia Tech Yellow Jackets,Duke Blue Devils,59.964,0.5858,0.4141,,,,,2.957,-2.957,4.186,3.547,Duke Blue Devils at Georgia Tech Yellow Jackets,2026,2,6,football,college-football
 401858256,,,Pittsburgh Panthers,North Carolina Tar Heels,64.146,0.6166,0.3834,,,,,4.052,-4.052,6.616,4.91,North Carolina Tar Heels at Pittsburgh Panthers,2026,2,6,football,college-football
-401858258,,,Virginia Cavaliers,Syracuse Orange,60.042,0.7936,0.2063,,,,,11.487,-11.487,7.895,-0.808,Syracuse Orange at Virginia Cavaliers,2026,2,6,football,college-football
+401858258,,,Virginia Cavaliers,Syracuse Orange,60.081,0.7970,0.2030,,,,,11.66,-11.66,7.895,-0.808,Syracuse Orange at Virginia Cavaliers,2026,2,6,football,college-football
 401858260,,,NC State Wolfpack,Wake Forest Demon Deacons,59.254,0.5683,0.4316,,,,,2.343,-2.343,3.719,3.379,Wake Forest Demon Deacons at NC State Wolfpack,2026,2,6,football,college-football
 401858480,,,Michigan State Spartans,Illinois Fighting Illini,58.662,0.3801,0.6199,,,,,-4.169,4.169,0.281,6.315,Illinois Fighting Illini at Michigan State Spartans,2026,2,6,football,college-football
 401858483,,,Ohio State Buckeyes,Maryland Terrapins,74.923,0.9756,0.0244,,,,,31.422,-31.422,28.676,1.024,Maryland Terrapins at Ohio State Buckeyes,2026,2,6,football,college-football
 401858485,,,Penn State Nittany Lions,USC Trojans,87.135,0.5312,0.4688,,,,,1.066,-1.066,13.716,16.982,USC Trojans at Penn State Nittany Lions,2026,2,6,football,college-football
 401858486,,,Purdue Boilermakers,Minnesota Golden Gophers,51.756,0.5228,0.4772,,,,,0.779,-0.779,-0.929,0.612,Minnesota Golden Gophers at Purdue Boilermakers,2026,2,6,football,college-football
-401861964,,,Temple Owls,UConn Huskies,29.358,0.6371,0.3629,,,,,4.797,-4.797,-8.6,-11.163,UConn Huskies at Temple Owls,2026,2,6,football,college-football
+401861964,,,Temple Owls,UConn Huskies,29.312,0.6418,0.3582,,,,,4.97,-4.97,-8.6,-11.163,UConn Huskies at Temple Owls,2026,2,6,football,college-football
 401862797,,,East Carolina Pirates,Rice Owls,33.912,0.8898,0.1102,,,,,17.805,-17.805,-0.564,-13.439,Rice Owls at East Carolina Pirates,2026,2,6,football,college-football
 401866436,,,Bowling Green Falcons,Sacramento State Hornets,23.737,0.4873,0.5127,,,,,-0.433,0.433,-13.682,-10.422,Sacramento State Hornets at Bowling Green Falcons,2026,2,6,football,college-football
 401866437,,,Toledo Rockets,Buffalo Bulls,35.871,0.7725,0.2274,,,,,10.424,-10.424,-2.972,-10.782,Buffalo Bulls at Toledo Rockets,2026,2,6,football,college-football
@@ -49,7 +49,7 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401869943,,,Marshall Thundering Herd,Coastal Carolina Chanticleers,27.734,0.6639,0.3361,,,,,5.804,-5.804,-8.786,-12.093,Coastal Carolina Chanticleers at Marshall Thundering Herd,2026,2,6,football,college-football
 401869949,,,Georgia Southern Eagles,James Madison Dukes,40.948,0.3674,0.6326,,,,,-4.633,4.633,-8.701,-2.026,James Madison Dukes at Georgia Southern Eagles,2026,2,6,football,college-football
 401862795,,,Army Black Knights,Tulane Green Wave,48.66,0.3249,0.6751,,,,,-6.234,6.234,-5.63,2.251,Tulane Green Wave at Army Black Knights,2026,2,6,football,college-football
-401856717,,,Oklahoma Sooners,Texas Longhorns,96.469,0.2437,0.7563,,,,,-9.652,9.652,17.782,26.914,Texas Longhorns at Oklahoma Sooners,2026,2,6,football,college-football
+401856717,,,Oklahoma Sooners,Texas Longhorns,97.987,0.2908,0.7092,,,,,-7.598,7.598,17.782,26.914,Texas Longhorns at Oklahoma Sooners,2026,2,6,football,college-football
 401860902,,,Oregon State Beavers,San Diego State Aztecs,45.241,0.3020,0.6978,,,,,-7.137,7.137,-8.101,1.426,San Diego State Aztecs at Oregon State Beavers,2026,2,6,football,college-football
 401858257,,,Notre Dame Fighting Irish,Stanford Cardinal,68.293,0.9836,0.0164,,,,,34.914,-34.914,25.856,-3.344,Stanford Cardinal at Notre Dame Fighting Irish,2026,2,6,football,college-football
 401862799,,,Navy Midshipmen,Tulsa Golden Hurricane,40.469,0.7939,0.2061,,,,,11.497,-11.497,-0.712,-8.963,Tulsa Golden Hurricane at Navy Midshipmen,2026,2,6,football,college-football
