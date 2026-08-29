@@ -1,249 +1,261 @@
 name: CFB Week 2+ Pipeline
 
 on:
-  workflow_dispatch:
+workflow_dispatch:
 
 permissions:
-  contents: write
+contents: write
 
 env:
-  CFB_SEASON: "2026"
+CFB_SEASON: "2026"
 
 jobs:
-  run-cfb-pipeline:
-    runs-on: ubuntu-latest
+run-cfb-pipeline:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+```
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+  - name: Set up Python
+    uses: actions/setup-python@v5
+    with:
+      python-version: "3.12"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install pandas numpy pyyaml pyarrow polars xgboost sportsdataverse==0.0.75
+  - name: Install dependencies
+    run: |
+      python -m pip install --upgrade pip
+      python -m pip install pandas numpy pyyaml pyarrow polars xgboost sportsdataverse==0.0.75
 
-      # ----------------------------------------------------------------------
-      # SCHEDULE
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # SCHEDULE
+  # ----------------------------------------------------------------------
 
-      - name: Pull CFB schedule
-        run: python docs/win/football/cfb/scripts/00_intake/pull_schedule.py
+  - name: Pull CFB schedule
+    run: python docs/win/football/cfb/scripts/00_intake/pull_schedule.py
 
-      # ----------------------------------------------------------------------
-      # FINAL SCORES + GRADING FOR PREVIOUS PICKS
-      #
-      # When this workflow is run for Week 2, Week 1 picks already exist.
-      # Final Week 1 scores are pulled and Week 1 bets are graded here.
-      #
-      # When run for Week 3, existing Week 1 + Week 2 picks are refreshed
-      # against ESPN finals, etc.
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # FINAL SCORES + GRADING FOR PREVIOUS PICKS
+  #
+  # When this workflow is run for Week 2, Week 1 picks already exist.
+  # Final Week 1 scores are pulled and Week 1 bets are graded here.
+  #
+  # When run for Week 3, existing Week 1 + Week 2 picks are refreshed
+  # against ESPN finals, etc.
+  # ----------------------------------------------------------------------
 
-      - name: Pull final CFB scores
-        run: |
-          python docs/win/football/cfb/scripts/04_final_results/pull_final_scores.py \
-            --season "$CFB_SEASON"
+  - name: Pull final CFB scores
+    run: |
+      python docs/win/football/cfb/scripts/04_final_results/pull_final_scores.py \
+        --season "$CFB_SEASON"
 
-      - name: Grade existing CFB picks
-        run: |
-          python docs/win/football/cfb/scripts/04_final_results/grade_picks.py \
-            --season "$CFB_SEASON"
+  - name: Grade existing CFB picks
+    run: |
+      python docs/win/football/cfb/scripts/04_final_results/grade_picks.py \
+        --season "$CFB_SEASON"
 
-      # ----------------------------------------------------------------------
-      # COMPLETED GAME DATA FOR NEXT-WEEK MODEL
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # COMPLETED GAME DATA FOR NEXT-WEEK MODEL
+  # ----------------------------------------------------------------------
 
-      - name: Pull completed CFB play-by-play
-        run: |
-          python docs/win/football/cfb/scripts/00_intake/pull_pbp.py \
-            --season "$CFB_SEASON"
+  - name: Pull completed CFB play-by-play
+    run: |
+      python docs/win/football/cfb/scripts/00_intake/pull_pbp.py \
+        --season "$CFB_SEASON"
 
-      - name: Build current-season team statistics
-        run: |
-          python docs/win/football/cfb/scripts/00_intake/pull_team_stats.py \
-            --season "$CFB_SEASON"
+  - name: Build current-season team statistics
+    run: |
+      python docs/win/football/cfb/scripts/00_intake/pull_team_stats.py \
+        --season "$CFB_SEASON"
 
-      # ----------------------------------------------------------------------
-      # CURRENT MARKET DATA
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # CURRENT MARKET DATA
+  # ----------------------------------------------------------------------
 
-      - name: Pull current odds
-        run: python docs/win/football/cfb/scripts/00_intake/pull_odds.py
+  - name: Pull current odds
+    run: python docs/win/football/cfb/scripts/00_intake/pull_odds.py
 
-      - name: Build target weekly schedule
-        run: |
-          set -o pipefail
+  - name: Build target weekly schedule
+    run: |
+      set -o pipefail
 
-          python docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py \
-            | tee /tmp/cfb_weekly_schedule_output.txt
+      python docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py \
+        | tee /tmp/cfb_weekly_schedule_output.txt
 
-          CFB_WEEK=$(
-            sed -n \
-              's|.*Weekly schedule written: .*week_\([0-9][0-9]*\)_CFB_weekly_schedule\.csv.*|\1|p' \
-              /tmp/cfb_weekly_schedule_output.txt \
-              | tail -1
-          )
+      CFB_WEEK=$(
+        sed -n \
+          's|.*Weekly schedule written: .*week_\([0-9][0-9]*\)_CFB_weekly_schedule\.csv.*|\1|p' \
+          /tmp/cfb_weekly_schedule_output.txt \
+          | tail -1
+      )
 
-          if [ -z "$CFB_WEEK" ]; then
-            echo "ERROR: Could not determine target CFB week."
-            exit 1
-          fi
+      if [ -z "$CFB_WEEK" ]; then
+        echo "ERROR: Could not determine target CFB week."
+        exit 1
+      fi
 
-          if [ "$CFB_WEEK" -le 1 ]; then
-            echo "ERROR: cfb_pipeline.yml is for Week 2+."
-            echo "Detected target week: $CFB_WEEK"
-            exit 1
-          fi
+      if [ "$CFB_WEEK" -le 1 ]; then
+        echo "ERROR: cfb_pipeline.yml is for Week 2+."
+        echo "Detected target week: $CFB_WEEK"
+        exit 1
+      fi
 
-          echo "CFB_WEEK=$CFB_WEEK" >> "$GITHUB_ENV"
-          echo "Detected CFB target week: $CFB_WEEK"
+      echo "CFB_WEEK=$CFB_WEEK" >> "$GITHUB_ENV"
+      echo "Detected CFB target week: $CFB_WEEK"
 
-      - name: Pull opening odds
-        run: python docs/win/football/cfb/scripts/00_intake/pull_opening_odds.py
+  - name: Pull opening odds
+    run: python docs/win/football/cfb/scripts/00_intake/pull_opening_odds.py
 
-      # ----------------------------------------------------------------------
-      # TEAM / ROSTER / CONTEXT DATA
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # TEAM / ROSTER / CONTEXT DATA
+  # ----------------------------------------------------------------------
 
-      - name: Update league master
-        run: python docs/win/football/cfb/scripts/00_intake/league_master.py
+  - name: Update league master
+    run: python docs/win/football/cfb/scripts/00_intake/league_master.py
 
-      - name: Pull raw rosters
-        run: python docs/win/football/cfb/scripts/00_intake/pull_raw_roster.py
+  - name: Pull raw rosters
+    run: python docs/win/football/cfb/scripts/00_intake/pull_raw_roster.py
 
-      - name: Clean rosters
-        run: python docs/win/football/cfb/scripts/00_intake/roster_cleanup.py
+  - name: Clean rosters
+    run: python docs/win/football/cfb/scripts/00_intake/roster_cleanup.py
 
-      # Depth charts remain excluded from the current CFB pipeline.
-      #
-      # - name: Pull depth charts
-      #   run: python docs/win/football/cfb/scripts/00_intake/depth_chart.py
-      #
-      # - name: Clean depth charts
-      #   run: python docs/win/football/cfb/scripts/00_intake/depth_cleanup.py
+  # Depth charts remain excluded from the current CFB pipeline.
+  #
+  # - name: Pull depth charts
+  #   run: python docs/win/football/cfb/scripts/00_intake/depth_chart.py
+  #
+  # - name: Clean depth charts
+  #   run: python docs/win/football/cfb/scripts/00_intake/depth_cleanup.py
 
-      - name: Update coaches
-        run: python docs/win/football/cfb/scripts/00_intake/coaches.py
+  - name: Update coaches
+    run: python docs/win/football/cfb/scripts/00_intake/coaches.py
 
-      - name: Pull team power index
-        run: python docs/win/football/cfb/scripts/00_intake/team_power_index.py
+  - name: Pull team power index
+    run: python docs/win/football/cfb/scripts/00_intake/team_power_index.py
 
-      - name: Pull injuries
-        run: python docs/win/football/cfb/scripts/00_intake/pull_injuries.py
+  - name: Pull injuries
+    run: python docs/win/football/cfb/scripts/00_intake/pull_injuries.py
 
-      # ----------------------------------------------------------------------
-      # ESPN PREDICTIONS
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # ESPN PREDICTIONS
+  # ----------------------------------------------------------------------
 
-      - name: Pull ESPN predictions
-        run: python docs/win/football/cfb/scripts/00_intake/pull_e_predictions.py
+  - name: Pull ESPN predictions
+    run: python docs/win/football/cfb/scripts/00_intake/pull_e_predictions.py
 
-      - name: Clean ESPN predictions
-        run: python docs/win/football/cfb/scripts/00_intake/clean_e_pred.py
+  - name: Clean ESPN predictions
+    run: python docs/win/football/cfb/scripts/00_intake/clean_e_pred.py
 
-      - name: Finalize ESPN predictions
-        run: python docs/win/football/cfb/scripts/00_intake/finalize_pred.py
+  - name: Finalize ESPN predictions
+    run: python docs/win/football/cfb/scripts/00_intake/finalize_pred.py
 
-      # ----------------------------------------------------------------------
-      # TRAVEL + WEATHER
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # TRAVEL + WEATHER
+  # ----------------------------------------------------------------------
 
-      - name: Build travel data
-        run: python docs/win/football/cfb/scripts/00_intake/build_travel.py
+  - name: Build travel data
+    run: python docs/win/football/cfb/scripts/00_intake/build_travel.py
 
-      - name: Fetch weather
-        run: python docs/win/football/cfb/scripts/00_intake/fetch_weather.py
+  - name: Fetch weather
+    run: python docs/win/football/cfb/scripts/00_intake/fetch_weather.py
 
-      # ----------------------------------------------------------------------
-      # WEEK 2+ PROJECTION
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # WEEK 2+ PROJECTION
+  # ----------------------------------------------------------------------
 
-      - name: Build CFB in-season projection
-        run: |
-          python docs/win/football/cfb/scripts/01_merge/projection.py \
-            --season "$CFB_SEASON" \
-            --week "$CFB_WEEK"
+  - name: Build CFB in-season projection
+    run: |
+      python docs/win/football/cfb/scripts/01_merge/projection.py \
+        --season "$CFB_SEASON" \
+        --week "$CFB_WEEK"
 
-      # ----------------------------------------------------------------------
-      # CANDIDATE ENRICHMENT
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # CANDIDATE ENRICHMENT
+  # ----------------------------------------------------------------------
 
-      - name: Build betting candidates
-        run: |
-          python docs/win/football/cfb/scripts/02_select/selections.py \
-            --season "$CFB_SEASON" \
-            --week "$CFB_WEEK"
+  - name: Build betting candidates
+    run: |
+      python docs/win/football/cfb/scripts/02_select/selections.py \
+        --season "$CFB_SEASON" \
+        --week "$CFB_WEEK"
 
-      # ----------------------------------------------------------------------
-      # FILTERED PICKS
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # FILTERED PICKS
+  # ----------------------------------------------------------------------
 
-      - name: Apply markets filters
-        run: |
-          python docs/win/football/cfb/scripts/03_picks/picks.py \
-            --pattern "week_${CFB_WEEK}_CFB_selected.csv"
+  - name: Apply markets filters
+    run: |
+      python docs/win/football/cfb/scripts/03_picks/picks.py \
+        --pattern "week_${CFB_WEEK}_CFB_selected.csv"
 
-      # ----------------------------------------------------------------------
-      # CLEAN HUMAN-READABLE WEEKLY PICKS
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # CLEAN HUMAN-READABLE WEEKLY PICKS
+  # ----------------------------------------------------------------------
 
-      - name: Build clean weekly picks output
-        run: |
-          python docs/win/football/cfb/scripts/03_picks/clean_weekly_picks.py \
-            --week "$CFB_WEEK"
+  - name: Build clean weekly picks output
+    run: |
+      python docs/win/football/cfb/scripts/03_picks/clean_weekly_picks.py \
+        --week "$CFB_WEEK"
 
-      # ----------------------------------------------------------------------
-      # COMPACT ALL-GAMES OUTPUT
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # COMPACT ALL-GAMES OUTPUT
+  # ----------------------------------------------------------------------
 
-      - name: Build all-games picks output
-        run: |
-          python docs/win/football/cfb/scripts/03_picks/all_games_picks.py \
-            --week "$CFB_WEEK"
+  - name: Build all-games picks output
+    run: |
+      python docs/win/football/cfb/scripts/03_picks/all_games_picks.py \
+        --week "$CFB_WEEK"
 
-      # ----------------------------------------------------------------------
-      # VERIFY CURRENT-WEEK OUTPUTS
-      # ----------------------------------------------------------------------
+  # ----------------------------------------------------------------------
+  # FINAL SELECTED PICKS OUTPUT
+  # ----------------------------------------------------------------------
 
-      - name: Verify pipeline outputs
-        run: |
-          test -f "docs/win/football/cfb/01_merge/week_${CFB_WEEK}_CFB_enriched.csv"
-          test -f "docs/win/football/cfb/02_select/week_${CFB_WEEK}_CFB_selected.csv"
-          test -f "docs/win/football/cfb/03_picks/week_${CFB_WEEK}_CFB_picks.csv"
-          test -f "docs/win/football/cfb/03_picks/cleaned/week_${CFB_WEEK}_CFB_clean_picks.csv"
-          test -f "docs/win/football/cfb/03_picks/all_games/all_week_${CFB_WEEK}_CFB_picks.csv"
+  - name: Build final selected picks output
+    run: |
+      python docs/win/football/cfb/scripts/03_picks/final_picks.py \
+        --week "$CFB_WEEK"
 
-          echo "CFB Week ${CFB_WEEK} pipeline outputs verified."
+  # ----------------------------------------------------------------------
+  # VERIFY CURRENT-WEEK OUTPUTS
+  # ----------------------------------------------------------------------
 
-      # ----------------------------------------------------------------------
-      # COMMIT EVERYTHING
-      #
-      # Includes:
-      # - final scores
-      # - graded previous-week picks
-      # - season grading summary
-      # - PBP/team stats
-      # - current-week projections
-      # - current-week selections/picks
-      # - clean human-readable weekly picks
-      # ----------------------------------------------------------------------
+  - name: Verify pipeline outputs
+    run: |
+      test -f "docs/win/football/cfb/01_merge/week_${CFB_WEEK}_CFB_enriched.csv"
+      test -f "docs/win/football/cfb/02_select/week_${CFB_WEEK}_CFB_selected.csv"
+      test -f "docs/win/football/cfb/03_picks/week_${CFB_WEEK}_CFB_picks.csv"
+      test -f "docs/win/football/cfb/03_picks/cleaned/week_${CFB_WEEK}_CFB_clean_picks.csv"
+      test -f "docs/win/football/cfb/03_picks/all_games/all_week_${CFB_WEEK}_CFB_picks.csv"
+      test -f "docs/win/football/cfb/03_picks/selected/week_${CFB_WEEK}_CFB_select_picks.csv"
 
-      - name: Commit and push CFB pipeline outputs
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      echo "CFB Week ${CFB_WEEK} pipeline outputs verified."
 
-          git add docs/win/football/cfb
+  # ----------------------------------------------------------------------
+  # COMMIT EVERYTHING
+  #
+  # Includes:
+  # - final scores
+  # - graded previous-week picks
+  # - season grading summary
+  # - PBP/team stats
+  # - current-week projections
+  # - current-week selections/picks
+  # - clean human-readable weekly picks
+  # ----------------------------------------------------------------------
 
-          if git diff --cached --quiet; then
-            echo "No CFB pipeline changes to commit."
-            exit 0
-          fi
+  - name: Commit and push CFB pipeline outputs
+    run: |
+      git config user.name "github-actions[bot]"
+      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git commit -m "Run CFB Week ${CFB_WEEK} pipeline"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+      git add docs/win/football/cfb
+
+      if git diff --cached --quiet; then
+        echo "No CFB pipeline changes to commit."
+        exit 0
+      fi
+
+      git commit -m "Run CFB Week ${CFB_WEEK} pipeline"
+      git push origin "HEAD:${GITHUB_REF_NAME}"
+```
