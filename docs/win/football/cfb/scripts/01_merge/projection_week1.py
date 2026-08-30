@@ -4260,62 +4260,62 @@ def main() -> None:
 
     print(
         "home_prior_fallbacks="
-        f"{int(predictions['home_prior_fallback'].sum())}"
+        f"{int(pd.to_numeric(predictions['home_prior_fallback'], errors='coerce').fillna(0).sum())}"
     )
 
     print(
         "away_prior_fallbacks="
-        f"{int(predictions['away_prior_fallback'].sum())}"
+        f"{int(pd.to_numeric(predictions['away_prior_fallback'], errors='coerce').fillna(0).sum())}"
     )
 
     print(
         "prior_margin_disabled="
-        f"{int(predictions['prior_home_margin'].isna().sum())}"
+        f"{int(pd.to_numeric(predictions['prior_home_margin'], errors='coerce').isna().sum())}"
     )
 
     print(
         "neutral_site_corrections="
-        f"{int(predictions['neutral_site_corrected'].sum())}"
+        f"{int(pd.to_numeric(predictions['neutral_site_corrected'], errors='coerce').fillna(0).sum())}"
     )
 
     print(
         "with_market_spread="
-        f"{int(predictions['market_home_margin'].notna().sum())}"
+        f"{int(pd.to_numeric(predictions['market_home_margin'], errors='coerce').notna().sum())}"
     )
 
     print(
         "with_fpi="
-        f"{int(predictions['fpi_home_margin'].notna().sum())}"
+        f"{int(pd.to_numeric(predictions['fpi_home_margin'], errors='coerce').notna().sum())}"
     )
 
     print(
         "with_espn="
-        f"{int(predictions['espn_home_margin'].notna().sum())}"
+        f"{int(pd.to_numeric(predictions['espn_home_margin'], errors='coerce').notna().sum())}"
     )
 
     print(
         "with_prior_margin="
-        f"{int(predictions['prior_home_margin'].notna().sum())}"
+        f"{int(pd.to_numeric(predictions['prior_home_margin'], errors='coerce').notna().sum())}"
     )
 
     print(
         "with_market_total="
-        f"{int(predictions['market_total'].notna().sum())}"
+        f"{int(pd.to_numeric(predictions['market_total'], errors='coerce').notna().sum())}"
     )
 
     print(
         "fresh_injury_adjustments="
-        f"{int(predictions['injury_margin_adjustment'].abs().gt(0).sum())}"
+        f"{int(pd.to_numeric(predictions['injury_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
     )
 
     print(
         "travel_adjustments="
-        f"{int(predictions['travel_margin_adjustment'].abs().gt(0).sum())}"
+        f"{int(pd.to_numeric(predictions['travel_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
     )
 
     print(
         "weather_adjustments="
-        f"{int(predictions['weather_total_adjustment'].abs().gt(0).sum())}"
+        f"{int(pd.to_numeric(predictions['weather_total_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
     )
 
     if args.dry_run:
