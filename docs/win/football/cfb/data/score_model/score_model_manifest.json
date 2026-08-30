@@ -1,0 +1,118 @@
+{
+  "cv_validation_seasons": [
+    2022,
+    2023,
+    2024
+  ],
+  "deployment": {
+    "margin": "MARKET_BASELINE",
+    "missing_market_margin": "DIRECT_TRAINED_MODEL",
+    "missing_market_total": "DIRECT_TRAINED_MODEL",
+    "total": "TRAINED_RESIDUAL"
+  },
+  "direct_margin": {
+    "baseline_cv_mae": null,
+    "baseline_cv_rmse": null,
+    "component_names": [
+      "extra_leaf12"
+    ],
+    "component_weights": [
+      1.0
+    ],
+    "cv_mae": 12.714802077247704,
+    "cv_rmse": 16.035894033790562,
+    "cv_rows": 2573,
+    "feature_count": 166,
+    "mode": "single",
+    "shrink": 1.0,
+    "target_name": "direct_margin"
+  },
+  "direct_total": {
+    "baseline_cv_mae": null,
+    "baseline_cv_rmse": null,
+    "component_names": [
+      "rf_leaf8",
+      "extra_leaf12",
+      "ridge_100"
+    ],
+    "component_weights": [
+      0.33404659651748314,
+      0.33302135672438476,
+      0.33293204675813204
+    ],
+    "cv_mae": 13.022881190611118,
+    "cv_rmse": 16.53493383698013,
+    "cv_rows": 2573,
+    "feature_count": 166,
+    "mode": "ensemble",
+    "shrink": 1.0,
+    "target_name": "direct_total"
+  },
+  "excluded_from_training": {
+    "existing_ev_kelly_pick_fields": "Excluded because this is a score model, not a pick-filter model.",
+    "existing_predicted_scores": "Excluded to avoid training on output from the old fixed-weight projection.",
+    "fpi": "No historical point-in-time FPI files exist in repo for 2021-2025.",
+    "injuries": "No historical point-in-time injury files exist in repo for 2021-2025."
+  },
+  "final_validation_season": 2025,
+  "historical_games": 4285,
+  "historical_seasons": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "margin": {
+    "baseline_cv_mae": 12.086689406099518,
+    "baseline_cv_rmse": 15.292297483354885,
+    "component_names": [
+      "ridge_100"
+    ],
+    "component_weights": [
+      1.0
+    ],
+    "cv_mae": 12.079135736656166,
+    "cv_rmse": 15.289681666260256,
+    "cv_rows": 2492,
+    "feature_count": 180,
+    "mode": "single",
+    "shrink": 0.1,
+    "target_name": "margin_residual"
+  },
+  "script_version": "cfb-trained-score-v1-2026-08-28",
+  "team_stat_metric_count": 12,
+  "total": {
+    "baseline_cv_mae": 12.609418837675351,
+    "baseline_cv_rmse": 16.061264846110777,
+    "component_names": [
+      "extra_leaf5",
+      "xgboost",
+      "ridge_100"
+    ],
+    "component_weights": [
+      0.3334331063542336,
+      0.33330074107246743,
+      0.33326615257329895
+    ],
+    "cv_mae": 12.569133453374967,
+    "cv_rmse": 16.047662111114313,
+    "cv_rows": 2495,
+    "feature_count": 180,
+    "mode": "ensemble",
+    "shrink": 0.35,
+    "target_name": "total_residual"
+  },
+  "validation_2025": {
+    "average_team_score_beats_market_2025": true,
+    "margin_beats_market_2025": false,
+    "selected_score_combo": {
+      "average_team_score_mae": 8.550186947612147,
+      "market_average_team_score_mae": 8.556703910614525,
+      "use_trained_margin": false,
+      "use_trained_total": true
+    },
+    "total_beats_market_2025": true
+  },
+  "write_scope": "C:\\Users\\Mat\\Documents\\GitHub\\cfb_for_mat\\docs\\win\\football\\cfb\\data\\score_model"
+}
