@@ -88,7 +88,7 @@ import pandas as pd
 import projection_week1 as base
 
 
-SCRIPT_VERSION = "cfb-inseason-v2-2026-08-26"
+SCRIPT_VERSION = "cfb-inseason-v3-game-lock-2026-08-30"
 
 WEEKLY_FILE_RE = re.compile(
     r"^week_(\d+)_CFB_weekly_schedule\.csv$"
@@ -952,6 +952,16 @@ def main() -> int:
         args,
     )
 
+    (
+        projected,
+        locked_games_preserved,
+    ) = base.preserve_locked_rows(
+        projected,
+        schedule,
+        output_path,
+        "Week 2+ projection",
+    )
+
     validate_output(
         projected,
         schedule,
@@ -985,6 +995,11 @@ def main() -> int:
 
     print(
         f"games={len(projected)}"
+    )
+
+    print(
+        "locked_games_preserved="
+        f"{locked_games_preserved}"
     )
 
     print(

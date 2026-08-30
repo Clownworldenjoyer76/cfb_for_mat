@@ -1270,6 +1270,7 @@ def merge_schedule(
             "over_american",
             "under_american",
             "odds_available",
+            "game_locked",
         ],
         "weekly schedule",
     )
@@ -1410,6 +1411,7 @@ def merge_schedule(
         "over_american",
         "under_american",
         "odds_available",
+        "game_locked",
     ]
 
     source = schedule[
@@ -1588,6 +1590,139 @@ def build_output(
         ].to_numpy()
 
     return output
+
+
+
+def preserve_locked_selected_rows(
+    output: pd.DataFrame,
+    working: pd.DataFrame,
+    existing_output_path: Path,
+) -> tuple[pd.DataFrame, int]:
+    require_columns(
+        working,
+        [
+            "game_id",
+            "sched_game_locked",
+        ],
+        "candidate working frame",
+    )
+
+    lock_values = pd.to_numeric(
+        working[
+            "sched_game_locked"
+        ],
+        errors="coerce",
+    ).fillna(
+        0
+    )
+
+    locked_ids = set(
+        working.loc[
+            lock_values.eq(
+                1
+            ),
+            "game_id",
+        ].map(
+            normalize_game_id
+        )
+    )
+
+    locked_ids.discard(
+        ""
+    )
+
+    if not locked_ids:
+        return (
+            output,
+            0,
+        )
+
+    if not existing_output_path.is_file():
+        fail(
+            f"{len(locked_ids)} game(s) have already kicked off "
+            "but no existing selected output is available to "
+            "preserve. Refusing to rebuild locked selections. "
+            f"game_ids={sorted(locked_ids)[:10]}"
+        )
+
+    existing = read_csv(
+        existing_output_path,
+        "existing selected output",
+    )
+
+    require_columns(
+        existing,
+        [
+            "game_id",
+            *output.columns.tolist(),
+        ],
+        "existing selected output",
+    )
+
+    validate_unique_game_ids(
+        existing,
+        "existing selected output",
+    )
+
+    missing_locked = sorted(
+        locked_ids
+        - set(
+            existing[
+                "game_id"
+            ].map(
+                normalize_game_id
+            )
+        )
+    )
+
+    if missing_locked:
+        fail(
+            "Existing selected output is missing locked games. "
+            "Refusing to rebuild them after kickoff. "
+            f"game_ids={missing_locked[:10]}"
+        )
+
+    result = output.astype(object).copy()
+    result[
+        "game_id"
+    ] = result[
+        "game_id"
+    ].map(
+        normalize_game_id
+    )
+
+    existing_lookup = existing.set_index(
+        "game_id",
+        drop=False,
+    )
+
+    for game_id in locked_ids:
+        mask = result[
+            "game_id"
+        ].eq(
+            game_id
+        )
+
+        if not mask.any():
+            fail(
+                f"Locked game_id={game_id} is missing from the "
+                "new selected output frame"
+            )
+
+        prior_row = existing_lookup.loc[
+            game_id,
+            result.columns,
+        ]
+
+        result.loc[
+            mask,
+            result.columns,
+        ] = prior_row.to_numpy()
+
+    return (
+        result,
+        len(locked_ids),
+    )
 
 
 def write_atomic_csv(
@@ -1778,6 +1913,15 @@ def main() -> int:
         max_kelly,
     )
 
+    (
+        output,
+        locked_games_preserved,
+    ) = preserve_locked_selected_rows(
+        output,
+        working,
+        output_path,
+    )
+
     expected_columns = (
         list(
             combined.columns
@@ -1843,6 +1987,11 @@ def main() -> int:
         f"season={season} "
         f"week={week} "
         f"games={len(output)}"
+    )
+
+    print(
+        "locked_games_preserved="
+        f"{locked_games_preserved}"
     )
 
     for column, label in [

@@ -9,6 +9,7 @@ import traceback
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 
 BASE_DIR = Path("docs/win/football/cfb")
@@ -36,6 +37,8 @@ OUTPUT_COLUMNS = [
     "game_date",
     "game_time",
     "commence_time",
+    "kickoff_utc",
+    "game_locked",
     "away_team",
     "home_team",
     "odds_away_team",
@@ -177,6 +180,56 @@ def parse_date(value):
         return datetime.fromisoformat(text).date()
     except Exception:
         return None
+
+
+
+def schedule_kickoff_utc(row):
+    game_date = str(row.get("game_date", "")).strip()
+    game_time = str(row.get("game_time", "")).strip()
+    game_timezone = str(row.get("game_timezone", "")).strip()
+
+    if not game_date or not game_time or not game_timezone:
+        return None
+
+    try:
+        local_dt = datetime.strptime(
+            f"{game_date} {game_time}",
+            "%Y-%m-%d %H:%M",
+        ).replace(
+            tzinfo=ZoneInfo(game_timezone)
+        )
+    except Exception:
+        return None
+
+    return local_dt.astimezone(timezone.utc)
+
+
+def kickoff_iso(row):
+    kickoff = schedule_kickoff_utc(row)
+    if kickoff is None:
+        return ""
+    return kickoff.isoformat().replace("+00:00", "Z")
+
+
+def game_is_locked(row, now_utc):
+    kickoff = schedule_kickoff_utc(row)
+    if kickoff is None:
+        return False
+    return now_utc >= kickoff
+
+
+def read_existing_weekly(path):
+    if not path.exists():
+        return {}
+
+    with path.open("r", newline="", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        rows = {}
+        for row in reader:
+            game_id = str(row.get("game_id", "")).strip()
+            if game_id:
+                rows[game_id] = row
+        return rows
 
 
 def normalize_key(value):
@@ -368,7 +421,14 @@ def choose_target_week(schedule_rows, schedule_matches):
     return week_counter.most_common(1)[0][0]
 
 
-def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary):
+def build_output_rows(
+    schedule_rows,
+    target_week,
+    schedule_matches,
+    odds_summary,
+    existing_weekly,
+    now_utc,
+):
     output_rows = []
 
     target_season, target_season_type, target_week_number = target_week
@@ -384,6 +444,30 @@ def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary
             continue
 
         schedule_game_id = str(schedule_row.get("game_id", "")).strip()
+        locked = game_is_locked(schedule_row, now_utc)
+        kickoff = kickoff_iso(schedule_row)
+
+        if locked and schedule_game_id in existing_weekly:
+            previous = existing_weekly[schedule_game_id]
+            row = {
+                column: previous.get(column, "")
+                for column in OUTPUT_COLUMNS
+            }
+            row.update(
+                {
+                    "season": schedule_row.get("season", ""),
+                    "season_type": schedule_row.get("season_type", ""),
+                    "week": schedule_row.get("week", ""),
+                    "game_id": schedule_game_id,
+                    "game_date": previous.get("game_date", "") or schedule_row.get("game_date", ""),
+                    "game_time": previous.get("game_time", "") or schedule_row.get("game_time", ""),
+                    "kickoff_utc": previous.get("kickoff_utc", "") or kickoff,
+                    "game_locked": "1",
+                }
+            )
+            output_rows.append(row)
+            continue
+
         match = schedule_matches.get(schedule_game_id, {})
         odds_provider_game_id = str(match.get("odds_provider_game_id", "")).strip()
         odds = odds_summary.get(odds_provider_game_id, {})
@@ -397,6 +481,8 @@ def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary
             "game_date": schedule_row.get("game_date", ""),
             "game_time": schedule_row.get("game_time", ""),
             "commence_time": match.get("commence_time", ""),
+            "kickoff_utc": kickoff,
+            "game_locked": "1" if locked else "0",
             "away_team": schedule_row.get("away_team", ""),
             "home_team": schedule_row.get("home_team", ""),
             "odds_away_team": match.get("odds_away_team", ""),
@@ -423,7 +509,10 @@ def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary
             "odds_missing_reason": "",
         }
 
-        if odds_provider_game_id and odds:
+        if locked:
+            row["odds_available"] = "0"
+            row["odds_missing_reason"] = "locked_before_first_capture"
+        elif odds_provider_game_id and odds:
             row["odds_available"] = "1"
             row["odds_missing_reason"] = ""
         elif odds_provider_game_id and not odds:
@@ -445,7 +534,6 @@ def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary
     )
 
     return output_rows
-
 
 def main():
     LOG_FILE.write_text("", encoding="utf-8")
@@ -472,14 +560,30 @@ def main():
     target_week_number = str(target_week[2]).strip()
 
     output_path = WEEKLY_DIR / f"week_{target_week_number}_CFB_weekly_schedule.csv"
+    existing_weekly = read_existing_weekly(output_path)
+    now_utc = datetime.now(timezone.utc)
 
-    output_rows = build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary)
+    output_rows = build_output_rows(
+        schedule_rows,
+        target_week,
+        schedule_matches,
+        odds_summary,
+        existing_weekly,
+        now_utc,
+    )
 
     write_csv(output_path, output_rows)
 
     matched_with_odds = sum(1 for row in output_rows if row.get("odds_available") == "1")
     matched_without_odds = sum(1 for row in output_rows if row.get("odds_missing_reason") == "no_odds_returned")
     no_event_match = sum(1 for row in output_rows if row.get("odds_missing_reason") == "no_odds_event_match")
+    locked_games = sum(1 for row in output_rows if row.get("game_locked") == "1")
+    locked_preserved = sum(
+        1
+        for row in output_rows
+        if row.get("game_locked") == "1"
+        and str(row.get("game_id", "")).strip() in existing_weekly
+    )
 
     log(f"Schedule rows loaded: {len(schedule_rows)}")
     log(f"Raw odds events loaded: {len(raw_events)}")
@@ -492,6 +596,8 @@ def main():
     log(f"Rows with odds: {matched_with_odds}")
     log(f"Rows with event but no odds: {matched_without_odds}")
     log(f"Rows with no odds event match: {no_event_match}")
+    log(f"Locked games: {locked_games}")
+    log(f"Locked rows preserved: {locked_preserved}")
     log(f"Output written: {output_path}")
 
     if unmatched_events:
@@ -509,6 +615,8 @@ def main():
     print(f"Rows with odds: {matched_with_odds}")
     print(f"Rows with event but no odds: {matched_without_odds}")
     print(f"Rows with no odds event match: {no_event_match}")
+    print(f"Locked games: {locked_games}")
+    print(f"Locked rows preserved: {locked_preserved}")
 
 
 if __name__ == "__main__":
