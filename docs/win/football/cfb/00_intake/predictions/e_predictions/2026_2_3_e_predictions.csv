@@ -17,8 +17,8 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401856812,Arizona State Sun Devils at Kansas Jayhawks,awayTeam,9,47.11,59.68,55.0,2.759,52.89,,-0.987
 2026,2,3,401858451,Akron Zips at Minnesota Golden Gophers,homeTeam,135,92.2,31.642,133.0,-16.854,7.8,,21.055
 2026,2,3,401858451,Akron Zips at Minnesota Golden Gophers,awayTeam,2006,7.8,31.642,63.0,0.612,92.2,,-21.055
-2026,2,3,401860889,North Texas Mean Green at Texas State Bobcats,homeTeam,326,62.63999999999999,40.653,90.0,-6.401,37.36,,4.405
-2026,2,3,401860889,North Texas Mean Green at Texas State Bobcats,awayTeam,249,37.36,40.653,84.0,-4.26,62.63999999999999,,-4.405
+2026,2,3,401860889,North Texas Mean Green at Texas State Bobcats,homeTeam,326,62.63999999999999,40.653,91.0,-6.401,37.36,,4.405
+2026,2,3,401860889,North Texas Mean Green at Texas State Bobcats,awayTeam,249,37.36,40.653,85.0,-4.26,62.63999999999999,,-4.405
 2026,2,3,401858460,Eastern Michigan Eagles at Wisconsin Badgers,homeTeam,275,94.66,36.588,131.0,-16.316,5.34,,24.512
 2026,2,3,401858460,Eastern Michigan Eagles at Wisconsin Badgers,awayTeam,2199,5.34,36.588,43.0,4.818,94.66,,-24.512
 2026,2,3,401869940,Coastal Carolina Chanticleers at Delaware Blue Hens,homeTeam,48,72.44,30.212,117.0,-12.093,27.560000000000002,,8.239
@@ -38,7 +38,7 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401858233,Wagner Seahawks at California Golden Bears,homeTeam,25,99.59,33.506,0.0,-41.219,0.41000000000000003,,46.802
 2026,2,3,401858233,Wagner Seahawks at California Golden Bears,awayTeam,2681,0.41000000000000003,33.506,62.0,0.884,99.59,,-46.802
 2026,2,3,401860890,Duquesne Dukes at Washington State Cougars,homeTeam,265,97.35000000000001,28.013,0.0,-30.071,2.65,,30.721
-2026,2,3,401860890,Duquesne Dukes at Washington State Cougars,awayTeam,2184,2.65,28.013,83.0,-4.054,97.35000000000001,,-30.721
+2026,2,3,401860890,Duquesne Dukes at Washington State Cougars,awayTeam,2184,2.65,28.013,84.0,-4.054,97.35000000000001,,-30.721
 2026,2,3,401858448,Southern Illinois Salukis at Illinois Fighting Illini,homeTeam,356,94.23,41.342,0.0,-14.542,5.7700000000000005,,23.802
 2026,2,3,401858448,Southern Illinois Salukis at Illinois Fighting Illini,awayTeam,79,5.7700000000000005,41.342,39.0,6.315,94.23,,-23.802
 2026,2,3,401864508,Wyoming Cowboys at Central Michigan Chippewas,homeTeam,2117,59.870000000000005,21.197,121.0,-13.069,40.129999999999995,,3.409
@@ -80,7 +80,7 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401858459,Eastern Washington Eagles at Washington Huskies,homeTeam,264,98.78,40.493,0.0,-25.254,1.22,,37.456
 2026,2,3,401858459,Eastern Washington Eagles at Washington Huskies,awayTeam,331,1.22,40.493,26.0,9.893,98.78,,-37.456
 2026,2,3,401856795,BYU Cougars at Colorado State Rams,homeTeam,36,5.29,52.629,20.0,13.125,94.71000000000001,,-24.587
-2026,2,3,401856795,BYU Cougars at Colorado State Rams,awayTeam,252,94.71000000000001,52.629,118.0,-12.364,5.29,,24.587
+2026,2,3,401856795,BYU Cougars at Colorado State Rams,awayTeam,252,94.71000000000001,52.629,117.0,-12.364,5.29,,24.587
 2026,2,3,401871047,Marshall Thundering Herd at Missouri State Bears,homeTeam,2623,53.02,30.68,104.0,-8.786,46.98,,1.032
 2026,2,3,401871047,Marshall Thundering Herd at Missouri State Bears,awayTeam,276,46.98,30.68,110.0,-10.255,53.02,,-1.032
 2026,2,3,401856687,Florida Gators at Auburn Tigers,homeTeam,2,51.62,81.051,18.0,13.575,48.38,,0.551
@@ -121,8 +121,8 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401856799,Arkansas State Red Wolves at TCU Horned Frogs,awayTeam,2032,9.969999999999999,48.001,38.0,6.366,90.03,,-18.759
 2026,2,3,401856800,Georgia State Panthers at UCF Knights,homeTeam,2116,91.84,34.834,127.0,-15.225,8.16,,20.634
 2026,2,3,401856800,Georgia State Panthers at UCF Knights,awayTeam,2247,8.16,34.834,57.0,2.116,91.84,,-20.634
-2026,2,3,401860887,James Madison Dukes at San Diego State Aztecs,homeTeam,21,72.00999999999999,51.282,75.0,-2.026,27.99,,8.055
-2026,2,3,401860887,James Madison Dukes at San Diego State Aztecs,awayTeam,256,27.99,51.282,59.0,1.426,72.00999999999999,,-8.055
+2026,2,3,401860887,James Madison Dukes at San Diego State Aztecs,homeTeam,21,72.00999999999999,51.282,77.0,-2.026,27.99,,8.055
+2026,2,3,401860887,James Madison Dukes at San Diego State Aztecs,awayTeam,256,27.99,51.282,57.0,1.426,72.00999999999999,,-8.055
 2026,2,3,401862775,East Texas A&M Lions at Tulsa Golden Hurricane,homeTeam,202,95.89,21.653,0.0,-32.99,4.109999999999999,,26.851
 2026,2,3,401862775,East Texas A&M Lions at Tulsa Golden Hurricane,awayTeam,2837,4.109999999999999,21.653,105.0,-8.963,95.89,,-26.851
 2026,2,3,401862776,UAB Blazers at Louisiana Ragin' Cajuns,homeTeam,309,76.14,23.898,128.0,-15.451,23.86,,9.892
@@ -143,9 +143,9 @@ season,season_type,week,game_id,game_name,home_away,team_id,gameProjection,match
 2026,2,3,401856692,Kennesaw State Owls at Tennessee Volunteers,awayTeam,338,3.85,59.171,16.0,15.058,96.15,,-27.427
 2026,2,3,401858458,Purdue Boilermakers at UCLA Bruins,homeTeam,26,65.38000000000001,51.525,71.0,-0.929,34.62,,5.418
 2026,2,3,401858458,Purdue Boilermakers at UCLA Bruins,awayTeam,2509,34.62,51.525,64.0,0.472,65.38000000000001,,-5.418
-2026,2,3,401860885,South Dakota Coyotes at Boise State Broncos,homeTeam,68,94.1,37.855,0.0,-15.633,5.8999999999999995,,23.612
-2026,2,3,401860885,South Dakota Coyotes at Boise State Broncos,awayTeam,233,5.8999999999999995,37.855,50.0,4.045,94.1,,-23.612
-2026,2,3,401860886,Montana Grizzlies at Oregon State Beavers,homeTeam,204,68.87,32.241,0.0,-10.688,31.130000000000003,,6.77
-2026,2,3,401860886,Montana Grizzlies at Oregon State Beavers,awayTeam,149,31.130000000000003,32.241,98.0,-8.101,68.87,,-6.77
+2026,2,3,401860885,South Dakota Coyotes at Boise State Broncos,homeTeam,68,91.86,41.133,0.0,-12.523,8.14,,20.652
+2026,2,3,401860885,South Dakota Coyotes at Boise State Broncos,awayTeam,233,8.14,41.133,50.0,4.045,91.86,,-20.652
+2026,2,3,401860886,Montana Grizzlies at Oregon State Beavers,homeTeam,204,71.83,30.595,0.0,-11.958,28.17,,7.979
+2026,2,3,401860886,Montana Grizzlies at Oregon State Beavers,awayTeam,149,28.17,30.595,99.0,-8.101,71.83,,-7.979
 2026,2,3,401860888,Fresno State Bulldogs at San José State Spartans,homeTeam,23,23.14,33.027,77.0,-2.498,76.86,,-10.231
 2026,2,3,401860888,Fresno State Bulldogs at San José State Spartans,awayTeam,278,76.86,33.027,124.0,-14.286,23.14,,10.231
