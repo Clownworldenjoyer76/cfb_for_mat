@@ -1,0 +1,17 @@
+[2026-08-31 12:06:51 EDT] ================================================================================
+[2026-08-31 12:06:51 EDT] implementation=sportsdataverse_v3_2026-08-19
+[2026-08-31 12:06:51 EDT] pull_pbp.py started | season=2026 | source=sportsdataverse.CFBPlayProcess | sportsdataverse_version=0.0.75 | workers=5 | refresh=False | dry_run=False
+[2026-08-31 12:06:51 EDT] schedule_games_total=892
+[2026-08-31 12:06:51 EDT] existing_games=0
+[2026-08-31 12:06:51 EDT] existing_rows=0
+[2026-08-31 12:06:51 EDT] future_games_skipped=884
+[2026-08-31 12:06:51 EDT] already_stored_skipped=0
+[2026-08-31 12:06:51 EDT] games_to_process=8
+[2026-08-31 12:07:29 EDT] games_processed=8
+[2026-08-31 12:07:29 EDT] games_skipped=0
+[2026-08-31 12:07:29 EDT] games_in_output=8
+[2026-08-31 12:07:29 EDT] rows=1395
+[2026-08-31 12:07:29 EDT] columns=476
+[2026-08-31 12:07:29 EDT] output=C:\Users\Mat\Documents\GitHub\cfb_for_mat\docs\win\football\cfb\00_intake\pbp\2026_pbp.parquet
+[2026-08-31 12:07:29 EDT] status=success
+[2026-08-31 12:07:29 EDT] ================================================================================
