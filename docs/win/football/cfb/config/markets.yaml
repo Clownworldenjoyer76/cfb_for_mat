@@ -49,7 +49,6 @@ markets:
 
     home:
       enabled: true
-      min_kelly: 0.10
       line_bands:
         - [-9.0, 13.999999]
       prob_bands:
