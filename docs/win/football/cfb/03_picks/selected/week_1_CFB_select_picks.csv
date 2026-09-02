@@ -1,6 +1,6 @@
 week,game_id,game_date,game_time,away_team,home_team,ml_selection,ml_odds_american,ml_model_probability,spread_selection,spread_line,spread_odds_american,total_selection,total_line,total_odds_american,total_model_probability,season,season_type,ml_selected,spread_selected,total_selected
-1,401864577,2026-08-29,16:30,Jacksonville State Gamecocks,North Dakota State Bison,HOME,-265.0,0.737312,,,,,,,,2026,2,1,0,0
-1,401862693,2026-08-29,19:00,Memphis Tigers,UNLV Rebels,HOME,-192.0,0.675159,,,,UNDER,56.5,-112.0,0.534899,2026,2,1,0,1
+1,401864577,2026-08-29,16:30,Jacksonville State Gamecocks,North Dakota State Bison,HOME,-265.0,0.737312,HOME,-6.5,-115.0,,,,,2026,2,1,1,0
+1,401862693,2026-08-29,19:00,Memphis Tigers,UNLV Rebels,HOME,-192.0,0.675159,HOME,-4.0,-112.0,UNDER,56.5,-112.0,0.534899,2026,2,1,1,1
 1,401864570,2026-08-29,19:00,New Mexico State Aggies,Florida State Seminoles,HOME,-10000.0,0.977435,,,,,,,,2026,2,1,0,0
 1,401858423,2026-09-03,18:00,Massachusetts Minutemen,Rutgers Scarlet Knights,HOME,-6500.0,0.960115,,,,,,,,2026,2,1,0,0
 1,401858204,2026-09-03,19:00,Akron Zips,Wake Forest Demon Deacons,HOME,-3200.0,0.933071,,,,,,,,2026,2,1,0,0
@@ -13,7 +13,7 @@ week,game_id,game_date,game_time,away_team,home_team,ml_selection,ml_odds_americ
 1,401856634,2026-09-05,11:00,East Carolina Pirates,Alabama Crimson Tide,HOME,-8000.0,0.946798,,,,,,,,2026,2,1,0,0
 1,401856778,2026-09-05,11:00,Oregon State Beavers,Houston Cougars,HOME,-1650.0,0.910754,,,,,,,,2026,2,1,0,0
 1,401861962,2026-09-05,12:00,Lafayette Leopards,UConn Huskies,HOME,-1350.0,0.902263,,,,,,,,2026,2,1,0,0
-1,401869960,2026-09-05,12:00,Liberty Flames,James Madison Dukes,HOME,-225.0,0.711824,,,,,,,,2026,2,1,0,0
+1,401869960,2026-09-05,12:00,Liberty Flames,James Madison Dukes,HOME,-225.0,0.711824,HOME,-6.0,-110.0,,,,,2026,2,1,1,0
 1,401856779,2026-09-05,12:00,Southeast Missouri State Redhawks,Iowa State Cyclones,HOME,-20000.0,0.983428,,,,,,,,2026,2,1,0,0
 1,401866410,2026-09-05,12:00,Tarleton State Texans,Bowling Green Falcons,HOME,-135.0,0.555201,,,,,,,,2026,2,1,0,0
 1,401858433,2026-09-05,12:30,Boise State Broncos,Oregon Ducks,HOME,-2400.0,0.949408,,,,,,,,2026,2,1,0,0
