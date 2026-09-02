@@ -1,19 +1,19 @@
 game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_prob,tie_prob,away_projected_pts,home_projected_pts,total_projected_pts,home_PtDiff,away_PtDiff,home_rating,away_rating,game_name,season,season_type,week,sport,league
 401871067,,,Middle Tennessee Blue Raiders,Delaware Blue Hens,25.718,0.2956,0.7044,,,,,-7.402,7.402,-16.066,-6.555,Delaware Blue Hens at Middle Tennessee Blue Raiders,2026,2,7,football,college-football
-401871053,,,Jacksonville State Gamecocks,Florida International Panthers,20.287,0.5353,0.4647,,,,,1.206,-1.206,-13.934,-12.58,Florida International Panthers at Jacksonville State Gamecocks,2026,2,7,football,college-football
+401871053,,,Jacksonville State Gamecocks,Florida International Panthers,20.299,0.5355,0.4644,,,,,1.215,-1.215,-13.926,-12.58,Florida International Panthers at Jacksonville State Gamecocks,2026,2,7,football,college-football
 401871054,,,Missouri State Bears,Kennesaw State Owls,30.402,0.5293,0.4707,,,,,1.002,-1.002,-10.255,-9.012,Kennesaw State Owls at Missouri State Bears,2026,2,7,football,college-football
 401871068,,,Sam Houston Bearkats,Western Kentucky Hilltoppers,24.538,0.2036,0.7964,,,,,-11.626,11.626,-18.422,-4.859,Western Kentucky Hilltoppers at Sam Houston Bearkats,2026,2,7,football,college-football
 401862800,,,UAB Blazers,East Carolina Pirates,33.504,0.1759,0.8241,,,,,-13.163,13.163,-15.451,-0.564,East Carolina Pirates at UAB Blazers,2026,2,7,football,college-football
 401860923,,,Texas State Bobcats,Colorado State Rams,32.095,0.7886,0.2114,,,,,11.223,-11.223,-4.26,-12.364,Colorado State Rams at Texas State Bobcats,2026,2,7,football,college-football
 401869950,,,Old Dominion Monarchs,Georgia Southern Eagles,37.309,0.6917,0.3081,,,,,6.891,-6.891,-4.435,-8.701,Georgia Southern Eagles at Old Dominion Monarchs,2026,2,7,football,college-football
-401864521,,,Hawai'i Rainbow Warriors,New Mexico Lobos,43.925,0.6129,0.3871,,,,,3.915,-3.915,-4.027,-3.531,New Mexico Lobos at Hawai'i Rainbow Warriors,2026,2,7,football,college-football
-401862801,,,Tulane Green Wave,Memphis Tigers,54.372,0.6283,0.3716,,,,,4.479,-4.479,2.251,0.02,Memphis Tigers at Tulane Green Wave,2026,2,7,football,college-football
+401864521,,,Hawai'i Rainbow Warriors,New Mexico Lobos,43.973,0.6142,0.3857,,,,,3.967,-3.967,-3.979,-3.531,New Mexico Lobos at Hawai'i Rainbow Warriors,2026,2,7,football,college-football
+401862801,,,Tulane Green Wave,Memphis Tigers,54.372,0.6283,0.3716,,,,,4.479,-4.479,2.251,0.019,Memphis Tigers at Tulane Green Wave,2026,2,7,football,college-football
 401858493,,,Purdue Boilermakers,Washington Huskies,61.164,0.2953,0.7047,,,,,-7.414,7.414,-0.929,9.893,Washington Huskies at Purdue Boilermakers,2026,2,7,football,college-football
 401869844,,,Coastal Carolina Chanticleers,App State Mountaineers,26.937,0.4910,0.5090,,,,,-0.307,0.307,-12.093,-9.767,App State Mountaineers at Coastal Carolina Chanticleers,2026,2,7,football,college-football
 401858269,,,California Golden Bears,Wake Forest Demon Deacons,56.419,0.5566,0.4433,,,,,1.94,-1.94,0.884,3.379,Wake Forest Demon Deacons at California Golden Bears,2026,2,7,football,college-football
 401858492,,,Oregon Ducks,Nebraska Cornhuskers,81.679,0.9197,0.0802,,,,,20.794,-20.794,25.276,8.842,Nebraska Cornhuskers at Oregon Ducks,2026,2,7,football,college-football
 401858494,,,UCLA Bruins,Wisconsin Badgers,57.324,0.4425,0.5575,,,,,-1.97,1.97,0.472,4.818,Wisconsin Badgers at UCLA Bruins,2026,2,7,football,college-football
-401866445,,,Sacramento State Hornets,Ohio Bobcats,17.18,0.2525,0.7474,,,,,-9.246,9.246,-20.836,-7.957,Ohio Bobcats at Sacramento State Hornets,2026,2,7,football,college-football
+401866445,,,Sacramento State Hornets,Ohio Bobcats,17.203,0.2530,0.7470,,,,,-9.227,9.227,-20.818,-7.957,Ohio Bobcats at Sacramento State Hornets,2026,2,7,football,college-football
 401856809,,,BYU Cougars,Notre Dame Fighting Irish,94.643,0.2401,0.7599,,,,,-9.819,9.819,13.125,25.856,Notre Dame Fighting Irish at BYU Cougars,2026,2,7,football,college-football
 401856833,,,Colorado Buffaloes,Utah Utes,65.525,0.4819,0.5181,,,,,-0.618,0.618,4.546,8.451,Utah Utes at Colorado Buffaloes,2026,2,7,football,college-football
 401856720,,,LSU Tigers,Mississippi State Bulldogs,78.024,0.8896,0.1104,,,,,17.785,-17.785,20.034,4.082,Mississippi State Bulldogs at LSU Tigers,2026,2,7,football,college-football
@@ -25,7 +25,7 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401856830,,,Kansas State Wildcats,Kansas Jayhawks,60.125,0.6260,0.3740,,,,,4.391,-4.391,5.057,2.759,Kansas Jayhawks at Kansas State Wildcats,2026,2,7,football,college-football
 401856831,,,Houston Cougars,Oklahoma State Cowboys,63.242,0.6791,0.3209,,,,,6.39,-6.39,7.12,3.345,Oklahoma State Cowboys at Houston Cougars,2026,2,7,football,college-football
 401856832,,,Baylor Bears,TCU Horned Frogs,63.847,0.6121,0.3879,,,,,3.887,-3.887,6.518,4.77,TCU Horned Frogs at Baylor Bears,2026,2,7,football,college-football
-401858268,,,SMU Mustangs,Virginia Cavaliers,76.171,0.6456,0.3544,,,,,5.112,-5.112,11.117,10.405,Virginia Cavaliers at SMU Mustangs,2026,2,7,football,college-football
+401858268,,,SMU Mustangs,Virginia Cavaliers,76.223,0.6442,0.3557,,,,,5.062,-5.062,11.117,10.452,Virginia Cavaliers at SMU Mustangs,2026,2,7,football,college-football
 401862804,,,UTSA Roadrunners,Navy Midshipmen,45.986,0.4719,0.5281,,,,,-0.958,0.958,-5.31,-0.712,Navy Midshipmen at UTSA Roadrunners,2026,2,7,football,college-football
 401862805,,,Rice Owls,Tulsa Golden Hurricane,26.203,0.4374,0.5626,,,,,-2.144,2.144,-13.439,-8.963,Tulsa Golden Hurricane at Rice Owls,2026,2,7,football,college-football
 401869934,,,Southern Miss Golden Eagles,Arkansas State Red Wolves,35.962,0.6926,0.3074,,,,,6.925,-6.925,-5.053,-9.153,Arkansas State Red Wolves at Southern Miss Golden Eagles,2026,2,7,football,college-football
@@ -34,11 +34,11 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401856719,,,Georgia Bulldogs,Auburn Tigers,88.365,0.8438,0.1562,,,,,14.378,-14.378,24.837,12.007,Auburn Tigers at Georgia Bulldogs,2026,2,7,football,college-football
 401856723,,,Tennessee Volunteers,Alabama Crimson Tide,92.638,0.4091,0.5908,,,,,-3.133,3.133,15.058,20.126,Alabama Crimson Tide at Tennessee Volunteers,2026,2,7,football,college-football
 401856829,,,West Virginia Mountaineers,Cincinnati Bearcats,56.654,0.3994,0.6006,,,,,-3.477,3.477,0.197,4.406,Cincinnati Bearcats at West Virginia Mountaineers,2026,2,7,football,college-football
-401858261,,,Clemson Tigers,Charleston Southern Buccaneers,44.472,0.9964,0.0036,,,,,47.996,-47.996,13.421,-32.83,Charleston Southern Buccaneers at Clemson Tigers,2026,2,7,football,college-football
-401858263,,,Miami Hurricanes,Florida State Seminoles,80.559,0.8940,0.1060,,,,,18.172,-18.172,21.834,7.969,Florida State Seminoles at Miami Hurricanes,2026,2,7,football,college-football
+401858261,,,Clemson Tigers,Charleston Southern Buccaneers,44.472,0.9964,0.0036,,,,,47.994,-47.994,13.421,-32.828,Charleston Southern Buccaneers at Clemson Tigers,2026,2,7,football,college-football
+401858263,,,Miami Hurricanes,Florida State Seminoles,80.561,0.8939,0.1061,,,,,18.17,-18.17,21.834,7.971,Florida State Seminoles at Miami Hurricanes,2026,2,7,football,college-football
 401858264,,,Virginia Tech Hokies,Georgia Tech Yellow Jackets,64.368,0.6595,0.3405,,,,,5.635,-5.635,7.384,4.186,Georgia Tech Yellow Jackets at Virginia Tech Hokies,2026,2,7,football,college-football
 401858265,,,Syracuse Orange,Louisville Cardinals,60.957,0.2757,0.7243,,,,,-8.232,8.232,-0.808,9.454,Louisville Cardinals at Syracuse Orange,2026,2,7,football,college-football
-401858266,,,Duke Blue Devils,North Carolina Tar Heels,61.617,0.4824,0.5176,,,,,-0.6,0.6,3.547,5.91,North Carolina Tar Heels at Duke Blue Devils,2026,2,7,football,college-football
+401858266,,,Duke Blue Devils,North Carolina Tar Heels,61.618,0.4824,0.5176,,,,,-0.6,0.6,3.547,5.91,North Carolina Tar Heels at Duke Blue Devils,2026,2,7,football,college-football
 401858267,,,Boston College Eagles,Pittsburgh Panthers,55.997,0.3273,0.6727,,,,,-6.141,6.141,-2.668,6.616,Pittsburgh Panthers at Boston College Eagles,2026,2,7,football,college-football
 401858488,,,Indiana Hoosiers,Ohio State Buckeyes,99.856,0.3924,0.6076,,,,,-3.727,3.727,23.14,28.676,Ohio State Buckeyes at Indiana Hoosiers,2026,2,7,football,college-football
 401858489,,,Maryland Terrapins,Rutgers Scarlet Knights,52.938,0.5666,0.4334,,,,,2.283,-2.283,1.024,-0.153,Rutgers Scarlet Knights at Maryland Terrapins,2026,2,7,football,college-football
@@ -49,15 +49,15 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401866441,,,Bowling Green Falcons,Ball State Cardinals,14.945,0.6644,0.3356,,,,,5.821,-5.821,-13.682,-17.282,Ball State Cardinals at Bowling Green Falcons,2026,2,7,football,college-football
 401866442,,,Buffalo Bulls,Massachusetts Minutemen,17.919,0.7791,0.2209,,,,,10.744,-10.744,-10.782,-18.834,Massachusetts Minutemen at Buffalo Bulls,2026,2,7,football,college-football
 401866443,,,Central Michigan Chippewas,Western Michigan Broncos,33.367,0.2993,0.7007,,,,,-7.249,7.249,-12.806,-4.037,Western Michigan Broncos at Central Michigan Chippewas,2026,2,7,football,college-football
-401866444,,,Eastern Michigan Eagles,Toledo Rockets,31.226,0.2159,0.7841,,,,,-10.995,10.995,-15.067,-2.972,Toledo Rockets at Eastern Michigan Eagles,2026,2,7,football,college-football
+401866444,,,Eastern Michigan Eagles,Toledo Rockets,31.232,0.2160,0.7840,,,,,-10.99,10.99,-15.063,-2.972,Toledo Rockets at Eastern Michigan Eagles,2026,2,7,football,college-football
 401866478,,,Miami (OH) RedHawks,Akron Zips,23.896,0.8158,0.1842,,,,,12.684,-12.684,-6.994,-16.854,Akron Zips at Miami (OH) RedHawks,2026,2,7,football,college-football
 401869957,,,James Madison Dukes,Georgia State Panthers,30.941,0.8548,0.1452,,,,,15.111,-15.111,-2.026,-15.225,Georgia State Panthers at James Madison Dukes,2026,2,7,football,college-football
-401856725,,,Texas A&M Aggies,The Citadel Bulldogs,49.493,0.9987,0.0013,,,,,56.471,-56.471,20.002,-34.201,The Citadel Bulldogs at Texas A&M Aggies,2026,2,7,football,college-football
+401856725,,,Texas A&M Aggies,The Citadel Bulldogs,49.493,0.9987,0.0013,,,,,56.564,-56.564,20.002,-34.298,The Citadel Bulldogs at Texas A&M Aggies,2026,2,7,football,college-football
 401862802,,,Army Black Knights,Florida Atlantic Owls,32.573,0.7160,0.2840,,,,,7.884,-7.884,-5.63,-11.256,Florida Atlantic Owls at Army Black Knights,2026,2,7,football,college-football
 401864522,,,Wyoming Cowboys,Northern Illinois Huskies,19.027,0.6313,0.3686,,,,,4.588,-4.588,-13.069,-14.51,Northern Illinois Huskies at Wyoming Cowboys,2026,2,7,football,college-football
-401864524,,,Air Force Falcons,UNLV Rebels,44.769,0.3785,0.6215,,,,,-4.227,4.227,-6.842,-0.382,UNLV Rebels at Air Force Falcons,2026,2,7,football,college-football
+401864524,,,Air Force Falcons,UNLV Rebels,44.77,0.3785,0.6215,,,,,-4.228,4.228,-6.842,-0.381,UNLV Rebels at Air Force Falcons,2026,2,7,football,college-football
 401860903,,,Oregon State Beavers,Washington State Cougars,39.378,0.4366,0.5633,,,,,-2.171,2.171,-8.101,-4.054,Washington State Cougars at Oregon State Beavers,2026,2,7,football,college-football
-401858262,,,Stanford Cardinal,Elon Phoenix,31.192,0.9639,0.0361,,,,,27.993,-27.993,-1.192,-23.788,Elon Phoenix at Stanford Cardinal,2026,2,7,football,college-football
-401864520,,,North Dakota State Bison,Nevada Wolf Pack,35.499,0.8450,0.1550,,,,,14.457,-14.457,-1.237,-11.931,Nevada Wolf Pack at North Dakota State Bison,2026,2,7,football,college-football
-401864523,,,UTEP Miners,San José State Spartans,17.471,0.4410,0.5590,,,,,-2.022,2.022,-16.605,-11.845,San José State Spartans at UTEP Miners,2026,2,7,football,college-football
+401858262,,,Stanford Cardinal,Elon Phoenix,31.084,0.9646,0.0354,,,,,28.169,-28.169,-1.3,-24.082,Elon Phoenix at Stanford Cardinal,2026,2,7,football,college-football
+401864520,,,North Dakota State Bison,Nevada Wolf Pack,35.517,0.8453,0.1547,,,,,14.476,-14.476,-1.218,-11.931,Nevada Wolf Pack at North Dakota State Bison,2026,2,7,football,college-football
+401864523,,,UTEP Miners,San José State Spartans,17.468,0.4410,0.5590,,,,,-2.02,2.02,-16.605,-11.848,San José State Spartans at UTEP Miners,2026,2,7,football,college-football
 401860904,,,San Diego State Aztecs,Fresno State Bulldogs,50.892,0.6790,0.3210,,,,,6.387,-6.387,1.426,-2.498,Fresno State Bulldogs at San Diego State Aztecs,2026,2,7,football,college-football
