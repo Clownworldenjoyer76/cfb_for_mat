@@ -1,6 +1,6 @@
 game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_prob,tie_prob,away_projected_pts,home_projected_pts,total_projected_pts,home_PtDiff,away_PtDiff,home_rating,away_rating,game_name,season,season_type,week,sport,league
 401866464,2026-11-17,19:00,Ohio Bobcats,Ball State Cardinals,22.396,0.8021,0.1979,,,,,11.929,-11.929,-7.957,-17.282,Ball State Cardinals at Ohio Bobcats,2026,2,12,football,college-football
-401866465,2026-11-17,19:00,Western Michigan Broncos,Eastern Michigan Eagles,29.236,0.8111,0.1889,,,,,12.418,-12.418,-4.037,-15.067,Eastern Michigan Eagles at Western Michigan Broncos,2026,2,12,football,college-football
+401866465,2026-11-17,19:00,Western Michigan Broncos,Eastern Michigan Eagles,29.241,0.8110,0.1890,,,,,12.414,-12.414,-4.037,-15.063,Eastern Michigan Eagles at Western Michigan Broncos,2026,2,12,football,college-football
 401866466,2026-11-17,19:00,Kent State Golden Flashes,Miami (OH) RedHawks,22.514,0.2500,0.7499,,,,,-9.36,9.36,-17.891,-6.994,Miami (OH) RedHawks at Kent State Golden Flashes,2026,2,12,football,college-football
 401866467,2026-11-18,00:00,Massachusetts Minutemen,Akron Zips,8.244,0.5101,0.4899,,,,,0.344,-0.344,-18.834,-16.854,Akron Zips at Massachusetts Minutemen,2026,2,12,football,college-football
 401866469,2026-11-18,00:00,Buffalo Bulls,Central Michigan Chippewas,24.274,0.6255,0.3745,,,,,4.371,-4.371,-10.782,-12.806,Central Michigan Chippewas at Buffalo Bulls,2026,2,12,football,college-football
@@ -10,10 +10,10 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401858303,2026-11-20,19:30,Duke Blue Devils,Clemson Tigers,70.397,0.2752,0.7247,,,,,-8.25,8.25,3.547,13.421,Clemson Tigers at Duke Blue Devils,2026,2,12,football,college-football
 401866468,2026-11-20,19:30,Toledo Rockets,Bowling Green Falcons,31.836,0.8246,0.1754,,,,,13.196,-13.196,-2.972,-13.682,Bowling Green Falcons at Toledo Rockets,2026,2,12,football,college-football
 401858529,2026-11-20,20:00,Michigan State Spartans,Oregon Ducks,79.274,0.0687,0.9313,,,,,-22.224,22.224,0.281,25.276,Oregon Ducks at Michigan State Spartans,2026,2,12,football,college-football
-401858308,2026-11-20,21:00,California Golden Bears,Stanford Cardinal,51.738,0.6180,0.3819,,,,,4.106,-4.106,0.884,-1.192,Stanford Cardinal at California Golden Bears,2026,2,12,football,college-football
+401858308,2026-11-20,21:00,California Golden Bears,Stanford Cardinal,51.626,0.6212,0.3787,,,,,4.22,-4.22,0.884,-1.3,Stanford Cardinal at California Golden Bears,2026,2,12,football,college-football
 401858534,2026-11-20,21:00,USC Trojans,Maryland Terrapins,69.329,0.8896,0.1104,,,,,17.783,-17.783,13.554,1.024,Maryland Terrapins at USC Trojans,2026,2,12,football,college-football
 401858535,2026-11-20,21:00,Washington Huskies,Indiana Hoosiers,89.595,0.2384,0.7616,,,,,-9.9,9.9,9.893,23.14,Indiana Hoosiers at Washington Huskies,2026,2,12,football,college-football
-401864541,2026-11-20,21:00,Nevada Wolf Pack,Hawai'i Rainbow Warriors,34.779,0.4048,0.5951,,,,,-3.281,3.281,-11.931,-4.027,Hawai'i Rainbow Warriors at Nevada Wolf Pack,2026,2,12,football,college-football
+401864541,2026-11-20,21:00,Nevada Wolf Pack,Hawai'i Rainbow Warriors,34.842,0.4035,0.5965,,,,,-3.332,3.332,-11.931,-3.979,Hawai'i Rainbow Warriors at Nevada Wolf Pack,2026,2,12,football,college-football
 401856870,2026-11-20,22:00,Arizona State Sun Devils,Oklahoma State Cowboys,60.504,0.6258,0.3741,,,,,4.382,-4.382,4.76,3.345,Oklahoma State Cowboys at Arizona State Sun Devils,2026,2,12,football,college-football
 401856751,2026-11-20,23:00,Missouri Tigers,Kentucky Wildcats,71.804,0.7544,0.2456,,,,,9.567,-9.567,12.18,5.366,Kentucky Wildcats at Missouri Tigers,2026,2,12,football,college-football
 401856752,2026-11-20,23:00,Oklahoma Sooners,Texas A&M Aggies,94.836,0.4987,0.5012,,,,,-0.046,0.046,17.782,20.002,Texas A&M Aggies at Oklahoma Sooners,2026,2,12,football,college-football
@@ -38,8 +38,8 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401856867,2026-11-21,00:00,Cincinnati Bearcats,Colorado Buffaloes,61.325,0.5878,0.4122,,,,,3.025,-3.025,4.406,4.546,Colorado Buffaloes at Cincinnati Bearcats,2026,2,12,football,college-football
 401856868,2026-11-21,00:00,West Virginia Mountaineers,Houston Cougars,59.384,0.3814,0.6186,,,,,-4.122,4.122,0.197,7.12,Houston Cougars at West Virginia Mountaineers,2026,2,12,football,college-football
 401858302,2026-11-21,00:00,Miami Hurricanes,Virginia Tech Hokies,80.636,0.8923,0.1077,,,,,18.026,-18.026,21.834,7.384,Virginia Tech Hokies at Miami Hurricanes,2026,2,12,football,college-football
-401858304,2026-11-21,00:00,Florida State Seminoles,NC State Wolfpack,59.514,0.8102,0.1898,,,,,12.371,-12.371,7.969,-1.435,NC State Wolfpack at Florida State Seminoles,2026,2,12,football,college-football
-401858305,2026-11-21,00:00,Virginia Cavaliers,North Carolina Tar Heels,69.954,0.6894,0.3106,,,,,6.796,-6.796,10.405,5.91,North Carolina Tar Heels at Virginia Cavaliers,2026,2,12,football,college-football
+401858304,2026-11-21,00:00,Florida State Seminoles,NC State Wolfpack,59.41,0.8121,0.1879,,,,,12.479,-12.479,7.971,-1.535,NC State Wolfpack at Florida State Seminoles,2026,2,12,football,college-football
+401858305,2026-11-21,00:00,Virginia Cavaliers,North Carolina Tar Heels,70.017,0.6906,0.3094,,,,,6.845,-6.845,10.452,5.91,North Carolina Tar Heels at Virginia Cavaliers,2026,2,12,football,college-football
 401858306,2026-11-21,00:00,Louisville Cardinals,Pittsburgh Panthers,69.499,0.6500,0.3500,,,,,5.275,-5.275,9.454,6.616,Pittsburgh Panthers at Louisville Cardinals,2026,2,12,football,college-football
 401858309,2026-11-21,00:00,Boston College Eagles,Syracuse Orange,48.611,0.5013,0.4986,,,,,0.048,-0.048,-2.668,-0.808,Syracuse Orange at Boston College Eagles,2026,2,12,football,college-football
 401858310,2026-11-21,00:00,Georgia Tech Yellow Jackets,Wake Forest Demon Deacons,59.79,0.5889,0.4111,,,,,3.065,-3.065,4.186,3.379,Wake Forest Demon Deacons at Georgia Tech Yellow Jackets,2026,2,12,football,college-football
@@ -49,20 +49,20 @@ game_id,game_date,game_time,home_team,away_team,matchupQuality,home_prob,away_pr
 401862833,2026-11-21,00:00,Florida Atlantic Owls,South Florida Bulls,38.799,0.2594,0.7406,,,,,-8.943,8.943,-11.256,-0.949,South Florida Bulls at Florida Atlantic Owls,2026,2,12,football,college-football
 401869929,2026-11-21,00:00,App State Mountaineers,UL Monroe Warhawks,19.115,0.8119,0.1881,,,,,12.464,-12.464,-9.767,-19.255,UL Monroe Warhawks at App State Mountaineers,2026,2,12,football,college-football
 401869958,2026-11-21,00:00,Marshall Thundering Herd,Georgia State Panthers,23.567,0.7435,0.2565,,,,,9.07,-9.07,-8.786,-15.225,Georgia State Panthers at Marshall Thundering Herd,2026,2,12,football,college-football
-401856749,2026-11-21,11:00,Ole Miss Rebels,Wofford Terriers,47.231,0.9937,0.0063,,,,,43.103,-43.103,16.029,-24.79,Wofford Terriers at Ole Miss Rebels,2026,2,12,football,college-football
-401856750,2026-11-21,12:00,Mississippi State Bulldogs,Tennessee Tech Golden Eagles,35.034,0.9570,0.0430,,,,,26.447,-26.447,4.082,-19.441,Tennessee Tech Golden Eagles at Mississippi State Bulldogs,2026,2,12,football,college-football
+401856749,2026-11-21,11:00,Ole Miss Rebels,Wofford Terriers,47.234,0.9936,0.0064,,,,,43.029,-43.029,16.029,-24.712,Wofford Terriers at Ole Miss Rebels,2026,2,12,football,college-football
+401856750,2026-11-21,12:00,Mississippi State Bulldogs,Tennessee Tech Golden Eagles,35.113,0.9562,0.0438,,,,,26.285,-26.285,4.082,-19.272,Tennessee Tech Golden Eagles at Mississippi State Bulldogs,2026,2,12,football,college-football
 401862831,2026-11-21,12:00,Army Black Knights,East Carolina Pirates,45.846,0.4443,0.5557,,,,,-1.907,1.907,-5.63,-0.564,East Carolina Pirates at Army Black Knights,2026,2,12,football,college-football
-401862834,2026-11-21,12:00,Navy Midshipmen,Memphis Tigers,51.337,0.5841,0.4158,,,,,2.895,-2.895,-0.712,0.02,Memphis Tigers at Navy Midshipmen,2026,2,12,football,college-football
-401856746,2026-11-21,13:00,Alabama Crimson Tide,Chattanooga Mocs,49.553,0.9945,0.0054,,,,,44.34,-44.34,20.126,-22.305,Chattanooga Mocs at Alabama Crimson Tide,2026,2,12,football,college-football
-401871077,2026-11-21,13:00,New Mexico State Aggies,Delaware Blue Hens,28.773,0.3883,0.6117,,,,,-3.873,3.873,-14.005,-6.555,Delaware Blue Hens at New Mexico State Aggies,2026,2,12,football,college-football
-401871079,2026-11-21,13:00,Jacksonville State Gamecocks,Missouri State Bears,23.644,0.4580,0.5420,,,,,-1.434,1.434,-13.934,-10.255,Missouri State Bears at Jacksonville State Gamecocks,2026,2,12,football,college-football
+401862834,2026-11-21,12:00,Navy Midshipmen,Memphis Tigers,51.336,0.5841,0.4158,,,,,2.896,-2.896,-0.712,0.019,Memphis Tigers at Navy Midshipmen,2026,2,12,football,college-football
+401856746,2026-11-21,13:00,Alabama Crimson Tide,Chattanooga Mocs,49.554,0.9945,0.0054,,,,,44.339,-44.339,20.126,-22.303,Chattanooga Mocs at Alabama Crimson Tide,2026,2,12,football,college-football
+401871077,2026-11-21,13:00,New Mexico State Aggies,Delaware Blue Hens,28.772,0.3883,0.6117,,,,,-3.874,3.874,-14.006,-6.555,Delaware Blue Hens at New Mexico State Aggies,2026,2,12,football,college-football
+401871079,2026-11-21,13:00,Jacksonville State Gamecocks,Missouri State Bears,23.656,0.4583,0.5416,,,,,-1.425,1.425,-13.926,-10.255,Missouri State Bears at Jacksonville State Gamecocks,2026,2,12,football,college-football
 401871080,2026-11-21,13:00,Liberty Flames,Western Kentucky Hilltoppers,38.826,0.4796,0.5204,,,,,-0.695,0.695,-7.748,-4.859,Western Kentucky Hilltoppers at Liberty Flames,2026,2,12,football,college-football
 401871081,2026-11-21,13:00,Sam Houston Bearkats,Middle Tennessee Blue Raiders,9.593,0.5042,0.4958,,,,,0.142,-0.142,-18.422,-16.066,Middle Tennessee Blue Raiders at Sam Houston Bearkats,2026,2,12,football,college-football
-401856747,2026-11-21,14:30,Auburn Tigers,Samford Bulldogs,42.759,0.9966,0.0033,,,,,48.332,-48.332,12.007,-34.722,Samford Bulldogs at Auburn Tigers,2026,2,12,football,college-football
-401864543,2026-11-21,15:00,North Dakota State Bison,Northern Illinois Huskies,32.324,0.8715,0.1285,,,,,16.315,-16.315,-1.237,-14.51,Northern Illinois Huskies at North Dakota State Bison,2026,2,12,football,college-football
+401856747,2026-11-21,14:30,Auburn Tigers,Samford Bulldogs,42.759,0.9966,0.0033,,,,,48.33,-48.33,12.007,-34.72,Samford Bulldogs at Auburn Tigers,2026,2,12,football,college-football
+401864543,2026-11-21,15:00,North Dakota State Bison,Northern Illinois Huskies,32.343,0.8717,0.1283,,,,,16.334,-16.334,-1.218,-14.51,Northern Illinois Huskies at North Dakota State Bison,2026,2,12,football,college-football
 401871078,2026-11-21,15:00,Kennesaw State Owls,Florida International Panthers,26.704,0.6790,0.3210,,,,,6.384,-6.384,-9.012,-12.58,Florida International Panthers at Kennesaw State Owls,2026,2,12,football,college-football
 401861968,2026-11-21,15:30,UConn Huskies,Old Dominion Monarchs,34.941,0.3273,0.6727,,,,,-6.141,6.141,-11.163,-4.435,Old Dominion Monarchs at UConn Huskies,2026,2,12,football,college-football
-401864544,2026-11-21,16:00,San José State Spartans,UNLV Rebels,38.711,0.2414,0.7586,,,,,-9.761,9.761,-11.845,-0.382,UNLV Rebels at San José State Spartans,2026,2,12,football,college-football
+401864544,2026-11-21,16:00,San José State Spartans,UNLV Rebels,38.708,0.2413,0.7587,,,,,-9.764,9.764,-11.848,-0.381,UNLV Rebels at San José State Spartans,2026,2,12,football,college-football
 401860918,2026-11-21,16:30,Fresno State Bulldogs,Colorado State Rams,33.775,0.8256,0.1744,,,,,13.254,-13.254,-2.498,-12.364,Colorado State Rams at Fresno State Bulldogs,2026,2,12,football,college-football
 401860920,2026-11-21,17:00,Texas State Bobcats,Washington State Cougars,43.266,0.5948,0.4051,,,,,3.277,-3.277,-4.26,-4.054,Washington State Cougars at Texas State Bobcats,2026,2,12,football,college-football
 401864542,2026-11-21,19:00,Wyoming Cowboys,New Mexico Lobos,33.714,0.2934,0.7066,,,,,-7.494,7.494,-13.069,-3.531,New Mexico Lobos at Wyoming Cowboys,2026,2,12,football,college-football

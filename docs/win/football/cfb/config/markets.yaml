@@ -8,6 +8,12 @@ selection_defaults:
   min_model_prob: 0.00
   max_model_prob: 1.00
 
+  
+## pick_preference OPTIONS:
+  ## best_ev → choose the qualifying side with the highest EV
+  ## best_prob → choose the qualifying side with the highest model_probability
+  ## best_kelly → choose the qualifying side with the highest Kelly
+
 
 markets:
 
@@ -17,13 +23,14 @@ markets:
 
   moneyline:
     enabled: true
-    pick_preference: best_ev
+    pick_preference: best_prob
 
     home:
       enabled: true
       min_ev: -0.05
       odds_bands:
         - [-20000, 1549]
+      min_model_prob: 0.55
 
     away:
       enabled: true
@@ -37,19 +44,24 @@ markets:
 
   spread:
     enabled: true
-    pick_preference: best_ev
+    pick_preference: best_prob
     max_spread_abs: 35.0
 
     home:
       enabled: true
-      min_kelly: 0.10
       line_bands:
         - [-9.0, 13.999999]
+      prob_bands:
+        - [0.55, 0.599999]
+        - [0.65, 1.00]
 
     away:
       enabled: true
       line_bands:
         - [-21.0, -14.000001]
+      prob_bands:
+        - [0.55, 0.599999]
+        - [0.65, 1.00]
 
 
   ###################################################
@@ -58,7 +70,7 @@ markets:
 
   total:
     enabled: true
-    pick_preference: best_ev
+    pick_preference: best_kelly
     min_total: 0.0
     max_total: 100.0
 
@@ -70,6 +82,8 @@ markets:
         - [-150, -101]
       line_bands:
         - [35.0, 54.999999]
+      kelly_bands:
+        - [0.000001, 0.0499]
 
     under:
       enabled: true
@@ -78,3 +92,5 @@ markets:
         - [-150, -101]
       line_bands:
         - [55.0, 84.999999]
+      kelly_bands:
+        - [0.000001, 0.0499]
