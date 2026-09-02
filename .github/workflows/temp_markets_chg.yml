@@ -1,0 +1,70 @@
+name: CFB Week 1 Picks
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cfb-week1-picks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Apply markets.yaml filters and create final selections.
+      - name: Run picks
+        run: python docs/win/football/cfb/scripts/03_picks/picks.py
+
+      # Build readable weekly picks output.
+      - name: Build clean weekly picks
+        run: |
+          python docs/win/football/cfb/scripts/03_picks/clean_weekly_picks.py \
+            --week 1
+
+      # Build compact all-games projection output.
+      - name: Build all-games picks
+        run: |
+          python docs/win/football/cfb/scripts/03_picks/all_games_picks.py \
+            --week 1
+
+      # Build final selected picks output.
+      - name: Build final selected picks
+        run: |
+          python docs/win/football/cfb/scripts/03_picks/final_picks.py \
+            --week 1
+
+      # Verify Week 1 outputs.
+      - name: Verify Week 1 outputs
+        run: |
+          test -f "docs/win/football/cfb/01_merge/week_1_CFB_enriched.csv"
+          test -f "docs/win/football/cfb/02_select/week_1_CFB_selected.csv"
+          test -f "docs/win/football/cfb/03_picks/week_1_CFB_picks.csv"
+          test -f "docs/win/football/cfb/03_picks/cleaned/week_1_CFB_clean_picks.csv"
+          test -f "docs/win/football/cfb/03_picks/all_games/all_week_1_CFB_picks.csv"
+          test -f "docs/win/football/cfb/03_picks/selected/week_1_CFB_select_picks.csv"
+
+      # Commit generated files back to the branch the workflow was run from.
+      - name: Commit and push outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add docs/win/football/cfb
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Run CFB Week 1 picks"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
