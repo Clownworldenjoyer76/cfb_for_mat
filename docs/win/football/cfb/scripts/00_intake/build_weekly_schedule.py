@@ -6,7 +6,7 @@ import json
 import re
 import sys
 import traceback
-from collections import Counter
+import yaml
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -21,6 +21,7 @@ ODDS_DIR = BASE_DIR / "00_intake" / "odds"
 RAW_ODDS_DIR = ODDS_DIR / "raw"
 
 TEAM_MAP_PATH = BASE_DIR / "config" / "mapping" / "team_map.csv"
+CURRENT_WEEK_CONFIG_PATH = BASE_DIR / "config" / "current_week.yaml"
 
 ERROR_DIR = BASE_DIR / "errors" / "00_intake"
 ERROR_DIR.mkdir(parents=True, exist_ok=True)
@@ -399,26 +400,69 @@ def match_raw_events_to_schedule(raw_events, schedule_index, team_map):
     return matches, unmatched_events
 
 
-def choose_target_week(schedule_rows, schedule_matches):
-    week_counter = Counter()
 
-    matched_schedule_ids = set(schedule_matches.keys())
+def load_current_week_config(path):
+    if not path.exists():
+        fail(f"Missing current-week config: {path}")
 
-    for row in schedule_rows:
-        schedule_game_id = str(row.get("game_id", "")).strip()
+    with path.open("r", encoding="utf-8") as f:
+        payload = yaml.safe_load(f)
 
-        if schedule_game_id in matched_schedule_ids:
-            key = (
-                str(row.get("season", "")).strip(),
-                str(row.get("season_type", "")).strip(),
-                str(row.get("week", "")).strip(),
-            )
-            week_counter[key] += 1
+    if not isinstance(payload, dict):
+        fail(f"Current-week config must be a YAML mapping: {path}")
 
-    if not week_counter:
-        fail("No schedule week could be identified from odds/schedule matches")
+    required = ["season", "season_type", "week"]
+    missing = [key for key in required if key not in payload]
 
-    return week_counter.most_common(1)[0][0]
+    if missing:
+        fail(f"Current-week config missing keys: {missing}")
+
+    season = str(payload.get("season", "")).strip()
+    season_type = str(payload.get("season_type", "")).strip()
+    week = str(payload.get("week", "")).strip()
+
+    if not season or not season_type or not week:
+        fail("Current-week config contains blank season, season_type, or week")
+
+    try:
+        season_int = int(season)
+        season_type_int = int(season_type)
+        week_int = int(week)
+    except ValueError:
+        fail("Current-week config season, season_type, and week must be integers")
+
+    if season_int < 2000:
+        fail(f"Invalid season in current-week config: {season_int}")
+
+    if season_type_int < 1:
+        fail(f"Invalid season_type in current-week config: {season_type_int}")
+
+    if week_int < 1:
+        fail(f"Invalid week in current-week config: {week_int}")
+
+    return str(season_int), str(season_type_int), str(week_int)
+
+
+def choose_target_week(schedule_rows):
+    target_week = load_current_week_config(CURRENT_WEEK_CONFIG_PATH)
+    target_season, target_season_type, target_week_number = target_week
+
+    exists = any(
+        str(row.get("season", "")).strip() == target_season
+        and str(row.get("season_type", "")).strip() == target_season_type
+        and str(row.get("week", "")).strip() == target_week_number
+        for row in schedule_rows
+    )
+
+    if not exists:
+        fail(
+            "Configured current week was not found in schedule: "
+            f"season={target_season}, "
+            f"season_type={target_season_type}, "
+            f"week={target_week_number}"
+        )
+
+    return target_week
 
 
 def build_output_rows(
@@ -545,6 +589,7 @@ def main():
     log(f"Schedule input: {schedule_path}")
     log(f"Odds CSV input: {odds_csv_path}")
     log(f"Raw odds input: {raw_odds_path}")
+    log(f"Current-week config: {CURRENT_WEEK_CONFIG_PATH}")
 
     team_map = load_team_map()
 
@@ -556,7 +601,7 @@ def main():
     schedule_matches, unmatched_events = match_raw_events_to_schedule(raw_events, schedule_index, team_map)
     odds_summary = build_odds_summary(odds_rows)
 
-    target_week = choose_target_week(schedule_rows, schedule_matches)
+    target_week = choose_target_week(schedule_rows)
     target_week_number = str(target_week[2]).strip()
 
     output_path = WEEKLY_DIR / f"week_{target_week_number}_CFB_weekly_schedule.csv"
@@ -591,7 +636,7 @@ def main():
     log(f"Odds CSV rows loaded: {len(odds_rows)}")
     log(f"Schedule matches from raw odds events: {len(schedule_matches)}")
     log(f"Unmatched raw odds events: {len(unmatched_events)}")
-    log(f"Target week: season={target_week[0]}, season_type={target_week[1]}, week={target_week[2]}")
+    log(f"Configured target week: season={target_week[0]}, season_type={target_week[1]}, week={target_week[2]}")
     log(f"Weekly schedule rows written: {len(output_rows)}")
     log(f"Rows with odds: {matched_with_odds}")
     log(f"Rows with event but no odds: {matched_without_odds}")
