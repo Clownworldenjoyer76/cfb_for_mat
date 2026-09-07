@@ -1119,12 +1119,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,OTLosses,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 258,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
@@ -1136,12 +1136,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,OTWins,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,6.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
@@ -1164,7 +1164,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,36.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,45.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,34.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
@@ -1174,6 +1173,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,14.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,41.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,34.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,avgPointsAgainst,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,45.0,2026
@@ -1197,7 +1198,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,21.5,2026
 24,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,6.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,15.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,0.0,2026
@@ -1207,6 +1207,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,13.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,38.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,8.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,avgPointsFor,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,differential,39.0,2026
@@ -1230,7 +1232,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,expanded,differential,-29.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,differential,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,differential,-39.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,differential,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,differential,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,differential,-19.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,differential,0.0,2026
@@ -1240,6 +1241,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,differential,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,differential,-1.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,differential,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,differential,-3.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,differential,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,differential,-26.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,differential,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
@@ -1252,12 +1255,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,divisionLosses,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 258,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
@@ -1269,12 +1272,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,divisionRecord,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 258,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
@@ -1286,12 +1289,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,divisionTies,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 258,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
@@ -1303,12 +1306,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,divisionWinPercent,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 258,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
@@ -1320,12 +1323,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,divisionWins,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.5,2026
@@ -1347,8 +1350,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.5,2026
 24,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.5,2026
 24,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,1.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.5,2026
-97,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.5,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,1.0,2026
@@ -1362,6 +1363,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 59,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,1.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.5,2026
 59,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,1.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.5,2026
 152,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,1.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.5,2026
 152,,Atlantic Coast Conference,acc,,,expanded,gamesBehind,0.0,2026
@@ -1386,7 +1389,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,2.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,1.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,1.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,0.0,2026
@@ -1396,6 +1398,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,1.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,1.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,1.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,gamesPlayed,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,1.0,2026
@@ -1410,12 +1414,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,leagueWinPercent,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 258,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
@@ -1427,12 +1431,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,lockedDivRank,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
 258,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
@@ -1445,7 +1449,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,losses,1.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,losses,1.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
@@ -1455,6 +1458,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,losses,1.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,losses,1.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,losses,1.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,losses,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,1.0,2026
@@ -1480,10 +1485,9 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,9.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,5.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,0.0,2026
-24,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,14.0,2026
+24,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,15.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,7.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,10.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,0.0,2026
@@ -1496,7 +1500,9 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 59,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,13.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,6.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,0.0,2026
-152,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,15.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,14.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,0.0,2026
+152,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,16.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,playoffSeed,3.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,39.0,2026
@@ -1520,7 +1526,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,-29.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,-39.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,-19.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,0.0,2026
@@ -1530,6 +1535,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,-1.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,-3.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,-26.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,pointDifferential,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,points,0.5,2026
@@ -1552,7 +1559,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,points,-0.5,2026
-97,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,points,-0.5,2026
 103,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
@@ -1562,6 +1568,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,points,-0.5,2026
 59,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,points,-0.5,2026
+97,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,points,-0.5,2026
 152,,Atlantic Coast Conference,acc,,,expanded,points,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,6.0,2026
@@ -1585,7 +1593,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,72.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,45.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,34.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,0.0,2026
@@ -1595,6 +1602,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,14.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,41.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,34.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,pointsAgainst,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,pointsFor,45.0,2026
@@ -1618,7 +1627,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,expanded,pointsFor,43.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,pointsFor,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,pointsFor,6.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,pointsFor,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,pointsFor,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,pointsFor,15.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,pointsFor,0.0,2026
@@ -1628,6 +1636,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,pointsFor,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,pointsFor,13.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,pointsFor,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,pointsFor,38.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,pointsFor,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,pointsFor,8.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,pointsFor,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,streak,1.0,2026
@@ -1650,7 +1660,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,streak,-1.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,streak,-1.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
@@ -1660,6 +1669,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,streak,-1.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,streak,-1.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,streak,-1.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,streak,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
@@ -1672,12 +1683,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 154,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,ties,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,winPercent,1.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
@@ -1699,12 +1710,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.5,2026
 24,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,winPercent,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,wins,1.0,2026
 2390,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
@@ -1726,12 +1737,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,wins,1.0,2026
 24,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
-97,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
 103,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
 25,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
 228,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
 59,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
+97,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
 152,,Atlantic Coast Conference,acc,,,expanded,wins,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 258,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
@@ -1743,12 +1754,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,OTLosses,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 258,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
@@ -1760,12 +1771,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,OTWins,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,6.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
@@ -1788,7 +1799,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,36.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,45.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,34.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
@@ -1798,6 +1808,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,14.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,41.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,34.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,avgPointsAgainst,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,45.0,2026
@@ -1821,7 +1833,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,21.5,2026
 24,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,6.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,15.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,0.0,2026
@@ -1831,6 +1842,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,13.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,38.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,8.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,avgPointsFor,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,differential,39.0,2026
@@ -1854,7 +1867,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,overall,differential,-29.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,differential,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,differential,-39.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,differential,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,differential,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,differential,-19.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,differential,0.0,2026
@@ -1864,6 +1876,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,differential,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,differential,-1.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,differential,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,differential,-3.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,differential,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,differential,-26.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,differential,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
@@ -1876,12 +1890,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,divisionLosses,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 258,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
@@ -1893,12 +1907,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,divisionRecord,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 258,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
@@ -1910,12 +1924,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,divisionTies,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 258,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
@@ -1927,12 +1941,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,divisionWinPercent,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 258,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
@@ -1944,12 +1958,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,divisionWins,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.5,2026
@@ -1972,8 +1986,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.5,2026
 24,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,gamesBehind,1.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.5,2026
-97,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.5,2026
 2567,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,gamesBehind,1.0,2026
@@ -1988,6 +2000,9 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 59,,Atlantic Coast Conference,acc,,,overall,gamesBehind,1.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.5,2026
 59,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,gamesBehind,1.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.5,2026
+97,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,gamesBehind,1.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.5,2026
 152,,Atlantic Coast Conference,acc,,,overall,gamesBehind,0.0,2026
@@ -2012,7 +2027,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,2.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,1.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,1.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,0.0,2026
@@ -2022,6 +2036,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,1.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,1.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,1.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,gamesPlayed,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,1.0,2026
@@ -2036,12 +2052,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,leagueWinPercent,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 258,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
@@ -2053,12 +2069,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,lockedDivRank,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
 258,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
@@ -2071,7 +2087,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,losses,1.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,losses,1.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
@@ -2081,6 +2096,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,losses,1.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,losses,1.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,losses,1.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,losses,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,playoffSeed,1.0,2026
@@ -2106,10 +2123,9 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,overall,playoffSeed,9.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,playoffSeed,5.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,playoffSeed,0.0,2026
-24,,Atlantic Coast Conference,acc,,,overall,playoffSeed,14.0,2026
+24,,Atlantic Coast Conference,acc,,,overall,playoffSeed,15.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,playoffSeed,7.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,playoffSeed,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,playoffSeed,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,playoffSeed,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,playoffSeed,10.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,playoffSeed,0.0,2026
@@ -2122,7 +2138,9 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 59,,Atlantic Coast Conference,acc,,,overall,playoffSeed,13.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,playoffSeed,6.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,playoffSeed,0.0,2026
-152,,Atlantic Coast Conference,acc,,,overall,playoffSeed,15.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,playoffSeed,14.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,playoffSeed,0.0,2026
+152,,Atlantic Coast Conference,acc,,,overall,playoffSeed,16.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,playoffSeed,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,playoffSeed,3.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,pointDifferential,39.0,2026
@@ -2146,7 +2164,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,overall,pointDifferential,-29.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,pointDifferential,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,pointDifferential,-39.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,pointDifferential,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,pointDifferential,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,pointDifferential,-19.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,pointDifferential,0.0,2026
@@ -2156,6 +2173,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,pointDifferential,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,pointDifferential,-1.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,pointDifferential,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,pointDifferential,-3.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,pointDifferential,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,pointDifferential,-26.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,pointDifferential,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,points,0.5,2026
@@ -2178,7 +2197,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,points,-0.5,2026
-97,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,points,-0.5,2026
 103,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
@@ -2188,6 +2206,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,points,-0.5,2026
 59,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,points,-0.5,2026
+97,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,points,-0.5,2026
 152,,Atlantic Coast Conference,acc,,,overall,points,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,6.0,2026
@@ -2211,7 +2231,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,72.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,45.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,34.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,0.0,2026
@@ -2221,6 +2240,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,14.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,41.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,34.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,pointsAgainst,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,pointsFor,45.0,2026
@@ -2244,7 +2265,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 24,,Atlantic Coast Conference,acc,,,overall,pointsFor,43.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,pointsFor,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,pointsFor,6.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,pointsFor,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,pointsFor,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,pointsFor,15.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,pointsFor,0.0,2026
@@ -2254,6 +2274,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,pointsFor,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,pointsFor,13.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,pointsFor,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,pointsFor,38.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,pointsFor,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,pointsFor,8.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,pointsFor,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,streak,1.0,2026
@@ -2276,7 +2298,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,streak,-1.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,streak,-1.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
@@ -2286,6 +2307,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 228,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,streak,-1.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,streak,-1.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,streak,-1.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,streak,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
@@ -2298,12 +2321,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 259,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 154,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,ties,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,winPercent,1.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
@@ -2325,12 +2348,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,winPercent,0.5,2026
 24,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,winPercent,0.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,wins,1.0,2026
 2390,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
@@ -2352,12 +2375,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 154,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,wins,1.0,2026
 24,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
-97,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
 2567,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
 103,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
 25,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
 228,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
 59,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
+97,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
 152,,Atlantic Coast Conference,acc,,,overall,wins,0.0,2026
 12,,Big 12 Conference,big12,,,expanded,OTLosses,0.0,2026
 9,,Big 12 Conference,big12,,,expanded,OTLosses,0.0,2026
@@ -3583,8 +3606,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,OTLosses,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,OTLosses,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,OTLosses,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,OTLosses,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,OTLosses,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,OTLosses,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
@@ -3601,8 +3624,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,OTWins,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,13.0,2026
 30,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,23.0,2026
@@ -3630,10 +3653,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,24.0,2026
 26,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,10.0,2026
 264,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,37.0,2026
 164,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,41.0,2026
+275,,Big Ten Conference,big10,,,expanded,avgPointsAgainst,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,avgPointsFor,40.5,2026
 30,,Big Ten Conference,big10,,,expanded,avgPointsFor,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,avgPointsFor,42.0,2026
@@ -3664,10 +3689,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,avgPointsFor,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,avgPointsFor,45.0,2026
 26,,Big Ten Conference,big10,,,expanded,avgPointsFor,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,avgPointsFor,24.0,2026
 264,,Big Ten Conference,big10,,,expanded,avgPointsFor,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,avgPointsFor,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,avgPointsFor,21.0,2026
 164,,Big Ten Conference,big10,,,expanded,avgPointsFor,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,avgPointsFor,13.0,2026
+275,,Big Ten Conference,big10,,,expanded,avgPointsFor,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,differential,55.0,2026
 30,,Big Ten Conference,big10,,,expanded,differential,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,differential,19.0,2026
@@ -3698,10 +3725,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,differential,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,differential,21.0,2026
 26,,Big Ten Conference,big10,,,expanded,differential,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,differential,14.0,2026
 264,,Big Ten Conference,big10,,,expanded,differential,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,differential,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,differential,-16.0,2026
 164,,Big Ten Conference,big10,,,expanded,differential,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,differential,-28.0,2026
+275,,Big Ten Conference,big10,,,expanded,differential,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
@@ -3718,8 +3747,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,divisionLosses,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
@@ -3736,8 +3765,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,divisionRecord,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
@@ -3754,8 +3783,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,divisionTies,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
@@ -3772,8 +3801,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,divisionWinPercent,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
@@ -3790,8 +3819,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,divisionWins,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,gamesBehind,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,gamesBehind,0.5,2026
 356,,Big Ten Conference,big10,,,expanded,gamesBehind,0.5,2026
@@ -3823,15 +3852,15 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 26,,Big Ten Conference,big10,,,expanded,gamesBehind,0.5,2026
 26,,Big Ten Conference,big10,,,expanded,gamesBehind,1.0,2026
 26,,Big Ten Conference,big10,,,expanded,gamesBehind,0.0,2026
-264,,Big Ten Conference,big10,,,expanded,gamesBehind,1.0,2026
 264,,Big Ten Conference,big10,,,expanded,gamesBehind,0.5,2026
 264,,Big Ten Conference,big10,,,expanded,gamesBehind,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,gamesBehind,1.0,2026
-275,,Big Ten Conference,big10,,,expanded,gamesBehind,0.5,2026
-275,,Big Ten Conference,big10,,,expanded,gamesBehind,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,gamesBehind,1.5,2026
 164,,Big Ten Conference,big10,,,expanded,gamesBehind,0.5,2026
 164,,Big Ten Conference,big10,,,expanded,gamesBehind,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,gamesBehind,1.5,2026
+275,,Big Ten Conference,big10,,,expanded,gamesBehind,1.0,2026
+275,,Big Ten Conference,big10,,,expanded,gamesBehind,0.5,2026
+275,,Big Ten Conference,big10,,,expanded,gamesBehind,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,gamesPlayed,2.0,2026
 30,,Big Ten Conference,big10,,,expanded,gamesPlayed,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,gamesPlayed,1.0,2026
@@ -3862,10 +3891,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,gamesPlayed,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,gamesPlayed,1.0,2026
 26,,Big Ten Conference,big10,,,expanded,gamesPlayed,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,gamesPlayed,1.0,2026
 264,,Big Ten Conference,big10,,,expanded,gamesPlayed,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,gamesPlayed,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,gamesPlayed,1.0,2026
 164,,Big Ten Conference,big10,,,expanded,gamesPlayed,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,gamesPlayed,1.0,2026
+275,,Big Ten Conference,big10,,,expanded,gamesPlayed,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
@@ -3882,8 +3913,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,leagueWinPercent,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
@@ -3900,8 +3931,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,lockedDivRank,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
@@ -3918,9 +3949,10 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,losses,1.0,2026
 164,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,losses,1.0,2026
+275,,Big Ten Conference,big10,,,expanded,losses,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,playoffSeed,1.0,2026
 30,,Big Ten Conference,big10,,,expanded,playoffSeed,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,playoffSeed,2.0,2026
@@ -3961,11 +3993,13 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,playoffSeed,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,playoffSeed,15.0,2026
 26,,Big Ten Conference,big10,,,expanded,playoffSeed,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,playoffSeed,16.0,2026
 264,,Big Ten Conference,big10,,,expanded,playoffSeed,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,playoffSeed,0.0,2026
-164,,Big Ten Conference,big10,,,expanded,playoffSeed,16.0,2026
+164,,Big Ten Conference,big10,,,expanded,playoffSeed,17.0,2026
 164,,Big Ten Conference,big10,,,expanded,playoffSeed,2.0,2026
 164,,Big Ten Conference,big10,,,expanded,playoffSeed,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,playoffSeed,18.0,2026
+275,,Big Ten Conference,big10,,,expanded,playoffSeed,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,pointDifferential,55.0,2026
 30,,Big Ten Conference,big10,,,expanded,pointDifferential,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,pointDifferential,19.0,2026
@@ -3996,10 +4030,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,pointDifferential,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,pointDifferential,21.0,2026
 26,,Big Ten Conference,big10,,,expanded,pointDifferential,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,pointDifferential,14.0,2026
 264,,Big Ten Conference,big10,,,expanded,pointDifferential,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,pointDifferential,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,pointDifferential,-16.0,2026
 164,,Big Ten Conference,big10,,,expanded,pointDifferential,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,pointDifferential,-28.0,2026
+275,,Big Ten Conference,big10,,,expanded,pointDifferential,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,points,1.0,2026
 30,,Big Ten Conference,big10,,,expanded,points,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,points,0.5,2026
@@ -4030,10 +4066,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,points,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,points,0.5,2026
 26,,Big Ten Conference,big10,,,expanded,points,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,points,0.5,2026
 264,,Big Ten Conference,big10,,,expanded,points,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,points,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,points,-0.5,2026
 164,,Big Ten Conference,big10,,,expanded,points,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,points,-0.5,2026
+275,,Big Ten Conference,big10,,,expanded,points,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,pointsAgainst,26.0,2026
 30,,Big Ten Conference,big10,,,expanded,pointsAgainst,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,pointsAgainst,23.0,2026
@@ -4061,10 +4099,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,pointsAgainst,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,pointsAgainst,24.0,2026
 26,,Big Ten Conference,big10,,,expanded,pointsAgainst,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,pointsAgainst,10.0,2026
 264,,Big Ten Conference,big10,,,expanded,pointsAgainst,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,pointsAgainst,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,pointsAgainst,37.0,2026
 164,,Big Ten Conference,big10,,,expanded,pointsAgainst,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,pointsAgainst,41.0,2026
+275,,Big Ten Conference,big10,,,expanded,pointsAgainst,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,pointsFor,81.0,2026
 30,,Big Ten Conference,big10,,,expanded,pointsFor,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,pointsFor,42.0,2026
@@ -4095,10 +4135,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,pointsFor,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,pointsFor,45.0,2026
 26,,Big Ten Conference,big10,,,expanded,pointsFor,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,pointsFor,24.0,2026
 264,,Big Ten Conference,big10,,,expanded,pointsFor,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,pointsFor,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,pointsFor,21.0,2026
 164,,Big Ten Conference,big10,,,expanded,pointsFor,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,pointsFor,13.0,2026
+275,,Big Ten Conference,big10,,,expanded,pointsFor,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,streak,2.0,2026
 30,,Big Ten Conference,big10,,,expanded,streak,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,streak,1.0,2026
@@ -4129,10 +4171,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,streak,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,streak,1.0,2026
 26,,Big Ten Conference,big10,,,expanded,streak,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,streak,1.0,2026
 264,,Big Ten Conference,big10,,,expanded,streak,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,streak,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,streak,-1.0,2026
 164,,Big Ten Conference,big10,,,expanded,streak,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,streak,-1.0,2026
+275,,Big Ten Conference,big10,,,expanded,streak,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
 84,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
@@ -4149,8 +4193,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
 264,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,ties,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,winPercent,1.0,2026
 30,,Big Ten Conference,big10,,,expanded,winPercent,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,winPercent,1.0,2026
@@ -4181,9 +4225,10 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,winPercent,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,winPercent,1.0,2026
 26,,Big Ten Conference,big10,,,expanded,winPercent,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,winPercent,1.0,2026
 264,,Big Ten Conference,big10,,,expanded,winPercent,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,winPercent,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,winPercent,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,winPercent,0.0,2026
 30,,Big Ten Conference,big10,,,expanded,wins,2.0,2026
 30,,Big Ten Conference,big10,,,expanded,wins,0.0,2026
 356,,Big Ten Conference,big10,,,expanded,wins,1.0,2026
@@ -4214,9 +4259,10 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,expanded,wins,0.0,2026
 26,,Big Ten Conference,big10,,,expanded,wins,1.0,2026
 26,,Big Ten Conference,big10,,,expanded,wins,0.0,2026
+264,,Big Ten Conference,big10,,,expanded,wins,1.0,2026
 264,,Big Ten Conference,big10,,,expanded,wins,0.0,2026
-275,,Big Ten Conference,big10,,,expanded,wins,0.0,2026
 164,,Big Ten Conference,big10,,,expanded,wins,0.0,2026
+275,,Big Ten Conference,big10,,,expanded,wins,0.0,2026
 30,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
 356,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
 84,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
@@ -4233,8 +4279,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
 26,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
 264,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
-275,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
 164,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
+275,,Big Ten Conference,big10,,,overall,OTLosses,0.0,2026
 30,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
 356,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
 84,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
@@ -4251,8 +4297,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
 26,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
 264,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
-275,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
 164,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
+275,,Big Ten Conference,big10,,,overall,OTWins,0.0,2026
 30,,Big Ten Conference,big10,,,overall,avgPointsAgainst,13.0,2026
 30,,Big Ten Conference,big10,,,overall,avgPointsAgainst,0.0,2026
 356,,Big Ten Conference,big10,,,overall,avgPointsAgainst,23.0,2026
@@ -4280,10 +4326,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,avgPointsAgainst,0.0,2026
 26,,Big Ten Conference,big10,,,overall,avgPointsAgainst,24.0,2026
 26,,Big Ten Conference,big10,,,overall,avgPointsAgainst,0.0,2026
+264,,Big Ten Conference,big10,,,overall,avgPointsAgainst,10.0,2026
 264,,Big Ten Conference,big10,,,overall,avgPointsAgainst,0.0,2026
-275,,Big Ten Conference,big10,,,overall,avgPointsAgainst,0.0,2026
 164,,Big Ten Conference,big10,,,overall,avgPointsAgainst,37.0,2026
 164,,Big Ten Conference,big10,,,overall,avgPointsAgainst,0.0,2026
+275,,Big Ten Conference,big10,,,overall,avgPointsAgainst,41.0,2026
+275,,Big Ten Conference,big10,,,overall,avgPointsAgainst,0.0,2026
 30,,Big Ten Conference,big10,,,overall,avgPointsFor,40.5,2026
 30,,Big Ten Conference,big10,,,overall,avgPointsFor,0.0,2026
 356,,Big Ten Conference,big10,,,overall,avgPointsFor,42.0,2026
@@ -4314,10 +4362,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,avgPointsFor,0.0,2026
 26,,Big Ten Conference,big10,,,overall,avgPointsFor,45.0,2026
 26,,Big Ten Conference,big10,,,overall,avgPointsFor,0.0,2026
+264,,Big Ten Conference,big10,,,overall,avgPointsFor,24.0,2026
 264,,Big Ten Conference,big10,,,overall,avgPointsFor,0.0,2026
-275,,Big Ten Conference,big10,,,overall,avgPointsFor,0.0,2026
 164,,Big Ten Conference,big10,,,overall,avgPointsFor,21.0,2026
 164,,Big Ten Conference,big10,,,overall,avgPointsFor,0.0,2026
+275,,Big Ten Conference,big10,,,overall,avgPointsFor,13.0,2026
+275,,Big Ten Conference,big10,,,overall,avgPointsFor,0.0,2026
 30,,Big Ten Conference,big10,,,overall,differential,55.0,2026
 30,,Big Ten Conference,big10,,,overall,differential,0.0,2026
 356,,Big Ten Conference,big10,,,overall,differential,19.0,2026
@@ -4348,10 +4398,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,differential,0.0,2026
 26,,Big Ten Conference,big10,,,overall,differential,21.0,2026
 26,,Big Ten Conference,big10,,,overall,differential,0.0,2026
+264,,Big Ten Conference,big10,,,overall,differential,14.0,2026
 264,,Big Ten Conference,big10,,,overall,differential,0.0,2026
-275,,Big Ten Conference,big10,,,overall,differential,0.0,2026
 164,,Big Ten Conference,big10,,,overall,differential,-16.0,2026
 164,,Big Ten Conference,big10,,,overall,differential,0.0,2026
+275,,Big Ten Conference,big10,,,overall,differential,-28.0,2026
+275,,Big Ten Conference,big10,,,overall,differential,0.0,2026
 30,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
 356,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
 84,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
@@ -4368,8 +4420,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
 26,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
 264,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
-275,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
 164,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
+275,,Big Ten Conference,big10,,,overall,divisionLosses,0.0,2026
 30,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
 356,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
 84,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
@@ -4386,8 +4438,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
 26,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
 264,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
-275,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
 164,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
+275,,Big Ten Conference,big10,,,overall,divisionRecord,0.0,2026
 30,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
 356,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
 84,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
@@ -4404,8 +4456,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
 26,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
 264,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
-275,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
 164,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
+275,,Big Ten Conference,big10,,,overall,divisionTies,0.0,2026
 30,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
 356,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
 84,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
@@ -4422,8 +4474,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
 26,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
 264,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
-275,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
 164,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
+275,,Big Ten Conference,big10,,,overall,divisionWinPercent,0.0,2026
 30,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
 356,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
 84,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
@@ -4440,8 +4492,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
 26,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
 264,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
-275,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
 164,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
+275,,Big Ten Conference,big10,,,overall,divisionWins,0.0,2026
 30,,Big Ten Conference,big10,,,overall,gamesBehind,0.0,2026
 30,,Big Ten Conference,big10,,,overall,gamesBehind,0.5,2026
 356,,Big Ten Conference,big10,,,overall,gamesBehind,0.5,2026
@@ -4473,15 +4525,15 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 26,,Big Ten Conference,big10,,,overall,gamesBehind,0.5,2026
 26,,Big Ten Conference,big10,,,overall,gamesBehind,1.0,2026
 26,,Big Ten Conference,big10,,,overall,gamesBehind,0.0,2026
-264,,Big Ten Conference,big10,,,overall,gamesBehind,1.0,2026
 264,,Big Ten Conference,big10,,,overall,gamesBehind,0.5,2026
 264,,Big Ten Conference,big10,,,overall,gamesBehind,0.0,2026
-275,,Big Ten Conference,big10,,,overall,gamesBehind,1.0,2026
-275,,Big Ten Conference,big10,,,overall,gamesBehind,0.5,2026
-275,,Big Ten Conference,big10,,,overall,gamesBehind,0.0,2026
 164,,Big Ten Conference,big10,,,overall,gamesBehind,1.5,2026
 164,,Big Ten Conference,big10,,,overall,gamesBehind,0.5,2026
 164,,Big Ten Conference,big10,,,overall,gamesBehind,0.0,2026
+275,,Big Ten Conference,big10,,,overall,gamesBehind,1.5,2026
+275,,Big Ten Conference,big10,,,overall,gamesBehind,1.0,2026
+275,,Big Ten Conference,big10,,,overall,gamesBehind,0.5,2026
+275,,Big Ten Conference,big10,,,overall,gamesBehind,0.0,2026
 30,,Big Ten Conference,big10,,,overall,gamesPlayed,2.0,2026
 30,,Big Ten Conference,big10,,,overall,gamesPlayed,0.0,2026
 356,,Big Ten Conference,big10,,,overall,gamesPlayed,1.0,2026
@@ -4512,10 +4564,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,gamesPlayed,0.0,2026
 26,,Big Ten Conference,big10,,,overall,gamesPlayed,1.0,2026
 26,,Big Ten Conference,big10,,,overall,gamesPlayed,0.0,2026
+264,,Big Ten Conference,big10,,,overall,gamesPlayed,1.0,2026
 264,,Big Ten Conference,big10,,,overall,gamesPlayed,0.0,2026
-275,,Big Ten Conference,big10,,,overall,gamesPlayed,0.0,2026
 164,,Big Ten Conference,big10,,,overall,gamesPlayed,1.0,2026
 164,,Big Ten Conference,big10,,,overall,gamesPlayed,0.0,2026
+275,,Big Ten Conference,big10,,,overall,gamesPlayed,1.0,2026
+275,,Big Ten Conference,big10,,,overall,gamesPlayed,0.0,2026
 30,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
 356,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
 84,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
@@ -4532,8 +4586,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
 26,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
 264,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
-275,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
 164,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
+275,,Big Ten Conference,big10,,,overall,leagueWinPercent,0.0,2026
 30,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
 356,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
 84,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
@@ -4550,8 +4604,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
 26,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
 264,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
-275,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
 164,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
+275,,Big Ten Conference,big10,,,overall,lockedDivRank,0.0,2026
 30,,Big Ten Conference,big10,,,overall,losses,0.0,2026
 356,,Big Ten Conference,big10,,,overall,losses,0.0,2026
 84,,Big Ten Conference,big10,,,overall,losses,0.0,2026
@@ -4568,9 +4622,10 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,losses,0.0,2026
 26,,Big Ten Conference,big10,,,overall,losses,0.0,2026
 264,,Big Ten Conference,big10,,,overall,losses,0.0,2026
-275,,Big Ten Conference,big10,,,overall,losses,0.0,2026
 164,,Big Ten Conference,big10,,,overall,losses,1.0,2026
 164,,Big Ten Conference,big10,,,overall,losses,0.0,2026
+275,,Big Ten Conference,big10,,,overall,losses,1.0,2026
+275,,Big Ten Conference,big10,,,overall,losses,0.0,2026
 30,,Big Ten Conference,big10,,,overall,playoffSeed,1.0,2026
 30,,Big Ten Conference,big10,,,overall,playoffSeed,0.0,2026
 356,,Big Ten Conference,big10,,,overall,playoffSeed,2.0,2026
@@ -4611,11 +4666,13 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,playoffSeed,0.0,2026
 26,,Big Ten Conference,big10,,,overall,playoffSeed,15.0,2026
 26,,Big Ten Conference,big10,,,overall,playoffSeed,0.0,2026
+264,,Big Ten Conference,big10,,,overall,playoffSeed,16.0,2026
 264,,Big Ten Conference,big10,,,overall,playoffSeed,0.0,2026
-275,,Big Ten Conference,big10,,,overall,playoffSeed,0.0,2026
-164,,Big Ten Conference,big10,,,overall,playoffSeed,16.0,2026
+164,,Big Ten Conference,big10,,,overall,playoffSeed,17.0,2026
 164,,Big Ten Conference,big10,,,overall,playoffSeed,2.0,2026
 164,,Big Ten Conference,big10,,,overall,playoffSeed,0.0,2026
+275,,Big Ten Conference,big10,,,overall,playoffSeed,18.0,2026
+275,,Big Ten Conference,big10,,,overall,playoffSeed,0.0,2026
 30,,Big Ten Conference,big10,,,overall,pointDifferential,55.0,2026
 30,,Big Ten Conference,big10,,,overall,pointDifferential,0.0,2026
 356,,Big Ten Conference,big10,,,overall,pointDifferential,19.0,2026
@@ -4646,10 +4703,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,pointDifferential,0.0,2026
 26,,Big Ten Conference,big10,,,overall,pointDifferential,21.0,2026
 26,,Big Ten Conference,big10,,,overall,pointDifferential,0.0,2026
+264,,Big Ten Conference,big10,,,overall,pointDifferential,14.0,2026
 264,,Big Ten Conference,big10,,,overall,pointDifferential,0.0,2026
-275,,Big Ten Conference,big10,,,overall,pointDifferential,0.0,2026
 164,,Big Ten Conference,big10,,,overall,pointDifferential,-16.0,2026
 164,,Big Ten Conference,big10,,,overall,pointDifferential,0.0,2026
+275,,Big Ten Conference,big10,,,overall,pointDifferential,-28.0,2026
+275,,Big Ten Conference,big10,,,overall,pointDifferential,0.0,2026
 30,,Big Ten Conference,big10,,,overall,points,1.0,2026
 30,,Big Ten Conference,big10,,,overall,points,0.0,2026
 356,,Big Ten Conference,big10,,,overall,points,0.5,2026
@@ -4680,10 +4739,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,points,0.0,2026
 26,,Big Ten Conference,big10,,,overall,points,0.5,2026
 26,,Big Ten Conference,big10,,,overall,points,0.0,2026
+264,,Big Ten Conference,big10,,,overall,points,0.5,2026
 264,,Big Ten Conference,big10,,,overall,points,0.0,2026
-275,,Big Ten Conference,big10,,,overall,points,0.0,2026
 164,,Big Ten Conference,big10,,,overall,points,-0.5,2026
 164,,Big Ten Conference,big10,,,overall,points,0.0,2026
+275,,Big Ten Conference,big10,,,overall,points,-0.5,2026
+275,,Big Ten Conference,big10,,,overall,points,0.0,2026
 30,,Big Ten Conference,big10,,,overall,pointsAgainst,26.0,2026
 30,,Big Ten Conference,big10,,,overall,pointsAgainst,0.0,2026
 356,,Big Ten Conference,big10,,,overall,pointsAgainst,23.0,2026
@@ -4711,10 +4772,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,pointsAgainst,0.0,2026
 26,,Big Ten Conference,big10,,,overall,pointsAgainst,24.0,2026
 26,,Big Ten Conference,big10,,,overall,pointsAgainst,0.0,2026
+264,,Big Ten Conference,big10,,,overall,pointsAgainst,10.0,2026
 264,,Big Ten Conference,big10,,,overall,pointsAgainst,0.0,2026
-275,,Big Ten Conference,big10,,,overall,pointsAgainst,0.0,2026
 164,,Big Ten Conference,big10,,,overall,pointsAgainst,37.0,2026
 164,,Big Ten Conference,big10,,,overall,pointsAgainst,0.0,2026
+275,,Big Ten Conference,big10,,,overall,pointsAgainst,41.0,2026
+275,,Big Ten Conference,big10,,,overall,pointsAgainst,0.0,2026
 30,,Big Ten Conference,big10,,,overall,pointsFor,81.0,2026
 30,,Big Ten Conference,big10,,,overall,pointsFor,0.0,2026
 356,,Big Ten Conference,big10,,,overall,pointsFor,42.0,2026
@@ -4745,10 +4808,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,pointsFor,0.0,2026
 26,,Big Ten Conference,big10,,,overall,pointsFor,45.0,2026
 26,,Big Ten Conference,big10,,,overall,pointsFor,0.0,2026
+264,,Big Ten Conference,big10,,,overall,pointsFor,24.0,2026
 264,,Big Ten Conference,big10,,,overall,pointsFor,0.0,2026
-275,,Big Ten Conference,big10,,,overall,pointsFor,0.0,2026
 164,,Big Ten Conference,big10,,,overall,pointsFor,21.0,2026
 164,,Big Ten Conference,big10,,,overall,pointsFor,0.0,2026
+275,,Big Ten Conference,big10,,,overall,pointsFor,13.0,2026
+275,,Big Ten Conference,big10,,,overall,pointsFor,0.0,2026
 30,,Big Ten Conference,big10,,,overall,streak,2.0,2026
 30,,Big Ten Conference,big10,,,overall,streak,0.0,2026
 356,,Big Ten Conference,big10,,,overall,streak,1.0,2026
@@ -4779,10 +4844,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,streak,0.0,2026
 26,,Big Ten Conference,big10,,,overall,streak,1.0,2026
 26,,Big Ten Conference,big10,,,overall,streak,0.0,2026
+264,,Big Ten Conference,big10,,,overall,streak,1.0,2026
 264,,Big Ten Conference,big10,,,overall,streak,0.0,2026
-275,,Big Ten Conference,big10,,,overall,streak,0.0,2026
 164,,Big Ten Conference,big10,,,overall,streak,-1.0,2026
 164,,Big Ten Conference,big10,,,overall,streak,0.0,2026
+275,,Big Ten Conference,big10,,,overall,streak,-1.0,2026
+275,,Big Ten Conference,big10,,,overall,streak,0.0,2026
 30,,Big Ten Conference,big10,,,overall,ties,0.0,2026
 356,,Big Ten Conference,big10,,,overall,ties,0.0,2026
 84,,Big Ten Conference,big10,,,overall,ties,0.0,2026
@@ -4799,8 +4866,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,ties,0.0,2026
 26,,Big Ten Conference,big10,,,overall,ties,0.0,2026
 264,,Big Ten Conference,big10,,,overall,ties,0.0,2026
-275,,Big Ten Conference,big10,,,overall,ties,0.0,2026
 164,,Big Ten Conference,big10,,,overall,ties,0.0,2026
+275,,Big Ten Conference,big10,,,overall,ties,0.0,2026
 30,,Big Ten Conference,big10,,,overall,winPercent,1.0,2026
 30,,Big Ten Conference,big10,,,overall,winPercent,0.0,2026
 356,,Big Ten Conference,big10,,,overall,winPercent,1.0,2026
@@ -4831,9 +4898,10 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,winPercent,0.0,2026
 26,,Big Ten Conference,big10,,,overall,winPercent,1.0,2026
 26,,Big Ten Conference,big10,,,overall,winPercent,0.0,2026
+264,,Big Ten Conference,big10,,,overall,winPercent,1.0,2026
 264,,Big Ten Conference,big10,,,overall,winPercent,0.0,2026
-275,,Big Ten Conference,big10,,,overall,winPercent,0.0,2026
 164,,Big Ten Conference,big10,,,overall,winPercent,0.0,2026
+275,,Big Ten Conference,big10,,,overall,winPercent,0.0,2026
 30,,Big Ten Conference,big10,,,overall,wins,2.0,2026
 30,,Big Ten Conference,big10,,,overall,wins,0.0,2026
 356,,Big Ten Conference,big10,,,overall,wins,1.0,2026
@@ -4864,9 +4932,10 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2509,,Big Ten Conference,big10,,,overall,wins,0.0,2026
 26,,Big Ten Conference,big10,,,overall,wins,1.0,2026
 26,,Big Ten Conference,big10,,,overall,wins,0.0,2026
+264,,Big Ten Conference,big10,,,overall,wins,1.0,2026
 264,,Big Ten Conference,big10,,,overall,wins,0.0,2026
-275,,Big Ten Conference,big10,,,overall,wins,0.0,2026
 164,,Big Ten Conference,big10,,,overall,wins,0.0,2026
+275,,Big Ten Conference,big10,,,overall,wins,0.0,2026
 48,,Conference USA,usa,,,expanded,OTLosses,0.0,2026
 338,,Conference USA,usa,,,expanded,OTLosses,0.0,2026
 2393,,Conference USA,usa,,,expanded,OTLosses,0.0,2026
@@ -5683,128 +5752,154 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 2623,,Conference USA,usa,,,overall,wins,0.0,2026
 2534,,Conference USA,usa,,,overall,wins,0.0,2026
 98,,Conference USA,usa,,,overall,wins,0.0,2026
-41,,FBS Independents,ind,,,expanded,OTLosses,0.0,2026
 87,,FBS Independents,ind,,,expanded,OTLosses,0.0,2026
-41,,FBS Independents,ind,,,expanded,OTWins,0.0,2026
+41,,FBS Independents,ind,,,expanded,OTLosses,0.0,2026
 87,,FBS Independents,ind,,,expanded,OTWins,0.0,2026
+41,,FBS Independents,ind,,,expanded,OTWins,0.0,2026
+87,,FBS Independents,ind,,,expanded,avgPointsAgainst,13.0,2026
+87,,FBS Independents,ind,,,expanded,avgPointsAgainst,0.0,2026
 41,,FBS Independents,ind,,,expanded,avgPointsAgainst,7.0,2026
 41,,FBS Independents,ind,,,expanded,avgPointsAgainst,0.0,2026
-87,,FBS Independents,ind,,,expanded,avgPointsAgainst,0.0,2026
+87,,FBS Independents,ind,,,expanded,avgPointsFor,41.0,2026
+87,,FBS Independents,ind,,,expanded,avgPointsFor,0.0,2026
 41,,FBS Independents,ind,,,expanded,avgPointsFor,56.0,2026
 41,,FBS Independents,ind,,,expanded,avgPointsFor,0.0,2026
-87,,FBS Independents,ind,,,expanded,avgPointsFor,0.0,2026
+87,,FBS Independents,ind,,,expanded,differential,28.0,2026
+87,,FBS Independents,ind,,,expanded,differential,0.0,2026
 41,,FBS Independents,ind,,,expanded,differential,49.0,2026
 41,,FBS Independents,ind,,,expanded,differential,0.0,2026
-87,,FBS Independents,ind,,,expanded,differential,0.0,2026
-41,,FBS Independents,ind,,,expanded,divisionLosses,0.0,2026
 87,,FBS Independents,ind,,,expanded,divisionLosses,0.0,2026
-41,,FBS Independents,ind,,,expanded,divisionRecord,0.0,2026
+41,,FBS Independents,ind,,,expanded,divisionLosses,0.0,2026
 87,,FBS Independents,ind,,,expanded,divisionRecord,0.0,2026
-41,,FBS Independents,ind,,,expanded,divisionTies,0.0,2026
+41,,FBS Independents,ind,,,expanded,divisionRecord,0.0,2026
 87,,FBS Independents,ind,,,expanded,divisionTies,0.0,2026
-41,,FBS Independents,ind,,,expanded,divisionWinPercent,0.0,2026
+41,,FBS Independents,ind,,,expanded,divisionTies,0.0,2026
 87,,FBS Independents,ind,,,expanded,divisionWinPercent,0.0,2026
-41,,FBS Independents,ind,,,expanded,divisionWins,0.0,2026
+41,,FBS Independents,ind,,,expanded,divisionWinPercent,0.0,2026
 87,,FBS Independents,ind,,,expanded,divisionWins,0.0,2026
-41,,FBS Independents,ind,,,expanded,gamesBehind,0.0,2026
-87,,FBS Independents,ind,,,expanded,gamesBehind,0.5,2026
+41,,FBS Independents,ind,,,expanded,divisionWins,0.0,2026
 87,,FBS Independents,ind,,,expanded,gamesBehind,0.0,2026
+87,,FBS Independents,ind,,,expanded,gamesBehind,0.5,2026
+41,,FBS Independents,ind,,,expanded,gamesBehind,0.0,2026
+87,,FBS Independents,ind,,,expanded,gamesPlayed,1.0,2026
+87,,FBS Independents,ind,,,expanded,gamesPlayed,0.0,2026
 41,,FBS Independents,ind,,,expanded,gamesPlayed,1.0,2026
 41,,FBS Independents,ind,,,expanded,gamesPlayed,0.0,2026
-87,,FBS Independents,ind,,,expanded,gamesPlayed,0.0,2026
-41,,FBS Independents,ind,,,expanded,leagueWinPercent,0.0,2026
 87,,FBS Independents,ind,,,expanded,leagueWinPercent,0.0,2026
-41,,FBS Independents,ind,,,expanded,lockedDivRank,0.0,2026
+41,,FBS Independents,ind,,,expanded,leagueWinPercent,0.0,2026
 87,,FBS Independents,ind,,,expanded,lockedDivRank,0.0,2026
-41,,FBS Independents,ind,,,expanded,losses,0.0,2026
+41,,FBS Independents,ind,,,expanded,lockedDivRank,0.0,2026
 87,,FBS Independents,ind,,,expanded,losses,0.0,2026
+41,,FBS Independents,ind,,,expanded,losses,0.0,2026
+87,,FBS Independents,ind,,,expanded,playoffSeed,1.0,2026
+87,,FBS Independents,ind,,,expanded,playoffSeed,0.0,2026
+41,,FBS Independents,ind,,,expanded,playoffSeed,2.0,2026
 41,,FBS Independents,ind,,,expanded,playoffSeed,1.0,2026
 41,,FBS Independents,ind,,,expanded,playoffSeed,0.0,2026
-87,,FBS Independents,ind,,,expanded,playoffSeed,0.0,2026
+87,,FBS Independents,ind,,,expanded,pointDifferential,28.0,2026
+87,,FBS Independents,ind,,,expanded,pointDifferential,0.0,2026
 41,,FBS Independents,ind,,,expanded,pointDifferential,49.0,2026
 41,,FBS Independents,ind,,,expanded,pointDifferential,0.0,2026
-87,,FBS Independents,ind,,,expanded,pointDifferential,0.0,2026
+87,,FBS Independents,ind,,,expanded,points,0.5,2026
+87,,FBS Independents,ind,,,expanded,points,0.0,2026
 41,,FBS Independents,ind,,,expanded,points,0.5,2026
 41,,FBS Independents,ind,,,expanded,points,0.0,2026
-87,,FBS Independents,ind,,,expanded,points,0.0,2026
+87,,FBS Independents,ind,,,expanded,pointsAgainst,13.0,2026
+87,,FBS Independents,ind,,,expanded,pointsAgainst,0.0,2026
 41,,FBS Independents,ind,,,expanded,pointsAgainst,7.0,2026
 41,,FBS Independents,ind,,,expanded,pointsAgainst,0.0,2026
-87,,FBS Independents,ind,,,expanded,pointsAgainst,0.0,2026
+87,,FBS Independents,ind,,,expanded,pointsFor,41.0,2026
+87,,FBS Independents,ind,,,expanded,pointsFor,0.0,2026
 41,,FBS Independents,ind,,,expanded,pointsFor,56.0,2026
 41,,FBS Independents,ind,,,expanded,pointsFor,0.0,2026
-87,,FBS Independents,ind,,,expanded,pointsFor,0.0,2026
+87,,FBS Independents,ind,,,expanded,streak,1.0,2026
+87,,FBS Independents,ind,,,expanded,streak,0.0,2026
 41,,FBS Independents,ind,,,expanded,streak,1.0,2026
 41,,FBS Independents,ind,,,expanded,streak,0.0,2026
-87,,FBS Independents,ind,,,expanded,streak,0.0,2026
-41,,FBS Independents,ind,,,expanded,ties,0.0,2026
 87,,FBS Independents,ind,,,expanded,ties,0.0,2026
+41,,FBS Independents,ind,,,expanded,ties,0.0,2026
+87,,FBS Independents,ind,,,expanded,winPercent,1.0,2026
+87,,FBS Independents,ind,,,expanded,winPercent,0.0,2026
 41,,FBS Independents,ind,,,expanded,winPercent,1.0,2026
 41,,FBS Independents,ind,,,expanded,winPercent,0.0,2026
-87,,FBS Independents,ind,,,expanded,winPercent,0.0,2026
+87,,FBS Independents,ind,,,expanded,wins,1.0,2026
+87,,FBS Independents,ind,,,expanded,wins,0.0,2026
 41,,FBS Independents,ind,,,expanded,wins,1.0,2026
 41,,FBS Independents,ind,,,expanded,wins,0.0,2026
-87,,FBS Independents,ind,,,expanded,wins,0.0,2026
-41,,FBS Independents,ind,,,overall,OTLosses,0.0,2026
 87,,FBS Independents,ind,,,overall,OTLosses,0.0,2026
-41,,FBS Independents,ind,,,overall,OTWins,0.0,2026
+41,,FBS Independents,ind,,,overall,OTLosses,0.0,2026
 87,,FBS Independents,ind,,,overall,OTWins,0.0,2026
+41,,FBS Independents,ind,,,overall,OTWins,0.0,2026
+87,,FBS Independents,ind,,,overall,avgPointsAgainst,13.0,2026
+87,,FBS Independents,ind,,,overall,avgPointsAgainst,0.0,2026
 41,,FBS Independents,ind,,,overall,avgPointsAgainst,7.0,2026
 41,,FBS Independents,ind,,,overall,avgPointsAgainst,0.0,2026
-87,,FBS Independents,ind,,,overall,avgPointsAgainst,0.0,2026
+87,,FBS Independents,ind,,,overall,avgPointsFor,41.0,2026
+87,,FBS Independents,ind,,,overall,avgPointsFor,0.0,2026
 41,,FBS Independents,ind,,,overall,avgPointsFor,56.0,2026
 41,,FBS Independents,ind,,,overall,avgPointsFor,0.0,2026
-87,,FBS Independents,ind,,,overall,avgPointsFor,0.0,2026
+87,,FBS Independents,ind,,,overall,differential,28.0,2026
+87,,FBS Independents,ind,,,overall,differential,0.0,2026
 41,,FBS Independents,ind,,,overall,differential,49.0,2026
 41,,FBS Independents,ind,,,overall,differential,0.0,2026
-87,,FBS Independents,ind,,,overall,differential,0.0,2026
-41,,FBS Independents,ind,,,overall,divisionLosses,0.0,2026
 87,,FBS Independents,ind,,,overall,divisionLosses,0.0,2026
-41,,FBS Independents,ind,,,overall,divisionRecord,0.0,2026
+41,,FBS Independents,ind,,,overall,divisionLosses,0.0,2026
 87,,FBS Independents,ind,,,overall,divisionRecord,0.0,2026
-41,,FBS Independents,ind,,,overall,divisionTies,0.0,2026
+41,,FBS Independents,ind,,,overall,divisionRecord,0.0,2026
 87,,FBS Independents,ind,,,overall,divisionTies,0.0,2026
-41,,FBS Independents,ind,,,overall,divisionWinPercent,0.0,2026
+41,,FBS Independents,ind,,,overall,divisionTies,0.0,2026
 87,,FBS Independents,ind,,,overall,divisionWinPercent,0.0,2026
-41,,FBS Independents,ind,,,overall,divisionWins,0.0,2026
+41,,FBS Independents,ind,,,overall,divisionWinPercent,0.0,2026
 87,,FBS Independents,ind,,,overall,divisionWins,0.0,2026
-41,,FBS Independents,ind,,,overall,gamesBehind,0.0,2026
-87,,FBS Independents,ind,,,overall,gamesBehind,0.5,2026
+41,,FBS Independents,ind,,,overall,divisionWins,0.0,2026
 87,,FBS Independents,ind,,,overall,gamesBehind,0.0,2026
+87,,FBS Independents,ind,,,overall,gamesBehind,0.5,2026
+41,,FBS Independents,ind,,,overall,gamesBehind,0.0,2026
+87,,FBS Independents,ind,,,overall,gamesPlayed,1.0,2026
+87,,FBS Independents,ind,,,overall,gamesPlayed,0.0,2026
 41,,FBS Independents,ind,,,overall,gamesPlayed,1.0,2026
 41,,FBS Independents,ind,,,overall,gamesPlayed,0.0,2026
-87,,FBS Independents,ind,,,overall,gamesPlayed,0.0,2026
-41,,FBS Independents,ind,,,overall,leagueWinPercent,0.0,2026
 87,,FBS Independents,ind,,,overall,leagueWinPercent,0.0,2026
-41,,FBS Independents,ind,,,overall,lockedDivRank,0.0,2026
+41,,FBS Independents,ind,,,overall,leagueWinPercent,0.0,2026
 87,,FBS Independents,ind,,,overall,lockedDivRank,0.0,2026
-41,,FBS Independents,ind,,,overall,losses,0.0,2026
+41,,FBS Independents,ind,,,overall,lockedDivRank,0.0,2026
 87,,FBS Independents,ind,,,overall,losses,0.0,2026
+41,,FBS Independents,ind,,,overall,losses,0.0,2026
+87,,FBS Independents,ind,,,overall,playoffSeed,1.0,2026
+87,,FBS Independents,ind,,,overall,playoffSeed,0.0,2026
+41,,FBS Independents,ind,,,overall,playoffSeed,2.0,2026
 41,,FBS Independents,ind,,,overall,playoffSeed,1.0,2026
 41,,FBS Independents,ind,,,overall,playoffSeed,0.0,2026
-87,,FBS Independents,ind,,,overall,playoffSeed,0.0,2026
+87,,FBS Independents,ind,,,overall,pointDifferential,28.0,2026
+87,,FBS Independents,ind,,,overall,pointDifferential,0.0,2026
 41,,FBS Independents,ind,,,overall,pointDifferential,49.0,2026
 41,,FBS Independents,ind,,,overall,pointDifferential,0.0,2026
-87,,FBS Independents,ind,,,overall,pointDifferential,0.0,2026
+87,,FBS Independents,ind,,,overall,points,0.5,2026
+87,,FBS Independents,ind,,,overall,points,0.0,2026
 41,,FBS Independents,ind,,,overall,points,0.5,2026
 41,,FBS Independents,ind,,,overall,points,0.0,2026
-87,,FBS Independents,ind,,,overall,points,0.0,2026
+87,,FBS Independents,ind,,,overall,pointsAgainst,13.0,2026
+87,,FBS Independents,ind,,,overall,pointsAgainst,0.0,2026
 41,,FBS Independents,ind,,,overall,pointsAgainst,7.0,2026
 41,,FBS Independents,ind,,,overall,pointsAgainst,0.0,2026
-87,,FBS Independents,ind,,,overall,pointsAgainst,0.0,2026
+87,,FBS Independents,ind,,,overall,pointsFor,41.0,2026
+87,,FBS Independents,ind,,,overall,pointsFor,0.0,2026
 41,,FBS Independents,ind,,,overall,pointsFor,56.0,2026
 41,,FBS Independents,ind,,,overall,pointsFor,0.0,2026
-87,,FBS Independents,ind,,,overall,pointsFor,0.0,2026
+87,,FBS Independents,ind,,,overall,streak,1.0,2026
+87,,FBS Independents,ind,,,overall,streak,0.0,2026
 41,,FBS Independents,ind,,,overall,streak,1.0,2026
 41,,FBS Independents,ind,,,overall,streak,0.0,2026
-87,,FBS Independents,ind,,,overall,streak,0.0,2026
-41,,FBS Independents,ind,,,overall,ties,0.0,2026
 87,,FBS Independents,ind,,,overall,ties,0.0,2026
+41,,FBS Independents,ind,,,overall,ties,0.0,2026
+87,,FBS Independents,ind,,,overall,winPercent,1.0,2026
+87,,FBS Independents,ind,,,overall,winPercent,0.0,2026
 41,,FBS Independents,ind,,,overall,winPercent,1.0,2026
 41,,FBS Independents,ind,,,overall,winPercent,0.0,2026
-87,,FBS Independents,ind,,,overall,winPercent,0.0,2026
+87,,FBS Independents,ind,,,overall,wins,1.0,2026
+87,,FBS Independents,ind,,,overall,wins,0.0,2026
 41,,FBS Independents,ind,,,overall,wins,1.0,2026
 41,,FBS Independents,ind,,,overall,wins,0.0,2026
-87,,FBS Independents,ind,,,overall,wins,0.0,2026
 2084,,Mid-American Conference,midam,,,expanded,OTLosses,0.0,2026
 113,,Mid-American Conference,midam,,,expanded,OTLosses,0.0,2026
 2199,,Mid-American Conference,midam,,,expanded,OTLosses,0.0,2026
@@ -7654,25 +7749,24 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 62,,Mountain West Conference,mwest,,,overall,wins,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,OTLosses,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,OTWins,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,13.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,20.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,34.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,39.0,2026
@@ -7683,11 +7777,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,29.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,24.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,avgPointsAgainst,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,35.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,53.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,27.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,0.0,2026
@@ -7697,11 +7792,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,17.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,10.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,avgPointsFor,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,differential,22.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,differential,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,differential,33.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,differential,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,differential,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,differential,-7.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,differential,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,differential,-39.0,2026
@@ -7712,50 +7808,50 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,differential,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,differential,-12.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,differential,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,differential,-14.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,differential,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,divisionLosses,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,divisionRecord,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,divisionTies,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,divisionWinPercent,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,divisionWins,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.5,2026
-265,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,gamesBehind,1.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.5,2026
 68,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.0,2026
@@ -7770,11 +7866,13 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,gamesBehind,1.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,gamesBehind,1.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.5,2026
+265,,Pac-12 Conference,pac12,,,expanded,gamesBehind,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,1.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,1.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,1.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,1.0,2026
@@ -7785,25 +7883,26 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,1.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,1.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,gamesPlayed,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,leagueWinPercent,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,lockedDivRank,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,losses,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,losses,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,losses,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,losses,1.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,losses,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,losses,1.0,2026
@@ -7814,11 +7913,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,losses,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,losses,1.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,losses,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,losses,1.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,losses,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,playoffSeed,1.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,playoffSeed,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,playoffSeed,2.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,playoffSeed,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,playoffSeed,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,playoffSeed,3.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,playoffSeed,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,playoffSeed,1.0,2026
@@ -7834,11 +7934,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 328,,Pac-12 Conference,pac12,,,expanded,playoffSeed,7.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,playoffSeed,6.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,playoffSeed,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,playoffSeed,8.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,playoffSeed,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,pointDifferential,22.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,pointDifferential,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,pointDifferential,33.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,pointDifferential,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,pointDifferential,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,pointDifferential,-7.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,pointDifferential,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,pointDifferential,-39.0,2026
@@ -7849,11 +7950,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,pointDifferential,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,pointDifferential,-12.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,pointDifferential,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,pointDifferential,-14.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,pointDifferential,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,points,0.5,2026
 36,,Pac-12 Conference,pac12,,,expanded,points,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,points,0.5,2026
 21,,Pac-12 Conference,pac12,,,expanded,points,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,points,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,points,-0.5,2026
 68,,Pac-12 Conference,pac12,,,expanded,points,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,points,-0.5,2026
@@ -7864,11 +7966,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,points,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,points,-0.5,2026
 328,,Pac-12 Conference,pac12,,,expanded,points,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,points,-0.5,2026
+265,,Pac-12 Conference,pac12,,,expanded,points,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,13.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,20.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,34.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,39.0,2026
@@ -7879,11 +7982,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,29.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,24.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,pointsAgainst,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,pointsFor,35.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,pointsFor,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,pointsFor,53.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,pointsFor,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,pointsFor,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,pointsFor,27.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,pointsFor,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,pointsFor,0.0,2026
@@ -7893,11 +7997,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,pointsFor,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,pointsFor,17.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,pointsFor,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,pointsFor,10.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,pointsFor,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,streak,1.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,streak,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,streak,1.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,streak,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,streak,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,streak,-1.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,streak,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,streak,-1.0,2026
@@ -7908,55 +8013,56 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,expanded,streak,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,streak,-1.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,streak,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,streak,-1.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,streak,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,ties,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,winPercent,1.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,winPercent,1.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,winPercent,0.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,wins,1.0,2026
 36,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,wins,1.0,2026
 21,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
-265,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
 68,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
 278,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
 204,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
 326,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
 328,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
+265,,Pac-12 Conference,pac12,,,expanded,wins,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,OTLosses,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,OTWins,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,13.0,2026
 36,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,20.0,2026
 21,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,34.0,2026
 68,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,39.0,2026
@@ -7967,11 +8073,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,29.0,2026
 328,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,24.0,2026
+265,,Pac-12 Conference,pac12,,,overall,avgPointsAgainst,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,avgPointsFor,35.0,2026
 36,,Pac-12 Conference,pac12,,,overall,avgPointsFor,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,avgPointsFor,53.0,2026
 21,,Pac-12 Conference,pac12,,,overall,avgPointsFor,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,avgPointsFor,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,avgPointsFor,27.0,2026
 68,,Pac-12 Conference,pac12,,,overall,avgPointsFor,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,avgPointsFor,0.0,2026
@@ -7981,11 +8088,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,avgPointsFor,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,avgPointsFor,17.0,2026
 328,,Pac-12 Conference,pac12,,,overall,avgPointsFor,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,avgPointsFor,10.0,2026
+265,,Pac-12 Conference,pac12,,,overall,avgPointsFor,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,differential,22.0,2026
 36,,Pac-12 Conference,pac12,,,overall,differential,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,differential,33.0,2026
 21,,Pac-12 Conference,pac12,,,overall,differential,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,differential,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,differential,-7.0,2026
 68,,Pac-12 Conference,pac12,,,overall,differential,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,differential,-39.0,2026
@@ -7996,50 +8104,50 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,differential,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,differential,-12.0,2026
 328,,Pac-12 Conference,pac12,,,overall,differential,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,differential,-14.0,2026
+265,,Pac-12 Conference,pac12,,,overall,differential,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,divisionLosses,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,divisionRecord,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,divisionTies,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,divisionWinPercent,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,divisionWins,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.5,2026
-265,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,gamesBehind,1.0,2026
 68,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.5,2026
 68,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.0,2026
@@ -8054,11 +8162,13 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,gamesBehind,1.0,2026
 328,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,gamesBehind,1.0,2026
+265,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.5,2026
+265,,Pac-12 Conference,pac12,,,overall,gamesBehind,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,gamesPlayed,1.0,2026
 36,,Pac-12 Conference,pac12,,,overall,gamesPlayed,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,gamesPlayed,1.0,2026
 21,,Pac-12 Conference,pac12,,,overall,gamesPlayed,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,gamesPlayed,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,gamesPlayed,1.0,2026
 68,,Pac-12 Conference,pac12,,,overall,gamesPlayed,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,gamesPlayed,1.0,2026
@@ -8069,25 +8179,26 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,gamesPlayed,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,gamesPlayed,1.0,2026
 328,,Pac-12 Conference,pac12,,,overall,gamesPlayed,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,gamesPlayed,1.0,2026
+265,,Pac-12 Conference,pac12,,,overall,gamesPlayed,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,leagueWinPercent,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,lockedDivRank,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,losses,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,losses,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,losses,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,losses,1.0,2026
 68,,Pac-12 Conference,pac12,,,overall,losses,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,losses,1.0,2026
@@ -8098,11 +8209,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,losses,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,losses,1.0,2026
 328,,Pac-12 Conference,pac12,,,overall,losses,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,losses,1.0,2026
+265,,Pac-12 Conference,pac12,,,overall,losses,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,playoffSeed,1.0,2026
 36,,Pac-12 Conference,pac12,,,overall,playoffSeed,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,playoffSeed,2.0,2026
 21,,Pac-12 Conference,pac12,,,overall,playoffSeed,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,playoffSeed,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,playoffSeed,3.0,2026
 68,,Pac-12 Conference,pac12,,,overall,playoffSeed,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,playoffSeed,1.0,2026
@@ -8118,11 +8230,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 328,,Pac-12 Conference,pac12,,,overall,playoffSeed,7.0,2026
 328,,Pac-12 Conference,pac12,,,overall,playoffSeed,6.0,2026
 328,,Pac-12 Conference,pac12,,,overall,playoffSeed,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,playoffSeed,8.0,2026
+265,,Pac-12 Conference,pac12,,,overall,playoffSeed,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,pointDifferential,22.0,2026
 36,,Pac-12 Conference,pac12,,,overall,pointDifferential,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,pointDifferential,33.0,2026
 21,,Pac-12 Conference,pac12,,,overall,pointDifferential,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,pointDifferential,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,pointDifferential,-7.0,2026
 68,,Pac-12 Conference,pac12,,,overall,pointDifferential,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,pointDifferential,-39.0,2026
@@ -8133,11 +8246,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,pointDifferential,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,pointDifferential,-12.0,2026
 328,,Pac-12 Conference,pac12,,,overall,pointDifferential,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,pointDifferential,-14.0,2026
+265,,Pac-12 Conference,pac12,,,overall,pointDifferential,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,points,0.5,2026
 36,,Pac-12 Conference,pac12,,,overall,points,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,points,0.5,2026
 21,,Pac-12 Conference,pac12,,,overall,points,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,points,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,points,-0.5,2026
 68,,Pac-12 Conference,pac12,,,overall,points,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,points,-0.5,2026
@@ -8148,11 +8262,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,points,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,points,-0.5,2026
 328,,Pac-12 Conference,pac12,,,overall,points,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,points,-0.5,2026
+265,,Pac-12 Conference,pac12,,,overall,points,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,pointsAgainst,13.0,2026
 36,,Pac-12 Conference,pac12,,,overall,pointsAgainst,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,pointsAgainst,20.0,2026
 21,,Pac-12 Conference,pac12,,,overall,pointsAgainst,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,pointsAgainst,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,pointsAgainst,34.0,2026
 68,,Pac-12 Conference,pac12,,,overall,pointsAgainst,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,pointsAgainst,39.0,2026
@@ -8163,11 +8278,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,pointsAgainst,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,pointsAgainst,29.0,2026
 328,,Pac-12 Conference,pac12,,,overall,pointsAgainst,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,pointsAgainst,24.0,2026
+265,,Pac-12 Conference,pac12,,,overall,pointsAgainst,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,pointsFor,35.0,2026
 36,,Pac-12 Conference,pac12,,,overall,pointsFor,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,pointsFor,53.0,2026
 21,,Pac-12 Conference,pac12,,,overall,pointsFor,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,pointsFor,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,pointsFor,27.0,2026
 68,,Pac-12 Conference,pac12,,,overall,pointsFor,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,pointsFor,0.0,2026
@@ -8177,11 +8293,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,pointsFor,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,pointsFor,17.0,2026
 328,,Pac-12 Conference,pac12,,,overall,pointsFor,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,pointsFor,10.0,2026
+265,,Pac-12 Conference,pac12,,,overall,pointsFor,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,streak,1.0,2026
 36,,Pac-12 Conference,pac12,,,overall,streak,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,streak,1.0,2026
 21,,Pac-12 Conference,pac12,,,overall,streak,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,streak,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,streak,-1.0,2026
 68,,Pac-12 Conference,pac12,,,overall,streak,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,streak,-1.0,2026
@@ -8192,34 +8309,36 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 326,,Pac-12 Conference,pac12,,,overall,streak,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,streak,-1.0,2026
 328,,Pac-12 Conference,pac12,,,overall,streak,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,streak,-1.0,2026
+265,,Pac-12 Conference,pac12,,,overall,streak,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,ties,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,winPercent,1.0,2026
 36,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,winPercent,1.0,2026
 21,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,winPercent,0.0,2026
 36,,Pac-12 Conference,pac12,,,overall,wins,1.0,2026
 36,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
 21,,Pac-12 Conference,pac12,,,overall,wins,1.0,2026
 21,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
-265,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
 68,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
 278,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
 204,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
 326,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
 328,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
+265,,Pac-12 Conference,pac12,,,overall,wins,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
@@ -8230,12 +8349,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,OTLosses,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
@@ -8246,12 +8365,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,OTWins,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,10.0,2026
 333,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,14.0,2026
@@ -8271,6 +8390,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,14.0,2026
 142,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,38.0,2026
+145,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,9.0,2026
 2633,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
@@ -8279,7 +8400,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,9.0,2026
 238,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,avgPointsAgainst,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,avgPointsFor,48.0,2026
 333,,Southeastern Conference,sec,,,expanded,avgPointsFor,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,avgPointsFor,31.0,2026
@@ -8300,6 +8420,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,avgPointsFor,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,avgPointsFor,51.0,2026
 201,,Southeastern Conference,sec,,,expanded,avgPointsFor,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,avgPointsFor,41.0,2026
+145,,Southeastern Conference,sec,,,expanded,avgPointsFor,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,avgPointsFor,57.0,2026
 2579,,Southeastern Conference,sec,,,expanded,avgPointsFor,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,avgPointsFor,56.0,2026
@@ -8310,7 +8432,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,avgPointsFor,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,avgPointsFor,28.0,2026
 238,,Southeastern Conference,sec,,,expanded,avgPointsFor,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,avgPointsFor,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,differential,38.0,2026
 333,,Southeastern Conference,sec,,,expanded,differential,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,differential,17.0,2026
@@ -8331,6 +8452,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,differential,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,differential,51.0,2026
 201,,Southeastern Conference,sec,,,expanded,differential,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,differential,3.0,2026
+145,,Southeastern Conference,sec,,,expanded,differential,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,differential,57.0,2026
 2579,,Southeastern Conference,sec,,,expanded,differential,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,differential,47.0,2026
@@ -8341,7 +8464,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,differential,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,differential,19.0,2026
 238,,Southeastern Conference,sec,,,expanded,differential,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,differential,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
@@ -8352,12 +8474,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,divisionLosses,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
@@ -8368,12 +8490,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,divisionRecord,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
@@ -8384,12 +8506,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,divisionTies,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
@@ -8400,12 +8522,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,divisionWinPercent,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
@@ -8416,12 +8538,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,divisionWins,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
 8,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
@@ -8435,12 +8557,15 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 96,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
 96,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
 99,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
+99,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
 344,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
 344,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
 142,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
 201,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
+145,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
 2579,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
 2633,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
@@ -8451,8 +8576,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
 238,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
-145,,Southeastern Conference,sec,,,expanded,gamesBehind,0.5,2026
-145,,Southeastern Conference,sec,,,expanded,gamesBehind,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,gamesPlayed,1.0,2026
 333,,Southeastern Conference,sec,,,expanded,gamesPlayed,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,gamesPlayed,1.0,2026
@@ -8473,6 +8596,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,gamesPlayed,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,gamesPlayed,1.0,2026
 201,,Southeastern Conference,sec,,,expanded,gamesPlayed,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,gamesPlayed,1.0,2026
+145,,Southeastern Conference,sec,,,expanded,gamesPlayed,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,gamesPlayed,1.0,2026
 2579,,Southeastern Conference,sec,,,expanded,gamesPlayed,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,gamesPlayed,1.0,2026
@@ -8483,7 +8608,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,gamesPlayed,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,gamesPlayed,1.0,2026
 238,,Southeastern Conference,sec,,,expanded,gamesPlayed,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,gamesPlayed,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
@@ -8494,12 +8618,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,leagueWinPercent,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
@@ -8510,12 +8634,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,lockedDivRank,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
@@ -8526,12 +8650,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,losses,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,playoffSeed,1.0,2026
 333,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,playoffSeed,2.0,2026
@@ -8557,22 +8681,23 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 201,,Southeastern Conference,sec,,,expanded,playoffSeed,10.0,2026
 201,,Southeastern Conference,sec,,,expanded,playoffSeed,2.0,2026
 201,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
-2579,,Southeastern Conference,sec,,,expanded,playoffSeed,11.0,2026
+145,,Southeastern Conference,sec,,,expanded,playoffSeed,11.0,2026
+145,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
+2579,,Southeastern Conference,sec,,,expanded,playoffSeed,12.0,2026
 2579,,Southeastern Conference,sec,,,expanded,playoffSeed,4.0,2026
 2579,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
-2633,,Southeastern Conference,sec,,,expanded,playoffSeed,12.0,2026
+2633,,Southeastern Conference,sec,,,expanded,playoffSeed,13.0,2026
 2633,,Southeastern Conference,sec,,,expanded,playoffSeed,7.0,2026
 2633,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
-251,,Southeastern Conference,sec,,,expanded,playoffSeed,13.0,2026
+251,,Southeastern Conference,sec,,,expanded,playoffSeed,14.0,2026
 251,,Southeastern Conference,sec,,,expanded,playoffSeed,7.0,2026
 251,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
-245,,Southeastern Conference,sec,,,expanded,playoffSeed,14.0,2026
+245,,Southeastern Conference,sec,,,expanded,playoffSeed,15.0,2026
 245,,Southeastern Conference,sec,,,expanded,playoffSeed,11.0,2026
 245,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
-238,,Southeastern Conference,sec,,,expanded,playoffSeed,15.0,2026
+238,,Southeastern Conference,sec,,,expanded,playoffSeed,16.0,2026
 238,,Southeastern Conference,sec,,,expanded,playoffSeed,11.0,2026
 238,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,playoffSeed,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,pointDifferential,38.0,2026
 333,,Southeastern Conference,sec,,,expanded,pointDifferential,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,pointDifferential,17.0,2026
@@ -8593,6 +8718,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,pointDifferential,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,pointDifferential,51.0,2026
 201,,Southeastern Conference,sec,,,expanded,pointDifferential,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,pointDifferential,3.0,2026
+145,,Southeastern Conference,sec,,,expanded,pointDifferential,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,pointDifferential,57.0,2026
 2579,,Southeastern Conference,sec,,,expanded,pointDifferential,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,pointDifferential,47.0,2026
@@ -8603,7 +8730,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,pointDifferential,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,pointDifferential,19.0,2026
 238,,Southeastern Conference,sec,,,expanded,pointDifferential,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,pointDifferential,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,points,0.5,2026
 333,,Southeastern Conference,sec,,,expanded,points,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,points,0.5,2026
@@ -8624,6 +8750,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,points,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,points,0.5,2026
 201,,Southeastern Conference,sec,,,expanded,points,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,points,0.5,2026
+145,,Southeastern Conference,sec,,,expanded,points,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,points,0.5,2026
 2579,,Southeastern Conference,sec,,,expanded,points,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,points,0.5,2026
@@ -8634,7 +8762,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,points,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,points,0.5,2026
 238,,Southeastern Conference,sec,,,expanded,points,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,points,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,pointsAgainst,10.0,2026
 333,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,pointsAgainst,14.0,2026
@@ -8654,6 +8781,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,pointsAgainst,14.0,2026
 142,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,pointsAgainst,38.0,2026
+145,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,pointsAgainst,9.0,2026
 2633,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
@@ -8662,7 +8791,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,pointsAgainst,9.0,2026
 238,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,pointsAgainst,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,pointsFor,48.0,2026
 333,,Southeastern Conference,sec,,,expanded,pointsFor,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,pointsFor,31.0,2026
@@ -8683,6 +8811,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,pointsFor,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,pointsFor,51.0,2026
 201,,Southeastern Conference,sec,,,expanded,pointsFor,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,pointsFor,41.0,2026
+145,,Southeastern Conference,sec,,,expanded,pointsFor,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,pointsFor,57.0,2026
 2579,,Southeastern Conference,sec,,,expanded,pointsFor,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,pointsFor,56.0,2026
@@ -8693,7 +8823,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,pointsFor,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,pointsFor,28.0,2026
 238,,Southeastern Conference,sec,,,expanded,pointsFor,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,pointsFor,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,streak,1.0,2026
 333,,Southeastern Conference,sec,,,expanded,streak,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,streak,1.0,2026
@@ -8714,6 +8843,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,streak,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,streak,1.0,2026
 201,,Southeastern Conference,sec,,,expanded,streak,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,streak,1.0,2026
+145,,Southeastern Conference,sec,,,expanded,streak,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,streak,1.0,2026
 2579,,Southeastern Conference,sec,,,expanded,streak,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,streak,1.0,2026
@@ -8724,7 +8855,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,streak,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,streak,1.0,2026
 238,,Southeastern Conference,sec,,,expanded,streak,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,streak,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 2,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
@@ -8735,12 +8865,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 142,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 251,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 245,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,ties,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,winPercent,1.0,2026
 333,,Southeastern Conference,sec,,,expanded,winPercent,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,winPercent,1.0,2026
@@ -8761,6 +8891,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,winPercent,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,winPercent,1.0,2026
 201,,Southeastern Conference,sec,,,expanded,winPercent,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,winPercent,1.0,2026
+145,,Southeastern Conference,sec,,,expanded,winPercent,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,winPercent,1.0,2026
 2579,,Southeastern Conference,sec,,,expanded,winPercent,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,winPercent,1.0,2026
@@ -8771,7 +8903,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,winPercent,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,winPercent,1.0,2026
 238,,Southeastern Conference,sec,,,expanded,winPercent,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,winPercent,0.0,2026
 333,,Southeastern Conference,sec,,,expanded,wins,1.0,2026
 333,,Southeastern Conference,sec,,,expanded,wins,0.0,2026
 8,,Southeastern Conference,sec,,,expanded,wins,1.0,2026
@@ -8792,6 +8923,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,expanded,wins,0.0,2026
 201,,Southeastern Conference,sec,,,expanded,wins,1.0,2026
 201,,Southeastern Conference,sec,,,expanded,wins,0.0,2026
+145,,Southeastern Conference,sec,,,expanded,wins,1.0,2026
+145,,Southeastern Conference,sec,,,expanded,wins,0.0,2026
 2579,,Southeastern Conference,sec,,,expanded,wins,1.0,2026
 2579,,Southeastern Conference,sec,,,expanded,wins,0.0,2026
 2633,,Southeastern Conference,sec,,,expanded,wins,1.0,2026
@@ -8802,7 +8935,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,expanded,wins,0.0,2026
 238,,Southeastern Conference,sec,,,expanded,wins,1.0,2026
 238,,Southeastern Conference,sec,,,expanded,wins,0.0,2026
-145,,Southeastern Conference,sec,,,expanded,wins,0.0,2026
 333,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 8,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 2,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
@@ -8813,12 +8945,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 142,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 201,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
+145,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 251,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 245,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 238,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
-145,,Southeastern Conference,sec,,,overall,OTLosses,0.0,2026
 333,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 8,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 2,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
@@ -8829,12 +8961,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 142,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 201,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
+145,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 251,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 245,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 238,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
-145,,Southeastern Conference,sec,,,overall,OTWins,0.0,2026
 333,,Southeastern Conference,sec,,,overall,avgPointsAgainst,10.0,2026
 333,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
 8,,Southeastern Conference,sec,,,overall,avgPointsAgainst,14.0,2026
@@ -8854,6 +8986,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,avgPointsAgainst,14.0,2026
 142,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
 201,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
+145,,Southeastern Conference,sec,,,overall,avgPointsAgainst,38.0,2026
+145,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,avgPointsAgainst,9.0,2026
 2633,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
@@ -8862,7 +8996,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
 238,,Southeastern Conference,sec,,,overall,avgPointsAgainst,9.0,2026
 238,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
-145,,Southeastern Conference,sec,,,overall,avgPointsAgainst,0.0,2026
 333,,Southeastern Conference,sec,,,overall,avgPointsFor,48.0,2026
 333,,Southeastern Conference,sec,,,overall,avgPointsFor,0.0,2026
 8,,Southeastern Conference,sec,,,overall,avgPointsFor,31.0,2026
@@ -8883,6 +9016,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,avgPointsFor,0.0,2026
 201,,Southeastern Conference,sec,,,overall,avgPointsFor,51.0,2026
 201,,Southeastern Conference,sec,,,overall,avgPointsFor,0.0,2026
+145,,Southeastern Conference,sec,,,overall,avgPointsFor,41.0,2026
+145,,Southeastern Conference,sec,,,overall,avgPointsFor,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,avgPointsFor,57.0,2026
 2579,,Southeastern Conference,sec,,,overall,avgPointsFor,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,avgPointsFor,56.0,2026
@@ -8893,7 +9028,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,avgPointsFor,0.0,2026
 238,,Southeastern Conference,sec,,,overall,avgPointsFor,28.0,2026
 238,,Southeastern Conference,sec,,,overall,avgPointsFor,0.0,2026
-145,,Southeastern Conference,sec,,,overall,avgPointsFor,0.0,2026
 333,,Southeastern Conference,sec,,,overall,differential,38.0,2026
 333,,Southeastern Conference,sec,,,overall,differential,0.0,2026
 8,,Southeastern Conference,sec,,,overall,differential,17.0,2026
@@ -8914,6 +9048,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,differential,0.0,2026
 201,,Southeastern Conference,sec,,,overall,differential,51.0,2026
 201,,Southeastern Conference,sec,,,overall,differential,0.0,2026
+145,,Southeastern Conference,sec,,,overall,differential,3.0,2026
+145,,Southeastern Conference,sec,,,overall,differential,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,differential,57.0,2026
 2579,,Southeastern Conference,sec,,,overall,differential,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,differential,47.0,2026
@@ -8924,7 +9060,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,differential,0.0,2026
 238,,Southeastern Conference,sec,,,overall,differential,19.0,2026
 238,,Southeastern Conference,sec,,,overall,differential,0.0,2026
-145,,Southeastern Conference,sec,,,overall,differential,0.0,2026
 333,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 8,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 2,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
@@ -8935,12 +9070,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 142,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 201,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
+145,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 251,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 245,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 238,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
-145,,Southeastern Conference,sec,,,overall,divisionLosses,0.0,2026
 333,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 8,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 2,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
@@ -8951,12 +9086,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 142,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 201,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
+145,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 251,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 245,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 238,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
-145,,Southeastern Conference,sec,,,overall,divisionRecord,0.0,2026
 333,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 8,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 2,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
@@ -8967,12 +9102,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 142,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 201,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
+145,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 251,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 245,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 238,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
-145,,Southeastern Conference,sec,,,overall,divisionTies,0.0,2026
 333,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 8,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 2,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
@@ -8983,12 +9118,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 142,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 201,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
+145,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 251,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 245,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 238,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
-145,,Southeastern Conference,sec,,,overall,divisionWinPercent,0.0,2026
 333,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 8,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 2,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
@@ -8999,12 +9134,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 142,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 201,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
+145,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 251,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 245,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 238,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
-145,,Southeastern Conference,sec,,,overall,divisionWins,0.0,2026
 333,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
 333,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
 8,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
@@ -9018,12 +9153,15 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 96,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
 96,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
 99,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
+99,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
 344,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
 344,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
 142,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
 142,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
 201,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
 201,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
+145,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
+145,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
 2579,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
 2633,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
@@ -9034,8 +9172,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
 238,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
 238,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
-145,,Southeastern Conference,sec,,,overall,gamesBehind,0.5,2026
-145,,Southeastern Conference,sec,,,overall,gamesBehind,0.0,2026
 333,,Southeastern Conference,sec,,,overall,gamesPlayed,1.0,2026
 333,,Southeastern Conference,sec,,,overall,gamesPlayed,0.0,2026
 8,,Southeastern Conference,sec,,,overall,gamesPlayed,1.0,2026
@@ -9056,6 +9192,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,gamesPlayed,0.0,2026
 201,,Southeastern Conference,sec,,,overall,gamesPlayed,1.0,2026
 201,,Southeastern Conference,sec,,,overall,gamesPlayed,0.0,2026
+145,,Southeastern Conference,sec,,,overall,gamesPlayed,1.0,2026
+145,,Southeastern Conference,sec,,,overall,gamesPlayed,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,gamesPlayed,1.0,2026
 2579,,Southeastern Conference,sec,,,overall,gamesPlayed,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,gamesPlayed,1.0,2026
@@ -9066,7 +9204,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,gamesPlayed,0.0,2026
 238,,Southeastern Conference,sec,,,overall,gamesPlayed,1.0,2026
 238,,Southeastern Conference,sec,,,overall,gamesPlayed,0.0,2026
-145,,Southeastern Conference,sec,,,overall,gamesPlayed,0.0,2026
 333,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 8,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 2,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
@@ -9077,12 +9214,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 142,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 201,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
+145,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 251,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 245,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 238,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
-145,,Southeastern Conference,sec,,,overall,leagueWinPercent,0.0,2026
 333,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 8,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 2,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
@@ -9093,12 +9230,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 142,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 201,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
+145,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 251,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 245,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 238,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
-145,,Southeastern Conference,sec,,,overall,lockedDivRank,0.0,2026
 333,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 8,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 2,,Southeastern Conference,sec,,,overall,losses,0.0,2026
@@ -9109,12 +9246,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 142,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 201,,Southeastern Conference,sec,,,overall,losses,0.0,2026
+145,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 251,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 245,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 238,,Southeastern Conference,sec,,,overall,losses,0.0,2026
-145,,Southeastern Conference,sec,,,overall,losses,0.0,2026
 333,,Southeastern Conference,sec,,,overall,playoffSeed,1.0,2026
 333,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
 8,,Southeastern Conference,sec,,,overall,playoffSeed,2.0,2026
@@ -9140,22 +9277,23 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 201,,Southeastern Conference,sec,,,overall,playoffSeed,10.0,2026
 201,,Southeastern Conference,sec,,,overall,playoffSeed,2.0,2026
 201,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
-2579,,Southeastern Conference,sec,,,overall,playoffSeed,11.0,2026
+145,,Southeastern Conference,sec,,,overall,playoffSeed,11.0,2026
+145,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
+2579,,Southeastern Conference,sec,,,overall,playoffSeed,12.0,2026
 2579,,Southeastern Conference,sec,,,overall,playoffSeed,4.0,2026
 2579,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
-2633,,Southeastern Conference,sec,,,overall,playoffSeed,12.0,2026
+2633,,Southeastern Conference,sec,,,overall,playoffSeed,13.0,2026
 2633,,Southeastern Conference,sec,,,overall,playoffSeed,7.0,2026
 2633,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
-251,,Southeastern Conference,sec,,,overall,playoffSeed,13.0,2026
+251,,Southeastern Conference,sec,,,overall,playoffSeed,14.0,2026
 251,,Southeastern Conference,sec,,,overall,playoffSeed,7.0,2026
 251,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
-245,,Southeastern Conference,sec,,,overall,playoffSeed,14.0,2026
+245,,Southeastern Conference,sec,,,overall,playoffSeed,15.0,2026
 245,,Southeastern Conference,sec,,,overall,playoffSeed,11.0,2026
 245,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
-238,,Southeastern Conference,sec,,,overall,playoffSeed,15.0,2026
+238,,Southeastern Conference,sec,,,overall,playoffSeed,16.0,2026
 238,,Southeastern Conference,sec,,,overall,playoffSeed,11.0,2026
 238,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
-145,,Southeastern Conference,sec,,,overall,playoffSeed,0.0,2026
 333,,Southeastern Conference,sec,,,overall,pointDifferential,38.0,2026
 333,,Southeastern Conference,sec,,,overall,pointDifferential,0.0,2026
 8,,Southeastern Conference,sec,,,overall,pointDifferential,17.0,2026
@@ -9176,6 +9314,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,pointDifferential,0.0,2026
 201,,Southeastern Conference,sec,,,overall,pointDifferential,51.0,2026
 201,,Southeastern Conference,sec,,,overall,pointDifferential,0.0,2026
+145,,Southeastern Conference,sec,,,overall,pointDifferential,3.0,2026
+145,,Southeastern Conference,sec,,,overall,pointDifferential,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,pointDifferential,57.0,2026
 2579,,Southeastern Conference,sec,,,overall,pointDifferential,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,pointDifferential,47.0,2026
@@ -9186,7 +9326,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,pointDifferential,0.0,2026
 238,,Southeastern Conference,sec,,,overall,pointDifferential,19.0,2026
 238,,Southeastern Conference,sec,,,overall,pointDifferential,0.0,2026
-145,,Southeastern Conference,sec,,,overall,pointDifferential,0.0,2026
 333,,Southeastern Conference,sec,,,overall,points,0.5,2026
 333,,Southeastern Conference,sec,,,overall,points,0.0,2026
 8,,Southeastern Conference,sec,,,overall,points,0.5,2026
@@ -9207,6 +9346,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,points,0.0,2026
 201,,Southeastern Conference,sec,,,overall,points,0.5,2026
 201,,Southeastern Conference,sec,,,overall,points,0.0,2026
+145,,Southeastern Conference,sec,,,overall,points,0.5,2026
+145,,Southeastern Conference,sec,,,overall,points,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,points,0.5,2026
 2579,,Southeastern Conference,sec,,,overall,points,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,points,0.5,2026
@@ -9217,7 +9358,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,points,0.0,2026
 238,,Southeastern Conference,sec,,,overall,points,0.5,2026
 238,,Southeastern Conference,sec,,,overall,points,0.0,2026
-145,,Southeastern Conference,sec,,,overall,points,0.0,2026
 333,,Southeastern Conference,sec,,,overall,pointsAgainst,10.0,2026
 333,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
 8,,Southeastern Conference,sec,,,overall,pointsAgainst,14.0,2026
@@ -9237,6 +9377,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,pointsAgainst,14.0,2026
 142,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
 201,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
+145,,Southeastern Conference,sec,,,overall,pointsAgainst,38.0,2026
+145,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,pointsAgainst,9.0,2026
 2633,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
@@ -9245,7 +9387,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
 238,,Southeastern Conference,sec,,,overall,pointsAgainst,9.0,2026
 238,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
-145,,Southeastern Conference,sec,,,overall,pointsAgainst,0.0,2026
 333,,Southeastern Conference,sec,,,overall,pointsFor,48.0,2026
 333,,Southeastern Conference,sec,,,overall,pointsFor,0.0,2026
 8,,Southeastern Conference,sec,,,overall,pointsFor,31.0,2026
@@ -9266,6 +9407,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,pointsFor,0.0,2026
 201,,Southeastern Conference,sec,,,overall,pointsFor,51.0,2026
 201,,Southeastern Conference,sec,,,overall,pointsFor,0.0,2026
+145,,Southeastern Conference,sec,,,overall,pointsFor,41.0,2026
+145,,Southeastern Conference,sec,,,overall,pointsFor,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,pointsFor,57.0,2026
 2579,,Southeastern Conference,sec,,,overall,pointsFor,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,pointsFor,56.0,2026
@@ -9276,7 +9419,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,pointsFor,0.0,2026
 238,,Southeastern Conference,sec,,,overall,pointsFor,28.0,2026
 238,,Southeastern Conference,sec,,,overall,pointsFor,0.0,2026
-145,,Southeastern Conference,sec,,,overall,pointsFor,0.0,2026
 333,,Southeastern Conference,sec,,,overall,streak,1.0,2026
 333,,Southeastern Conference,sec,,,overall,streak,0.0,2026
 8,,Southeastern Conference,sec,,,overall,streak,1.0,2026
@@ -9297,6 +9439,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,streak,0.0,2026
 201,,Southeastern Conference,sec,,,overall,streak,1.0,2026
 201,,Southeastern Conference,sec,,,overall,streak,0.0,2026
+145,,Southeastern Conference,sec,,,overall,streak,1.0,2026
+145,,Southeastern Conference,sec,,,overall,streak,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,streak,1.0,2026
 2579,,Southeastern Conference,sec,,,overall,streak,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,streak,1.0,2026
@@ -9307,7 +9451,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,streak,0.0,2026
 238,,Southeastern Conference,sec,,,overall,streak,1.0,2026
 238,,Southeastern Conference,sec,,,overall,streak,0.0,2026
-145,,Southeastern Conference,sec,,,overall,streak,0.0,2026
 333,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 8,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 2,,Southeastern Conference,sec,,,overall,ties,0.0,2026
@@ -9318,12 +9461,12 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 344,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 142,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 201,,Southeastern Conference,sec,,,overall,ties,0.0,2026
+145,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 251,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 245,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 238,,Southeastern Conference,sec,,,overall,ties,0.0,2026
-145,,Southeastern Conference,sec,,,overall,ties,0.0,2026
 333,,Southeastern Conference,sec,,,overall,winPercent,1.0,2026
 333,,Southeastern Conference,sec,,,overall,winPercent,0.0,2026
 8,,Southeastern Conference,sec,,,overall,winPercent,1.0,2026
@@ -9344,6 +9487,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,winPercent,0.0,2026
 201,,Southeastern Conference,sec,,,overall,winPercent,1.0,2026
 201,,Southeastern Conference,sec,,,overall,winPercent,0.0,2026
+145,,Southeastern Conference,sec,,,overall,winPercent,1.0,2026
+145,,Southeastern Conference,sec,,,overall,winPercent,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,winPercent,1.0,2026
 2579,,Southeastern Conference,sec,,,overall,winPercent,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,winPercent,1.0,2026
@@ -9354,7 +9499,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,winPercent,0.0,2026
 238,,Southeastern Conference,sec,,,overall,winPercent,1.0,2026
 238,,Southeastern Conference,sec,,,overall,winPercent,0.0,2026
-145,,Southeastern Conference,sec,,,overall,winPercent,0.0,2026
 333,,Southeastern Conference,sec,,,overall,wins,1.0,2026
 333,,Southeastern Conference,sec,,,overall,wins,0.0,2026
 8,,Southeastern Conference,sec,,,overall,wins,1.0,2026
@@ -9375,6 +9519,8 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 142,,Southeastern Conference,sec,,,overall,wins,0.0,2026
 201,,Southeastern Conference,sec,,,overall,wins,1.0,2026
 201,,Southeastern Conference,sec,,,overall,wins,0.0,2026
+145,,Southeastern Conference,sec,,,overall,wins,1.0,2026
+145,,Southeastern Conference,sec,,,overall,wins,0.0,2026
 2579,,Southeastern Conference,sec,,,overall,wins,1.0,2026
 2579,,Southeastern Conference,sec,,,overall,wins,0.0,2026
 2633,,Southeastern Conference,sec,,,overall,wins,1.0,2026
@@ -9385,7 +9531,6 @@ team_id,team_abbr,conference,conference_abbr,division,division_abbr,standings_ty
 245,,Southeastern Conference,sec,,,overall,wins,0.0,2026
 238,,Southeastern Conference,sec,,,overall,wins,1.0,2026
 238,,Southeastern Conference,sec,,,overall,wins,0.0,2026
-145,,Southeastern Conference,sec,,,overall,wins,0.0,2026
 2026,,Sun Belt Conference,belt,,,expanded,OTLosses,0.0,2026
 290,,Sun Belt Conference,belt,,,expanded,OTLosses,0.0,2026
 2247,,Sun Belt Conference,belt,,,expanded,OTLosses,0.0,2026
