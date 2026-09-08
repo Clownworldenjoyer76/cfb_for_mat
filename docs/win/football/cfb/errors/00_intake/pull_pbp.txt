@@ -1,20 +1,12 @@
-[2026-09-06 06:45:41 EDT] ================================================================================
-[2026-09-06 06:45:41 EDT] implementation=sportsdataverse_v3_2026-08-19
-[2026-09-06 06:45:41 EDT] pull_pbp.py started | season=2026 | source=sportsdataverse.CFBPlayProcess | sportsdataverse_version=0.0.75 | workers=3 | refresh=False | dry_run=False
-[2026-09-06 06:45:42 EDT] schedule_games_total=892
-[2026-09-06 06:45:42 EDT] existing_games=8
-[2026-09-06 06:45:42 EDT] existing_rows=1395
-[2026-09-06 06:45:42 EDT] future_games_skipped=794
-[2026-09-06 06:45:42 EDT] already_stored_skipped=8
-[2026-09-06 06:45:42 EDT] games_to_process=90
-[2026-09-06 06:55:11 EDT] games_processed=87
-[2026-09-06 06:55:11 EDT] games_skipped=3
-[2026-09-06 06:55:11 EDT] games_in_output=95
-[2026-09-06 06:55:11 EDT] rows=16145
-[2026-09-06 06:55:11 EDT] columns=476
-[2026-09-06 06:55:11 EDT] output=C:\Users\Mat\Documents\GitHub\cfb_for_mat\docs\win\football\cfb\00_intake\pbp\2026_pbp.parquet
-[2026-09-06 06:55:11 EDT] SKIPPED game_id=401856661 reason=no plays returned
-[2026-09-06 06:55:11 EDT] SKIPPED game_id=401858437 reason=no plays returned
-[2026-09-06 06:55:11 EDT] SKIPPED game_id=401858438 reason=no plays returned
-[2026-09-06 06:55:11 EDT] status=success
-[2026-09-06 06:55:11 EDT] ================================================================================
+[2026-09-08 11:30:05 EDT] ================================================================================
+[2026-09-08 11:30:05 EDT] implementation=sportsdataverse_v3_2026-08-19
+[2026-09-08 11:30:05 EDT] pull_pbp.py started | season=2026 | source=sportsdataverse.CFBPlayProcess | sportsdataverse_version=0.0.75 | workers=3 | refresh=False | dry_run=False
+[2026-09-08 11:30:05 EDT] schedule_games_total=892
+[2026-09-08 11:30:05 EDT] existing_games=99
+[2026-09-08 11:30:05 EDT] existing_rows=16843
+[2026-09-08 11:30:05 EDT] future_games_skipped=793
+[2026-09-08 11:30:05 EDT] already_stored_skipped=99
+[2026-09-08 11:30:05 EDT] games_to_process=0
+[2026-09-08 11:30:05 EDT] status=no_new_games
+[2026-09-08 11:30:05 EDT] output=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/pbp/2026_pbp.parquet
+[2026-09-08 11:30:05 EDT] ================================================================================
