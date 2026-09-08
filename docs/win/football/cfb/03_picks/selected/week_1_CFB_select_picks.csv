@@ -1,12 +1,12 @@
 week,game_id,game_date,game_time,away_team,home_team,ml_selection,ml_odds_american,ml_model_probability,spread_selection,spread_line,spread_odds_american,total_selection,total_line,total_odds_american,total_model_probability,season,season_type,ml_selected,spread_selected,total_selected
-1,401864577,2026-08-29,16:30,Jacksonville State Gamecocks,North Dakota State Bison,HOME,-265.0,0.737312,HOME,-6.5,-115.0,,,,,2026,2,1,1,0
-1,401862693,2026-08-29,19:00,Memphis Tigers,UNLV Rebels,HOME,-192.0,0.675159,HOME,-4.0,-112.0,UNDER,56.5,-112.0,0.534899,2026,2,1,1,1
+1,401864577,2026-08-29,16:30,Jacksonville State Gamecocks,North Dakota State Bison,HOME,-265.0,0.737312,,,,,,,,2026,2,1,0,0
+1,401862693,2026-08-29,19:00,Memphis Tigers,UNLV Rebels,HOME,-192.0,0.675159,,,,UNDER,56.5,-112.0,0.534899,2026,2,1,0,1
 1,401864424,2026-09-03,19:00,Merrimack Warriors,Delaware Blue Hens,,,,,,,UNDER,55.5,-112.0,0.54163,2026,2,0,0,1
 1,401858424,2026-09-03,20:00,UAB Blazers,Illinois Fighting Illini,,,,,,,OVER,54.5,-118.0,0.543411,2026,2,0,0,1
 1,401864495,2026-09-04,18:30,San José State Spartans,Eastern Michigan Eagles,HOME,-142.0,0.563594,,,,,,,,2026,2,1,0,0
 1,401858435,2026-09-04,19:00,Indiana State Sycamores,Purdue Boilermakers,,,,,,,UNDER,56.5,-110.0,0.542912,2026,2,0,0,1
 1,401864496,2026-09-05,11:00,Duquesne Dukes,Air Force Falcons,,,,,,,UNDER,58.5,-118.0,0.545957,2026,2,0,0,1
-1,401869960,2026-09-05,12:00,Liberty Flames,James Madison Dukes,HOME,-225.0,0.711824,HOME,-6.0,-110.0,,,,,2026,2,1,1,0
+1,401869960,2026-09-05,12:00,Liberty Flames,James Madison Dukes,HOME,-225.0,0.711824,,,,,,,,2026,2,1,0,0
 1,401866410,2026-09-05,12:00,Tarleton State Texans,Bowling Green Falcons,HOME,-135.0,0.555201,,,,,,,,2026,2,1,0,0
 1,401856636,2026-09-05,14:30,Baylor Bears,Auburn Tigers,HOME,-270.0,0.698393,,,,UNDER,57.5,-105.0,0.531737,2026,2,1,0,1
 1,401856777,2026-09-05,15:30,Boston College Eagles,Cincinnati Bearcats,HOME,-278.0,0.779185,,,,,,,,2026,2,1,0,0
