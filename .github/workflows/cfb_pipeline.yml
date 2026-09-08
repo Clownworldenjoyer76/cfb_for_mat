@@ -231,12 +231,38 @@ jobs:
           echo "CFB Week ${CFB_WEEK} pipeline outputs verified."
 
       # ----------------------------------------------------------------------
+      # GRADING ANALYSIS + REPORTS
+      #
+      # These run after all normal CFB processing is complete.
+      # They analyze all currently graded CFB bets and rebuild the
+      # season grading reports.
+      # ----------------------------------------------------------------------
+
+      - name: Build CFB grading analysis ledger
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/02_cfb_results_analyze.py
+
+      - name: Build CFB grading reports
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/03_cfb_results_reports.py
+
+      - name: Verify CFB grading reports
+        run: |
+          test -f "docs/win/football/cfb/04_final_results/intermediate/work_cfb.csv"
+          test -f "docs/win/football/cfb/04_final_results/cfb_summary_overall.csv"
+          test -d "docs/win/football/cfb/04_final_results/reports"
+
+          echo "CFB grading report outputs verified."
+
+      # ----------------------------------------------------------------------
       # COMMIT EVERYTHING
       #
       # Includes:
       # - final scores
       # - graded previous-week picks
       # - season grading summary
+      # - grading analysis ledger
+      # - grading reports
       # - PBP/team stats
       # - current-week projections
       # - current-week selections/picks
