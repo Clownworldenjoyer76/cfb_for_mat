@@ -8,11 +8,49 @@ selection_defaults:
   min_model_prob: 0.00
   max_model_prob: 1.00
 
-  
+
+###################################################
+# ── Cross-Market Selection Rules ────────────────
+###################################################
+
+## moneyline_vs_spread.mode OPTIONS:
+##   exclusive  → moneyline OR spread, never both
+##   allow_both → moneyline and spread may both be selected
+##
+## moneyline_vs_spread.preference OPTIONS
+## when mode=exclusive and both markets qualify:
+##
+##   moneyline  → always keep moneyline
+##   spread     → always keep spread
+##   best_ev    → keep the market with the higher EV
+##   best_prob  → keep the market with the higher model probability
+##   best_kelly → keep the market with the higher Kelly
+##
+## Total remains independent.
+##
+## With:
+##   mode: exclusive
+##   preference: best_prob
+##
+## Maximum selections per game become:
+##   [MONEYLINE OR SPREAD] + [TOTAL]
+##   max = 2
+
+selection_rules:
+
+  moneyline_vs_spread:
+    mode: exclusive
+    preference: best_prob
+
+
+###################################################
+# ── Per-Market Pick Preference Options ──────────
+###################################################
+
 ## pick_preference OPTIONS:
-  ## best_ev → choose the qualifying side with the highest EV
-  ## best_prob → choose the qualifying side with the highest model_probability
-  ## best_kelly → choose the qualifying side with the highest Kelly
+##   best_ev    → choose the qualifying side with the highest EV
+##   best_prob  → choose the qualifying side with the highest model_probability
+##   best_kelly → choose the qualifying side with the highest Kelly
 
 
 markets:
