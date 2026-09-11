@@ -1,3 +1,4 @@
 league,season,market_type,side_group,variable,Win,Loss,Push,Void,Pending,Invalid,Total,Selected,bets_excluding_pushes,bets_including_pushes,Win_Pct,Win_Pct_All_Bets,units,ROI_Excluding_Pushes,ROI_Including_Pushes,avg_ev,avg_odds,avg_model_prob,avg_kelly
-CFB,2026,spread,HOME,10.0_to_13.9,0,0,0,0,2,0,0,2,0,0,0.0,0.0,0.0,0.0,0.0,0.0735,-108.5,0.5584,0.0796
-CFB,2026,spread,HOME,0.0_to_2.9,0,0,0,0,1,0,0,1,0,0,0.0,0.0,0.0,0.0,0.0,0.0601,-108.0,0.5504,0.0649
+CFB,2026,spread,HOME,3.0_to_6.9,0,0,0,0,2,0,0,2,0,0,0.0,0.0,0.0,0.0,0.0,0.1125,-108.5,0.5785,0.1206
+CFB,2026,spread,HOME,7.0_to_9.9,0,0,0,0,1,0,0,1,0,0,0.0,0.0,0.0,0.0,0.0,0.0823,-112.0,0.5718,0.0922
+CFB,2026,spread,HOME,10.0_to_13.9,0,0,0,0,1,0,0,1,0,0,0.0,0.0,0.0,0.0,0.0,0.0525,-110.0,0.5513,0.0578

@@ -321,7 +321,9 @@ def schedule_game_is_future(row: dict[str, str]) -> bool:
     if game_date is None:
         return False
 
-    return game_date > datetime.now(EASTERN).date()
+    # Automatic PBP processing is limited to games dated before today.
+    # Games scheduled today or later are excluded.
+    return game_date >= datetime.now(EASTERN).date()
 
 
 # ─────────────────────────────────────────────

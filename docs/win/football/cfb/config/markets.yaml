@@ -68,12 +68,12 @@ markets:
       min_ev: -0.05
       odds_bands:
         - [-300, 1549]
-      min_model_prob: 0.55
+      min_model_prob: 0.60
 
     away:
       enabled: true
       min_ev: 0.00
-      min_model_prob: 0.55
+      min_model_prob: 0.60
 
 
   ###################################################
