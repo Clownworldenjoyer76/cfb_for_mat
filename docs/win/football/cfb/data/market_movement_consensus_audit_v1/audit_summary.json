@@ -1,0 +1,71 @@
+{
+  "frozen_feature_rows": 18,
+  "matched_coverage": [
+    {
+      "consensus_spread_games": 801,
+      "consensus_total_games": 801,
+      "opening_spread_games": 794,
+      "opening_total_games": 795,
+      "repo_games": 801,
+      "season": 2021
+    },
+    {
+      "consensus_spread_games": 811,
+      "consensus_total_games": 811,
+      "opening_spread_games": 742,
+      "opening_total_games": 747,
+      "repo_games": 815,
+      "season": 2022
+    },
+    {
+      "consensus_spread_games": 857,
+      "consensus_total_games": 857,
+      "opening_spread_games": 801,
+      "opening_total_games": 803,
+      "repo_games": 860,
+      "season": 2023
+    },
+    {
+      "consensus_spread_games": 882,
+      "consensus_total_games": 881,
+      "opening_spread_games": 799,
+      "opening_total_games": 798,
+      "repo_games": 898,
+      "season": 2024
+    },
+    {
+      "consensus_spread_games": 908,
+      "consensus_total_games": 908,
+      "opening_spread_games": 887,
+      "opening_total_games": 887,
+      "repo_games": 911,
+      "season": 2025
+    }
+  ],
+  "odds_books_2021_2025": 7,
+  "odds_games_2021_2025": 6893,
+  "odds_rows_2021_2025": 84705,
+  "policy": {
+    "forward_cv_years": [
+      2022,
+      2023,
+      2024
+    ],
+    "meaningful_mae_threshold": 0.1,
+    "min_fold_rows": 100,
+    "min_pre2025_rows": 300,
+    "train_seasons": [
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "untouched_final_year": 2025
+  },
+  "pre2025_feature_rows_tested": 248,
+  "repo_games": 4285,
+  "strict_direct_confirmations_2025": 0,
+  "strict_direct_names": [],
+  "strict_feature_confirmations_2025": 0,
+  "strict_feature_names": []
+}
