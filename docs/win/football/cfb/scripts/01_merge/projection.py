@@ -88,7 +88,7 @@ import pandas as pd
 import projection_week1 as base
 
 
-SCRIPT_VERSION = "cfb-inseason-v2-2026-08-26"
+SCRIPT_VERSION = "cfb-inseason-v3-game-lock-2026-08-30"
 
 WEEKLY_FILE_RE = re.compile(
     r"^week_(\d+)_CFB_weekly_schedule\.csv$"
@@ -952,6 +952,16 @@ def main() -> int:
         args,
     )
 
+    (
+        projected,
+        locked_games_preserved,
+    ) = base.preserve_locked_rows(
+        projected,
+        schedule,
+        output_path,
+        "Week 2+ projection",
+    )
+
     validate_output(
         projected,
         schedule,
@@ -988,6 +998,11 @@ def main() -> int:
     )
 
     print(
+        "locked_games_preserved="
+        f"{locked_games_preserved}"
+    )
+
+    print(
         "team_stats_source="
         f"{team_stats_path}"
     )
@@ -1020,57 +1035,57 @@ def main() -> int:
 
     print(
         "home_team_stats_fallbacks="
-        f"{int(projected['home_prior_fallback'].sum())}"
+        f"{int(pd.to_numeric(projected['home_prior_fallback'], errors='coerce').fillna(0).sum())}"
     )
 
     print(
         "away_team_stats_fallbacks="
-        f"{int(projected['away_prior_fallback'].sum())}"
+        f"{int(pd.to_numeric(projected['away_prior_fallback'], errors='coerce').fillna(0).sum())}"
     )
 
     print(
         "team_stats_margin_disabled="
-        f"{int(projected['prior_home_margin'].isna().sum())}"
+        f"{int(pd.to_numeric(projected['prior_home_margin'], errors='coerce').isna().sum())}"
     )
 
     print(
         "with_market_spread="
-        f"{int(projected['market_home_margin'].notna().sum())}"
+        f"{int(pd.to_numeric(projected['market_home_margin'], errors='coerce').notna().sum())}"
     )
 
     print(
         "with_fpi="
-        f"{int(projected['fpi_home_margin'].notna().sum())}"
+        f"{int(pd.to_numeric(projected['fpi_home_margin'], errors='coerce').notna().sum())}"
     )
 
     print(
         "with_espn="
-        f"{int(projected['espn_home_margin'].notna().sum())}"
+        f"{int(pd.to_numeric(projected['espn_home_margin'], errors='coerce').notna().sum())}"
     )
 
     print(
         "with_current_team_stats_margin="
-        f"{int(projected['prior_home_margin'].notna().sum())}"
+        f"{int(pd.to_numeric(projected['prior_home_margin'], errors='coerce').notna().sum())}"
     )
 
     print(
         "with_market_total="
-        f"{int(projected['market_total'].notna().sum())}"
+        f"{int(pd.to_numeric(projected['market_total'], errors='coerce').notna().sum())}"
     )
 
     print(
         "fresh_injury_adjustments="
-        f"{int(projected['injury_margin_adjustment'].abs().gt(0).sum())}"
+        f"{int(pd.to_numeric(projected['injury_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
     )
 
     print(
         "travel_adjustments="
-        f"{int(projected['travel_margin_adjustment'].abs().gt(0).sum())}"
+        f"{int(pd.to_numeric(projected['travel_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
     )
 
     print(
         "weather_adjustments="
-        f"{int(projected['weather_total_adjustment'].abs().gt(0).sum())}"
+        f"{int(pd.to_numeric(projected['weather_total_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
     )
 
     print(

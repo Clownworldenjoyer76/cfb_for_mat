@@ -25,7 +25,7 @@ import json
 import re
 import sys
 import traceback
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -67,7 +67,10 @@ SCHEDULE_REQUIRED_COLUMNS = [
     "game_time",
     "away_team",
     "home_team",
+    "game_timezone",
 ]
+
+ACTIVE_GAME_GRACE_HOURS = 8
 
 OUTPUT_COLUMNS = [
     "snapshot_id",
@@ -271,26 +274,44 @@ def parse_iso_or_date(value):
         return None
 
 
-def schedule_kickoff_iso(row):
+def schedule_kickoff_utc(row):
     game_date = str(row.get("game_date", "")).strip()
     game_time = str(row.get("game_time", "")).strip()
     game_timezone = str(row.get("game_timezone", "")).strip()
 
-    if game_date and game_time and game_timezone:
-        try:
-            local_dt = datetime.strptime(
-                f"{game_date} {game_time}",
-                "%Y-%m-%d %H:%M",
-            ).replace(
-                tzinfo=ZoneInfo(game_timezone)
-            )
-            return (
-                local_dt.astimezone(timezone.utc)
-                .isoformat()
-                .replace("+00:00", "Z")
-            )
-        except Exception:
-            pass
+    if not game_date or not game_time or not game_timezone:
+        return None
+
+    try:
+        local_dt = datetime.strptime(
+            f"{game_date} {game_time}",
+            "%Y-%m-%d %H:%M",
+        ).replace(
+            tzinfo=ZoneInfo(game_timezone)
+        )
+    except Exception as exc:
+        log(
+            "KICKOFF_PARSE_FAILED "
+            f"game_id={row.get('game_id', '')} "
+            f"date={game_date} time={game_time} "
+            f"timezone={game_timezone} error={exc}"
+        )
+        return None
+
+    return local_dt.astimezone(timezone.utc)
+
+
+def schedule_kickoff_iso(row):
+    kickoff = schedule_kickoff_utc(row)
+
+    if kickoff is not None:
+        return (
+            kickoff.isoformat()
+            .replace("+00:00", "Z")
+        )
+
+    game_date = str(row.get("game_date", "")).strip()
+    game_time = str(row.get("game_time", "")).strip()
 
     if game_date and game_time:
         return f"{game_date}T{game_time}"
@@ -298,15 +319,33 @@ def schedule_kickoff_iso(row):
     return game_date
 
 
-def is_upcoming_or_today(row):
+def is_game_locked(row, now_utc=None):
+    kickoff = schedule_kickoff_utc(row)
+
+    if kickoff is None:
+        return False
+
+    now_utc = now_utc or utc_now()
+    return now_utc >= kickoff
+
+
+def is_current_or_future_window(row, now_utc=None):
+    now_utc = now_utc or utc_now()
+    kickoff = schedule_kickoff_utc(row)
+
+    if kickoff is not None:
+        return kickoff >= (
+            now_utc
+            - timedelta(hours=ACTIVE_GAME_GRACE_HOURS)
+        )
+
     game_date = str(row.get("game_date", "")).strip()
     parsed = parse_iso_or_date(game_date)
 
     if parsed is None:
         return True
 
-    return parsed.date() >= utc_now().date()
-
+    return parsed.date() >= now_utc.date()
 
 def provider_info(odds_item):
     provider = odds_item.get("provider")
@@ -790,7 +829,7 @@ def build_schedule_groups(schedule_rows):
         row
         for row in schedule_rows
         if str(row.get("game_id", "")).strip()
-        and is_upcoming_or_today(row)
+        and is_current_or_future_window(row)
     ]
 
     groups = {}
@@ -922,91 +961,122 @@ def main():
     rows = []
     request_urls = []
 
-    for week_key, week_rows in schedule_groups:
-        week_events = []
-        week_raw_odds = []
-        week_csv_rows = []
-        week_urls = []
+    # Always stay on the earliest active schedule group.  This prevents a
+    # mid-game run from silently advancing to the next week after every
+    # game in the current week has kicked off.
+    week_key, week_rows = schedule_groups[0]
+    week_events = []
+    week_raw_odds = []
+    week_csv_rows = []
+    week_urls = []
+    locked_count = 0
 
-        for schedule_row in week_rows:
-            game_id = str(
-                schedule_row.get("game_id", "")
-            ).strip()
+    for schedule_row in week_rows:
+        game_id = str(
+            schedule_row.get("game_id", "")
+        ).strip()
 
-            odds_item, odds_url, status = (
-                fetch_game_odds(game_id)
+        if is_game_locked(
+            schedule_row,
+            captured_at,
+        ):
+            locked_count += 1
+            kickoff = schedule_kickoff_iso(
+                schedule_row
+            )
+            log(
+                "ODDS_SKIPPED_LOCKED "
+                f"game_id={game_id} kickoff={kickoff}"
             )
             week_urls.append(
                 {
                     "game_id": game_id,
-                    "url": odds_url,
-                    "status": status,
+                    "url": "",
+                    "status": "LOCKED",
                 }
             )
+            continue
 
-            if odds_item is None:
-                continue
-
-            event = {
-                "id": game_id,
-                "date": schedule_kickoff_iso(
-                    schedule_row
-                ),
-                "home": str(
-                    schedule_row.get(
-                        "home_team",
-                        "",
-                    )
-                ).strip(),
-                "away": str(
-                    schedule_row.get(
-                        "away_team",
-                        "",
-                    )
-                ).strip(),
-            }
-
-            normalized_rows, provider = (
-                normalize_event_odds(
-                    event,
-                    odds_item,
-                    snapshot_id,
-                    snapshot_fetched_at,
-                )
-            )
-
-            if not normalized_rows:
-                log(
-                    "ODDS_NO_SUPPORTED_MARKETS "
-                    f"game_id={game_id}"
-                )
-                continue
-
-            week_events.append(event)
-            week_raw_odds.append(
-                {
-                    "game_id": game_id,
-                    "provider": provider,
-                    "odds": odds_item,
-                }
-            )
-            week_csv_rows.extend(
-                normalized_rows
-            )
-
-        if week_csv_rows:
-            selected_week = week_key
-            raw_events = week_events
-            raw_odds = week_raw_odds
-            rows = week_csv_rows
-            request_urls = week_urls
-            break
-
-    if not rows:
-        fail(
-            "ESPN returned no supported current odds "
-            "for any upcoming CFB schedule week"
+        odds_item, odds_url, status = (
+            fetch_game_odds(game_id)
         )
+        week_urls.append(
+            {
+                "game_id": game_id,
+                "url": odds_url,
+                "status": status,
+            }
+        )
+
+        if odds_item is None:
+            continue
+
+        event = {
+            "id": game_id,
+            "date": schedule_kickoff_iso(
+                schedule_row
+            ),
+            "home": str(
+                schedule_row.get(
+                    "home_team",
+                    "",
+                )
+            ).strip(),
+            "away": str(
+                schedule_row.get(
+                    "away_team",
+                    "",
+                )
+            ).strip(),
+        }
+
+        normalized_rows, provider = (
+            normalize_event_odds(
+                event,
+                odds_item,
+                snapshot_id,
+                snapshot_fetched_at,
+            )
+        )
+
+        if not normalized_rows:
+            log(
+                "ODDS_NO_SUPPORTED_MARKETS "
+                f"game_id={game_id}"
+            )
+            continue
+
+        week_events.append(event)
+        week_raw_odds.append(
+            {
+                "game_id": game_id,
+                "provider": provider,
+                "odds": odds_item,
+            }
+        )
+        week_csv_rows.extend(
+            normalized_rows
+        )
+
+    if not week_csv_rows:
+        if locked_count == len(week_rows):
+            fail(
+                "All games in the current CFB schedule group "
+                "have kicked off. No odds were refreshed and the "
+                "pipeline will not advance to the next week yet."
+            )
+
+        fail(
+            "ESPN returned no supported current odds for the "
+            "earliest active CFB schedule group. The pipeline "
+            "will not skip ahead to a later week."
+        )
+
+    selected_week = week_key
+    raw_events = week_events
+    raw_odds = week_raw_odds
+    rows = week_csv_rows
+    request_urls = week_urls
 
     raw_payload = {
         "snapshot_id": snapshot_id,

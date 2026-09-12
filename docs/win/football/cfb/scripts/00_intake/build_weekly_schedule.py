@@ -6,9 +6,10 @@ import json
 import re
 import sys
 import traceback
-from collections import Counter
+import yaml
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 
 BASE_DIR = Path("docs/win/football/cfb")
@@ -20,6 +21,7 @@ ODDS_DIR = BASE_DIR / "00_intake" / "odds"
 RAW_ODDS_DIR = ODDS_DIR / "raw"
 
 TEAM_MAP_PATH = BASE_DIR / "config" / "mapping" / "team_map.csv"
+CURRENT_WEEK_CONFIG_PATH = BASE_DIR / "config" / "current_week.yaml"
 
 ERROR_DIR = BASE_DIR / "errors" / "00_intake"
 ERROR_DIR.mkdir(parents=True, exist_ok=True)
@@ -36,6 +38,8 @@ OUTPUT_COLUMNS = [
     "game_date",
     "game_time",
     "commence_time",
+    "kickoff_utc",
+    "game_locked",
     "away_team",
     "home_team",
     "odds_away_team",
@@ -177,6 +181,56 @@ def parse_date(value):
         return datetime.fromisoformat(text).date()
     except Exception:
         return None
+
+
+
+def schedule_kickoff_utc(row):
+    game_date = str(row.get("game_date", "")).strip()
+    game_time = str(row.get("game_time", "")).strip()
+    game_timezone = str(row.get("game_timezone", "")).strip()
+
+    if not game_date or not game_time or not game_timezone:
+        return None
+
+    try:
+        local_dt = datetime.strptime(
+            f"{game_date} {game_time}",
+            "%Y-%m-%d %H:%M",
+        ).replace(
+            tzinfo=ZoneInfo(game_timezone)
+        )
+    except Exception:
+        return None
+
+    return local_dt.astimezone(timezone.utc)
+
+
+def kickoff_iso(row):
+    kickoff = schedule_kickoff_utc(row)
+    if kickoff is None:
+        return ""
+    return kickoff.isoformat().replace("+00:00", "Z")
+
+
+def game_is_locked(row, now_utc):
+    kickoff = schedule_kickoff_utc(row)
+    if kickoff is None:
+        return False
+    return now_utc >= kickoff
+
+
+def read_existing_weekly(path):
+    if not path.exists():
+        return {}
+
+    with path.open("r", newline="", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        rows = {}
+        for row in reader:
+            game_id = str(row.get("game_id", "")).strip()
+            if game_id:
+                rows[game_id] = row
+        return rows
 
 
 def normalize_key(value):
@@ -346,29 +400,79 @@ def match_raw_events_to_schedule(raw_events, schedule_index, team_map):
     return matches, unmatched_events
 
 
-def choose_target_week(schedule_rows, schedule_matches):
-    week_counter = Counter()
 
-    matched_schedule_ids = set(schedule_matches.keys())
+def load_current_week_config(path):
+    if not path.exists():
+        fail(f"Missing current-week config: {path}")
 
-    for row in schedule_rows:
-        schedule_game_id = str(row.get("game_id", "")).strip()
+    with path.open("r", encoding="utf-8") as f:
+        payload = yaml.safe_load(f)
 
-        if schedule_game_id in matched_schedule_ids:
-            key = (
-                str(row.get("season", "")).strip(),
-                str(row.get("season_type", "")).strip(),
-                str(row.get("week", "")).strip(),
-            )
-            week_counter[key] += 1
+    if not isinstance(payload, dict):
+        fail(f"Current-week config must be a YAML mapping: {path}")
 
-    if not week_counter:
-        fail("No schedule week could be identified from odds/schedule matches")
+    required = ["season", "season_type", "week"]
+    missing = [key for key in required if key not in payload]
 
-    return week_counter.most_common(1)[0][0]
+    if missing:
+        fail(f"Current-week config missing keys: {missing}")
+
+    season = str(payload.get("season", "")).strip()
+    season_type = str(payload.get("season_type", "")).strip()
+    week = str(payload.get("week", "")).strip()
+
+    if not season or not season_type or not week:
+        fail("Current-week config contains blank season, season_type, or week")
+
+    try:
+        season_int = int(season)
+        season_type_int = int(season_type)
+        week_int = int(week)
+    except ValueError:
+        fail("Current-week config season, season_type, and week must be integers")
+
+    if season_int < 2000:
+        fail(f"Invalid season in current-week config: {season_int}")
+
+    if season_type_int < 1:
+        fail(f"Invalid season_type in current-week config: {season_type_int}")
+
+    if week_int < 1:
+        fail(f"Invalid week in current-week config: {week_int}")
+
+    return str(season_int), str(season_type_int), str(week_int)
 
 
-def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary):
+def choose_target_week(schedule_rows):
+    target_week = load_current_week_config(CURRENT_WEEK_CONFIG_PATH)
+    target_season, target_season_type, target_week_number = target_week
+
+    exists = any(
+        str(row.get("season", "")).strip() == target_season
+        and str(row.get("season_type", "")).strip() == target_season_type
+        and str(row.get("week", "")).strip() == target_week_number
+        for row in schedule_rows
+    )
+
+    if not exists:
+        fail(
+            "Configured current week was not found in schedule: "
+            f"season={target_season}, "
+            f"season_type={target_season_type}, "
+            f"week={target_week_number}"
+        )
+
+    return target_week
+
+
+def build_output_rows(
+    schedule_rows,
+    target_week,
+    schedule_matches,
+    odds_summary,
+    existing_weekly,
+    now_utc,
+):
     output_rows = []
 
     target_season, target_season_type, target_week_number = target_week
@@ -384,6 +488,30 @@ def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary
             continue
 
         schedule_game_id = str(schedule_row.get("game_id", "")).strip()
+        locked = game_is_locked(schedule_row, now_utc)
+        kickoff = kickoff_iso(schedule_row)
+
+        if locked and schedule_game_id in existing_weekly:
+            previous = existing_weekly[schedule_game_id]
+            row = {
+                column: previous.get(column, "")
+                for column in OUTPUT_COLUMNS
+            }
+            row.update(
+                {
+                    "season": schedule_row.get("season", ""),
+                    "season_type": schedule_row.get("season_type", ""),
+                    "week": schedule_row.get("week", ""),
+                    "game_id": schedule_game_id,
+                    "game_date": previous.get("game_date", "") or schedule_row.get("game_date", ""),
+                    "game_time": previous.get("game_time", "") or schedule_row.get("game_time", ""),
+                    "kickoff_utc": previous.get("kickoff_utc", "") or kickoff,
+                    "game_locked": "1",
+                }
+            )
+            output_rows.append(row)
+            continue
+
         match = schedule_matches.get(schedule_game_id, {})
         odds_provider_game_id = str(match.get("odds_provider_game_id", "")).strip()
         odds = odds_summary.get(odds_provider_game_id, {})
@@ -397,6 +525,8 @@ def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary
             "game_date": schedule_row.get("game_date", ""),
             "game_time": schedule_row.get("game_time", ""),
             "commence_time": match.get("commence_time", ""),
+            "kickoff_utc": kickoff,
+            "game_locked": "1" if locked else "0",
             "away_team": schedule_row.get("away_team", ""),
             "home_team": schedule_row.get("home_team", ""),
             "odds_away_team": match.get("odds_away_team", ""),
@@ -423,7 +553,10 @@ def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary
             "odds_missing_reason": "",
         }
 
-        if odds_provider_game_id and odds:
+        if locked:
+            row["odds_available"] = "0"
+            row["odds_missing_reason"] = "locked_before_first_capture"
+        elif odds_provider_game_id and odds:
             row["odds_available"] = "1"
             row["odds_missing_reason"] = ""
         elif odds_provider_game_id and not odds:
@@ -446,7 +579,6 @@ def build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary
 
     return output_rows
 
-
 def main():
     LOG_FILE.write_text("", encoding="utf-8")
 
@@ -457,6 +589,7 @@ def main():
     log(f"Schedule input: {schedule_path}")
     log(f"Odds CSV input: {odds_csv_path}")
     log(f"Raw odds input: {raw_odds_path}")
+    log(f"Current-week config: {CURRENT_WEEK_CONFIG_PATH}")
 
     team_map = load_team_map()
 
@@ -468,18 +601,34 @@ def main():
     schedule_matches, unmatched_events = match_raw_events_to_schedule(raw_events, schedule_index, team_map)
     odds_summary = build_odds_summary(odds_rows)
 
-    target_week = choose_target_week(schedule_rows, schedule_matches)
+    target_week = choose_target_week(schedule_rows)
     target_week_number = str(target_week[2]).strip()
 
     output_path = WEEKLY_DIR / f"week_{target_week_number}_CFB_weekly_schedule.csv"
+    existing_weekly = read_existing_weekly(output_path)
+    now_utc = datetime.now(timezone.utc)
 
-    output_rows = build_output_rows(schedule_rows, target_week, schedule_matches, odds_summary)
+    output_rows = build_output_rows(
+        schedule_rows,
+        target_week,
+        schedule_matches,
+        odds_summary,
+        existing_weekly,
+        now_utc,
+    )
 
     write_csv(output_path, output_rows)
 
     matched_with_odds = sum(1 for row in output_rows if row.get("odds_available") == "1")
     matched_without_odds = sum(1 for row in output_rows if row.get("odds_missing_reason") == "no_odds_returned")
     no_event_match = sum(1 for row in output_rows if row.get("odds_missing_reason") == "no_odds_event_match")
+    locked_games = sum(1 for row in output_rows if row.get("game_locked") == "1")
+    locked_preserved = sum(
+        1
+        for row in output_rows
+        if row.get("game_locked") == "1"
+        and str(row.get("game_id", "")).strip() in existing_weekly
+    )
 
     log(f"Schedule rows loaded: {len(schedule_rows)}")
     log(f"Raw odds events loaded: {len(raw_events)}")
@@ -487,11 +636,13 @@ def main():
     log(f"Odds CSV rows loaded: {len(odds_rows)}")
     log(f"Schedule matches from raw odds events: {len(schedule_matches)}")
     log(f"Unmatched raw odds events: {len(unmatched_events)}")
-    log(f"Target week: season={target_week[0]}, season_type={target_week[1]}, week={target_week[2]}")
+    log(f"Configured target week: season={target_week[0]}, season_type={target_week[1]}, week={target_week[2]}")
     log(f"Weekly schedule rows written: {len(output_rows)}")
     log(f"Rows with odds: {matched_with_odds}")
     log(f"Rows with event but no odds: {matched_without_odds}")
     log(f"Rows with no odds event match: {no_event_match}")
+    log(f"Locked games: {locked_games}")
+    log(f"Locked rows preserved: {locked_preserved}")
     log(f"Output written: {output_path}")
 
     if unmatched_events:
@@ -509,6 +660,8 @@ def main():
     print(f"Rows with odds: {matched_with_odds}")
     print(f"Rows with event but no odds: {matched_without_odds}")
     print(f"Rows with no odds event match: {no_event_match}")
+    print(f"Locked games: {locked_games}")
+    print(f"Locked rows preserved: {locked_preserved}")
 
 
 if __name__ == "__main__":

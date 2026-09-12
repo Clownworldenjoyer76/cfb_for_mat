@@ -1,0 +1,3 @@
+league,season,market_type,variable,Win,Loss,Push,Void,Pending,Invalid,Total,Selected,bets_excluding_pushes,bets_including_pushes,Win_Pct,Win_Pct_All_Bets,units,ROI_Excluding_Pushes,ROI_Including_Pushes,avg_ev,avg_odds,avg_model_prob,avg_kelly
+CFB,2026,total,50_to_54.9,5,1,0,0,6,0,6,12,6,6,0.8333,0.8333,3.433,0.5722,0.5722,0.0206,-110.9,0.5365,0.0225
+CFB,2026,total,55_to_59.9,0,0,0,0,1,0,0,1,0,0,0.0,0.0,0.0,0.0,0.0,0.0423,-112.0,0.5506,0.0474

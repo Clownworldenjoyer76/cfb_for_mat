@@ -1,0 +1,759 @@
+# CFB Pipeline Technical Audit
+
+**Scope audited:** `docs/win/football/cfb/**` and `.github/workflows/cfb_01_pipeline.yml` only.
+**Repository:** `Clownworldenjoyer76/bet_tracker`
+**Repository access:** read-only. No files, workflows, branches, commits, or settings were modified.
+
+## Executive conclusion
+
+**Overall assessment: materially flawed.**
+
+I found **no confirmed algebraic error** in the core betting calculations for American odds, no-vig probabilities, EV, Kelly, spread orientation, totals, grading, or profit.
+
+The principal problems are instead **data integrity, historical validation, silent degradation, and point-in-time evidence**:
+
+* The 2025 backtest is **not a faithful point-in-time reproduction of the production pipeline**.
+* Historical non-DraftKings odds can be deliberately relabeled as `draftkings`.
+* Historical odds have no enforced pre-kickoff timestamp.
+* The backtest disables several live production components.
+* PBP failures can be skipped while the workflow succeeds.
+* The team-stat freshness check does not prove complete prior-week coverage.
+* ESPN predictor failures are permitted without failing that intake step.
+* The current injury feed is effectively unusable.
+* Final market-filtered picks are not themselves frozen after kickoff.
+* Several model probability assumptions have no calibration/training provenance in the repository.
+
+The current Week 2 run itself completed with 86/86 schedule-to-prediction-to-projection coverage and no duplicate IDs, but that does not resolve the structural issues.
+
+---
+
+# 1. Pipeline Map
+
+`.github/workflows/cfb_01_pipeline.yml` runs the following sequence.
+
+1. **Schedule**
+
+   * `docs/win/football/cfb/scripts/00_intake/pull_schedule.py`
+   * Pulls ESPN 2026 regular-season schedule.
+
+2. **Prior picks/results**
+
+   * `pull_final_scores.py`
+   * `grade_picks.py`
+   * Refreshes final scores and grades previously generated bets.
+
+3. **Completed-game statistics**
+
+   * `pull_pbp.py`
+   * `pull_team_stats.py`
+   * SportsDataverse PBP becomes team/week EPA, success rate, YPP, PPD, red-zone and third-down statistics.
+
+4. **Current market**
+
+   * `pull_odds.py`
+   * `build_weekly_schedule.py`
+   * Current week comes from `config/current_week.yaml`.
+   * Odds are joined onto the ESPN schedule.
+   * `CFB_WEEK` is parsed from the generated filename.
+
+5. **Other context**
+
+   * `pull_opening_odds.py`
+   * `league_master.py`
+   * `pull_raw_roster.py`
+   * `roster_cleanup.py`
+   * `coaches.py`
+   * `team_power_index.py`
+   * `pull_injuries.py`
+
+6. **ESPN predictor**
+
+   * `pull_e_predictions.py`
+   * `clean_e_pred.py`
+   * `finalize_pred.py`
+
+7. **Travel/weather**
+
+   * `build_travel.py`
+   * `fetch_weather.py`
+
+8. **Projection**
+
+   * `projection.py`
+   * Uses the shared projection engine in `projection_week1.py`.
+   * Production is **not a fitted ML classifier/regressor**. It is a deterministic weighted projection system.
+
+9. **Bet construction**
+
+   * `selections.py`: calculates both sides of ML/spread/total, implied probabilities, no-vig probabilities, edge, EV and Kelly.
+   * `picks.py`: applies `markets.yaml` filters and exclusivity rules.
+
+10. **Outputs**
+
+    * `clean_weekly_picks.py`
+    * `all_games_picks.py`
+    * `final_picks.py`
+
+11. **Reporting**
+
+    * results analysis and report generation.
+
+12. **Commit**
+
+    * CFB data is committed and pushed.
+
+13. **Health check**
+
+    * `pipeline_health.py`
+    * Health status is committed separately afterward.
+
+The current Week 2 health file shows 86 scheduled games, 86 prediction games, 86 projection rows, 85 games with sportsbook data and 19 final selected-game rows.
+
+---
+
+# 2. Critical/High Findings
+
+## No confirmed Critical issue
+
+I found no single confirmed defect that proves every current production prediction is invalid. I did find several **High** issues capable of materially distorting historical evaluation or live predictions.
+
+### H1 — Historical backtest odds are not point-in-time certified
+
+**Severity:** High
+**Status:** Confirmed integrity deficiency; actual post-kickoff value usage is not individually proven.
+**Path:** `docs/win/football/cfb/scripts/05_backtest/build_2025_backtest_inputs.py`
+**Functions:** `fetch_game_odds()`, `main()`
+**Lines:** approximately 75–140 and 260–400.
+
+The backtest fetches historical game odds from ESPN's event odds endpoint **when the backtest builder runs**, not from a timestamped pregame archive. It copies `last_update` if ESPN supplies one, but there is no requirement that:
+
+`odds_last_update < kickoff_time`
+
+and there is no rejection when the timestamp is blank.
+
+The committed historical Week 1 file demonstrates that `odds_last_update` is blank for the inspected rows.
+
+**Effect:** The repository cannot establish that the exact line/price used in historical EV and ROI calculations was available when a real bet could have been placed. It may be a retained closing value or another endpoint state.
+
+**Conclusion:** Historical performance is **not provably point-in-time safe**.
+
+---
+
+### H2 — Non-DraftKings historical odds are labeled as DraftKings
+
+**Severity:** High
+**Status:** Confirmed
+**Path:** `docs/win/football/cfb/scripts/05_backtest/build_2025_backtest_inputs.py`
+**Function:** `choose_odds_item()`, `fetch_game_odds()`
+**Lines:** approximately 65–140.
+
+The backtest tries DraftKings first. If DraftKings is unavailable, it accepts ESPN's chosen fallback provider. However, the resulting schedule record is still assigned:
+
+`bookmaker = draftkings`
+
+while the real source is stored separately in `historical_source_bookmaker` and the proxy flag is set.
+
+This is not theoretical. The committed 2025 Week 1 input shows records where:
+
+* `bookmaker = draftkings`
+* `historical_source_bookmaker = ESPN BET`
+* `historical_provider_proxy = 1`
+
+The audit file explicitly documents that another ESPN provider is used as a proxy when DraftKings is unavailable.
+
+**Effect:** A result described or filtered as DraftKings performance may actually use another sportsbook's spread, total, moneyline and juice. Because EV, implied probability, Kelly and filter eligibility all depend on price/line, this can materially change reported results.
+
+---
+
+### H3 — 2025 backtest does not reproduce the live production model
+
+**Severity:** High
+**Status:** Confirmed
+**Path:** `docs/win/football/cfb/scripts/05_backtest/build_2025_backtest_inputs.py`
+**Function:** `main()`
+**Lines:** approximately 300–500.
+
+Production can use:
+
+* market
+* FPI
+* ESPN predictor
+* current-season team statistics
+* injuries
+* travel
+* weather
+
+The backtest explicitly supplies:
+
+* empty FPI
+* empty injury lookup
+* empty travel
+* empty weather
+
+and labels its audit accordingly:
+
+* `fpi_component = DISABLED_NO_POINT_IN_TIME_ARCHIVE`
+* `injury_component = DISABLED_NO_POINT_IN_TIME_ARCHIVE`
+* `travel_component = DISABLED`
+* `weather_component = DISABLED`
+
+The committed audit independently confirms those disabled components.
+
+**Effect:** Historical ROI/calibration is not the measured performance of the current live model. The component weights are renormalized when features are absent, producing a materially different projection system.
+
+This is particularly important because missing FPI changes a nominal 28% margin component.
+
+---
+
+### H4 — PBP game failures can silently pass, while the downstream freshness check is insufficient
+
+**Severity:** High
+**Status:** Confirmed failure mode; not observed in the latest current run.
+**Paths:**
+
+* `docs/win/football/cfb/scripts/00_intake/pull_pbp.py`
+* `docs/win/football/cfb/scripts/01_merge/projection.py`
+
+**Functions:** `process_one_game()`, `process_games()`, `main()`, `load_current_team_stats()`
+**Lines:** `pull_pbp.py` approximately 430–700 and 760–1030; `projection.py` approximately 530–650.
+
+Individual SportsDataverse failures are caught and converted into a skipped-game reason rather than an exception. The PBP script can then log skipped games and return success.
+
+The production projection validates team-stat freshness only by checking:
+
+`max(team_stats.week) == target_week - 1`
+
+It does **not** verify that every completed prior-week game or every expected team exists.
+
+Therefore, if 40 prior-week games should be present but one successfully processed game supplies a `week = target_week - 1` row, the freshness test can pass even when multiple games are missing.
+
+**Effect:** Affected teams can silently receive incomplete history or fallback priors, changing predicted margins and probabilities without stopping the workflow.
+
+For the current Week 2 run, the PBP log shows 100 games eligible before September 11 and all 100 were already stored, so there is no evidence that this defect affected the current run.
+
+---
+
+### H5 — ESPN predictor intake permits partial failures without failing the step
+
+**Severity:** High
+**Status:** Confirmed failure mode; current target-week coverage is complete.
+**Path:** `docs/win/football/cfb/scripts/00_intake/pull_e_predictions.py`
+**Functions:** `get_predictor_rows()`, `main()`
+**Lines:** approximately 80–220.
+
+A failed ESPN predictor request:
+
+* is logged,
+* returns an empty list,
+* increments `failed_count`,
+* does not cause a nonzero process exit.
+
+The successful rows are still rewritten to weekly files.
+
+The repository log contains repeated real failures for ESPN event IDs while the script continued to write other weeks successfully.
+
+The projection accepts missing components by renormalizing remaining weights.
+
+**Effect:** A nominal 20% projection component can silently disappear for individual games, producing different model behavior without failing the pipeline.
+
+The current Week 2 health file shows all 86 scheduled games represented in final predictions, so this failure mode did not leave missing target-week prediction IDs in the inspected run.
+
+---
+
+# 3. Medium/Low Findings
+
+### M1 — Current injury feature is effectively disabled by stale source data
+
+**Severity:** Medium
+**Status:** Confirmed current condition
+**Paths:**
+
+* `docs/win/football/cfb/00_intake/injuries/2026_injuries.csv`
+* `docs/win/football/cfb/scripts/01_merge/projection_week1.py`
+
+The committed 2026 injury file contains only three rows, whose timestamps are from **2020 or 2022**.
+
+The projection parses `report_date` and applies its freshness window before applying injury penalties.
+
+The current Week 2 projection rows inspected contain zero injury penalties.
+
+**Effect:** The workflow says it is pulling and using injuries, but current injury information is effectively absent. Player absences therefore cannot influence the current model through this feature.
+
+---
+
+### M2 — Injury freshness is measured against midnight, not kickoff
+
+**Severity:** Medium
+**Status:** Confirmed logic problem; impact depends on source timestamps
+**Path:** `docs/win/football/cfb/scripts/01_merge/projection_week1.py`
+**Function:** `injury_summary_for_game()`
+**Lines:** approximately 2200–2310.
+
+The injury report is stored as a true UTC timestamp. But `game_date` is converted to a timestamp from the **date only** and therefore represents midnight.
+
+The code then requires:
+
+`game_timestamp - report_timestamp >= 0`
+
+A legitimate injury update at, for example, 15:00 UTC on game day is therefore later than the midnight game timestamp and gets excluded even when kickoff is hours later.
+
+**Effect:** Same-day pre-kickoff injury information can be dropped.
+
+---
+
+### M3 — Weekly schedule team-name mapping loader expects a schema the actual map does not have
+
+**Severity:** Medium
+**Status:** Confirmed
+**Path:** `docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py`
+**Function:** `load_team_map()`
+**Lines:** approximately 245–275.
+
+`load_team_map()` only imports the mapping CSV when it contains:
+
+* `source_name`
+* `canonical_team`
+
+The actual CFB team mapping file uses the broader team-master schema and does not expose that `source_name` column.
+
+The hardcoded fallback mapping is empty.
+
+**Effect:** The intended canonicalization layer in this script is effectively bypassed. Odds-to-schedule matching then depends on source strings already agreeing after basic normalization.
+
+No incorrect current Week 2 match was proven; the current odds provider IDs and schedule IDs align for inspected games.
+
+---
+
+### M4 — Final market-filtered picks are not frozen after kickoff
+
+**Severity:** Medium
+**Status:** Confirmed architecture; mutation requires a filter/configuration change
+**Paths:**
+
+* `docs/win/football/cfb/scripts/02_select/selections.py`
+* `docs/win/football/cfb/scripts/03_picks/picks.py`
+* `docs/win/football/cfb/scripts/04_final_results/grade_picks.py`
+
+Projection rows are properly frozen after kickoff. The projection refuses to manufacture new locked-game predictions and instead copies the existing row.
+
+Candidate/selection rows in `02_select` are similarly preserved.
+
+However, `picks.py` subsequently re-evaluates every row using the **current** `markets.yaml`, then atomically replaces `week_X_CFB_picks.csv`. It has no equivalent locked-row preservation mechanism.
+
+Grading later reads that mutable `03_picks/week_X_CFB_picks.csv`, not an immutable pre-kickoff ledger.
+
+**Effect:** If `markets.yaml` or filter logic changes after a game starts, rerunning the pipeline can retrospectively add/remove/reclassify historical bets.
+
+That threatens grading and performance-history integrity.
+
+---
+
+### M5 — Lock determination fails open when kickoff fields are invalid
+
+**Severity:** Medium
+**Status:** Potential risk; current occurrence not demonstrated
+**Path:** `docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py`
+**Functions:** `schedule_kickoff_utc()`, `game_is_locked()`
+**Lines:** approximately 145–220.
+
+If game date, time or timezone cannot be parsed, `schedule_kickoff_utc()` returns `None`, after which `game_is_locked()` evaluates the game as unlocked.
+
+The projection itself has the same parsing fallback, although it additionally honors an explicit `game_locked=1`.
+
+**Effect:** A malformed timezone can allow post-kickoff market capture before the explicit lock is ever set.
+
+The inspected current rows generally have a usable `game_timezone`, so no current violation is proven.
+
+---
+
+### M6 — Historical ESPN predictor values are also not timestamp-certified
+
+**Severity:** Medium
+**Status:** Point-in-time status unresolved
+**Path:** `docs/win/football/cfb/scripts/05_backtest/build_2025_backtest_inputs.py`
+**Function:** `fetch_predictor()`
+**Lines:** approximately 140–180.
+
+The backtest contacts ESPN's predictor endpoint for historical games when building the replay. There is no archived capture timestamp or validation of when those predictor values became available.
+
+They may in fact be pregame predictor values, but the repository does not contain evidence sufficient to prove this.
+
+---
+
+### M7 — Fixed normal-error probability model has no calibration provenance
+
+**Severity:** Medium
+**Status:** Confirmed implementation; statistical correctness cannot be established from repository evidence
+**Path:** `docs/win/football/cfb/scripts/01_merge/projection_week1.py`
+**Functions:** `normal_cdf()`, `build_betting_probabilities()`
+**Lines:** approximately 2480–2610.
+
+Win/cover/total probabilities assume normally distributed residuals with fixed SDs. Current output shows both margin and total SD set to **14.0**.
+
+I found no CFB training/calibration artifact establishing why 14 is appropriate, by season or market.
+
+Additionally, a continuous normal distribution gives effectively zero probability to exact pushes on integer spreads/totals.
+
+**Effect:** Even with a correct mean prediction, cover/total probabilities—and therefore EV and Kelly—can be systematically miscalibrated.
+
+---
+
+### M8 — Weekly rate statistics are averaged with equal week weight rather than pooled observations
+
+**Severity:** Medium
+**Status:** Confirmed statistical design; whether intentional is not documented
+**Path:** `docs/win/football/cfb/scripts/01_merge/projection_week1.py`
+**Function:** `build_prior_table()`
+**Lines:** approximately 1400–1600.
+
+Team statistics are first one row per team/week. The projection then computes the arithmetic mean of those weekly rate rows.
+
+Thus a week containing 35 qualifying plays receives the same weight as a week containing 85.
+
+That is not equivalent to season-to-date:
+
+`Σ metric numerator / Σ metric denominator`
+
+**Effect:** Team EPA/play, success rate, YPP, PPD and similar features can differ from properly pooled season rates, especially early in the season.
+
+---
+
+### M9 — Model probabilities are heavily market-derived and then evaluated against that same market
+
+**Severity:** Medium
+**Status:** Confirmed design; not mathematical leakage by itself
+**Path:** `docs/win/football/cfb/scripts/01_merge/projection_week1.py`
+**Function:** `build_projection()`
+**Lines:** approximately 2820–3210.
+
+Default margin blend:
+
+* current market: 36%
+* FPI: 28%
+* ESPN: 20%
+* team prior: 16%
+
+The total model is nominally:
+
+* current market total: 75%
+* team-stat total: 25%
+
+Those resulting distributions are then evaluated for edge/EV against the same market line.
+
+This is not future leakage. It does mean the model is substantially a **market-anchored estimator rather than an independent forecast**.
+
+**Effect:** Edge is mechanically compressed toward the market, and calibration/backtest conclusions cannot be interpreted as a fully independent predictive model.
+
+---
+
+### M10 — Travel/weather coefficient training provenance is absent
+
+**Severity:** Medium
+**Status:** Unresolved
+**Path:** `docs/win/football/cfb/config/travel_weather_coefficients.csv`
+
+The production model contains selected travel/weather coefficients, but no in-scope CFB training pipeline establishes:
+
+* training seasons,
+* target variables,
+* temporal split,
+* whether games used for evaluation also contributed to coefficient fitting,
+* whether coefficient selection was performed on holdout data.
+
+Therefore I cannot certify those coefficients as leakage-free.
+
+This is missing repository evidence, not proof that leakage occurred.
+
+---
+
+### M11 — Schedule/odds matching uses names and dates despite provider IDs being available
+
+**Severity:** Medium
+**Status:** Confirmed implementation; current wrong join not proven
+**Path:** `docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py`
+**Functions:** `schedule_candidate_keys()`, `match_raw_events_to_schedule()`
+**Lines:** approximately 330–430.
+
+Matching uses:
+
+* date,
+* normalized home name,
+* normalized away name,
+
+and checks the source date plus one day prior. Where multiple candidates exist it takes the first candidate.
+
+Current files show `odds_provider_game_id` matching the schedule ESPN `game_id`, so a stronger direct identifier is available in current data.
+
+**Effect:** Name drift or ambiguous same-team/date records can create a wrong odds assignment.
+
+---
+
+### M12 — Health validation occurs after the main outputs are committed
+
+**Severity:** Medium
+**Status:** Confirmed workflow sequencing issue
+**Path:** `.github/workflows/cfb_01_pipeline.yml`
+**Steps:** `Commit and push CFB pipeline outputs` → `CFB Pipeline Health`
+
+The workflow commits and pushes the CFB pipeline before running `pipeline_health.py`.
+
+The health script can subsequently return nonzero on fatal errors.
+
+**Effect:** A health failure does not act as a pre-push gate. The bad artifacts can already exist on the branch before health rejects the run.
+
+---
+
+### L1 — Output verification is mainly existence-based
+
+**Severity:** Low
+**Status:** Confirmed
+**Path:** `.github/workflows/cfb_01_pipeline.yml`
+
+The verification stage uses `test -f`/`test -d` for output artifacts.
+
+It does not verify:
+
+* creation during the current run,
+* file timestamp,
+* expected row counts,
+* source snapshot IDs,
+* prior-week PBP coverage.
+
+The separate health system improves row/ID checks but likewise does not validate PBP completeness or feature timestamps.
+
+---
+
+### L2 — Multiple CFB scripts hardcode 2026 independently of workflow configuration
+
+**Severity:** Low currently; Medium rollover risk
+**Status:** Confirmed
+
+Examples include `pull_e_predictions.py`, whose `SEASON = 2026` determines its schedule path.
+
+`league_master.py` independently hardcodes `SEASON = 2026`.
+
+The workflow separately declares `CFB_SEASON="2026"`.
+
+These agree today. Changing only the workflow variable for 2027 would not update those scripts.
+
+---
+
+### L3 — Several workflow data products do not participate in the production projection
+
+**Severity:** Low
+**Status:** Confirmed dependency observation
+
+The inspected production projection's dependency graph is schedule, team stats, FPI, ESPN prediction, injuries, travel, weather, team/stadium mappings and coefficient configuration.
+
+Outputs such as cleaned roster information and league/conference standings are built by the workflow but are not part of the current projection input path. The CFB roster master search likewise showed no CFB downstream consumer other than the roster builder itself.
+
+This is primarily workflow complexity, not a prediction correctness error.
+
+---
+
+# 4. Calculation Verification
+
+| Calculation                  | Implemented formula                                                       | Assessment                                                          |
+| ---------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Home market margin           | `-home_spread`                                                            | **Correct** under conventional negative-favorite spread notation.   |
+| Margin blend                 | normalized weighted average of available market/FPI/ESPN/prior components | **Mathematically correct** weighted blend.                          |
+| Injury direction             | `away_penalty - home_penalty`                                             | **Correct:** away injuries help home margin; home injuries hurt it. |
+| Predicted total from PPD     | `[(home off + away def)/2 + (away off + home def)/2] × drives_per_team`   | **Correct** for the stated heuristic.                               |
+| Home projected score         | `(total + margin)/2`                                                      | **Correct.**                                                        |
+| Away projected score         | `(total - margin)/2`                                                      | **Correct.**                                                        |
+| Home win probability         | `Φ(predicted_margin / margin_SD)`                                         | **Correct given normal residual assumption.**                       |
+| Home cover                   | `Φ((predicted_margin + home_spread)/margin_SD)`                           | **Correct sign.**                                                   |
+| Away cover                   | `1 - home_cover`                                                          | **Correct absent explicit push mass.**                              |
+| Over                         | `Φ((predicted_total - line)/total_SD)`                                    | **Correct sign.**                                                   |
+| American → decimal, positive | `1 + odds/100`                                                            | **Correct.**                                                        |
+| American → decimal, negative | `1 + 100/abs(odds)`                                                       | **Correct.**                                                        |
+| Raw implied probability      | `1 / decimal_odds`                                                        | **Correct.**                                                        |
+| Two-sided no-vig probability | `raw_p / (raw_p1 + raw_p2)`                                               | **Correct proportional de-vig method.**                             |
+| Edge                         | `model_probability - fair_market_probability`                             | **Correct.**                                                        |
+| EV / 1 unit risk             | `p × (decimal-1) - (1-p)`                                                 | **Correct.**                                                        |
+| Full Kelly                   | `(b×p - q)/b`                                                             | **Correct.**                                                        |
+| ML grading                   | selected team final score comparison                                      | **Correct.**                                                        |
+| Spread grading               | selected score + selected spread versus opponent                          | **Correct.**                                                        |
+| Total grading                | actual total versus selected line                                         | **Correct.**                                                        |
+| American-odds win profit     | `odds/100` or `100/abs(odds)`                                             | **Correct for flat 1-unit risk.**                                   |
+| Win percentage               | wins / (wins + losses)                                                    | **Correct as documented.**                                          |
+| ROI excluding pushes         | total units / (wins + losses)                                             | **Correct for 1-unit flat-risk reporting.**                         |
+
+### Spread orientation check
+
+Current production data confirms consistent side orientation. Example:
+
+* home `-5.5`
+* away `+5.5`
+
+and equivalent opposite signs throughout inspected rows.
+
+I found **no confirmed favorite/underdog sign reversal**.
+
+---
+
+# 5. Point-in-Time / Leakage Audit
+
+## Live production
+
+The core completed-game team-stat path is correctly lagged at the **week level**:
+
+`team_stats.week < target_week`
+
+Therefore I did **not** find the classic error where the target game's own PBP enters its team-stat features.
+
+Projection locking is also strong when kickoff information is valid:
+
+* preexisting locked projection required,
+* locked rows copied unchanged,
+* missing historical locked row causes an error rather than creating a post-kickoff prediction.
+
+Candidate rows receive similar protection.
+
+### Live conclusion
+
+I found **no confirmed direct future-game result leakage into current production team-stat features**.
+
+However, live point-in-time integrity is **not fully guaranteed** because of:
+
+* fail-open malformed kickoff timestamps,
+* final picks not frozen,
+* incomplete-data success paths,
+* weak PBP completeness validation,
+* stale injury data.
+
+## Historical/backtest
+
+The historical backtest **cannot be certified as point-in-time safe** because:
+
+* odds are reconstructed later from an endpoint,
+
+* timestamps are not required,
+
+* inspected historical rows have blank `odds_last_update`,
+
+* ESPN predictor values are also fetched retrospectively,
+
+* no archived FPI/injury state exists.
+
+**Explicit conclusion:** Historical performance is **not sufficient evidence of genuinely reproducible pre-kickoff performance**.
+
+---
+
+# 6. Train/Test and Model Audit
+
+There is no conventional train/test model in the production CFB workflow.
+
+The production predictor is a weighted system, approximately:
+
+**Margin**
+
+`0.36 market + 0.28 FPI + 0.20 ESPN + 0.16 team prior`
+
+with missing components renormalized.
+
+**Total**
+
+`0.75 market total + 0.25 statistical prior total`
+
+before weather adjustment.
+
+Therefore I found no production implementation of:
+
+* random train/test split,
+* scaler fit on full dataset,
+* target encoding leakage,
+* classifier training on target game,
+* model artifact selection using test outcomes.
+
+Those concerns do not apply because that training stage does not exist here.
+
+### What cannot be determined
+
+The repository does **not** provide sufficient in-scope evidence to validate how the following were statistically selected:
+
+* 36/28/20/16 margin weights,
+* 75/25 total weights,
+* 14-point residual SDs,
+* travel coefficients,
+* weather coefficients,
+* shrinkage strength,
+* feature-strength weights.
+
+Thus I cannot certify that their original fitting process was leakage-free or out-of-sample.
+
+SportsDataverse also performs internal processing/inference inside `CFBPlayProcess`; its model-training provenance is external to this repository and therefore outside what can be proven from this audit. The CFB PBP script confirms that this external processor is used.
+
+---
+
+# 7. Workflow Audit
+
+The main dependency order is generally correct:
+
+**schedule → old grading → completed PBP → team stats → current market → context → projection → candidate metrics → filters → output → grading reports**
+
+I found no clear case where the core projection consumes a file before its workflow producer runs.
+
+The important workflow risks are:
+
+* PBP can partially fail without stopping execution.
+* ESPN predictor can partially fail without stopping execution.
+* Schedule pulls can retain previously existing data when individual requests fail.
+* Weekly schedule can continue with games lacking odds.
+* Current output verification tests existence, not freshness/content.
+* The health check occurs **after** the main CFB commit.
+* Current health does not check PBP expected-game coverage.
+* Several scripts independently hardcode the season.
+* The odds pull and configured target-week selection are separate mechanisms rather than one authoritative snapshot contract.
+* Final filtered picks have no immutable post-kickoff freeze.
+
+The current health check itself correctly detected one Week 2 game without sportsbook odds and marked the pipeline `warning`, while the workflow run remained successful.
+
+---
+
+# 8. Confirmed-Correct Areas
+
+The following important areas survived the audit:
+
+* **Current-game team-stat leakage:** target-week team stats are excluded with `< target_week`.
+* **Duplicate target schedule IDs:** explicitly rejected.
+* **Projection row identity/order:** validated against schedule.
+* **Probability complements:** explicitly validated to sum to 1.
+* **Locked projections:** safely preserved rather than regenerated post-kickoff.
+* **Locked candidate metrics:** preserved in `selections.py`.
+* **Home/away market spread orientation:** correct.
+* **American odds conversion:** correct.
+* **No-vig conversion:** correct.
+* **EV:** correct.
+* **Kelly:** correct.
+* **Moneyline grading:** correct.
+* **Spread grading:** correct.
+* **Total grading:** correct.
+* **Flat-risk P&L:** correct.
+* **Report win percentage and ROI definitions:** internally consistent.
+* **PBP native play duplicate validation:** present.
+* **Current Week 2 ID coverage:** 86 scheduled, 86 predictor, 86 projection and no duplicate IDs.
+* **Current eligible PBP coverage:** the September 11 run had 100 eligible pre-today games and all 100 already stored.
+* **Current production spread values inspected:** home/away signs are symmetric.
+
+---
+
+# 9. Overall Assessment
+
+## **Materially flawed**
+
+The designation is driven primarily by **validation integrity rather than basic betting arithmetic**.
+
+The live projection pipeline has several well-designed safeguards—especially week-lagged completed-game statistics, game-ID validation, correct odds mathematics and locked projection preservation. The current Week 2 run also shows complete target-game prediction/projection coverage.
+
+But three facts prevent me from classifying the system as reliable:
+
+1. **The historical backtest cannot prove point-in-time inputs.**
+2. **The historical backtest intentionally substitutes other sportsbooks while representing them to downstream code as DraftKings.**
+3. **The backtest is not running the same feature set as production.**
+
+Those alone mean historical ROI/calibration cannot currently be treated as a valid out-of-sample validation of the live CFB pipeline.
+
+Separately, live reliability is weakened by permissive PBP/predictor failure handling, incomplete prior-week coverage validation, a nonfunctional team-map loader in weekly scheduling, stale injuries, and mutable post-kickoff market filtering.
+
+**Bottom line:** the core formulas are largely sound, and I found no direct target-game statistical leakage in the live team-stat path. The system is nevertheless **materially flawed as a validated betting model**, because its historical evidence is not demonstrably point-in-time, sportsbook-faithful, or production-equivalent.

@@ -1,0 +1,264 @@
+name: CFB 02 Grading
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CFB_SEASON: "2026"
+
+jobs:
+  cfb-rebuild-all-picks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy pandas PyYAML
+
+      # ----------------------------------------------------------------------
+      # REAPPLY markets.yaml TO EVERY EXISTING WEEK
+      #
+      # Every existing:
+      #   docs/win/football/cfb/02_select/week_*_CFB_selected.csv
+      #
+      # is processed using the CURRENT markets.yaml settings.
+      # ----------------------------------------------------------------------
+
+      - name: Rebuild picks for all existing weeks
+        run: |
+          python docs/win/football/cfb/scripts/03_picks/picks.py \
+            --pattern "week_*_CFB_selected.csv"
+
+      # ----------------------------------------------------------------------
+      # REBUILD DERIVED PICK OUTPUTS FOR EVERY EXISTING WEEK
+      # ----------------------------------------------------------------------
+
+      - name: Rebuild all weekly pick outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FOUND=0
+
+          for file in docs/win/football/cfb/02_select/week_*_CFB_selected.csv; do
+            if [ ! -f "$file" ]; then
+              continue
+            fi
+
+            FOUND=1
+
+            filename="$(basename "$file")"
+            week="${filename#week_}"
+            week="${week%_CFB_selected.csv}"
+
+            if ! [[ "$week" =~ ^[0-9]+$ ]]; then
+              echo "ERROR: Could not parse week from: $filename"
+              exit 1
+            fi
+
+            echo "=================================================="
+            echo "Rebuilding CFB Week $week"
+            echo "=================================================="
+
+            python docs/win/football/cfb/scripts/03_picks/clean_weekly_picks.py \
+              --week "$week"
+
+            python docs/win/football/cfb/scripts/03_picks/all_games_picks.py \
+              --week "$week"
+
+            python docs/win/football/cfb/scripts/03_picks/final_picks.py \
+              --week "$week"
+          done
+
+          if [ "$FOUND" -ne 1 ]; then
+            echo "ERROR: No existing CFB selected files found."
+            exit 1
+          fi
+
+      # ----------------------------------------------------------------------
+      # VERIFY RECALCULATED PICK OUTPUTS
+      # ----------------------------------------------------------------------
+
+      - name: Verify all weekly pick outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FOUND=0
+
+          for file in docs/win/football/cfb/02_select/week_*_CFB_selected.csv; do
+            if [ ! -f "$file" ]; then
+              continue
+            fi
+
+            FOUND=1
+
+            filename="$(basename "$file")"
+            week="${filename#week_}"
+            week="${week%_CFB_selected.csv}"
+
+            echo "Verifying CFB Week $week"
+
+            test -f "docs/win/football/cfb/01_merge/week_${week}_CFB_enriched.csv"
+            test -f "docs/win/football/cfb/02_select/week_${week}_CFB_selected.csv"
+            test -f "docs/win/football/cfb/03_picks/week_${week}_CFB_picks.csv"
+            test -f "docs/win/football/cfb/03_picks/cleaned/week_${week}_CFB_clean_picks.csv"
+            test -f "docs/win/football/cfb/03_picks/all_games/all_week_${week}_CFB_picks.csv"
+            test -f "docs/win/football/cfb/03_picks/selected/week_${week}_CFB_select_picks.csv"
+
+            echo "CFB Week $week pick outputs verified."
+          done
+
+          if [ "$FOUND" -ne 1 ]; then
+            echo "ERROR: No existing CFB selected files found."
+            exit 1
+          fi
+
+          echo "All existing CFB weekly pick outputs verified."
+
+      # ----------------------------------------------------------------------
+      # REFRESH FINAL SCORES
+      #
+      # Pull season results before grading so every completed game currently
+      # available from ESPN can be graded.
+      # ----------------------------------------------------------------------
+
+      - name: Pull final CFB scores
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/pull_final_scores.py \
+            --season "$CFB_SEASON"
+
+      # ----------------------------------------------------------------------
+      # GRADE ALL EXISTING WEEKS
+      #
+      # No --week argument is supplied, so grade_picks.py processes every
+      # existing week_*_CFB_picks.csv for the configured season.
+      # ----------------------------------------------------------------------
+
+      - name: Grade all CFB bets
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/grade_picks.py \
+            --season "$CFB_SEASON"
+
+      # ----------------------------------------------------------------------
+      # VERIFY GRADED FILES FOR EVERY EXISTING WEEK
+      # ----------------------------------------------------------------------
+
+      - name: Verify all graded CFB weeks
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FOUND=0
+
+          for file in docs/win/football/cfb/02_select/week_*_CFB_selected.csv; do
+            if [ ! -f "$file" ]; then
+              continue
+            fi
+
+            FOUND=1
+
+            filename="$(basename "$file")"
+            week="${filename#week_}"
+            week="${week%_CFB_selected.csv}"
+
+            graded="docs/win/football/cfb/04_final_results/graded/week_${week}_CFB_graded.csv"
+
+            echo "Checking graded CFB Week $week"
+            test -f "$graded"
+          done
+
+          if [ "$FOUND" -ne 1 ]; then
+            echo "ERROR: No existing CFB weeks found."
+            exit 1
+          fi
+
+          test -f "docs/win/football/cfb/04_final_results/graded/season_${CFB_SEASON}_summary.csv"
+
+          echo "All existing CFB graded outputs verified."
+
+      # ----------------------------------------------------------------------
+      # BUILD ONE-ROW-PER-BET ANALYSIS LEDGER
+      # ----------------------------------------------------------------------
+
+      - name: Build CFB grading analysis ledger
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/02_cfb_results_analyze.py
+
+      # ----------------------------------------------------------------------
+      # BUILD CFB GRADING REPORTS
+      # ----------------------------------------------------------------------
+
+      - name: Build CFB grading reports
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/03_cfb_results_reports.py
+
+      # ----------------------------------------------------------------------
+      # VERIFY GRADING ANALYSIS + REPORTS
+      # ----------------------------------------------------------------------
+
+      - name: Verify CFB grading reports
+        run: |
+          set -euo pipefail
+
+          test -f "docs/win/football/cfb/04_final_results/intermediate/work_cfb.csv"
+          test -f "docs/win/football/cfb/04_final_results/cfb_summary_overall.csv"
+
+          test -d "docs/win/football/cfb/04_final_results/reports"
+          test -d "docs/win/football/cfb/04_final_results/reports/overview"
+          test -d "docs/win/football/cfb/04_final_results/reports/moneyline"
+          test -d "docs/win/football/cfb/04_final_results/reports/spread"
+          test -d "docs/win/football/cfb/04_final_results/reports/totals"
+
+          test -f "docs/win/football/cfb/04_final_results/reports/overview/cfb_summary_overall.csv"
+          test -f "docs/win/football/cfb/04_final_results/reports/overview/cfb_summary_by_market.csv"
+          test -f "docs/win/football/cfb/04_final_results/reports/overview/cfb_summary_by_week.csv"
+          test -f "docs/win/football/cfb/04_final_results/reports/overview/cfb_bet_log.csv"
+
+          echo "CFB grading analysis and reports verified."
+
+      # ----------------------------------------------------------------------
+      # COMMIT AND PUSH
+      #
+      # Commits:
+      # - recalculated picks for every existing week
+      # - clean weekly picks
+      # - all-games outputs
+      # - final selected outputs
+      # - refreshed final scores
+      # - all graded weeks
+      # - season grading summary
+      # - work_cfb.csv
+      # - all CFB grading reports
+      # ----------------------------------------------------------------------
+
+      - name: Commit and push outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add docs/win/football/cfb/03_picks
+          git add docs/win/football/cfb/04_final_results
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Rebuild and grade all CFB picks from markets config"
+          git pull --rebase --autostash origin main
+          git push origin "HEAD:${GITHUB_REF_NAME}"

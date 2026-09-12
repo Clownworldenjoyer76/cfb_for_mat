@@ -9,6 +9,9 @@ WRITES:
   docs/win/football/cfb/03_picks/selected/
       week_{week}_CFB_select_picks.csv
 
+  docs/win/football/cfb/03_picks/selected/locked/
+      week_{week}_CFB_select_picks.csv
+
 A row is included when any of these equal 1:
   ml_selected
   spread_selected
@@ -29,6 +32,7 @@ CFB_ROOT = SCRIPT_DIR.parents[1]
 
 DEFAULT_INPUT_DIR = CFB_ROOT / "03_picks"
 DEFAULT_OUTPUT_DIR = CFB_ROOT / "03_picks" / "selected"
+DEFAULT_LOCKED_DIR = DEFAULT_OUTPUT_DIR / "locked"
 
 
 OUTPUT_COLUMNS = [
@@ -156,6 +160,11 @@ def main() -> None:
         / f"week_{week}_CFB_select_picks.csv"
     )
 
+    locked_output_path = (
+        DEFAULT_LOCKED_DIR
+        / f"week_{week}_CFB_select_picks.csv"
+    )
+
     if not input_path.exists():
         fail(
             f"Input file not found: {input_path}"
@@ -180,14 +189,30 @@ def main() -> None:
         exist_ok=True,
     )
 
+    DEFAULT_LOCKED_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
     output.to_csv(
         output_path,
         index=False,
         lineterminator="\n",
     )
 
+    output.to_csv(
+        locked_output_path,
+        index=False,
+        lineterminator="\n",
+    )
+
     print(
         f"WROTE {output_path} "
+        f"| rows={len(output)}"
+    )
+
+    print(
+        f"WROTE {locked_output_path} "
         f"| rows={len(output)}"
     )
 

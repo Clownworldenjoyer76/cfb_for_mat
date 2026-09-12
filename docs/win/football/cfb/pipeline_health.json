@@ -1,0 +1,116 @@
+{
+  "fatal_errors": [],
+  "game_date_new_york": "2026_09_11",
+  "generated_at_utc": "2026-09-11T14:50:31.397557+00:00",
+  "leagues": {
+    "cfb": {
+      "counts": {
+        "locked_bets": 0,
+        "merged_games": 86,
+        "prediction_games": 86,
+        "scheduled_games": 86,
+        "selected_bets": 19,
+        "sportsbook_games": 85
+      },
+      "coverage": {
+        "predictions_not_merged": [],
+        "scheduled_missing_predictions": [],
+        "scheduled_missing_sportsbook": [
+          "401868241"
+        ]
+      },
+      "identity": {
+        "blank_weekly_game_ids": 0,
+        "merged_duplicate_game_ids": [],
+        "prediction_duplicate_game_ids": [],
+        "weekly_duplicate_game_ids": []
+      },
+      "in_season": true,
+      "paths": {
+        "all_games": "docs/win/football/cfb/03_picks/all_games/all_week_2_CFB_picks.csv",
+        "candidates": "docs/win/football/cfb/02_select/week_2_CFB_selected.csv",
+        "clean_picks": "docs/win/football/cfb/03_picks/cleaned/week_2_CFB_clean_picks.csv",
+        "merged": "docs/win/football/cfb/01_merge/week_2_CFB_enriched.csv",
+        "picks": "docs/win/football/cfb/03_picks/week_2_CFB_picks.csv",
+        "predictions": "docs/win/football/cfb/00_intake/predictions/final/2026_2_2_clean_predictions.csv",
+        "season_schedule": "docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
+        "selected": "docs/win/football/cfb/03_picks/selected/week_2_CFB_select_picks.csv",
+        "weekly_schedule": "docs/win/football/cfb/00_intake/schedule/weekly/week_2_CFB_weekly_schedule.csv"
+      },
+      "season": "2026",
+      "week": 2
+    }
+  },
+  "report_week": 2,
+  "schema_version": 1,
+  "season": "2026",
+  "sport": "cfb",
+  "stage_status": [
+    {
+      "exists": true,
+      "name": "Season Schedule",
+      "path": "docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "Weekly Schedule",
+      "path": "docs/win/football/cfb/00_intake/schedule/weekly/week_2_CFB_weekly_schedule.csv",
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "Final Predictions",
+      "path": "docs/win/football/cfb/00_intake/predictions/final/2026_2_2_clean_predictions.csv",
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "Projection",
+      "path": "docs/win/football/cfb/01_merge/week_2_CFB_enriched.csv",
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "Betting Candidates",
+      "path": "docs/win/football/cfb/02_select/week_2_CFB_selected.csv",
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "Market Picks",
+      "path": "docs/win/football/cfb/03_picks/week_2_CFB_picks.csv",
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "Clean Weekly Picks",
+      "path": "docs/win/football/cfb/03_picks/cleaned/week_2_CFB_clean_picks.csv",
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "All Games Picks",
+      "path": "docs/win/football/cfb/03_picks/all_games/all_week_2_CFB_picks.csv",
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "Final Selected Picks",
+      "path": "docs/win/football/cfb/03_picks/selected/week_2_CFB_select_picks.csv",
+      "status": "STATUS: SUCCESS"
+    }
+  ],
+  "status": "warning",
+  "warnings": [
+    "CFB Week 2: 1 scheduled game(s) do not have sportsbook odds"
+  ],
+  "workflow": {
+    "name": "CFB Pipeline",
+    "ref_name": "main",
+    "run_attempt": "1",
+    "run_id": "34611738104",
+    "sha": "29e75bad9ca9c04efcd4a2c2905bb2e81f2a6a4d",
+    "status": "success"
+  }
+}

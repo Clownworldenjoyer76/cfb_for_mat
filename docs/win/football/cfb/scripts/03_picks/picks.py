@@ -16,6 +16,7 @@ Behavior:
 - Applies spread.max_spread_abs and total.min_total/max_total.
 - If multiple sides qualify in one market, uses pick_preference:
     best_ev, best_prob, or best_kelly.
+- Applies optional cross-market moneyline_vs_spread rules from markets.yaml.
 - Overwrites only the existing final selection columns.
 - Selection-time Kelly is min(full_kelly, resolved max_kelly), so markets.yaml
   controls Kelly independently of any upstream candidate Kelly cap.
@@ -66,6 +67,17 @@ PICK_METRIC = {
     "best_ev": "ev",
     "best_prob": "model_probability",
     "best_kelly": "kelly",
+}
+
+CROSS_MARKET_MODES = {
+    "exclusive",
+    "allow_both",
+}
+
+CROSS_MARKET_PREFERENCES = {
+    "moneyline",
+    "spread",
+    *PICK_METRIC.keys(),
 }
 
 MARKETS = {
@@ -499,6 +511,7 @@ def normalize_config(
         raw,
         {
             "selection_defaults",
+            "selection_rules",
             "markets",
         },
         "markets.yaml",
@@ -523,6 +536,77 @@ def normalize_config(
         require_all=True,
     )
 
+    selection_rules_raw = require_mapping(
+        raw.get(
+            "selection_rules",
+            {},
+        ),
+        "markets.yaml.selection_rules",
+    )
+
+    reject_unknown(
+        selection_rules_raw,
+        {
+            "moneyline_vs_spread",
+        },
+        "markets.yaml.selection_rules",
+    )
+
+    moneyline_vs_spread_raw = require_mapping(
+        selection_rules_raw.get(
+            "moneyline_vs_spread",
+            {},
+        ),
+        (
+            "markets.yaml.selection_rules."
+            "moneyline_vs_spread"
+        ),
+    )
+
+    reject_unknown(
+        moneyline_vs_spread_raw,
+        {
+            "mode",
+            "preference",
+        },
+        (
+            "markets.yaml.selection_rules."
+            "moneyline_vs_spread"
+        ),
+    )
+
+    cross_market_mode = clean(
+        moneyline_vs_spread_raw.get(
+            "mode",
+            "allow_both",
+        )
+    ).casefold()
+
+    if cross_market_mode not in CROSS_MARKET_MODES:
+        fail(
+            "markets.yaml.selection_rules."
+            "moneyline_vs_spread.mode must be "
+            f"one of {sorted(CROSS_MARKET_MODES)}"
+        )
+
+    cross_market_preference = clean(
+        moneyline_vs_spread_raw.get(
+            "preference",
+            "best_prob",
+        )
+    ).casefold()
+
+    if (
+        cross_market_preference
+        not in CROSS_MARKET_PREFERENCES
+    ):
+        fail(
+            "markets.yaml.selection_rules."
+            "moneyline_vs_spread.preference "
+            "must be one of "
+            f"{sorted(CROSS_MARKET_PREFERENCES)}"
+        )
+
     markets_raw = require_mapping(
         raw.get("markets"),
         "markets.yaml.markets",
@@ -536,6 +620,14 @@ def normalize_config(
 
     output: dict[str, Any] = {
         "selection_defaults": defaults,
+        "selection_rules": {
+            "moneyline_vs_spread": {
+                "mode": cross_market_mode,
+                "preference": (
+                    cross_market_preference
+                ),
+            },
+        },
         "markets": {},
     }
 
@@ -1316,6 +1408,161 @@ def evaluate_market(
     )
 
 
+def selected_from_updates(
+    updates: dict[str, Any],
+    prefix: str,
+) -> bool:
+    value = optional_number(
+        updates.get(
+            f"{prefix}_selected",
+            0,
+        )
+    )
+
+    return value == 1.0
+
+
+def resolve_moneyline_vs_spread(
+    updates: dict[str, Any],
+    config: dict[str, Any],
+) -> None:
+    rule = config[
+        "selection_rules"
+    ][
+        "moneyline_vs_spread"
+    ]
+
+    if rule["mode"] == "allow_both":
+        return
+
+    if not (
+        selected_from_updates(
+            updates,
+            "ml",
+        )
+        and selected_from_updates(
+            updates,
+            "spread",
+        )
+    ):
+        return
+
+    preference = rule[
+        "preference"
+    ]
+
+    if preference == "moneyline":
+        winner = "ml"
+
+    elif preference == "spread":
+        winner = "spread"
+
+    else:
+        metric = PICK_METRIC[
+            preference
+        ]
+
+        metric_columns = {
+            "model_probability": (
+                "model_probability"
+            ),
+            "ev": "ev",
+            "kelly": "kelly",
+        }
+
+        suffix = metric_columns[
+            metric
+        ]
+
+        def market_ranking(
+            prefix: str,
+        ) -> tuple[
+            float,
+            float,
+            float,
+            float,
+            int,
+        ]:
+            primary = optional_number(
+                updates.get(
+                    f"{prefix}_{suffix}",
+                    "",
+                )
+            )
+
+            model_prob = optional_number(
+                updates.get(
+                    f"{prefix}_model_probability",
+                    "",
+                )
+            )
+
+            ev = optional_number(
+                updates.get(
+                    f"{prefix}_ev",
+                    "",
+                )
+            )
+
+            kelly = optional_number(
+                updates.get(
+                    f"{prefix}_kelly",
+                    "",
+                )
+            )
+
+            if (
+                primary is None
+                or model_prob is None
+                or ev is None
+                or kelly is None
+            ):
+                fail(
+                    "Cannot resolve "
+                    "moneyline_vs_spread: "
+                    "selected market is missing "
+                    "ranking metrics"
+                )
+
+            # Final deterministic tie-break favors
+            # moneyline when all configured metrics
+            # are exactly equal.
+            tie_break = (
+                1
+                if prefix == "ml"
+                else 0
+            )
+
+            return (
+                float(primary),
+                float(model_prob),
+                float(ev),
+                float(kelly),
+                tie_break,
+            )
+
+        winner = max(
+            ("ml", "spread"),
+            key=market_ranking,
+        )
+
+    loser = (
+        "spread"
+        if winner == "ml"
+        else "ml"
+    )
+
+    updates.update(
+        empty_selection(
+            loser,
+            (
+                "EXCLUDED_BY_"
+                "MONEYLINE_VS_SPREAD_RULE"
+            ),
+        )
+    )
+
+
 def process_file(
     input_path: Path,
     output_path: Path,
@@ -1355,6 +1602,11 @@ def process_file(
                     config,
                 )
             )
+
+        resolve_moneyline_vs_spread(
+            updates,
+            config,
+        )
 
         for (
             column,
