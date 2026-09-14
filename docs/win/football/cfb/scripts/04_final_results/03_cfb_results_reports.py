@@ -349,6 +349,136 @@ def enrich(df: pd.DataFrame) -> pd.DataFrame:
     return work
 
 
+
+def build_probability_validation(df: pd.DataFrame) -> None:
+    metric_columns = [
+        "league",
+        "season",
+        "market_type",
+        "settled_bets",
+        "brier_score",
+        "log_loss",
+        "avg_model_prob",
+        "observed_win_rate",
+        "calibration_bias",
+        "expected_calibration_error",
+    ]
+    calibration_columns = [
+        "league",
+        "season",
+        "market_type",
+        "probability_bucket",
+        "settled_bets",
+        "avg_model_prob",
+        "observed_win_rate",
+        "calibration_gap",
+        "abs_calibration_gap",
+    ]
+
+    settled = df[df["bet_result"].isin({"Win", "Loss"})].copy()
+    settled["_model_prob"] = pd.to_numeric(
+        settled["model_prob"],
+        errors="coerce",
+    )
+    settled = settled[
+        settled["_model_prob"].between(0.0, 1.0, inclusive="both")
+    ].copy()
+    settled["_outcome"] = settled["bet_result"].eq("Win").astype(float)
+
+    metric_rows: list[dict[str, Any]] = []
+    calibration_rows: list[dict[str, Any]] = []
+
+    scopes: list[tuple[Any, Any, str, pd.DataFrame]] = []
+
+    for (league, season), season_sub in settled.groupby(
+        ["league", "season"],
+        dropna=False,
+        sort=False,
+    ):
+        scopes.append((league, season, "all", season_sub))
+
+        for market_type, market_sub in season_sub.groupby(
+            "market_type",
+            dropna=False,
+            sort=False,
+        ):
+            scopes.append((league, season, str(market_type), market_sub))
+
+    for league, season, market_type, sub in scopes:
+        probabilities = sub["_model_prob"].astype(float)
+        outcomes = sub["_outcome"].astype(float)
+        clipped = probabilities.clip(lower=1e-15, upper=1.0 - 1e-15)
+
+        brier_score = float(((probabilities - outcomes) ** 2).mean())
+        log_loss = float(
+            -(
+                outcomes * clipped.map(math.log)
+                + (1.0 - outcomes) * (1.0 - clipped).map(math.log)
+            ).mean()
+        )
+        avg_model_prob = float(probabilities.mean())
+        observed_win_rate = float(outcomes.mean())
+
+        expected_calibration_error = 0.0
+
+        for probability_bucket, bucket_sub in sub.groupby(
+            "win_prob_bucket",
+            dropna=False,
+            sort=False,
+        ):
+            bucket_prob = float(bucket_sub["_model_prob"].mean())
+            bucket_win_rate = float(bucket_sub["_outcome"].mean())
+            calibration_gap = bucket_win_rate - bucket_prob
+            bucket_count = len(bucket_sub)
+
+            expected_calibration_error += (
+                bucket_count / len(sub)
+            ) * abs(calibration_gap)
+
+            calibration_rows.append(
+                {
+                    "league": league,
+                    "season": season,
+                    "market_type": market_type,
+                    "probability_bucket": probability_bucket,
+                    "settled_bets": bucket_count,
+                    "avg_model_prob": round(bucket_prob, 6),
+                    "observed_win_rate": round(bucket_win_rate, 6),
+                    "calibration_gap": round(calibration_gap, 6),
+                    "abs_calibration_gap": round(abs(calibration_gap), 6),
+                }
+            )
+
+        metric_rows.append(
+            {
+                "league": league,
+                "season": season,
+                "market_type": market_type,
+                "settled_bets": len(sub),
+                "brier_score": round(brier_score, 6),
+                "log_loss": round(log_loss, 6),
+                "avg_model_prob": round(avg_model_prob, 6),
+                "observed_win_rate": round(observed_win_rate, 6),
+                "calibration_bias": round(
+                    observed_win_rate - avg_model_prob,
+                    6,
+                ),
+                "expected_calibration_error": round(
+                    expected_calibration_error,
+                    6,
+                ),
+            }
+        )
+
+    write_csv(
+        pd.DataFrame(metric_rows, columns=metric_columns),
+        OVERVIEW_DIR / "cfb_probability_metrics.csv",
+    )
+    write_csv(
+        pd.DataFrame(calibration_rows, columns=calibration_columns),
+        OVERVIEW_DIR / "cfb_calibration_by_probability.csv",
+    )
+
 def build_top_summary(df: pd.DataFrame) -> None:
     report = aggregate(df, ["league", "season", "market_type"])
     write_csv(report, SUMMARY_DIR / "cfb_summary_overall.csv")
@@ -356,6 +486,7 @@ def build_top_summary(df: pd.DataFrame) -> None:
 
 def build_overview(df: pd.DataFrame) -> None:
     write_metric_definitions()
+    build_probability_validation(df)
 
     write_csv(
         aggregate(df, ["league", "season"]),
