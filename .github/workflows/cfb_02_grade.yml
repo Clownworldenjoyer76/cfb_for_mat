@@ -729,7 +729,11 @@ jobs:
           fi
 
           git commit -m "Rebuild and grade all CFB picks from markets config"
-          git pull --rebase --autostash origin main
+          if ! git pull --rebase --autostash origin "$GITHUB_REF_NAME"; then
+            git rebase --abort || true
+            echo "ERROR: Could not update from origin/${GITHUB_REF_NAME}; conflicting changes were detected."
+            exit 1
+          fi
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
 
