@@ -91,32 +91,25 @@ jobs:
 
       - name: Build target weekly schedule
         run: |
-          set -o pipefail
+          python docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py
 
-          python docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py \
-            | tee /tmp/cfb_weekly_schedule_output.txt
-
-          CFB_WEEK=$(
-            sed -n \
-              's|.*Weekly schedule written: .*week_\([0-9][0-9]*\)_CFB_weekly_schedule\.csv.*|\1|p' \
-              /tmp/cfb_weekly_schedule_output.txt \
-              | tail -1
+          CFB_WEEK="$(
+            sed -n 's/^[[:space:]]*week:[[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p' docs/win/football/cfb/config/current_week.yaml |
+              head -1
           )
 
-          if [ -z "$CFB_WEEK" ]; then
-            echo "ERROR: Could not determine target CFB week."
+          if ! [[ "$CFB_WEEK" =~ ^[0-9]+$ ]]; then
+            echo "ERROR: Invalid or missing week in docs/win/football/cfb/config/current_week.yaml"
             exit 1
           fi
 
           if [ "$CFB_WEEK" -le 1 ]; then
             echo "ERROR: cfb_pipeline.yml is for Week 2+."
-            echo "Detected target week: $CFB_WEEK"
             exit 1
           fi
 
           echo "CFB_WEEK=$CFB_WEEK" >> "$GITHUB_ENV"
-          echo "Detected CFB target week: $CFB_WEEK"
-
+          echo "Configured CFB target week: $CFB_WEEK"
       - name: Pull opening odds
         run: python docs/win/football/cfb/scripts/00_intake/pull_opening_odds.py
 
