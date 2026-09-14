@@ -34,7 +34,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+
+          cache: "pip"
+          cache-dependency-path: docs/win/football/cfb/requirements.txt- name: Install dependencies
         run: |
           python -m pip install --upgrade pip==26.2.1
           python -m pip install -r docs/win/football/cfb/requirements.txt
