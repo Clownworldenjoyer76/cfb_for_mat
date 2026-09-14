@@ -6,6 +6,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: repo-write-lock-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   cfb-rebuild-all-picks:
     runs-on: ubuntu-latest
