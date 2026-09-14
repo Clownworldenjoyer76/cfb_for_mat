@@ -1,18 +1,18 @@
-[2026-09-14T15:52:32.666430+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
-[2026-09-14T15:52:32.666479+00:00] Odds CSV input: docs/win/football/cfb/00_intake/odds/2026_09_14_CFB_odds.csv
-[2026-09-14T15:52:32.666500+00:00] Raw odds input: docs/win/football/cfb/00_intake/odds/raw/2026_09_14_cfb_odds.json
-[2026-09-14T15:52:32.666529+00:00] Current-week config: docs/win/football/cfb/config/current_week.yaml
-[2026-09-14T15:52:32.698460+00:00] Schedule rows loaded: 892
-[2026-09-14T15:52:32.698488+00:00] Raw odds events loaded: 57
-[2026-09-14T15:52:32.698507+00:00] Raw odds objects loaded: 57
-[2026-09-14T15:52:32.698524+00:00] Odds CSV rows loaded: 328
-[2026-09-14T15:52:32.698541+00:00] Schedule matches from raw odds events: 57
-[2026-09-14T15:52:32.698559+00:00] Unmatched raw odds events: 0
-[2026-09-14T15:52:32.698577+00:00] Configured target week: season=2026, season_type=2, week=3
-[2026-09-14T15:52:32.698594+00:00] Weekly schedule rows written: 75
-[2026-09-14T15:52:32.698611+00:00] Rows with odds: 57
-[2026-09-14T15:52:32.698650+00:00] Rows with event but no odds: 0
-[2026-09-14T15:52:32.698667+00:00] Rows with no odds event match: 18
-[2026-09-14T15:52:32.698683+00:00] Locked games: 0
-[2026-09-14T15:52:32.698700+00:00] Locked rows preserved: 0
-[2026-09-14T15:52:32.698716+00:00] Output written: docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv
+[2026-09-14T21:23:24.599814+00:00] Schedule input: docs/win/football/cfb/00_intake/schedule/2026_schedule.csv
+[2026-09-14T21:23:24.599868+00:00] Odds CSV input: docs/win/football/cfb/00_intake/odds/2026_09_14_CFB_odds.csv
+[2026-09-14T21:23:24.599894+00:00] Raw odds input: docs/win/football/cfb/00_intake/odds/raw/2026_09_14_cfb_odds.json
+[2026-09-14T21:23:24.599932+00:00] Current-week config: docs/win/football/cfb/config/current_week.yaml
+[2026-09-14T21:23:24.638627+00:00] Schedule rows loaded: 892
+[2026-09-14T21:23:24.638660+00:00] Raw odds events loaded: 57
+[2026-09-14T21:23:24.638684+00:00] Raw odds objects loaded: 57
+[2026-09-14T21:23:24.638706+00:00] Odds CSV rows loaded: 328
+[2026-09-14T21:23:24.638750+00:00] Schedule matches from raw odds events: 57
+[2026-09-14T21:23:24.638771+00:00] Unmatched raw odds events: 0
+[2026-09-14T21:23:24.638792+00:00] Configured target week: season=2026, season_type=2, week=3
+[2026-09-14T21:23:24.638813+00:00] Weekly schedule rows written: 75
+[2026-09-14T21:23:24.638835+00:00] Rows with odds: 57
+[2026-09-14T21:23:24.638856+00:00] Rows with event but no odds: 0
+[2026-09-14T21:23:24.638877+00:00] Rows with no odds event match: 18
+[2026-09-14T21:23:24.638897+00:00] Locked games: 0
+[2026-09-14T21:23:24.638917+00:00] Locked rows preserved: 0
+[2026-09-14T21:23:24.638939+00:00] Output written: docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv
