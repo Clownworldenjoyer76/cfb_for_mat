@@ -1,37 +1,40 @@
+#!/usr/bin/env python3
 """
 Reusable pipeline summary/error reporter.
 
-Standard-library only. Designed to be copied into any Python repo and used
-across unrelated pipeline scripts while keeping one consistent report format.
+The caller supplies only:
+- script
+- stage
+- report_root
+- optional pipeline/league/season/week/context
 
-Typical use:
+Reports are written automatically as:
 
-    from pipeline_reporter import PipelineReporter
+    {report_root}/{stage}/{script_stem}.json
 
-    with PipelineReporter(
+Example:
+
+    PipelineReporter(
         script=__file__,
-        pipeline="cfb",
         stage="00_intake",
-        output_dir="reports",
-        season=2026,
-        week=2,
-    ) as report:
-        report.add_input("input.csv")
-        report.set_detail("games_fetched", 85)
+        report_root="docs/project/errors",
+    )
 
-        # Run normal script logic here.
+writes:
 
-        report.add_output("output.csv")
-        report.set_rows(rows_in=85, rows_out=82)
+    docs/project/errors/00_intake/build_travel.json
 
-If the script finishes normally, the report is written with status SUCCESS.
-If an unhandled exception occurs, the exception and traceback are recorded,
-the report is written with status FAILED, and the exception is re-raised.
+Each execution replaces the prior report for that script so the file always
+describes the most recent execution.
+
+Unhandled exceptions are recorded with their traceback, the report is written
+with FAILED status, and the original exception is re-raised.
 """
 
 from __future__ import annotations
 
 import json
+import math
 import os
 import socket
 import sys
@@ -43,7 +46,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "2.0"
 VALID_STATUSES = {"SUCCESS", "WARNING", "FAILED"}
 
 
@@ -51,40 +54,74 @@ class PipelineReporter:
     def __init__(
         self,
         *,
-        script: str,
-        pipeline: str,
-        output_dir: str | os.PathLike[str],
-        stage: str | None = None,
+        script: str | os.PathLike[str],
+        stage: str,
+        report_root: str | os.PathLike[str],
+        pipeline: str | None = None,
         league: str | None = None,
         season: int | str | None = None,
         week: int | str | None = None,
         run_id: str | None = None,
         extra_context: Mapping[str, Any] | None = None,
     ) -> None:
-        self.script = Path(script).name
-        self.script_path = str(Path(script))
-        self.pipeline = pipeline
-        self.stage = stage
-        self.league = league
+        stage_text = str(stage).strip()
+        if not stage_text:
+            raise ValueError("stage must be a non-empty string")
+
+        script_path = Path(script)
+
+        self.script = script_path.name
+        self.script_stem = script_path.stem
+        self.script_path = str(script_path)
+
+        self.stage = stage_text
+        self.pipeline = _clean_optional(pipeline)
+        self.league = _clean_optional(league)
         self.season = season
         self.week = week
-        self.run_id = run_id or os.getenv("GITHUB_RUN_ID") or uuid.uuid4().hex
-        self.output_dir = Path(output_dir)
+
+        self.report_root = Path(report_root)
+
+        self.github_run_id = _clean_optional(
+            os.getenv("GITHUB_RUN_ID")
+        )
+        self.github_run_attempt = _clean_optional(
+            os.getenv("GITHUB_RUN_ATTEMPT")
+        )
+
+        self.run_id = (
+            str(run_id).strip()
+            if run_id is not None and str(run_id).strip()
+            else _build_run_id(
+                github_run_id=self.github_run_id,
+                github_run_attempt=self.github_run_attempt,
+            )
+        )
+
+        safe_stage = _safe_filename(self.stage)
+        safe_script = _safe_filename(self.script_stem)
+
+        self.output_dir = self.report_root / safe_stage
+        self.report_path = self.output_dir / f"{safe_script}.json"
 
         self._started_monotonic = time.monotonic()
         self._started_at = datetime.now(timezone.utc)
 
         self._status = "SUCCESS"
+
         self._warnings: list[dict[str, Any]] = []
         self._errors: list[dict[str, Any]] = []
+
         self._inputs: list[str] = []
         self._outputs: list[str] = []
+
         self._details: dict[str, Any] = {}
+        self._extra_context = dict(extra_context or {})
+
         self._rows_in: int | None = None
         self._rows_out: int | None = None
-        self._extra_context = dict(extra_context or {})
+
         self._written = False
-        self.report_path: Path | None = None
 
     def __enter__(self) -> "PipelineReporter":
         return self
@@ -92,26 +129,69 @@ class PipelineReporter:
     def __exit__(self, exc_type, exc_value, exc_tb) -> bool:
         if exc_value is not None:
             self.record_exception(exc_value, exc_tb)
-            self.write_report(status="FAILED")
+
+            try:
+                self.write_report(
+                    status="FAILED",
+                    exit_code=1,
+                )
+            except Exception as report_exc:
+                _emit_reporting_failure(
+                    report_path=self.report_path,
+                    report_exception=report_exc,
+                    original_exception=exc_value,
+                )
+
             return False
 
         if self._errors:
             status = "FAILED"
+            exit_code = 1
         elif self._warnings:
             status = "WARNING"
+            exit_code = 0
         else:
             status = "SUCCESS"
+            exit_code = 0
 
-        self.write_report(status=status)
+        self.write_report(
+            status=status,
+            exit_code=exit_code,
+        )
+
         return False
 
-    def add_input(self, path: str | os.PathLike[str]) -> None:
+    @property
+    def status(self) -> str:
+        return self._status
+
+    @property
+    def warning_count(self) -> int:
+        return len(self._warnings)
+
+    @property
+    def error_count(self) -> int:
+        return len(self._errors)
+
+    @property
+    def written(self) -> bool:
+        return self._written
+
+    def add_input(
+        self,
+        path: str | os.PathLike[str],
+    ) -> None:
         value = str(path)
+
         if value not in self._inputs:
             self._inputs.append(value)
 
-    def add_output(self, path: str | os.PathLike[str]) -> None:
+    def add_output(
+        self,
+        path: str | os.PathLike[str],
+    ) -> None:
         value = str(path)
+
         if value not in self._outputs:
             self._outputs.append(value)
 
@@ -122,24 +202,54 @@ class PipelineReporter:
         rows_out: int | None = None,
     ) -> None:
         if rows_in is not None:
-            self._rows_in = int(rows_in)
+            self._rows_in = _validate_nonnegative_int(
+                rows_in,
+                "rows_in",
+            )
+
         if rows_out is not None:
-            self._rows_out = int(rows_out)
+            self._rows_out = _validate_nonnegative_int(
+                rows_out,
+                "rows_out",
+            )
 
-    def set_detail(self, key: str, value: Any) -> None:
-        self._details[str(key)] = value
+    def set_detail(
+        self,
+        key: str,
+        value: Any,
+    ) -> None:
+        key_text = str(key).strip()
 
-    def update_details(self, values: Mapping[str, Any]) -> None:
-        self._details.update(dict(values))
+        if not key_text:
+            raise ValueError("detail key must not be blank")
 
-    def warning(self, message: str, **details: Any) -> None:
+        self._details[key_text] = value
+
+    def update_details(
+        self,
+        values: Mapping[str, Any],
+    ) -> None:
+        for key, value in values.items():
+            self.set_detail(str(key), value)
+
+    def warning(
+        self,
+        message: str,
+        **details: Any,
+    ) -> None:
+        message_text = str(message).strip()
+
+        if not message_text:
+            raise ValueError("warning message must not be blank")
+
         self._warnings.append(
             {
                 "timestamp_utc": _utc_now_iso(),
-                "message": str(message),
+                "message": message_text,
                 "details": details or None,
             }
         )
+
         if self._status == "SUCCESS":
             self._status = "WARNING"
 
@@ -151,27 +261,43 @@ class PipelineReporter:
         traceback_text: str | None = None,
         **details: Any,
     ) -> None:
+        message_text = (
+            str(message).strip()
+            or "Unspecified error"
+        )
+
         self._errors.append(
             {
                 "timestamp_utc": _utc_now_iso(),
-                "type": error_type,
-                "message": str(message),
+                "type": _clean_optional(error_type),
+                "message": message_text,
                 "traceback": traceback_text,
                 "details": details or None,
             }
         )
+
         self._status = "FAILED"
 
-    def record_exception(self, exc: BaseException, tb=None) -> None:
+    def record_exception(
+        self,
+        exc: BaseException,
+        tb=None,
+    ) -> None:
         if tb is None:
             tb = exc.__traceback__
 
+        traceback_text = "".join(
+            traceback.format_exception(
+                type(exc),
+                exc,
+                tb,
+            )
+        )
+
         self.error(
-            str(exc),
+            str(exc) or type(exc).__name__,
             error_type=type(exc).__name__,
-            traceback_text="".join(
-                traceback.format_exception(type(exc), exc, tb)
-            ),
+            traceback_text=traceback_text,
         )
 
     def write_report(
@@ -180,7 +306,9 @@ class PipelineReporter:
         status: str | None = None,
         exit_code: int | None = None,
     ) -> Path:
-        final_status = (status or self._status).upper()
+        final_status = (
+            status or self._status
+        ).upper().strip()
 
         if final_status not in VALID_STATUSES:
             raise ValueError(
@@ -190,86 +318,312 @@ class PipelineReporter:
 
         if self._errors:
             final_status = "FAILED"
-        elif self._warnings and final_status == "SUCCESS":
+        elif (
+            self._warnings
+            and final_status == "SUCCESS"
+        ):
             final_status = "WARNING"
 
+        if exit_code is None:
+            exit_code = (
+                1
+                if final_status == "FAILED"
+                else 0
+            )
+        else:
+            exit_code = int(exit_code)
+
+        if (
+            final_status == "FAILED"
+            and exit_code == 0
+        ):
+            exit_code = 1
+
         finished_at = datetime.now(timezone.utc)
-        duration_seconds = round(time.monotonic() - self._started_monotonic, 3)
+
+        duration_seconds = round(
+            max(
+                0.0,
+                time.monotonic()
+                - self._started_monotonic,
+            ),
+            3,
+        )
 
         report = {
             "schema_version": SCHEMA_VERSION,
-            "timestamp_utc": finished_at.isoformat(),
             "run_id": self.run_id,
+            "status": final_status,
+            "exit_code": exit_code,
             "pipeline": self.pipeline,
             "league": self.league,
             "stage": self.stage,
             "script": self.script,
             "script_path": self.script_path,
-            "status": final_status,
-            "exit_code": exit_code,
-            "started_at_utc": self._started_at.isoformat(),
-            "finished_at_utc": finished_at.isoformat(),
+            "report_path": str(self.report_path),
+            "started_at_utc": (
+                self._started_at.isoformat()
+            ),
+            "finished_at_utc": (
+                finished_at.isoformat()
+            ),
             "duration_seconds": duration_seconds,
             "environment": {
                 "hostname": socket.gethostname(),
-                "python_version": sys.version.split()[0],
-                "github_run_id": os.getenv("GITHUB_RUN_ID"),
-                "github_run_attempt": os.getenv("GITHUB_RUN_ATTEMPT"),
-                "github_workflow": os.getenv("GITHUB_WORKFLOW"),
-                "github_job": os.getenv("GITHUB_JOB"),
-                "github_ref_name": os.getenv("GITHUB_REF_NAME"),
-                "github_sha": os.getenv("GITHUB_SHA"),
+                "python_version": (
+                    sys.version.split()[0]
+                ),
+                "python_executable": sys.executable,
+                "platform": sys.platform,
+                "process_id": os.getpid(),
+                "working_directory": os.getcwd(),
+                "github_run_id": (
+                    self.github_run_id
+                ),
+                "github_run_attempt": (
+                    self.github_run_attempt
+                ),
+                "github_workflow": _clean_optional(
+                    os.getenv("GITHUB_WORKFLOW")
+                ),
+                "github_job": _clean_optional(
+                    os.getenv("GITHUB_JOB")
+                ),
+                "github_ref_name": _clean_optional(
+                    os.getenv("GITHUB_REF_NAME")
+                ),
+                "github_sha": _clean_optional(
+                    os.getenv("GITHUB_SHA")
+                ),
+                "github_actor": _clean_optional(
+                    os.getenv("GITHUB_ACTOR")
+                ),
+                "github_repository": (
+                    _clean_optional(
+                        os.getenv(
+                            "GITHUB_REPOSITORY"
+                        )
+                    )
+                ),
             },
             "context": {
                 "season": self.season,
                 "week": self.week,
                 **self._extra_context,
             },
-            "inputs": self._inputs,
-            "outputs": self._outputs,
+            "inputs": list(self._inputs),
+            "outputs": list(self._outputs),
             "rows_in": self._rows_in,
             "rows_out": self._rows_out,
-            "warning_count": len(self._warnings),
-            "error_count": len(self._errors),
-            "warnings": self._warnings,
-            "errors": self._errors,
-            "details": self._details,
+            "warning_count": len(
+                self._warnings
+            ),
+            "error_count": len(
+                self._errors
+            ),
+            "warnings": list(
+                self._warnings
+            ),
+            "errors": list(
+                self._errors
+            ),
+            "details": dict(
+                self._details
+            ),
         }
 
-        self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.output_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
 
-        safe_pipeline = _safe_filename(self.pipeline)
-        safe_stage = _safe_filename(self.stage or "general")
-        safe_script = _safe_filename(Path(self.script).stem)
-        filename = f"{safe_pipeline}__{safe_stage}__{safe_script}.json"
+        temp_path = self.report_path.with_name(
+            (
+                f".{self.report_path.name}."
+                f"{uuid.uuid4().hex}.tmp"
+            )
+        )
 
-        destination = self.output_dir / filename
-        temp_path = destination.with_suffix(destination.suffix + ".tmp")
+        try:
+            with temp_path.open(
+                "w",
+                encoding="utf-8",
+                newline="\n",
+            ) as handle:
+                json.dump(
+                    report,
+                    handle,
+                    indent=2,
+                    sort_keys=False,
+                    ensure_ascii=False,
+                    allow_nan=False,
+                    default=_json_default,
+                )
 
-        with temp_path.open("w", encoding="utf-8", newline="\n") as handle:
-            json.dump(report, handle, indent=2, sort_keys=False, default=str)
-            handle.write("\n")
+                handle.write("\n")
+                handle.flush()
+                os.fsync(handle.fileno())
 
-        os.replace(temp_path, destination)
+            os.replace(
+                temp_path,
+                self.report_path,
+            )
+
+        except Exception:
+            try:
+                temp_path.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+            raise
 
         self._status = final_status
         self._written = True
-        self.report_path = destination
-        return destination
+
+        return self.report_path
+
+
+def _build_run_id(
+    *,
+    github_run_id: str | None,
+    github_run_attempt: str | None,
+) -> str:
+    if github_run_id:
+        if github_run_attempt:
+            return (
+                f"github-{github_run_id}"
+                f"-attempt-{github_run_attempt}"
+            )
+
+        return f"github-{github_run_id}"
+
+    return uuid.uuid4().hex
+
+
+def _validate_nonnegative_int(
+    value: Any,
+    field: str,
+) -> int:
+    if isinstance(value, bool):
+        raise ValueError(
+            f"{field} must be a "
+            "non-negative integer"
+        )
+
+    try:
+        converted = int(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            f"{field} must be a "
+            "non-negative integer"
+        ) from exc
+
+    if converted < 0:
+        raise ValueError(
+            f"{field} must be a "
+            "non-negative integer"
+        )
+
+    return converted
+
+
+def _json_default(
+    value: Any,
+) -> Any:
+    if isinstance(value, Path):
+        return str(value)
+
+    if isinstance(value, datetime):
+        return value.isoformat()
+
+    if isinstance(value, set):
+        return sorted(
+            value,
+            key=str,
+        )
+
+    if hasattr(value, "item"):
+        try:
+            scalar = value.item()
+
+            if (
+                isinstance(scalar, float)
+                and not math.isfinite(scalar)
+            ):
+                return str(scalar)
+
+            return scalar
+
+        except Exception:
+            pass
+
+    return str(value)
+
+
+def _clean_optional(
+    value: Any,
+) -> str | None:
+    if value is None:
+        return None
+
+    text = str(value).strip()
+
+    return text or None
 
 
 def _utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(
+        timezone.utc
+    ).isoformat()
 
 
-def _safe_filename(value: str) -> str:
-    cleaned = []
+def _safe_filename(
+    value: str,
+) -> str:
+    cleaned: list[str] = []
+
     for char in str(value):
-        if char.isalnum() or char in {"-", "_"}:
+        if (
+            char.isalnum()
+            or char in {"-", "_"}
+        ):
             cleaned.append(char)
         else:
             cleaned.append("_")
-    return "".join(cleaned).strip("_") or "report"
+
+    return (
+        "".join(cleaned).strip("_")
+        or "report"
+    )
 
 
-__all__ = ["PipelineReporter", "SCHEMA_VERSION"]
+def _emit_reporting_failure(
+    *,
+    report_path: Path,
+    report_exception: BaseException,
+    original_exception: BaseException,
+) -> None:
+    try:
+        sys.stderr.write(
+            "\nPIPELINE REPORTING FAILURE\n"
+            f"Report path: {report_path}\n"
+            "Reporting error: "
+            f"{type(report_exception).__name__}: "
+            f"{report_exception}\n"
+            "Original script error preserved: "
+            f"{type(original_exception).__name__}: "
+            f"{original_exception}\n"
+        )
+
+        sys.stderr.flush()
+
+    except Exception:
+        pass
+
+
+__all__ = [
+    "PipelineReporter",
+    "SCHEMA_VERSION",
+]
