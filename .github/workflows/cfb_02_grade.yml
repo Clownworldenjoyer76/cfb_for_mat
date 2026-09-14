@@ -114,41 +114,91 @@ jobs:
       # ----------------------------------------------------------------------
 
       - name: Verify all weekly pick outputs
-        shell: bash
         run: |
-          set -euo pipefail
+          python - <<'PY'
+          import csv
+          import os
+          import re
+          from pathlib import Path
 
-          FOUND=0
+          season = int(os.environ["CFB_SEASON"])
+          selected_dir = Path("docs/win/football/cfb/02_select")
+          selected_files = sorted(selected_dir.glob("week_*_CFB_selected.csv"))
 
-          for file in docs/win/football/cfb/02_select/week_*_CFB_selected.csv; do
-            if [ ! -f "$file" ]; then
-              continue
-            fi
+          if not selected_files:
+              raise RuntimeError("No existing CFB selected files found.")
 
-            FOUND=1
+          required = {"season", "week", "game_id"}
 
-            filename="$(basename "$file")"
-            week="${filename#week_}"
-            week="${week%_CFB_selected.csv}"
+          def as_int(value, field, path, line):
+              try:
+                  number = float(str(value).strip())
+              except (TypeError, ValueError):
+                  raise RuntimeError(
+                      f"{path}: invalid {field} at line {line}: {value!r}"
+                  )
+              if not number.is_integer():
+                  raise RuntimeError(
+                      f"{path}: invalid {field} at line {line}: {value!r}"
+                  )
+              return int(number)
 
-            echo "Verifying CFB Week $week"
+          def verify(path, expected_week):
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise RuntimeError(f"{path}: missing or empty")
 
-            test -f "docs/win/football/cfb/01_merge/week_${week}_CFB_enriched.csv"
-            test -f "docs/win/football/cfb/02_select/week_${week}_CFB_selected.csv"
-            test -f "docs/win/football/cfb/03_picks/week_${week}_CFB_picks.csv"
-            test -f "docs/win/football/cfb/03_picks/cleaned/week_${week}_CFB_clean_picks.csv"
-            test -f "docs/win/football/cfb/03_picks/all_games/all_week_${week}_CFB_picks.csv"
-            test -f "docs/win/football/cfb/03_picks/selected/week_${week}_CFB_select_picks.csv"
+              try:
+                  with path.open(newline="", encoding="utf-8-sig") as handle:
+                      reader = csv.DictReader(handle, strict=True)
+                      fields = set(reader.fieldnames or [])
+                      missing = required - fields
+                      if missing:
+                          raise RuntimeError(
+                              f"{path}: missing required columns: {sorted(missing)}"
+                          )
+                      rows = list(reader)
+              except csv.Error as exc:
+                  raise RuntimeError(f"{path}: malformed CSV: {exc}") from exc
 
-            echo "CFB Week $week pick outputs verified."
-          done
+              if not reader.fieldnames:
+                  raise RuntimeError(f"{path}: missing CSV header")
 
-          if [ "$FOUND" -ne 1 ]; then
-            echo "ERROR: No existing CFB selected files found."
-            exit 1
-          fi
+              if not rows:
+                  raise RuntimeError(f"{path}: contains no data rows")
 
-          echo "All existing CFB weekly pick outputs verified."
+              for line, row in enumerate(rows, start=2):
+                  if None in row or any(value is None for value in row.values()):
+                      raise RuntimeError(f"{path}: malformed row at line {line}")
+                  if as_int(row["season"], "season", path, line) != season:
+                      raise RuntimeError(f"{path}: wrong season at line {line}")
+                  if as_int(row["week"], "week", path, line) != expected_week:
+                      raise RuntimeError(f"{path}: wrong week at line {line}")
+                  if not str(row["game_id"]).strip():
+                      raise RuntimeError(f"{path}: blank game_id at line {line}")
+
+              print(f"Verified {path}: {len(rows)} rows")
+
+          for selected in selected_files:
+              match = re.fullmatch(r"week_(\d+)_CFB_selected\.csv", selected.name)
+              if not match:
+                  raise RuntimeError(f"Could not parse week from {selected.name}")
+
+              week = int(match.group(1))
+
+              paths = (
+                  Path(f"docs/win/football/cfb/01_merge/week_{week}_CFB_enriched.csv"),
+                  Path(f"docs/win/football/cfb/02_select/week_{week}_CFB_selected.csv"),
+                  Path(f"docs/win/football/cfb/03_picks/week_{week}_CFB_picks.csv"),
+                  Path(f"docs/win/football/cfb/03_picks/cleaned/week_{week}_CFB_clean_picks.csv"),
+                  Path(f"docs/win/football/cfb/03_picks/all_games/all_week_{week}_CFB_picks.csv"),
+                  Path(f"docs/win/football/cfb/03_picks/selected/week_{week}_CFB_select_picks.csv"),
+              )
+
+              for path in paths:
+                  verify(path, week)
+
+          print("All existing CFB weekly pick outputs verified.")
+          PY
 
       # ----------------------------------------------------------------------
       # REFRESH FINAL SCORES
@@ -179,37 +229,156 @@ jobs:
       # ----------------------------------------------------------------------
 
       - name: Verify all graded CFB weeks
-        shell: bash
         run: |
-          set -euo pipefail
+          python - <<'PY'
+          import csv
+          import os
+          import re
+          from pathlib import Path
 
-          FOUND=0
+          season = int(os.environ["CFB_SEASON"])
+          selected_files = sorted(
+              Path("docs/win/football/cfb/02_select").glob("week_*_CFB_selected.csv")
+          )
 
-          for file in docs/win/football/cfb/02_select/week_*_CFB_selected.csv; do
-            if [ ! -f "$file" ]; then
-              continue
-            fi
+          if not selected_files:
+              raise RuntimeError("No existing CFB weeks found.")
 
-            FOUND=1
+          def as_int(value, field, path, line):
+              try:
+                  number = float(str(value).strip())
+              except (TypeError, ValueError):
+                  raise RuntimeError(
+                      f"{path}: invalid {field} at line {line}: {value!r}"
+                  )
+              if not number.is_integer():
+                  raise RuntimeError(
+                      f"{path}: invalid {field} at line {line}: {value!r}"
+                  )
+              return int(number)
 
-            filename="$(basename "$file")"
-            week="${filename#week_}"
-            week="${week%_CFB_selected.csv}"
+          def read_csv(path, required):
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise RuntimeError(f"{path}: missing or empty")
 
-            graded="docs/win/football/cfb/04_final_results/graded/week_${week}_CFB_graded.csv"
+              try:
+                  with path.open(newline="", encoding="utf-8-sig") as handle:
+                      reader = csv.DictReader(handle, strict=True)
+                      fields = set(reader.fieldnames or [])
+                      missing = set(required) - fields
+                      if missing:
+                          raise RuntimeError(
+                              f"{path}: missing required columns: {sorted(missing)}"
+                          )
+                      rows = list(reader)
+              except csv.Error as exc:
+                  raise RuntimeError(f"{path}: malformed CSV: {exc}") from exc
 
-            echo "Checking graded CFB Week $week"
-            test -f "$graded"
-          done
+              if not reader.fieldnames:
+                  raise RuntimeError(f"{path}: missing CSV header")
 
-          if [ "$FOUND" -ne 1 ]; then
-            echo "ERROR: No existing CFB weeks found."
-            exit 1
-          fi
+              if not rows:
+                  raise RuntimeError(f"{path}: contains no data rows")
 
-          test -f "docs/win/football/cfb/04_final_results/graded/season_${CFB_SEASON}_summary.csv"
+              for line, row in enumerate(rows, start=2):
+                  if None in row or any(value is None for value in row.values()):
+                      raise RuntimeError(f"{path}: malformed row at line {line}")
 
-          echo "All existing CFB graded outputs verified."
+              return rows
+
+          expected_weeks = set()
+
+          for selected in selected_files:
+              match = re.fullmatch(r"week_(\d+)_CFB_selected\.csv", selected.name)
+              if not match:
+                  raise RuntimeError(f"Could not parse week from {selected.name}")
+
+              week = int(match.group(1))
+              expected_weeks.add(week)
+
+              path = Path(
+                  f"docs/win/football/cfb/04_final_results/graded/"
+                  f"week_{week}_CFB_graded.csv"
+              )
+
+              rows = read_csv(
+                  path,
+                  {
+                      "season",
+                      "week",
+                      "game_id",
+                      "final_status",
+                      "selected_bets",
+                      "graded_bets",
+                      "net_units",
+                  },
+              )
+
+              for line, row in enumerate(rows, start=2):
+                  if as_int(row["season"], "season", path, line) != season:
+                      raise RuntimeError(f"{path}: wrong season at line {line}")
+                  if as_int(row["week"], "week", path, line) != week:
+                      raise RuntimeError(f"{path}: wrong week at line {line}")
+                  if not str(row["game_id"]).strip():
+                      raise RuntimeError(f"{path}: blank game_id at line {line}")
+
+              print(f"Verified {path}: {len(rows)} rows")
+
+          summary_path = Path(
+              f"docs/win/football/cfb/04_final_results/graded/"
+              f"season_{season}_summary.csv"
+          )
+
+          summary = read_csv(
+              summary_path,
+              {
+                  "season",
+                  "week",
+                  "games",
+                  "selected_bets",
+                  "graded_bets",
+                  "wins",
+                  "losses",
+                  "pushes",
+                  "voids",
+                  "pending_bets",
+                  "net_units",
+                  "roi_per_graded_bet",
+              },
+          )
+
+          summary_weeks = set()
+          total_rows = 0
+
+          for line, row in enumerate(summary, start=2):
+              if as_int(row["season"], "season", summary_path, line) != season:
+                  raise RuntimeError(
+                      f"{summary_path}: wrong season at line {line}"
+                  )
+
+              week_value = str(row["week"]).strip()
+
+              if week_value == "TOTAL":
+                  total_rows += 1
+              else:
+                  summary_weeks.add(
+                      as_int(week_value, "week", summary_path, line)
+                  )
+
+          if total_rows != 1:
+              raise RuntimeError(
+                  f"{summary_path}: expected exactly one TOTAL row"
+              )
+
+          if summary_weeks != expected_weeks:
+              raise RuntimeError(
+                  f"{summary_path}: week coverage mismatch; "
+                  f"expected {sorted(expected_weeks)}, "
+                  f"found {sorted(summary_weeks)}"
+              )
+
+          print("All existing CFB graded outputs verified.")
+          PY
 
       # ----------------------------------------------------------------------
       # BUILD ONE-ROW-PER-BET ANALYSIS LEDGER
@@ -233,23 +402,122 @@ jobs:
 
       - name: Verify CFB grading reports
         run: |
-          set -euo pipefail
+          python - <<'PY'
+          import csv
+          import os
+          from pathlib import Path
 
-          test -f "docs/win/football/cfb/04_final_results/intermediate/work_cfb.csv"
-          test -f "docs/win/football/cfb/04_final_results/cfb_summary_overall.csv"
+          season = str(int(os.environ["CFB_SEASON"]))
+          root = Path("docs/win/football/cfb/04_final_results")
 
-          test -d "docs/win/football/cfb/04_final_results/reports"
-          test -d "docs/win/football/cfb/04_final_results/reports/overview"
-          test -d "docs/win/football/cfb/04_final_results/reports/moneyline"
-          test -d "docs/win/football/cfb/04_final_results/reports/spread"
-          test -d "docs/win/football/cfb/04_final_results/reports/totals"
+          def read_csv(path, required=(), require_rows=True):
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise RuntimeError(f"{path}: missing or empty")
 
-          test -f "docs/win/football/cfb/04_final_results/reports/overview/cfb_summary_overall.csv"
-          test -f "docs/win/football/cfb/04_final_results/reports/overview/cfb_summary_by_market.csv"
-          test -f "docs/win/football/cfb/04_final_results/reports/overview/cfb_summary_by_week.csv"
-          test -f "docs/win/football/cfb/04_final_results/reports/overview/cfb_bet_log.csv"
+              try:
+                  with path.open(newline="", encoding="utf-8-sig") as handle:
+                      reader = csv.DictReader(handle, strict=True)
+                      fields = set(reader.fieldnames or [])
+                      missing = set(required) - fields
+                      if missing:
+                          raise RuntimeError(
+                              f"{path}: missing required columns: {sorted(missing)}"
+                          )
+                      rows = list(reader)
+              except csv.Error as exc:
+                  raise RuntimeError(f"{path}: malformed CSV: {exc}") from exc
 
-          echo "CFB grading analysis and reports verified."
+              if not reader.fieldnames:
+                  raise RuntimeError(f"{path}: missing CSV header")
+
+              if require_rows and not rows:
+                  raise RuntimeError(f"{path}: contains no data rows")
+
+              for line, row in enumerate(rows, start=2):
+                  if None in row or any(value is None for value in row.values()):
+                      raise RuntimeError(f"{path}: malformed row at line {line}")
+
+              return rows
+
+          work = read_csv(
+              root / "intermediate/work_cfb.csv",
+              {
+                  "season",
+                  "week",
+                  "game_id",
+                  "market_type",
+                  "bet_result",
+                  "bet_units",
+                  "final_status",
+              },
+          )
+
+          for line, row in enumerate(work, start=2):
+              if str(row["season"]).strip() != season:
+                  raise RuntimeError(
+                      f"work_cfb.csv: wrong season at line {line}"
+                  )
+              if not str(row["game_id"]).strip():
+                  raise RuntimeError(
+                      f"work_cfb.csv: blank game_id at line {line}"
+                  )
+
+          summary = read_csv(
+              root / "cfb_summary_overall.csv",
+              {
+                  "league",
+                  "season",
+                  "market_type",
+                  "Win",
+                  "Loss",
+                  "Pending",
+                  "Total",
+                  "Selected",
+                  "Win_Pct",
+                  "units",
+              },
+          )
+
+          for line, row in enumerate(summary, start=2):
+              if str(row["league"]).strip() != "CFB":
+                  raise RuntimeError(
+                      f"cfb_summary_overall.csv: wrong league at line {line}"
+                  )
+              if str(row["season"]).strip() != season:
+                  raise RuntimeError(
+                      f"cfb_summary_overall.csv: wrong season at line {line}"
+                  )
+
+          overview = root / "reports/overview"
+
+          for name in (
+              "cfb_summary_overall.csv",
+              "cfb_summary_by_market.csv",
+              "cfb_summary_by_week.csv",
+              "cfb_bet_log.csv",
+          ):
+              read_csv(overview / name)
+
+          for name in ("moneyline", "spread", "totals"):
+              directory = root / "reports" / name
+
+              if not directory.is_dir():
+                  raise RuntimeError(
+                      f"{directory}: missing report directory"
+                  )
+
+              files = sorted(directory.rglob("*.csv"))
+
+              if not files:
+                  raise RuntimeError(
+                      f"{directory}: contains no CSV reports"
+                  )
+
+              for path in files:
+                  read_csv(path, require_rows=False)
+
+          print("CFB grading analysis and reports verified.")
+          PY
 
       # ----------------------------------------------------------------------
       # COMMIT AND PUSH
