@@ -404,6 +404,7 @@ jobs:
         run: |
           python - <<'PY'
           import csv
+          import math
           import os
           from pathlib import Path
 
@@ -449,6 +450,7 @@ jobs:
                   "bet_result",
                   "bet_units",
                   "final_status",
+                  "model_prob",
               },
           )
 
@@ -497,6 +499,185 @@ jobs:
               "cfb_bet_log.csv",
           ):
               read_csv(overview / name)
+
+          metric_columns = [
+              "league",
+              "season",
+              "market_type",
+              "settled_bets",
+              "brier_score",
+              "log_loss",
+              "avg_model_prob",
+              "observed_win_rate",
+              "calibration_bias",
+              "expected_calibration_error",
+          ]
+
+          calibration_columns = [
+              "league",
+              "season",
+              "market_type",
+              "probability_bucket",
+              "settled_bets",
+              "avg_model_prob",
+              "observed_win_rate",
+              "calibration_gap",
+              "abs_calibration_gap",
+          ]
+
+          eligible_settled_bets = 0
+
+          for row in work:
+              if str(row["bet_result"]).strip().casefold() not in {"win", "loss"}:
+                  continue
+
+              try:
+                  probability = float(str(row["model_prob"]).strip())
+              except (TypeError, ValueError):
+                  continue
+
+              if math.isfinite(probability) and 0.0 <= probability <= 1.0:
+                  eligible_settled_bets += 1
+
+          def read_probability_report(path, expected_columns, require_rows):
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise RuntimeError(f"{path}: missing or empty")
+
+              try:
+                  with path.open(newline="", encoding="utf-8-sig") as handle:
+                      reader = csv.DictReader(handle, strict=True)
+
+                      if list(reader.fieldnames or []) != expected_columns:
+                          raise RuntimeError(
+                              f"{path}: unexpected columns: {reader.fieldnames}"
+                          )
+
+                      rows = list(reader)
+              except csv.Error as exc:
+                  raise RuntimeError(f"{path}: malformed CSV: {exc}") from exc
+
+              if require_rows and not rows:
+                  raise RuntimeError(
+                      f"{path}: contains no rows despite eligible settled bets"
+                  )
+
+              for line, row in enumerate(rows, start=2):
+                  if None in row or any(value is None for value in row.values()):
+                      raise RuntimeError(f"{path}: malformed row at line {line}")
+
+              return rows
+
+          def number(row, field, path, line, minimum=None, maximum=None):
+              try:
+                  value = float(str(row[field]).strip())
+              except (TypeError, ValueError):
+                  raise RuntimeError(
+                      f"{path}: invalid {field} at line {line}: {row[field]!r}"
+                  )
+
+              if not math.isfinite(value):
+                  raise RuntimeError(
+                      f"{path}: non-finite {field} at line {line}"
+                  )
+
+              if minimum is not None and value < minimum:
+                  raise RuntimeError(
+                      f"{path}: {field} below {minimum} at line {line}"
+                  )
+
+              if maximum is not None and value > maximum:
+                  raise RuntimeError(
+                      f"{path}: {field} above {maximum} at line {line}"
+                  )
+
+              return value
+
+          def validate_common(row, path, line):
+              if str(row["league"]).strip() != "CFB":
+                  raise RuntimeError(f"{path}: wrong league at line {line}")
+
+              try:
+                  row_season = int(float(str(row["season"]).strip()))
+              except (TypeError, ValueError):
+                  raise RuntimeError(
+                      f"{path}: invalid season at line {line}"
+                  )
+
+              if row_season != int(season):
+                  raise RuntimeError(f"{path}: wrong season at line {line}")
+
+              if not str(row["market_type"]).strip():
+                  raise RuntimeError(
+                      f"{path}: blank market_type at line {line}"
+                  )
+
+              settled = number(
+                  row,
+                  "settled_bets",
+                  path,
+                  line,
+                  minimum=1.0,
+              )
+
+              if not settled.is_integer():
+                  raise RuntimeError(
+                      f"{path}: non-integer settled_bets at line {line}"
+                  )
+
+          probability_metrics_path = (
+              overview / "cfb_probability_metrics.csv"
+          )
+          calibration_path = (
+              overview / "cfb_calibration_by_probability.csv"
+          )
+
+          require_probability_rows = eligible_settled_bets > 0
+
+          probability_metrics = read_probability_report(
+              probability_metrics_path,
+              metric_columns,
+              require_probability_rows,
+          )
+
+          calibration = read_probability_report(
+              calibration_path,
+              calibration_columns,
+              require_probability_rows,
+          )
+
+          if not require_probability_rows and (
+              probability_metrics or calibration
+          ):
+              raise RuntimeError(
+                  "Probability reports contain rows but no eligible settled bets exist"
+              )
+
+          for line, row in enumerate(probability_metrics, start=2):
+              validate_common(
+                  row,
+                  probability_metrics_path,
+                  line,
+              )
+              number(row, "brier_score", probability_metrics_path, line, 0.0, 1.0)
+              number(row, "log_loss", probability_metrics_path, line, 0.0)
+              number(row, "avg_model_prob", probability_metrics_path, line, 0.0, 1.0)
+              number(row, "observed_win_rate", probability_metrics_path, line, 0.0, 1.0)
+              number(row, "calibration_bias", probability_metrics_path, line, -1.0, 1.0)
+              number(
+                  row,
+                  "expected_calibration_error",
+                  probability_metrics_path,
+                  line,
+                  0.0,
+                  1.0,
+              )
+
+          for line, row in enumerate(calibration, start=2):
+              validate_common(row, calibration_path, line)
+              number(row, "avg_model_prob", calibration_path, line, 0.0, 1.0)
+              number(row, "observed_win_rate", calibration_path, line, 0.0, 1.0)
+              number(row, "calibration_gap", calibration_path, line, -1.0, 1.0)
+              number(row, "abs_calibration_gap", calibration_path, line, 0.0, 1.0)
 
           for name in ("moneyline", "spread", "totals"):
               directory = root / "reports" / name
