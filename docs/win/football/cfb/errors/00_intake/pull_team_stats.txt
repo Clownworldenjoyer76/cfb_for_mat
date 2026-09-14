@@ -1,12 +1,12 @@
 ================================================================================
-[2026-09-11 14:44:41 UTC] pull_team_stats.py started | season=2026
+[2026-09-14 10:17:36 UTC] pull_team_stats.py started | season=2026
 source=sportsdataverse_native_cfb_pbp
 input=/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/pbp/2026_pbp.parquet
 output=/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/team_stats/2026_team_stats.csv
 log=/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/00_intake/pull_team_stats.txt
-pbp_rows=17010
+pbp_rows=31534
 pbp_columns=476
-output_rows=188
+output_rows=358
 output_columns=15
 status=success
 ================================================================================

@@ -65,3 +65,25 @@ wrote 99 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb
 wrote 86 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/04_final_results/results/2026_2_2.csv
 games_processed=185 completed=100 not_final=85 failed=0 files_written=2
 
+--- run 2026-09-12T16:49:52.484718+00:00 ---
+version=cfb-final-scores-v2-2026-08-26
+season=2026
+wrote 99 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/04_final_results/results/2026_2_1.csv
+wrote 86 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/04_final_results/results/2026_2_2.csv
+games_processed=185 completed=105 not_final=80 failed=0 files_written=2
+
+--- run 2026-09-13T14:42:49.534926+00:00 ---
+version=cfb-final-scores-v2-2026-08-26
+season=2026
+wrote 99 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/04_final_results/results/2026_2_1.csv
+wrote 86 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/04_final_results/results/2026_2_2.csv
+games_processed=185 completed=185 not_final=0 failed=0 files_written=2
+
+--- run 2026-09-14T10:17:32.931385+00:00 ---
+version=cfb-final-scores-v2-2026-08-26
+season=2026
+wrote 99 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/04_final_results/results/2026_2_1.csv
+wrote 86 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/04_final_results/results/2026_2_2.csv
+wrote 75 rows to /home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/04_final_results/results/2026_2_3.csv
+games_processed=260 completed=185 not_final=75 failed=0 files_written=3
+
