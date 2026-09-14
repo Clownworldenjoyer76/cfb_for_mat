@@ -233,14 +233,66 @@ jobs:
 
       - name: Verify pipeline outputs
         run: |
-          test -f "docs/win/football/cfb/01_merge/week_${CFB_WEEK}_CFB_enriched.csv"
-          test -f "docs/win/football/cfb/02_select/week_${CFB_WEEK}_CFB_selected.csv"
-          test -f "docs/win/football/cfb/03_picks/week_${CFB_WEEK}_CFB_picks.csv"
-          test -f "docs/win/football/cfb/03_picks/cleaned/week_${CFB_WEEK}_CFB_clean_picks.csv"
-          test -f "docs/win/football/cfb/03_picks/all_games/all_week_${CFB_WEEK}_CFB_picks.csv"
-          test -f "docs/win/football/cfb/03_picks/selected/week_${CFB_WEEK}_CFB_select_picks.csv"
+          python - <<'PY'
+          import csv
+          import os
+          from pathlib import Path
 
-          echo "CFB Week ${CFB_WEEK} pipeline outputs verified."
+          season = int(os.environ["CFB_SEASON"])
+          week = int(os.environ["CFB_WEEK"])
+
+          paths = [
+              Path(f"docs/win/football/cfb/01_merge/week_{week}_CFB_enriched.csv"),
+              Path(f"docs/win/football/cfb/02_select/week_{week}_CFB_selected.csv"),
+              Path(f"docs/win/football/cfb/03_picks/week_{week}_CFB_picks.csv"),
+              Path(f"docs/win/football/cfb/03_picks/cleaned/week_{week}_CFB_clean_picks.csv"),
+              Path(f"docs/win/football/cfb/03_picks/all_games/all_week_{week}_CFB_picks.csv"),
+              Path(f"docs/win/football/cfb/03_picks/selected/week_{week}_CFB_select_picks.csv"),
+          ]
+
+          required = {"season", "week", "game_id"}
+
+          def as_int(value, field, path, line):
+              try:
+                  number = float(str(value).strip())
+              except (TypeError, ValueError):
+                  raise RuntimeError(f"{path}: invalid {field} at line {line}: {value!r}")
+              if not number.is_integer():
+                  raise RuntimeError(f"{path}: invalid {field} at line {line}: {value!r}")
+              return int(number)
+
+          for path in paths:
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise RuntimeError(f"{path}: missing or empty")
+
+              try:
+                  with path.open(newline="", encoding="utf-8-sig") as handle:
+                      reader = csv.DictReader(handle, strict=True)
+                      fields = set(reader.fieldnames or [])
+                      missing = required - fields
+                      if missing:
+                          raise RuntimeError(f"{path}: missing required columns: {sorted(missing)}")
+                      rows = list(reader)
+              except csv.Error as exc:
+                  raise RuntimeError(f"{path}: malformed CSV: {exc}") from exc
+
+              if not rows:
+                  raise RuntimeError(f"{path}: contains no data rows")
+
+              for line, row in enumerate(rows, start=2):
+                  if None in row or any(value is None for value in row.values()):
+                      raise RuntimeError(f"{path}: malformed row at line {line}")
+                  if as_int(row["season"], "season", path, line) != season:
+                      raise RuntimeError(f"{path}: wrong season at line {line}")
+                  if as_int(row["week"], "week", path, line) != week:
+                      raise RuntimeError(f"{path}: wrong week at line {line}")
+                  if not str(row["game_id"]).strip():
+                      raise RuntimeError(f"{path}: blank game_id at line {line}")
+
+              print(f"Verified {path}: {len(rows)} rows")
+
+          print(f"CFB Week {week} pipeline outputs verified.")
+          PY
 
       # ----------------------------------------------------------------------
       # GRADING ANALYSIS + REPORTS
