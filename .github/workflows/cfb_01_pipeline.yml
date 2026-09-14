@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: cfb-01-pipeline-${{ github.ref }}
+  group: repo-write-lock-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
