@@ -6,9 +6,6 @@ on:
 permissions:
   contents: write
 
-env:
-  CFB_SEASON: "2026"
-
 jobs:
   run-cfb-pipeline:
     runs-on: ubuntu-latest
@@ -16,6 +13,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+      - name: Load CFB season
+        shell: bash
+        run: |
+          CFB_SEASON="$(
+            sed -n 's/^[[:space:]]*season:[[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p' docs/win/football/cfb/config/current_week.yaml |
+              head -1
+          )
+
+          if ! [[ "$CFB_SEASON" =~ ^20[0-9]{2}$ ]]; then
+            echo "ERROR: Invalid or missing season in docs/win/football/cfb/config/current_week.yaml"
+            exit 1
+          fi
+
+          echo "CFB_SEASON=$CFB_SEASON" >> "$GITHUB_ENV"
+          echo "Configured CFB season: $CFB_SEASON"
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -24,8 +36,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install pandas numpy pyyaml pyarrow polars xgboost==3.2.0 sportsdataverse==0.0.75
+          python -m pip install --upgrade pip==26.2.1
+          python -m pip install -r docs/win/football/cfb/requirements.txt
 
       # ----------------------------------------------------------------------
       # SCHEDULE
@@ -282,6 +294,7 @@ jobs:
           fi
 
           git commit -m "Run CFB Week ${CFB_WEEK} pipeline"
+          git pull --rebase --autostash origin "$GITHUB_REF_NAME"
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
       # ----------------------------------------------------------------------
@@ -310,5 +323,5 @@ jobs:
           fi
 
           git commit -m "Update CFB pipeline health"
-          git pull --rebase --autostash origin main
+          git pull --rebase --autostash origin "$GITHUB_REF_NAME"
           git push origin "HEAD:${GITHUB_REF_NAME}"
