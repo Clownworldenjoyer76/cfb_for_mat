@@ -6,6 +6,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: cfb-01-pipeline-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   run-cfb-pipeline:
     runs-on: ubuntu-latest
