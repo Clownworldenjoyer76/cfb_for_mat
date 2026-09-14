@@ -1,12 +1,12 @@
-[2026-09-14 06:17:35 EDT] ================================================================================
-[2026-09-14 06:17:35 EDT] implementation=sportsdataverse_v5_2026-09-12
-[2026-09-14 06:17:35 EDT] pull_pbp.py started | season=2026 | source=sportsdataverse.CFBPlayProcess | sportsdataverse_version=0.0.75 | workers=1 | join_participants=False | refresh=False | dry_run=False
-[2026-09-14 06:17:36 EDT] schedule_games_total=892
-[2026-09-14 06:17:36 EDT] existing_games=185
-[2026-09-14 06:17:36 EDT] existing_rows=31534
-[2026-09-14 06:17:36 EDT] future_games_skipped=707
-[2026-09-14 06:17:36 EDT] already_stored_skipped=185
-[2026-09-14 06:17:36 EDT] games_to_process=0
-[2026-09-14 06:17:36 EDT] status=no_new_games
-[2026-09-14 06:17:36 EDT] output=/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/pbp/2026_pbp.parquet
-[2026-09-14 06:17:36 EDT] ================================================================================
+[2026-09-14 11:52:16 EDT] ================================================================================
+[2026-09-14 11:52:16 EDT] implementation=sportsdataverse_v5_2026-09-12
+[2026-09-14 11:52:16 EDT] pull_pbp.py started | season=2026 | source=sportsdataverse.CFBPlayProcess | sportsdataverse_version=0.0.75 | workers=1 | join_participants=False | refresh=False | dry_run=False
+[2026-09-14 11:52:17 EDT] schedule_games_total=892
+[2026-09-14 11:52:17 EDT] existing_games=185
+[2026-09-14 11:52:17 EDT] existing_rows=31534
+[2026-09-14 11:52:17 EDT] future_games_skipped=707
+[2026-09-14 11:52:17 EDT] already_stored_skipped=185
+[2026-09-14 11:52:17 EDT] games_to_process=0
+[2026-09-14 11:52:17 EDT] status=no_new_games
+[2026-09-14 11:52:17 EDT] output=/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/pbp/2026_pbp.parquet
+[2026-09-14 11:52:17 EDT] ================================================================================
