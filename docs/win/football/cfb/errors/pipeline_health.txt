@@ -1,9 +1,8 @@
-=== CFB PIPELINE HEALTH 2026-09-14T21:16:57.988983+00:00 ===
-status=failed
-workflow_status=failure
+=== CFB PIPELINE HEALTH 2026-09-14T21:29:47.117340+00:00 ===
+status=warning
+workflow_status=success
 season=2026
 week=3
-fatal_errors=1
+fatal_errors=0
 warnings=1
-FATAL: CFB workflow status is FAILURE
 WARNING: CFB Week 3: 18 scheduled game(s) do not have sportsbook odds
