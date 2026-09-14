@@ -114,7 +114,7 @@ def lookup_key(value: Any) -> str:
 
 def load_pipeline_config(
     path: Path,
-) -> tuple[int, int]:
+) -> tuple[int, int, int]:
     if not path.is_file():
         raise RuntimeError(
             f"Missing required file: {path}"
@@ -173,9 +173,28 @@ def load_pipeline_config(
             f"{season_type}"
         )
 
+    try:
+        week = int(
+            data["week"]
+        )
+    except (
+        KeyError,
+        TypeError,
+        ValueError,
+    ) as exc:
+        raise RuntimeError(
+            f"Invalid or missing week in {path}"
+        ) from exc
+
+    if week <= 0:
+        raise RuntimeError(
+            f"Invalid week in {path}: {week}"
+        )
+
     return (
         season,
         season_type,
+        week,
     )
 
 
@@ -1050,11 +1069,13 @@ def main() -> None:
         (
             season,
             season_type,
+            week,
         ) = load_pipeline_config(
             CONFIG_FILE
         )
 
         report.season = season
+        report.week = week
 
         report.set_detail(
             "season_type",
@@ -1263,6 +1284,11 @@ def main() -> None:
             dict[str, str],
         ] = {}
 
+        existing_by_id: dict[
+            str,
+            dict[str, str],
+        ] = {}
+
         for row in existing_rows:
             game_id = clean(
                 row.get(
@@ -1271,17 +1297,58 @@ def main() -> None:
             )
 
             if game_id:
+                existing_by_id[
+                    game_id
+                ] = row
+
                 merged[
                     game_id
                 ] = row
+
+        added_games = 0
+        updated_games = 0
+        unchanged_games = 0
 
         for (
             game_id,
             row,
         ) in pulled.items():
+            existing_row = (
+                existing_by_id.get(
+                    game_id
+                )
+            )
+
+            if existing_row is None:
+                added_games += 1
+
+            elif all(
+                clean(
+                    existing_row.get(
+                        column
+                    )
+                )
+                == clean(
+                    row.get(
+                        column
+                    )
+                )
+                for column
+                in OUTPUT_COLUMNS
+            ):
+                unchanged_games += 1
+
+            else:
+                updated_games += 1
+
             merged[
                 game_id
             ] = row
+
+        preserved_games = len(
+            set(existing_by_id)
+            - set(pulled)
+        )
 
         output_rows = sort_rows(
             list(
@@ -1294,6 +1361,60 @@ def main() -> None:
                 "No schedule rows "
                 "available to write."
             )
+
+        missing_stadium = sum(
+            1
+            for row in output_rows
+            if not clean(
+                row.get("stadium")
+            )
+        )
+
+        missing_surface = sum(
+            1
+            for row in output_rows
+            if not clean(
+                row.get("surface")
+            )
+        )
+
+        missing_roof = sum(
+            1
+            for row in output_rows
+            if not clean(
+                row.get("roof")
+            )
+        )
+
+        missing_home_timezone = sum(
+            1
+            for row in output_rows
+            if not clean(
+                row.get(
+                    "home_timezone"
+                )
+            )
+        )
+
+        missing_away_timezone = sum(
+            1
+            for row in output_rows
+            if not clean(
+                row.get(
+                    "away_timezone"
+                )
+            )
+        )
+
+        missing_game_timezone = sum(
+            1
+            for row in output_rows
+            if not clean(
+                row.get(
+                    "game_timezone"
+                )
+            )
+        )
 
         write_csv_atomic(
             output_file,
@@ -1320,6 +1441,36 @@ def main() -> None:
                 ),
                 "schedule_rows_written": (
                     len(output_rows)
+                ),
+                "schedule_games_added": (
+                    added_games
+                ),
+                "schedule_games_updated": (
+                    updated_games
+                ),
+                "schedule_games_unchanged": (
+                    unchanged_games
+                ),
+                "schedule_games_preserved": (
+                    preserved_games
+                ),
+                "missing_stadium": (
+                    missing_stadium
+                ),
+                "missing_surface": (
+                    missing_surface
+                ),
+                "missing_roof": (
+                    missing_roof
+                ),
+                "missing_home_timezone": (
+                    missing_home_timezone
+                ),
+                "missing_away_timezone": (
+                    missing_away_timezone
+                ),
+                "missing_game_timezone": (
+                    missing_game_timezone
                 ),
             }
         )
