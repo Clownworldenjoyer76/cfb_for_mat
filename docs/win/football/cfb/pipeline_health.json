@@ -1,7 +1,9 @@
 {
-  "fatal_errors": [],
+  "fatal_errors": [
+    "CFB workflow status is FAILURE"
+  ],
   "game_date_new_york": "2026_09_14",
-  "generated_at_utc": "2026-09-14T15:59:26.710718+00:00",
+  "generated_at_utc": "2026-09-14T21:16:57.988983+00:00",
   "leagues": {
     "cfb": {
       "counts": {
@@ -118,7 +120,7 @@
       "status": "STATUS: SUCCESS"
     }
   ],
-  "status": "warning",
+  "status": "failed",
   "warnings": [
     "CFB Week 3: 18 scheduled game(s) do not have sportsbook odds"
   ],
@@ -126,8 +128,8 @@
     "name": "CFB Pipeline",
     "ref_name": "main",
     "run_attempt": "1",
-    "run_id": "34864798667",
-    "sha": "fe9f88281b3707a66eaaada33ba7d717ff19d032",
-    "status": "success"
+    "run_id": "34897889223",
+    "sha": "5c1f70fb1a120953603c8d547dabfc92734c0414",
+    "status": "failure"
   }
 }
