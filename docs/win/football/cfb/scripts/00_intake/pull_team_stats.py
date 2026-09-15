@@ -4,12 +4,28 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-import traceback
-from datetime import datetime, timezone
+import uuid
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+
+SCRIPT_PATH = Path(__file__).resolve()
+SCRIPTS_DIR = SCRIPT_PATH.parents[1]
+CFB_ROOT = SCRIPT_PATH.parents[2]
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from pipeline_reporter import PipelineReporter
+
+
+PBP_DIR = CFB_ROOT / "00_intake" / "pbp"
+OUTPUT_DIR = CFB_ROOT / "00_intake" / "team_stats"
+REPORT_ROOT = CFB_ROOT / "errors"
+
+SCRIPT_VERSION = "cfb-team-stats-v2-2026-09-15"
 
 OUTPUT_COLUMNS = [
     "season",
@@ -61,28 +77,6 @@ SDV_REQUIRED_COLUMNS = [
 ]
 
 
-class RunLog:
-    def __init__(self, log_path: Path) -> None:
-        self.log_path = log_path
-        self.lines: list[str] = []
-
-    def write_line(self, message: str = "", *, stderr: bool = False) -> None:
-        self.lines.append(message)
-        print(message, file=sys.stderr if stderr else sys.stdout)
-
-    def save(self) -> None:
-        self.log_path.parent.mkdir(parents=True, exist_ok=True)
-        self.log_path.write_text("\n".join(self.lines) + "\n", encoding="utf-8")
-
-
-def resolve_paths() -> tuple[Path, Path, Path, Path]:
-    cfb_root = Path(__file__).resolve().parents[2]
-    pbp_dir = cfb_root / "00_intake" / "pbp"
-    output_dir = cfb_root / "00_intake" / "team_stats"
-    error_dir = cfb_root / "errors" / "00_intake"
-    return cfb_root, pbp_dir, output_dir, error_dir
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Build CFB weekly team stats from native SportsDataverse PBP."
@@ -106,18 +100,63 @@ def parse_args() -> argparse.Namespace:
 
 
 def get_season(cli_season: str | None) -> str:
-    if cli_season:
-        return str(cli_season)
-    env_season = os.getenv("CFB_SEASON")
-    if env_season:
-        return str(env_season)
-    raise SystemExit("Missing season. Pass --season or set CFB_SEASON.")
+    raw = (
+        str(cli_season).strip()
+        if cli_season is not None
+        else str(os.getenv("CFB_SEASON", "")).strip()
+    )
+
+    if not raw:
+        raise ValueError(
+            "Missing season. Pass --season or set CFB_SEASON."
+        )
+
+    try:
+        season = int(raw)
+    except ValueError as exc:
+        raise ValueError(
+            f"Season must be an integer; found {raw!r}"
+        ) from exc
+
+    if season < 2000 or season > 2100:
+        raise ValueError(
+            f"Season is outside the supported range: {season}"
+        )
+
+    return str(season)
 
 
-def write_empty_output(output_path: Path) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(columns=OUTPUT_COLUMNS).to_csv(output_path, index=False)
+def write_team_stats_atomic(
+    frame: pd.DataFrame,
+    output_path: Path,
+) -> None:
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
 
+    temp_path = output_path.with_name(
+        f".{output_path.name}.{uuid.uuid4().hex}.tmp"
+    )
+
+    try:
+        frame.to_csv(
+            temp_path,
+            index=False,
+        )
+
+        os.replace(
+            temp_path,
+            output_path,
+        )
+
+    finally:
+        try:
+            temp_path.unlink(
+                missing_ok=True
+            )
+        except Exception:
+            pass
 
 def read_pbp(pbp_path: Path) -> pd.DataFrame:
     if not pbp_path.exists():
@@ -188,72 +227,179 @@ def validate_pbp_season(
         )
 
 
-def _full_team_name(name: object, mascot: object = None) -> str | None:
-    if pd.isna(name):
-        return None
+def validate_pbp_integrity(
+    pbp: pd.DataFrame,
+) -> None:
+    week_values = pd.to_numeric(
+        pbp["week"],
+        errors="coerce",
+    )
 
-    base = str(name).strip()
-    if not base:
-        return None
+    invalid_week = (
+        week_values.isna()
+        | week_values.mod(1).ne(0)
+        | week_values.le(0)
+    )
 
-    if mascot is None or pd.isna(mascot):
-        return base
+    if invalid_week.any():
+        examples = (
+            pbp.loc[invalid_week, "week"]
+            .astype(str)
+            .drop_duplicates()
+            .head(10)
+            .tolist()
+        )
 
-    nick = str(mascot).strip()
-    if not nick:
-        return base
+        raise ValueError(
+            "PBP contains blank, non-numeric, non-integer, "
+            f"or non-positive week values: {examples}"
+        )
 
-    if base.casefold().endswith(nick.casefold()):
-        return base
+    game_ids = (
+        pbp["game_id"]
+        .astype("string")
+        .str.strip()
+    )
 
-    return f"{base} {nick}"
+    invalid_game_id = (
+        game_ids.isna()
+        | game_ids.fillna("").eq("")
+    )
+
+    if invalid_game_id.any():
+        raise ValueError(
+            "PBP contains blank game_id values"
+        )
+
+    sequence_numbers = pd.to_numeric(
+        pbp["sequenceNumber"],
+        errors="coerce",
+    )
+
+    if sequence_numbers.isna().any():
+        examples = (
+            pbp.loc[
+                sequence_numbers.isna(),
+                "sequenceNumber",
+            ]
+            .astype(str)
+            .drop_duplicates()
+            .head(10)
+            .tolist()
+        )
+
+        raise ValueError(
+            "PBP contains blank or non-numeric "
+            f"sequenceNumber values: {examples}"
+        )
 
 
-def _native_team_names(pbp: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
-    """
-    Published SportsDataverse season Parquets currently store pos_team and
-    def_pos_team as full display-name strings (for example, "Ohio State Buckeyes").
-    Use those native values directly.
-    """
-    posteam = pbp["pos_team"].astype("object")
-    defteam = pbp["def_pos_team"].astype("object")
-    return posteam, defteam
+def _clean_team_series(
+    series: pd.Series,
+) -> pd.Series:
+    result = (
+        series
+        .astype("string")
+        .str.strip()
+    )
+
+    normalized = result.str.casefold()
+
+    invalid = (
+        result.isna()
+        | normalized.isin(
+            {
+                "",
+                "nan",
+                "none",
+                "null",
+                "<na>",
+            }
+        )
+    )
+
+    return result.mask(
+        invalid,
+        pd.NA,
+    ).astype("object")
 
 
-def _home_away_display_names(
+def _coerce_boolean_series(
+    series: pd.Series,
+    label: str,
+) -> pd.Series:
+    def convert(value: object) -> bool:
+        if value is None or pd.isna(value):
+            return False
+
+        if isinstance(
+            value,
+            (bool, np.bool_),
+        ):
+            return bool(value)
+
+        if isinstance(
+            value,
+            (int, np.integer),
+        ):
+            if int(value) in {0, 1}:
+                return bool(int(value))
+
+        if isinstance(
+            value,
+            (float, np.floating),
+        ):
+            number = float(value)
+
+            if np.isfinite(number) and number in {0.0, 1.0}:
+                return bool(int(number))
+
+        text = str(value).strip().casefold()
+
+        if text in {
+            "true",
+            "1",
+            "1.0",
+            "yes",
+            "y",
+        }:
+            return True
+
+        if text in {
+            "false",
+            "0",
+            "0.0",
+            "no",
+            "n",
+            "",
+            "nan",
+            "none",
+            "null",
+            "<na>",
+        }:
+            return False
+
+        raise ValueError(
+            f"{label} contains unsupported boolean value {value!r}"
+        )
+
+    return series.map(
+        convert
+    ).astype(bool)
+
+
+def _native_team_names(
     pbp: pd.DataFrame,
 ) -> tuple[pd.Series, pd.Series]:
-    if "homeTeamMascot" in pbp.columns:
-        home_names = pd.Series(
-            [
-                _full_team_name(name, mascot)
-                for name, mascot in zip(
-                    pbp["homeTeamName"],
-                    pbp["homeTeamMascot"],
-                )
-            ],
-            index=pbp.index,
-            dtype="object",
-        )
-    else:
-        home_names = pbp["homeTeamName"].astype("object")
+    posteam = _clean_team_series(
+        pbp["pos_team"]
+    )
 
-    if "awayTeamMascot" in pbp.columns:
-        away_names = pd.Series(
-            [
-                _full_team_name(name, mascot)
-                for name, mascot in zip(
-                    pbp["awayTeamName"],
-                    pbp["awayTeamMascot"],
-                )
-            ],
-            index=pbp.index,
-            dtype="object",
-        )
-    else:
-        away_names = pbp["awayTeamName"].astype("object")
+    defteam = _clean_team_series(
+        pbp["def_pos_team"]
+    )
 
-    return home_names, away_names
+    return posteam, defteam
 
 def _offense_score_from_is_home(
     is_home: pd.Series,
@@ -265,7 +411,10 @@ def _offense_score_from_is_home(
     SportsDataverse is_home flag. This avoids reconstructing or matching team
     names for score perspective.
     """
-    home_flag = is_home.fillna(False).astype(bool)
+    home_flag = _coerce_boolean_series(
+        is_home,
+        "is_home",
+    )
 
     home_vals = pd.to_numeric(home_score, errors="coerce")
     away_vals = pd.to_numeric(away_score, errors="coerce")
@@ -313,10 +462,17 @@ def adapt_sportsdataverse_pbp(pbp: pd.DataFrame) -> pd.DataFrame:
         errors="coerce",
     )
 
-    out["touchdown"] = pd.to_numeric(pbp["touchdown"], errors="coerce")
+    touchdown_flags = _coerce_boolean_series(
+        pbp["touchdown"],
+        "touchdown",
+    )
+    out["touchdown"] = touchdown_flags.astype(float)
     out["pass_touchdown"] = pd.to_numeric(pbp["pass_td"], errors="coerce")
     out["rush_touchdown"] = pd.to_numeric(pbp["rush_td"], errors="coerce")
-    out["scrimmage_play"] = pbp["scrimmage_play"].fillna(False).astype(bool)
+    out["scrimmage_play"] = _coerce_boolean_series(
+        pbp["scrimmage_play"],
+        "scrimmage_play",
+    )
 
     out["posteam_score"] = _offense_score_from_is_home(
         pbp["is_home"],
@@ -329,9 +485,15 @@ def adapt_sportsdataverse_pbp(pbp: pd.DataFrame) -> pd.DataFrame:
         pbp["end.awayScore"],
     )
 
-    offense_score = pbp["offense_score_play"].fillna(False).astype(bool)
-    defense_score = pbp["defense_score_play"].fillna(False).astype(bool)
-    touchdown = pbp["touchdown"].fillna(False).astype(bool)
+    offense_score = _coerce_boolean_series(
+        pbp["offense_score_play"],
+        "offense_score_play",
+    )
+    defense_score = _coerce_boolean_series(
+        pbp["defense_score_play"],
+        "defense_score_play",
+    )
+    touchdown = touchdown_flags
 
     out["td_team"] = pd.NA
     out.loc[touchdown & offense_score, "td_team"] = out.loc[
@@ -666,6 +828,180 @@ def merge_stat_frames(frames: list[pd.DataFrame]) -> pd.DataFrame:
     return result
 
 
+def validate_team_stats_output(
+    team_stats: pd.DataFrame,
+    requested_season: str,
+) -> None:
+    if team_stats.empty:
+        raise ValueError(
+            "Team-stat output is empty"
+        )
+
+    if list(team_stats.columns) != OUTPUT_COLUMNS:
+        raise ValueError(
+            "Team-stat output columns do not match "
+            "the required output schema"
+        )
+
+    expected_season = int(
+        str(requested_season).strip()
+    )
+
+    season_values = pd.to_numeric(
+        team_stats["season"],
+        errors="coerce",
+    )
+
+    invalid_season = (
+        season_values.isna()
+        | season_values.mod(1).ne(0)
+    )
+
+    if invalid_season.any():
+        raise ValueError(
+            "Team-stat output contains invalid season values"
+        )
+
+    observed_seasons = sorted(
+        season_values.astype(int).unique().tolist()
+    )
+
+    if observed_seasons != [expected_season]:
+        raise ValueError(
+            "Team-stat output season mismatch. "
+            f"requested_season={expected_season}, "
+            f"observed_seasons={observed_seasons}"
+        )
+
+    week_values = pd.to_numeric(
+        team_stats["week"],
+        errors="coerce",
+    )
+
+    invalid_week = (
+        week_values.isna()
+        | week_values.mod(1).ne(0)
+        | week_values.le(0)
+    )
+
+    if invalid_week.any():
+        raise ValueError(
+            "Team-stat output contains invalid week values"
+        )
+
+    team_values = (
+        team_stats["team"]
+        .astype("string")
+        .str.strip()
+    )
+
+    invalid_team = (
+        team_values.isna()
+        | team_values.fillna("").eq("")
+    )
+
+    if invalid_team.any():
+        raise ValueError(
+            "Team-stat output contains blank team values"
+        )
+
+    key_frame = pd.DataFrame(
+        {
+            "season": season_values.astype(int),
+            "week": week_values.astype(int),
+            "team": team_values,
+        }
+    )
+
+    duplicate_mask = key_frame.duplicated(
+        ["season", "week", "team"],
+        keep=False,
+    )
+
+    if duplicate_mask.any():
+        examples = (
+            key_frame.loc[
+                duplicate_mask,
+                ["season", "week", "team"],
+            ]
+            .drop_duplicates()
+            .head(10)
+            .astype(str)
+            .agg("/".join, axis=1)
+            .tolist()
+        )
+
+        raise ValueError(
+            "Team-stat output contains duplicate "
+            f"(season, week, team) rows: {examples}"
+        )
+
+    metric_columns = OUTPUT_COLUMNS[3:]
+
+    for column in metric_columns:
+        numeric = pd.to_numeric(
+            team_stats[column],
+            errors="coerce",
+        )
+
+        invalid_numeric = (
+            team_stats[column].notna()
+            & numeric.isna()
+        )
+
+        if invalid_numeric.any():
+            raise ValueError(
+                f"Team-stat output contains non-numeric {column}"
+            )
+
+        values = numeric.dropna().to_numpy(
+            dtype=float
+        )
+
+        if (
+            values.size
+            and not np.isfinite(values).all()
+        ):
+            raise ValueError(
+                f"Team-stat output contains non-finite {column}"
+            )
+
+    rate_columns = [
+        "off_success_rate",
+        "def_success_rate",
+        "red_zone_td_rate",
+        "red_zone_td_rate_allowed",
+        "third_down_conversion_rate",
+    ]
+
+    for column in rate_columns:
+        numeric = pd.to_numeric(
+            team_stats[column],
+            errors="coerce",
+        ).dropna()
+
+        if (
+            numeric.lt(0).any()
+            or numeric.gt(1).any()
+        ):
+            raise ValueError(
+                f"Team-stat output {column} is outside [0, 1]"
+            )
+
+    for column in [
+        "points_per_drive",
+        "points_per_drive_allowed",
+    ]:
+        numeric = pd.to_numeric(
+            team_stats[column],
+            errors="coerce",
+        ).dropna()
+
+        if numeric.lt(0).any():
+            raise ValueError(
+                f"Team-stat output {column} contains negative values"
+            )
+
 def build_team_stats(native_pbp: pd.DataFrame) -> pd.DataFrame:
     if native_pbp.empty:
         return pd.DataFrame(columns=OUTPUT_COLUMNS)
@@ -701,45 +1037,69 @@ def build_team_stats(native_pbp: pd.DataFrame) -> pd.DataFrame:
 
 def run() -> int:
     args = parse_args()
-    season = get_season(args.season)
-
-    _, pbp_dir, output_dir, error_dir = resolve_paths()
-
-    pbp_path = (
-        Path(args.pbp_path).expanduser()
-        if args.pbp_path
-        else pbp_dir / f"{season}_pbp.parquet"
+    season = get_season(
+        args.season
     )
 
-    output_path = output_dir / f"{season}_team_stats.csv"
-    log_path = error_dir / "pull_team_stats.txt"
+    pbp_path = (
+        Path(args.pbp_path)
+        .expanduser()
+        .resolve()
+        if args.pbp_path
+        else PBP_DIR / f"{season}_pbp.parquet"
+    )
 
-    log = RunLog(log_path)
+    output_path = (
+        OUTPUT_DIR
+        / f"{season}_team_stats.csv"
+    )
 
-    try:
-        output_dir.mkdir(parents=True, exist_ok=True)
-        error_dir.mkdir(parents=True, exist_ok=True)
-
-        log.write_line("=" * 80)
-        log.write_line(
-            f"[{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}] "
-            f"pull_team_stats.py started | season={season}"
+    with PipelineReporter(
+        script=__file__,
+        stage="00_intake",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        season=int(season),
+        extra_context={
+            "script_version": SCRIPT_VERSION,
+            "source": "sportsdataverse_native_cfb_pbp",
+        },
+    ) as report:
+        report.add_input(
+            pbp_path
         )
-        log.write_line("source=sportsdataverse_native_cfb_pbp")
-        log.write_line(f"input={pbp_path}")
-        log.write_line(f"output={output_path}")
-        log.write_line(f"log={log_path}")
+        report.add_output(
+            output_path
+        )
 
-        pbp = read_pbp(pbp_path)
+        report.update_details(
+            {
+                "explicit_pbp_path": bool(
+                    args.pbp_path
+                ),
+                "output_modified": False,
+            }
+        )
+
+        pbp = read_pbp(
+            pbp_path
+        )
+
+        report.set_rows(
+            rows_in=len(pbp),
+        )
+
+        report.set_detail(
+            "pbp_columns",
+            len(pbp.columns),
+        )
 
         if pbp.empty:
-            write_empty_output(output_path)
-            log.write_line("pbp_rows=0")
-            log.write_line("output_rows=0")
-            log.write_line(f"output_columns={len(OUTPUT_COLUMNS)}")
-            log.write_line("status=empty_pbp_written")
-            log.write_line("=" * 80)
-            return 0
+            raise RuntimeError(
+                "PBP input is empty; refusing to overwrite "
+                f"team-stat output: {output_path}"
+            )
 
         require_columns(
             pbp,
@@ -752,37 +1112,93 @@ def run() -> int:
             season,
         )
 
-        team_stats = build_team_stats(pbp)
+        validate_pbp_integrity(
+            pbp,
+        )
 
-        if len(pbp) > 0 and team_stats.empty:
-            raise ValueError(
-                "PBP contained rows but team-stat output was empty. "
-                "Refusing to report success."
+        week_values = pd.to_numeric(
+            pbp["week"],
+            errors="raise",
+        ).astype(int)
+
+        game_ids = (
+            pbp["game_id"]
+            .astype("string")
+            .str.strip()
+        )
+
+        report.update_details(
+            {
+                "games_in_input": int(
+                    game_ids.nunique()
+                ),
+                "weeks_in_input": sorted(
+                    week_values.unique().tolist()
+                ),
+            }
+        )
+
+        team_stats = build_team_stats(
+            pbp
+        )
+
+        validate_team_stats_output(
+            team_stats,
+            season,
+        )
+
+        write_team_stats_atomic(
+            team_stats,
+            output_path,
+        )
+
+        output_weeks = sorted(
+            pd.to_numeric(
+                team_stats["week"],
+                errors="raise",
             )
+            .astype(int)
+            .unique()
+            .tolist()
+        )
 
-        team_stats.to_csv(output_path, index=False)
+        report.set_rows(
+            rows_out=len(team_stats),
+        )
 
-        log.write_line(f"pbp_rows={len(pbp)}")
-        log.write_line(f"pbp_columns={len(pbp.columns)}")
-        log.write_line(f"output_rows={len(team_stats)}")
-        log.write_line(f"output_columns={len(team_stats.columns)}")
-        log.write_line("status=success")
-        log.write_line("=" * 80)
+        report.update_details(
+            {
+                "output_modified": True,
+                "output_columns": len(
+                    team_stats.columns
+                ),
+                "team_week_rows": len(
+                    team_stats
+                ),
+                "teams_in_output": int(
+                    team_stats["team"].nunique()
+                ),
+                "weeks_in_output": output_weeks,
+            }
+        )
 
-        return 0
+        print("pull_team_stats.py completed")
+        print(f"season={season}")
+        print(f"pbp_rows={len(pbp)}")
+        print(
+            f"games_in_input="
+            f"{game_ids.nunique()}"
+        )
+        print(
+            f"team_stat_rows="
+            f"{len(team_stats)}"
+        )
+        print(f"output={output_path}")
 
-    except Exception as exc:
-        log.write_line("=" * 80, stderr=True)
-        log.write_line("pull_team_stats.py failed", stderr=True)
-        log.write_line(f"error={exc}", stderr=True)
-        log.write_line(traceback.format_exc(), stderr=True)
-        log.write_line("status=failed", stderr=True)
-        log.write_line("=" * 80, stderr=True)
-        return 1
-
-    finally:
-        log.save()
+    return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(run())
+    raise SystemExit(
+        run()
+    )
