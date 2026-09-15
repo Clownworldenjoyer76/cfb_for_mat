@@ -1,0 +1,66 @@
+{
+  "schema_version": "2.0",
+  "run_id": "github-34982762005-attempt-1",
+  "status": "SUCCESS",
+  "exit_code": 0,
+  "pipeline": "cfb",
+  "league": "CFB",
+  "stage": "00_intake",
+  "script": "pull_team_stats.py",
+  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_team_stats.py",
+  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_team_stats.json",
+  "started_at_utc": "2026-09-15T14:37:33.749968+00:00",
+  "finished_at_utc": "2026-09-15T14:37:34.294284+00:00",
+  "duration_seconds": 0.544,
+  "environment": {
+    "hostname": "runnervmlun5p",
+    "python_version": "3.12.14",
+    "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
+    "platform": "linux",
+    "process_id": 2433,
+    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
+    "github_run_id": "34982762005",
+    "github_run_attempt": "1",
+    "github_workflow": "CFB 01 Pipeline",
+    "github_job": "run-cfb-pipeline",
+    "github_ref_name": "main",
+    "github_sha": "12819fb2ed6d7158dec873d3ec56325eb34717ca",
+    "github_actor": "Clownworldenjoyer76",
+    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+  },
+  "context": {
+    "season": 2026,
+    "week": null,
+    "script_version": "cfb-team-stats-v2-2026-09-15",
+    "source": "sportsdataverse_native_cfb_pbp"
+  },
+  "inputs": [
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/pbp/2026_pbp.parquet"
+  ],
+  "outputs": [
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/team_stats/2026_team_stats.csv"
+  ],
+  "rows_in": 31534,
+  "rows_out": 358,
+  "warning_count": 0,
+  "error_count": 0,
+  "warnings": [],
+  "errors": [],
+  "details": {
+    "explicit_pbp_path": false,
+    "output_modified": true,
+    "pbp_columns": 476,
+    "games_in_input": 185,
+    "weeks_in_input": [
+      1,
+      2
+    ],
+    "output_columns": 15,
+    "team_week_rows": 358,
+    "teams_in_output": 218,
+    "weeks_in_output": [
+      1,
+      2
+    ]
+  }
+}
