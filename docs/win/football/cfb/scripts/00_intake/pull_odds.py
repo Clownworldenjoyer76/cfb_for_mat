@@ -1,62 +1,48 @@
 #!/usr/bin/env python3
 # docs/win/football/cfb/scripts/00_intake/pull_odds.py
-"""Pull current CFB odds from ESPN Core and preserve point-in-time snapshots.
+"""Pull current CFB odds from ESPN Core and preserve point-in-time snapshots."""
 
-Input:
-  docs/win/football/cfb/00_intake/schedule/{season}_schedule.csv
-
-ESPN source:
-  https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/
-  events/{game_id}/competitions/{game_id}/odds
-
-Compatibility/current outputs:
-  docs/win/football/cfb/00_intake/odds/YYYY_MM_DD_CFB_odds.csv
-  docs/win/football/cfb/00_intake/odds/raw/YYYY_MM_DD_cfb_odds.json
-
-Immutable snapshot outputs:
-  docs/win/football/cfb/00_intake/odds/snapshots/
-  docs/win/football/cfb/00_intake/odds/raw/snapshots/
-
-No external odds provider or API key is used.
-"""
+from __future__ import annotations
 
 import csv
 import json
+import math
+import os
 import re
 import sys
-import traceback
-from datetime import datetime, timedelta, timezone
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 
+import yaml
 
-BASE_DIR = Path("docs/win/football/cfb")
-SCHEDULE_DIR = BASE_DIR / "00_intake" / "schedule"
+SCRIPT_PATH = Path(__file__).resolve()
+SCRIPTS_DIR = SCRIPT_PATH.parents[1]
+CFB_ROOT = SCRIPT_PATH.parents[2]
 
-ODDS_DIR = BASE_DIR / "00_intake" / "odds"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from pipeline_reporter import PipelineReporter
+
+CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
+SCHEDULE_DIR = CFB_ROOT / "00_intake" / "schedule"
+ODDS_DIR = CFB_ROOT / "00_intake" / "odds"
 RAW_ODDS_DIR = ODDS_DIR / "raw"
 SNAPSHOT_DIR = ODDS_DIR / "snapshots"
 RAW_SNAPSHOT_DIR = RAW_ODDS_DIR / "snapshots"
-ERROR_DIR = BASE_DIR / "errors" / "00_intake"
-
-for directory in (
-    RAW_ODDS_DIR,
-    SNAPSHOT_DIR,
-    RAW_SNAPSHOT_DIR,
-    ODDS_DIR,
-    ERROR_DIR,
-):
-    directory.mkdir(parents=True, exist_ok=True)
-
-LOG_FILE = ERROR_DIR / "pull_odds.txt"
+REPORT_ROOT = CFB_ROOT / "errors"
 
 ESPN_BASE = (
     "https://sports.core.api.espn.com/v2/sports/football/"
     "leagues/college-football"
 )
+
+SCRIPT_VERSION = "cfb-odds-v2-2026-09-15"
 
 SCHEDULE_REQUIRED_COLUMNS = [
     "season",
@@ -69,8 +55,6 @@ SCHEDULE_REQUIRED_COLUMNS = [
     "home_team",
     "game_timezone",
 ]
-
-ACTIVE_GAME_GRACE_HOURS = 8
 
 OUTPUT_COLUMNS = [
     "snapshot_id",
@@ -97,44 +81,92 @@ OUTPUT_COLUMNS = [
     "under_american",
 ]
 
+VALID_MARKET_SIDES = {
+    "h2h": {"home", "away"},
+    "spreads": {"home", "away"},
+    "totals": {"over", "under"},
+}
 
-def utc_now():
+
+def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def utc_now_iso():
-    return utc_now().isoformat()
+def load_current_week() -> tuple[int, int, int]:
+    if not CURRENT_WEEK_CONFIG_PATH.exists():
+        raise FileNotFoundError(
+            f"Missing current-week config: {CURRENT_WEEK_CONFIG_PATH}"
+        )
 
+    with CURRENT_WEEK_CONFIG_PATH.open(
+        "r",
+        encoding="utf-8",
+    ) as handle:
+        payload = yaml.safe_load(handle)
 
-def log(message):
-    with LOG_FILE.open("a", encoding="utf-8") as f:
-        f.write(f"[{utc_now_iso()}] {message}\n")
+    if not isinstance(payload, dict):
+        raise ValueError(
+            "Current-week config must contain a YAML mapping"
+        )
 
+    values: dict[str, int] = {}
 
-def fail(message):
-    log(f"ERROR: {message}")
-    raise RuntimeError(message)
+    for key in ("season", "season_type", "week"):
+        raw = payload.get(key)
 
+        if isinstance(raw, bool):
+            raise ValueError(
+                f"Current-week config {key} must be an integer"
+            )
 
-def latest_file(directory, pattern, label):
-    files = sorted(
-        directory.glob(pattern),
-        key=lambda p: p.stat().st_mtime,
-        reverse=True,
+        try:
+            values[key] = int(
+                str(raw).strip()
+            )
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"Current-week config {key} must be an integer"
+            ) from exc
+
+    if values["season"] < 2000:
+        raise ValueError(
+            f"Invalid season in current-week config: {values['season']}"
+        )
+
+    if values["season_type"] < 1:
+        raise ValueError(
+            "Invalid season_type in current-week config: "
+            f"{values['season_type']}"
+        )
+
+    if values["week"] < 1:
+        raise ValueError(
+            f"Invalid week in current-week config: {values['week']}"
+        )
+
+    return (
+        values["season"],
+        values["season_type"],
+        values["week"],
     )
 
-    if not files:
-        fail(f"No {label} found in {directory} matching {pattern}")
 
-    return files[0]
-
-
-def read_csv(path, required_columns, label):
+def read_csv(
+    path: Path,
+    required_columns: list[str],
+    label: str,
+) -> list[dict[str, str]]:
     if not path.exists():
-        fail(f"Missing {label}: {path}")
+        raise FileNotFoundError(
+            f"Missing {label}: {path}"
+        )
 
-    with path.open("r", newline="", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f)
+    with path.open(
+        "r",
+        newline="",
+        encoding="utf-8-sig",
+    ) as handle:
+        reader = csv.DictReader(handle)
         fieldnames = reader.fieldnames or []
 
         missing = [
@@ -142,257 +174,531 @@ def read_csv(path, required_columns, label):
             for column in required_columns
             if column not in fieldnames
         ]
+
         if missing:
-            fail(f"{label} missing columns: {missing}")
+            raise ValueError(
+                f"{label} missing columns: {missing}"
+            )
 
         return list(reader)
 
 
-def build_url(path, params=None):
-    url = f"{ESPN_BASE}{path}"
-    if params:
-        return f"{url}?{urlencode(params)}"
-    return url
+def schedule_kickoff_utc(
+    row: dict[str, str],
+) -> datetime:
+    game_id = str(
+        row.get("game_id", "")
+    ).strip()
 
+    game_date = str(
+        row.get("game_date", "")
+    ).strip()
 
-def http_get_json(url):
-    request = Request(
-        url,
-        headers={
-            "User-Agent": "cfb-espn-pull-odds/1.0",
-            "Accept": "application/json",
-        },
-    )
+    game_time = str(
+        row.get("game_time", "")
+    ).strip()
 
-    try:
-        with urlopen(request, timeout=45) as response:
-            status = response.status
-            body = response.read().decode("utf-8")
-    except HTTPError as exc:
-        body = ""
-        try:
-            body = exc.read().decode("utf-8")
-        except Exception:
-            pass
+    game_timezone = str(
+        row.get("game_timezone", "")
+    ).strip()
 
-        return exc.code, None, body or str(exc)
-    except URLError as exc:
-        return None, None, str(exc)
-    except Exception as exc:
-        return None, None, str(exc)
-
-    if status < 200 or status >= 300:
-        return status, None, body
-
-    try:
-        return status, json.loads(body), ""
-    except Exception as exc:
-        return status, None, f"JSON parse failed: {exc}"
-
-
-def fetch_ref(ref):
-    if not ref:
-        return None
-
-    status, payload, error = http_get_json(ref)
-    if payload is None:
-        log(
-            "REF_FETCH_FAILED "
-            f"status={status or ''} ref={ref} error={error}"
+    missing = [
+        name
+        for name, value in (
+            ("game_date", game_date),
+            ("game_time", game_time),
+            ("game_timezone", game_timezone),
         )
-    return payload
+        if not value
+    ]
 
-
-def to_float(value):
-    if value is None:
-        return None
-
-    text = str(value).strip()
-    if not text:
-        return None
-
-    if text.lower() in {"even", "ev", "evens"}:
-        return 100.0
+    if missing:
+        raise ValueError(
+            f"Game {game_id or '<blank>'} missing kickoff fields: "
+            + ", ".join(missing)
+        )
 
     try:
-        return float(text)
-    except Exception:
-        return None
-
-
-def clean_number(value):
-    number = to_float(value)
-    if number is None:
-        return ""
-
-    if number.is_integer():
-        return str(int(number))
-
-    return str(number)
-
-
-def normalize_american(value):
-    number = to_float(value)
-    if number is None:
-        return ""
-
-    if number == 0:
-        return ""
-
-    return str(int(round(number)))
-
-
-def american_to_decimal(value):
-    american = to_float(value)
-    if american is None or american == 0:
-        return ""
-
-    if american > 0:
-        decimal = 1 + (american / 100)
-    else:
-        decimal = 1 + (100 / abs(american))
-
-    return clean_number(round(decimal, 6))
-
-
-def parse_iso_or_date(value):
-    text = str(value or "").strip()
-    if not text:
-        return None
-
-    if text.endswith("Z"):
-        text = text[:-1] + "+00:00"
-
-    try:
-        return datetime.fromisoformat(text)
-    except Exception:
-        pass
-
-    try:
-        return datetime.strptime(text, "%Y-%m-%d")
-    except Exception:
-        return None
-
-
-def schedule_kickoff_utc(row):
-    game_date = str(row.get("game_date", "")).strip()
-    game_time = str(row.get("game_time", "")).strip()
-    game_timezone = str(row.get("game_timezone", "")).strip()
-
-    if not game_date or not game_time or not game_timezone:
-        return None
+        timezone_info = ZoneInfo(
+            game_timezone
+        )
+    except Exception as exc:
+        raise ValueError(
+            f"Game {game_id or '<blank>'} has invalid "
+            f"game_timezone={game_timezone!r}"
+        ) from exc
 
     try:
         local_dt = datetime.strptime(
             f"{game_date} {game_time}",
             "%Y-%m-%d %H:%M",
-        ).replace(
-            tzinfo=ZoneInfo(game_timezone)
+        )
+    except ValueError as exc:
+        raise ValueError(
+            f"Game {game_id or '<blank>'} has invalid kickoff "
+            f"date/time: date={game_date!r}, time={game_time!r}"
+        ) from exc
+
+    return local_dt.replace(
+        tzinfo=timezone_info
+    ).astimezone(
+        timezone.utc
+    )
+
+
+def schedule_kickoff_iso(
+    row: dict[str, str],
+) -> str:
+    return (
+        schedule_kickoff_utc(row)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
+
+
+def is_game_locked(
+    row: dict[str, str],
+    now_utc: datetime,
+) -> bool:
+    return (
+        now_utc
+        >= schedule_kickoff_utc(row)
+    )
+
+
+def load_target_schedule(
+    season: int,
+    season_type: int,
+    week: int,
+) -> tuple[Path, list[dict[str, str]]]:
+    schedule_path = (
+        SCHEDULE_DIR
+        / f"{season}_schedule.csv"
+    )
+
+    rows = read_csv(
+        schedule_path,
+        SCHEDULE_REQUIRED_COLUMNS,
+        "CFB schedule CSV",
+    )
+
+    target_rows = [
+        row
+        for row in rows
+        if str(
+            row.get("season", "")
+        ).strip() == str(season)
+        and str(
+            row.get("season_type", "")
+        ).strip() == str(season_type)
+        and str(
+            row.get("week", "")
+        ).strip() == str(week)
+    ]
+
+    if not target_rows:
+        raise ValueError(
+            "Configured CFB schedule group was not found: "
+            f"season={season}, "
+            f"season_type={season_type}, "
+            f"week={week}"
+        )
+
+    game_ids: list[str] = []
+
+    for row in target_rows:
+        game_id = str(
+            row.get("game_id", "")
+        ).strip()
+
+        home_team = str(
+            row.get("home_team", "")
+        ).strip()
+
+        away_team = str(
+            row.get("away_team", "")
+        ).strip()
+
+        if not game_id:
+            raise ValueError(
+                "Configured target week contains a blank game_id"
+            )
+
+        if not home_team or not away_team:
+            raise ValueError(
+                f"Game {game_id} has a blank home_team or away_team"
+            )
+
+        schedule_kickoff_utc(
+            row
+        )
+
+        game_ids.append(
+            game_id
+        )
+
+    counts: dict[str, int] = {}
+
+    for game_id in game_ids:
+        counts[game_id] = (
+            counts.get(
+                game_id,
+                0,
+            )
+            + 1
+        )
+
+    duplicates = sorted(
+        game_id
+        for game_id, count in counts.items()
+        if count > 1
+    )
+
+    if duplicates:
+        raise ValueError(
+            "Configured target week contains duplicate game_id values: "
+            + ", ".join(
+                duplicates[:20]
+            )
+        )
+
+    target_rows.sort(
+        key=lambda row: (
+            schedule_kickoff_utc(row),
+            str(
+                row.get("game_id", "")
+            ).strip(),
+        )
+    )
+
+    return (
+        schedule_path,
+        target_rows,
+    )
+
+
+def build_url(
+    path: str,
+    params: dict[str, object] | None = None,
+) -> str:
+    url = f"{ESPN_BASE}{path}"
+
+    if params:
+        return (
+            f"{url}?{urlencode(params)}"
+        )
+
+    return url
+
+
+def http_get_json(
+    url: str,
+) -> tuple[int | None, object | None, str]:
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "cfb-espn-pull-odds/2.0",
+            "Accept": "application/json",
+        },
+    )
+
+    try:
+        with urlopen(
+            request,
+            timeout=45,
+        ) as response:
+            status = response.status
+            body = response.read().decode(
+                "utf-8"
+            )
+
+    except HTTPError as exc:
+        body = ""
+
+        try:
+            body = exc.read().decode(
+                "utf-8"
+            )
+        except Exception:
+            pass
+
+        return (
+            exc.code,
+            None,
+            body or str(exc),
+        )
+
+    except URLError as exc:
+        return (
+            None,
+            None,
+            str(exc),
+        )
+
+    except Exception as exc:
+        return (
+            None,
+            None,
+            str(exc),
+        )
+
+    if (
+        status < 200
+        or status >= 300
+    ):
+        return (
+            status,
+            None,
+            body,
+        )
+
+    try:
+        payload = json.loads(
+            body
         )
     except Exception as exc:
-        log(
-            "KICKOFF_PARSE_FAILED "
-            f"game_id={row.get('game_id', '')} "
-            f"date={game_date} time={game_time} "
-            f"timezone={game_timezone} error={exc}"
+        return (
+            status,
+            None,
+            f"JSON parse failed: {exc}",
         )
+
+    return (
+        status,
+        payload,
+        "",
+    )
+
+
+def fetch_ref(
+    ref: str,
+    label: str,
+) -> dict:
+    status, payload, error = (
+        http_get_json(ref)
+    )
+
+    if (
+        status is None
+        or status < 200
+        or status >= 300
+        or payload is None
+    ):
+        raise RuntimeError(
+            f"{label} fetch failed: "
+            f"status={status!r}, "
+            f"ref={ref}, "
+            f"error={error}"
+        )
+
+    if not isinstance(
+        payload,
+        dict,
+    ):
+        raise RuntimeError(
+            f"{label} fetch returned non-object JSON: {ref}"
+        )
+
+    return payload
+
+
+def to_float(
+    value: object,
+) -> float | None:
+    if (
+        value is None
+        or isinstance(value, bool)
+    ):
         return None
 
-    return local_dt.astimezone(timezone.utc)
+    text = str(value).strip()
+
+    if not text:
+        return None
+
+    if text.casefold() in {
+        "even",
+        "ev",
+        "evens",
+    }:
+        return 100.0
+
+    try:
+        number = float(text)
+    except (TypeError, ValueError):
+        return None
+
+    if not math.isfinite(
+        number
+    ):
+        return None
+
+    return number
 
 
-def schedule_kickoff_iso(row):
-    kickoff = schedule_kickoff_utc(row)
+def clean_number(
+    value: object,
+) -> str:
+    number = to_float(
+        value
+    )
 
-    if kickoff is not None:
-        return (
-            kickoff.isoformat()
-            .replace("+00:00", "Z")
+    if number is None:
+        return ""
+
+    if number.is_integer():
+        return str(
+            int(number)
         )
 
-    game_date = str(row.get("game_date", "")).strip()
-    game_time = str(row.get("game_time", "")).strip()
-
-    if game_date and game_time:
-        return f"{game_date}T{game_time}"
-
-    return game_date
+    return str(number)
 
 
-def is_game_locked(row, now_utc=None):
-    kickoff = schedule_kickoff_utc(row)
+def normalize_american(
+    value: object,
+) -> str:
+    number = to_float(
+        value
+    )
 
-    if kickoff is None:
-        return False
+    if (
+        number is None
+        or number == 0
+    ):
+        return ""
 
-    now_utc = now_utc or utc_now()
-    return now_utc >= kickoff
+    return str(
+        int(
+            round(number)
+        )
+    )
 
 
-def is_current_or_future_window(row, now_utc=None):
-    now_utc = now_utc or utc_now()
-    kickoff = schedule_kickoff_utc(row)
+def american_to_decimal(
+    value: object,
+) -> str:
+    american = to_float(
+        value
+    )
 
-    if kickoff is not None:
-        return kickoff >= (
-            now_utc
-            - timedelta(hours=ACTIVE_GAME_GRACE_HOURS)
+    if (
+        american is None
+        or american == 0
+    ):
+        return ""
+
+    if american > 0:
+        decimal = (
+            1
+            + american / 100
+        )
+    else:
+        decimal = (
+            1
+            + 100 / abs(american)
         )
 
-    game_date = str(row.get("game_date", "")).strip()
-    parsed = parse_iso_or_date(game_date)
+    return clean_number(
+        round(
+            decimal,
+            6,
+        )
+    )
 
-    if parsed is None:
-        return True
 
-    return parsed.date() >= now_utc.date()
+def provider_info(
+    odds_item: dict,
+) -> dict[str, object]:
+    provider = odds_item.get(
+        "provider"
+    )
 
-def provider_info(odds_item):
-    provider = odds_item.get("provider")
-
-    if isinstance(provider, dict):
-        provider_data = provider
-
-        if provider.get("$ref") and not (
-            provider.get("name")
-            or provider.get("id")
-            or provider.get("priority") is not None
-        ):
-            resolved = fetch_ref(provider.get("$ref"))
-            if isinstance(resolved, dict):
-                provider_data = resolved
-
+    if not isinstance(
+        provider,
+        dict,
+    ):
         return {
-            "id": str(provider_data.get("id", "")).strip(),
-            "name": str(
-                provider_data.get("name")
-                or provider_data.get("displayName")
-                or provider_data.get("shortName")
-                or ""
-            ).strip(),
-            "priority": to_float(provider_data.get("priority")),
+            "id": "",
+            "name": "",
+            "priority": None,
         }
 
+    provider_data = provider
+
+    if provider.get("$ref") and not (
+        provider.get("name")
+        or provider.get("id")
+        or provider.get("priority") is not None
+    ):
+        provider_data = fetch_ref(
+            str(
+                provider["$ref"]
+            ),
+            "provider reference",
+        )
+
     return {
-        "id": "",
-        "name": "",
-        "priority": None,
+        "id": str(
+            provider_data.get(
+                "id",
+                "",
+            )
+        ).strip(),
+        "name": str(
+            provider_data.get("name")
+            or provider_data.get(
+                "displayName"
+            )
+            or provider_data.get(
+                "shortName"
+            )
+            or ""
+        ).strip(),
+        "priority": to_float(
+            provider_data.get(
+                "priority"
+            )
+        ),
     }
 
 
-def resolve_odds_items(collection):
-    if not isinstance(collection, dict):
-        return []
+def resolve_odds_items(
+    collection: object,
+) -> list[dict]:
+    if not isinstance(
+        collection,
+        dict,
+    ):
+        raise RuntimeError(
+            "ESPN odds response was not a JSON object"
+        )
 
-    items = collection.get("items", [])
-    if not isinstance(items, list):
-        return []
+    items = collection.get(
+        "items",
+        [],
+    )
 
-    resolved = []
+    if not isinstance(
+        items,
+        list,
+    ):
+        raise RuntimeError(
+            "ESPN odds response items field was not a list"
+        )
 
-    for item in items:
-        if not isinstance(item, dict):
-            continue
+    resolved: list[dict] = []
+
+    for index, item in enumerate(
+        items
+    ):
+        if not isinstance(
+            item,
+            dict,
+        ):
+            raise RuntimeError(
+                "ESPN odds response contains a non-object "
+                f"item at index {index}"
+            )
 
         if item.get("$ref") and not (
             item.get("provider")
@@ -401,70 +707,194 @@ def resolve_odds_items(collection):
             or item.get("overUnder") is not None
             or item.get("spread") is not None
         ):
-            fetched = fetch_ref(item.get("$ref"))
-            if isinstance(fetched, dict):
-                resolved.append(fetched)
-        else:
-            resolved.append(item)
+            item = fetch_ref(
+                str(
+                    item["$ref"]
+                ),
+                "odds item reference",
+            )
+
+        resolved.append(
+            item
+        )
 
     return resolved
 
 
-def select_primary_odds_item(items):
+def select_primary_odds_item(
+    items: list[dict],
+) -> dict | None:
     if not items:
         return None
 
     ranked = []
 
-    for index, item in enumerate(items):
-        info = provider_info(item)
-        priority = info["priority"]
-        rank = priority if priority is not None else 1_000_000
-        ranked.append((rank, index, item))
+    for index, item in enumerate(
+        items
+    ):
+        info = provider_info(
+            item
+        )
 
-    ranked.sort(key=lambda value: (value[0], value[1]))
+        priority = info[
+            "priority"
+        ]
+
+        rank = (
+            priority
+            if priority is not None
+            else 1_000_000
+        )
+
+        ranked.append(
+            (
+                rank,
+                index,
+                item,
+            )
+        )
+
+    ranked.sort(
+        key=lambda value: (
+            value[0],
+            value[1],
+        )
+    )
+
     return ranked[0][2]
 
 
-def nested_value(data, path):
-    current = data
+def nested_value(
+    data: dict,
+    path: tuple[str, ...],
+) -> object | None:
+    current: object = data
 
     for key in path:
-        if not isinstance(current, dict):
+        if not isinstance(
+            current,
+            dict,
+        ):
             return None
-        current = current.get(key)
+
+        current = current.get(
+            key
+        )
 
     return current
 
 
-def first_value(data, paths):
+def first_value(
+    data: dict,
+    paths: list[tuple[str, ...]],
+) -> object | None:
     for path in paths:
-        value = nested_value(data, path)
-        if value is not None and str(value).strip() != "":
+        value = nested_value(
+            data,
+            path,
+        )
+
+        if (
+            value is not None
+            and str(
+                value
+            ).strip() != ""
+        ):
             return value
 
     return None
 
 
-def parse_details_line(details):
-    text = str(details or "").strip()
+def parse_details_line(
+    details: object,
+) -> float | None:
+    match = re.search(
+        r"([+-]?\d+(?:\.\d+)?)\s*$",
+        str(
+            details or ""
+        ).strip(),
+    )
 
-    match = re.search(r"([+-]?\d+(?:\.\d+)?)\s*$", text)
     if not match:
         return None
 
-    return to_float(match.group(1))
+    return to_float(
+        match.group(1)
+    )
 
 
-def extract_market_values(odds_item):
+def bool_value(
+    value: object,
+) -> bool:
+    if value is None:
+        return False
+
+    if isinstance(
+        value,
+        bool,
+    ):
+        return value
+
+    if isinstance(
+        value,
+        (int, float),
+    ):
+        return bool(value)
+
+    text = str(
+        value
+    ).strip().casefold()
+
+    if text in {
+        "true",
+        "1",
+        "yes",
+        "y",
+    }:
+        return True
+
+    if text in {
+        "false",
+        "0",
+        "no",
+        "n",
+        "",
+        "none",
+        "null",
+    }:
+        return False
+
+    raise ValueError(
+        f"Unsupported boolean value: {value!r}"
+    )
+
+
+def extract_market_values(
+    odds_item: dict,
+) -> dict[str, str]:
     home_team_odds = (
-        odds_item.get("homeTeamOdds")
-        if isinstance(odds_item.get("homeTeamOdds"), dict)
+        odds_item.get(
+            "homeTeamOdds"
+        )
+        if isinstance(
+            odds_item.get(
+                "homeTeamOdds"
+            ),
+            dict,
+        )
         else {}
     )
+
     away_team_odds = (
-        odds_item.get("awayTeamOdds")
-        if isinstance(odds_item.get("awayTeamOdds"), dict)
+        odds_item.get(
+            "awayTeamOdds"
+        )
+        if isinstance(
+            odds_item.get(
+                "awayTeamOdds"
+            ),
+            dict,
+        )
         else {}
     )
 
@@ -472,8 +902,14 @@ def extract_market_values(odds_item):
         first_value(
             odds_item,
             [
-                ("homeTeamOdds", "moneyLine"),
-                ("homeTeamOdds", "moneyline"),
+                (
+                    "homeTeamOdds",
+                    "moneyLine",
+                ),
+                (
+                    "homeTeamOdds",
+                    "moneyline",
+                ),
                 ("homeMoneyLine",),
                 ("homeMoneyline",),
             ],
@@ -484,8 +920,14 @@ def extract_market_values(odds_item):
         first_value(
             odds_item,
             [
-                ("awayTeamOdds", "moneyLine"),
-                ("awayTeamOdds", "moneyline"),
+                (
+                    "awayTeamOdds",
+                    "moneyLine",
+                ),
+                (
+                    "awayTeamOdds",
+                    "moneyline",
+                ),
                 ("awayMoneyLine",),
                 ("awayMoneyline",),
             ],
@@ -496,7 +938,10 @@ def extract_market_values(odds_item):
         first_value(
             odds_item,
             [
-                ("homeTeamOdds", "spreadOdds"),
+                (
+                    "homeTeamOdds",
+                    "spreadOdds",
+                ),
                 ("homeSpreadOdds",),
             ],
         )
@@ -506,7 +951,10 @@ def extract_market_values(odds_item):
         first_value(
             odds_item,
             [
-                ("awayTeamOdds", "spreadOdds"),
+                (
+                    "awayTeamOdds",
+                    "spreadOdds",
+                ),
                 ("awaySpreadOdds",),
             ],
         )
@@ -545,7 +993,10 @@ def extract_market_values(odds_item):
     direct_home_spread = first_value(
         odds_item,
         [
-            ("homeTeamOdds", "spread"),
+            (
+                "homeTeamOdds",
+                "spread",
+            ),
             ("homeSpread",),
         ],
     )
@@ -553,30 +1004,63 @@ def extract_market_values(odds_item):
     direct_away_spread = first_value(
         odds_item,
         [
-            ("awayTeamOdds", "spread"),
+            (
+                "awayTeamOdds",
+                "spread",
+            ),
             ("awaySpread",),
         ],
     )
 
-    home_spread = clean_number(direct_home_spread)
-    away_spread = clean_number(direct_away_spread)
+    home_spread = clean_number(
+        direct_home_spread
+    )
 
-    if home_spread == "" and away_spread != "":
-        away_num = to_float(away_spread)
-        if away_num is not None:
-            home_spread = clean_number(-away_num)
+    away_spread = clean_number(
+        direct_away_spread
+    )
 
-    if away_spread == "" and home_spread != "":
-        home_num = to_float(home_spread)
-        if home_num is not None:
-            away_spread = clean_number(-home_num)
-
-    if home_spread == "" and away_spread == "":
-        detail_line = parse_details_line(
-            odds_item.get("details", "")
+    if (
+        home_spread == ""
+        and away_spread != ""
+    ):
+        away_num = to_float(
+            away_spread
         )
+
+        if away_num is not None:
+            home_spread = clean_number(
+                -away_num
+            )
+
+    if (
+        away_spread == ""
+        and home_spread != ""
+    ):
+        home_num = to_float(
+            home_spread
+        )
+
+        if home_num is not None:
+            away_spread = clean_number(
+                -home_num
+            )
+
+    if (
+        home_spread == ""
+        and away_spread == ""
+    ):
+        detail_line = parse_details_line(
+            odds_item.get(
+                "details",
+                "",
+            )
+        )
+
         generic_spread = to_float(
-            odds_item.get("spread")
+            odds_item.get(
+                "spread"
+            )
         )
 
         line = (
@@ -585,23 +1069,48 @@ def extract_market_values(odds_item):
             else generic_spread
         )
 
-        home_favorite = bool(
-            home_team_odds.get("favorite")
+        home_favorite = bool_value(
+            home_team_odds.get(
+                "favorite"
+            )
         )
-        away_favorite = bool(
-            away_team_odds.get("favorite")
+
+        away_favorite = bool_value(
+            away_team_odds.get(
+                "favorite"
+            )
         )
 
         if line is not None:
-            if home_favorite and not away_favorite:
-                home_spread = clean_number(line)
-                away_spread = clean_number(-line)
-            elif away_favorite and not home_favorite:
-                away_spread = clean_number(line)
-                home_spread = clean_number(-line)
+            if (
+                home_favorite
+                and not away_favorite
+            ):
+                home_spread = clean_number(
+                    line
+                )
+                away_spread = clean_number(
+                    -line
+                )
+
+            elif (
+                away_favorite
+                and not home_favorite
+            ):
+                away_spread = clean_number(
+                    line
+                )
+                home_spread = clean_number(
+                    -line
+                )
+
             else:
-                home_spread = clean_number(line)
-                away_spread = clean_number(-line)
+                home_spread = clean_number(
+                    line
+                )
+                away_spread = clean_number(
+                    -line
+                )
 
     last_update = str(
         first_value(
@@ -632,17 +1141,17 @@ def extract_market_values(odds_item):
 
 
 def add_market_row(
-    rows,
-    event,
-    bookmaker,
-    market_type,
-    bet_side,
-    line,
-    odds_american,
-    current_fields,
-    snapshot_id,
-    snapshot_fetched_at,
-):
+    rows: list[dict[str, str]],
+    event: dict[str, str],
+    bookmaker: str,
+    market_type: str,
+    bet_side: str,
+    line: object,
+    odds_american: object,
+    current_fields: dict[str, str],
+    snapshot_id: str,
+    snapshot_fetched_at: str,
+) -> None:
     rows.append(
         {
             "snapshot_id": snapshot_id,
@@ -654,7 +1163,9 @@ def add_market_row(
             "bookmaker": bookmaker,
             "market_type": market_type,
             "bet_side": bet_side,
-            "line": clean_number(line),
+            "line": clean_number(
+                line
+            ),
             "odds_american": normalize_american(
                 odds_american
             ),
@@ -666,7 +1177,10 @@ def add_market_row(
                 "",
             ),
             **{
-                key: current_fields.get(key, "")
+                key: current_fields.get(
+                    key,
+                    "",
+                )
                 for key in [
                     "home_moneyline_american",
                     "away_moneyline_american",
@@ -684,19 +1198,43 @@ def add_market_row(
 
 
 def normalize_event_odds(
-    event,
-    odds_item,
-    snapshot_id,
-    snapshot_fetched_at,
-):
-    info = provider_info(odds_item)
-    bookmaker = info["name"] or info["id"]
-    current = extract_market_values(odds_item)
-    rows = []
+    event: dict[str, str],
+    odds_item: dict,
+    snapshot_id: str,
+    snapshot_fetched_at: str,
+) -> tuple[
+    list[dict[str, str]],
+    dict[str, object],
+]:
+    info = provider_info(
+        odds_item
+    )
+
+    bookmaker = str(
+        info["name"]
+        or info["id"]
+        or ""
+    ).strip()
+
+    if not bookmaker:
+        raise RuntimeError(
+            f"Game {event['id']} returned odds "
+            "without a provider identity"
+        )
+
+    current = extract_market_values(
+        odds_item
+    )
+
+    rows: list[dict[str, str]] = []
 
     if (
-        current["home_moneyline_american"]
-        or current["away_moneyline_american"]
+        current[
+            "home_moneyline_american"
+        ]
+        or current[
+            "away_moneyline_american"
+        ]
     ):
         add_market_row(
             rows,
@@ -705,11 +1243,14 @@ def normalize_event_odds(
             "h2h",
             "home",
             "",
-            current["home_moneyline_american"],
+            current[
+                "home_moneyline_american"
+            ],
             current,
             snapshot_id,
             snapshot_fetched_at,
         )
+
         add_market_row(
             rows,
             event,
@@ -717,7 +1258,9 @@ def normalize_event_odds(
             "h2h",
             "away",
             "",
-            current["away_moneyline_american"],
+            current[
+                "away_moneyline_american"
+            ],
             current,
             snapshot_id,
             snapshot_fetched_at,
@@ -726,8 +1269,12 @@ def normalize_event_odds(
     if (
         current["home_spread"]
         or current["away_spread"]
-        or current["home_spread_american"]
-        or current["away_spread_american"]
+        or current[
+            "home_spread_american"
+        ]
+        or current[
+            "away_spread_american"
+        ]
     ):
         add_market_row(
             rows,
@@ -736,11 +1283,14 @@ def normalize_event_odds(
             "spreads",
             "home",
             current["home_spread"],
-            current["home_spread_american"],
+            current[
+                "home_spread_american"
+            ],
             current,
             snapshot_id,
             snapshot_fetched_at,
         )
+
         add_market_row(
             rows,
             event,
@@ -748,7 +1298,9 @@ def normalize_event_odds(
             "spreads",
             "away",
             current["away_spread"],
-            current["away_spread_american"],
+            current[
+                "away_spread_american"
+            ],
             current,
             snapshot_id,
             snapshot_fetched_at,
@@ -771,6 +1323,7 @@ def normalize_event_odds(
             snapshot_id,
             snapshot_fetched_at,
         )
+
         add_market_row(
             rows,
             event,
@@ -784,14 +1337,25 @@ def normalize_event_odds(
             snapshot_fetched_at,
         )
 
-    return rows, info
+    return (
+        rows,
+        info,
+    )
 
 
-def fetch_game_odds(game_id):
+def fetch_game_odds(
+    game_id: str,
+) -> tuple[
+    dict | None,
+    str,
+    int,
+    str,
+]:
     path = (
         f"/events/{game_id}/competitions/"
         f"{game_id}/odds"
     )
+
     url = build_url(
         path,
         {
@@ -801,389 +1365,1191 @@ def fetch_game_odds(game_id):
         },
     )
 
-    status, collection, error = http_get_json(url)
-
-    if collection is None:
-        log(
-            "ODDS_UNAVAILABLE "
-            f"game_id={game_id} status={status or ''} "
-            f"error={error}"
+    status, collection, error = (
+        http_get_json(
+            url
         )
-        return None, url, status
+    )
 
-    items = resolve_odds_items(collection)
-    selected = select_primary_odds_item(items)
+    if (
+        status is None
+        or status < 200
+        or status >= 300
+        or collection is None
+    ):
+        raise RuntimeError(
+            f"Odds request failed for game_id={game_id}: "
+            f"status={status!r}, error={error}"
+        )
+
+    items = resolve_odds_items(
+        collection
+    )
+
+    selected = select_primary_odds_item(
+        items
+    )
 
     if selected is None:
-        log(
-            f"ODDS_EMPTY game_id={game_id} "
-            f"status={status or ''}"
+        return (
+            None,
+            url,
+            status,
+            "EMPTY",
         )
-        return None, url, status
 
-    return selected, url, status
+    return (
+        selected,
+        url,
+        status,
+        "AVAILABLE",
+    )
 
 
-def build_schedule_groups(schedule_rows):
-    upcoming = [
-        row
-        for row in schedule_rows
-        if str(row.get("game_id", "")).strip()
-        and is_current_or_future_window(row)
-    ]
+def parse_aware_iso(
+    value: str,
+    label: str,
+) -> datetime:
+    text = str(
+        value
+    ).strip()
 
-    groups = {}
-
-    for row in upcoming:
-        key = (
-            str(row.get("season", "")).strip(),
-            str(row.get("season_type", "")).strip(),
-            str(row.get("week", "")).strip(),
+    if not text:
+        raise ValueError(
+            f"{label} is blank"
         )
-        groups.setdefault(key, []).append(row)
 
-    def group_sort(item):
-        _, rows = item
-        dates = [
-            str(row.get("game_date", "")).strip()
-            for row in rows
-            if str(row.get("game_date", "")).strip()
+    if text.endswith("Z"):
+        text = (
+            text[:-1]
+            + "+00:00"
+        )
+
+    try:
+        parsed = datetime.fromisoformat(
+            text
+        )
+    except ValueError as exc:
+        raise ValueError(
+            f"{label} is not a valid ISO timestamp: {value!r}"
+        ) from exc
+
+    if parsed.tzinfo is None:
+        raise ValueError(
+            f"{label} must include a timezone: {value!r}"
+        )
+
+    return parsed.astimezone(
+        timezone.utc
+    )
+
+
+def validate_normalized_rows(
+    rows: list[dict[str, str]],
+    target_rows: list[dict[str, str]],
+    snapshot_id: str,
+    snapshot_fetched_at: str,
+) -> None:
+    if not rows:
+        raise ValueError(
+            "Normalized odds output is empty"
+        )
+
+    parse_aware_iso(
+        snapshot_fetched_at,
+        "snapshot_fetched_at",
+    )
+
+    schedule_by_id = {
+        str(
+            row["game_id"]
+        ).strip(): row
+        for row in target_rows
+    }
+
+    seen_keys: set[
+        tuple[
+            str,
+            str,
+            str,
         ]
-        return min(dates) if dates else "9999-99-99"
+    ] = set()
 
-    return [
-        (key, rows)
-        for key, rows in sorted(
-            groups.items(),
-            key=group_sort,
+    for index, row in enumerate(
+        rows
+    ):
+        missing_columns = [
+            column
+            for column in OUTPUT_COLUMNS
+            if column not in row
+        ]
+
+        if missing_columns:
+            raise ValueError(
+                f"Normalized odds row {index} missing columns: "
+                f"{missing_columns}"
+            )
+
+        if (
+            row["snapshot_id"]
+            != snapshot_id
+        ):
+            raise ValueError(
+                f"Normalized odds row {index} has "
+                "inconsistent snapshot_id"
+            )
+
+        if (
+            row["snapshot_fetched_at"]
+            != snapshot_fetched_at
+        ):
+            raise ValueError(
+                f"Normalized odds row {index} has "
+                "inconsistent snapshot_fetched_at"
+            )
+
+        game_id = str(
+            row["game_id"]
+        ).strip()
+
+        if (
+            game_id
+            not in schedule_by_id
+        ):
+            raise ValueError(
+                f"Normalized odds row {index} contains "
+                f"out-of-scope game_id={game_id!r}"
+            )
+
+        schedule_row = (
+            schedule_by_id[
+                game_id
+            ]
         )
-    ]
+
+        expected_home = str(
+            schedule_row[
+                "home_team"
+            ]
+        ).strip()
+
+        expected_away = str(
+            schedule_row[
+                "away_team"
+            ]
+        ).strip()
+
+        if (
+            str(
+                row["home_team"]
+            ).strip() != expected_home
+            or str(
+                row["away_team"]
+            ).strip() != expected_away
+        ):
+            raise ValueError(
+                f"Normalized odds row {index} has "
+                f"team identity mismatch for game_id={game_id}"
+            )
+
+        expected_commence = (
+            schedule_kickoff_iso(
+                schedule_row
+            )
+        )
+
+        if (
+            str(
+                row["commence_time"]
+            ).strip()
+            != expected_commence
+        ):
+            raise ValueError(
+                f"Normalized odds row {index} has "
+                f"kickoff mismatch for game_id={game_id}"
+            )
+
+        bookmaker = str(
+            row["bookmaker"]
+        ).strip()
+
+        if not bookmaker:
+            raise ValueError(
+                f"Normalized odds row {index} "
+                "has blank bookmaker"
+            )
+
+        market_type = str(
+            row["market_type"]
+        ).strip()
+
+        bet_side = str(
+            row["bet_side"]
+        ).strip()
+
+        if (
+            market_type
+            not in VALID_MARKET_SIDES
+        ):
+            raise ValueError(
+                f"Normalized odds row {index} has invalid "
+                f"market_type={market_type!r}"
+            )
+
+        if (
+            bet_side
+            not in VALID_MARKET_SIDES[
+                market_type
+            ]
+        ):
+            raise ValueError(
+                f"Normalized odds row {index} has invalid "
+                f"bet_side={bet_side!r} for "
+                f"market_type={market_type!r}"
+            )
+
+        key = (
+            game_id,
+            market_type,
+            bet_side,
+        )
+
+        if key in seen_keys:
+            raise ValueError(
+                "Duplicate normalized odds row key: "
+                f"{key}"
+            )
+
+        seen_keys.add(
+            key
+        )
+
+        line_text = str(
+            row["line"]
+        ).strip()
+
+        odds_text = str(
+            row["odds_american"]
+        ).strip()
+
+        decimal_text = str(
+            row["odds_decimal"]
+        ).strip()
+
+        if market_type == "h2h":
+            if line_text:
+                raise ValueError(
+                    "H2H row has nonblank line "
+                    f"for game_id={game_id}"
+                )
+
+        elif (
+            to_float(
+                line_text
+            )
+            is None
+        ):
+            raise ValueError(
+                f"{market_type} row has invalid line "
+                f"for game_id={game_id}"
+            )
+
+        if odds_text:
+            american = to_float(
+                odds_text
+            )
+
+            expected_decimal = to_float(
+                american_to_decimal(
+                    odds_text
+                )
+            )
+
+            actual_decimal = to_float(
+                decimal_text
+            )
+
+            if (
+                american is None
+                or american == 0
+                or expected_decimal is None
+                or actual_decimal is None
+                or abs(
+                    expected_decimal
+                    - actual_decimal
+                )
+                > 0.000001
+            ):
+                raise ValueError(
+                    "American/decimal odds mismatch for "
+                    f"game_id={game_id}, "
+                    f"market={market_type}, "
+                    f"side={bet_side}"
+                )
+
+        elif decimal_text:
+            raise ValueError(
+                "Decimal odds present without American odds for "
+                f"game_id={game_id}, "
+                f"market={market_type}, "
+                f"side={bet_side}"
+            )
+
+        home_spread = to_float(
+            row["home_spread"]
+        )
+
+        away_spread = to_float(
+            row["away_spread"]
+        )
+
+        if (
+            home_spread is not None
+            and away_spread is not None
+            and abs(
+                home_spread
+                + away_spread
+            )
+            > 0.000001
+        ):
+            raise ValueError(
+                f"Home/away spread mismatch for game_id={game_id}: "
+                f"home={home_spread}, away={away_spread}"
+            )
+
+        if market_type == "spreads":
+            expected_line = (
+                home_spread
+                if bet_side == "home"
+                else away_spread
+            )
+
+            actual_line = to_float(
+                line_text
+            )
+
+            if (
+                expected_line is None
+                or actual_line is None
+                or abs(
+                    expected_line
+                    - actual_line
+                )
+                > 0.000001
+            ):
+                raise ValueError(
+                    f"Spread row line mismatch for game_id={game_id}, "
+                    f"side={bet_side}"
+                )
+
+        if market_type == "totals":
+            total = to_float(
+                row["total"]
+            )
+
+            actual_line = to_float(
+                line_text
+            )
+
+            if (
+                total is None
+                or actual_line is None
+                or abs(
+                    total
+                    - actual_line
+                )
+                > 0.000001
+            ):
+                raise ValueError(
+                    f"Total row line mismatch for game_id={game_id}, "
+                    f"side={bet_side}"
+                )
 
 
-def write_csv(path, rows):
-    path.parent.mkdir(parents=True, exist_ok=True)
-
+def write_csv_file(
+    path: Path,
+    rows: list[dict[str, str]],
+) -> None:
     with path.open(
         "w",
         newline="",
         encoding="utf-8",
-    ) as f:
+    ) as handle:
         writer = csv.DictWriter(
-            f,
+            handle,
             fieldnames=OUTPUT_COLUMNS,
         )
+
         writer.writeheader()
 
         for row in rows:
             writer.writerow(
                 {
-                    column: row.get(column, "")
-                    for column in OUTPUT_COLUMNS
+                    column: row.get(
+                        column,
+                        "",
+                    )
+                    for column
+                    in OUTPUT_COLUMNS
                 }
             )
 
+        handle.flush()
+        os.fsync(
+            handle.fileno()
+        )
 
-def write_json(path, payload):
-    path.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
 
+def write_json_file(
+    path: Path,
+    payload: dict,
+) -> None:
     with path.open(
         "w",
         encoding="utf-8",
-    ) as f:
+        newline="\n",
+    ) as handle:
         json.dump(
             payload,
-            f,
+            handle,
             indent=2,
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+
+        handle.write(
+            "\n"
+        )
+
+        handle.flush()
+
+        os.fsync(
+            handle.fileno()
         )
 
 
-def main():
-    LOG_FILE.write_text(
-        "",
-        encoding="utf-8",
+def temporary_path(
+    final_path: Path,
+) -> Path:
+    return final_path.with_name(
+        f".{final_path.name}."
+        f"{uuid.uuid4().hex}.tmp"
     )
 
-    schedule_path = latest_file(
-        SCHEDULE_DIR,
-        "*_schedule.csv",
-        "CFB schedule CSV",
+
+def backup_path(
+    final_path: Path,
+) -> Path:
+    return final_path.with_name(
+        f".{final_path.name}."
+        f"{uuid.uuid4().hex}.bak"
     )
 
-    schedule_rows = read_csv(
-        schedule_path,
-        SCHEDULE_REQUIRED_COLUMNS,
-        "CFB schedule CSV",
-    )
 
-    schedule_groups = build_schedule_groups(
-        schedule_rows
-    )
+def publish_output_bundle(
+    *,
+    raw_path: Path,
+    csv_path: Path,
+    raw_snapshot_path: Path,
+    csv_snapshot_path: Path,
+    raw_payload: dict,
+    rows: list[dict[str, str]],
+) -> None:
+    finals = [
+        raw_path,
+        csv_path,
+        raw_snapshot_path,
+        csv_snapshot_path,
+    ]
 
-    if not schedule_groups:
-        fail(
-            "No upcoming CFB schedule rows available "
-            "for ESPN odds lookup"
+    for path in finals:
+        path.parent.mkdir(
+            parents=True,
+            exist_ok=True,
         )
 
-    captured_at = utc_now()
-    run_date = captured_at.strftime("%Y_%m_%d")
-    snapshot_id = captured_at.strftime(
-        "%Y_%m_%d_%H%M%S_%f"
-    )
-    snapshot_fetched_at = (
-        captured_at.isoformat()
-    )
+    for snapshot_path in (
+        raw_snapshot_path,
+        csv_snapshot_path,
+    ):
+        if snapshot_path.exists():
+            raise FileExistsError(
+                "Refusing to overwrite immutable odds snapshot: "
+                f"{snapshot_path}"
+            )
 
-    raw_path = (
-        RAW_ODDS_DIR
-        / f"{run_date}_cfb_odds.json"
-    )
-    csv_path = (
-        ODDS_DIR
-        / f"{run_date}_CFB_odds.csv"
+    temp_raw = temporary_path(
+        raw_path
     )
 
-    raw_snapshot_path = (
-        RAW_SNAPSHOT_DIR
-        / f"{snapshot_id}_cfb_odds.json"
-    )
-    csv_snapshot_path = (
-        SNAPSHOT_DIR
-        / f"{snapshot_id}_CFB_odds.csv"
+    temp_csv = temporary_path(
+        csv_path
     )
 
-    selected_week = None
-    raw_events = []
-    raw_odds = []
-    rows = []
-    request_urls = []
+    temp_raw_snapshot = temporary_path(
+        raw_snapshot_path
+    )
 
-    # Always stay on the earliest active schedule group.  This prevents a
-    # mid-game run from silently advancing to the next week after every
-    # game in the current week has kicked off.
-    week_key, week_rows = schedule_groups[0]
-    week_events = []
-    week_raw_odds = []
-    week_csv_rows = []
-    week_urls = []
-    locked_count = 0
+    temp_csv_snapshot = temporary_path(
+        csv_snapshot_path
+    )
 
-    for schedule_row in week_rows:
-        game_id = str(
-            schedule_row.get("game_id", "")
-        ).strip()
+    temp_paths = [
+        temp_raw,
+        temp_csv,
+        temp_raw_snapshot,
+        temp_csv_snapshot,
+    ]
 
-        if is_game_locked(
-            schedule_row,
-            captured_at,
+    raw_backup = backup_path(
+        raw_path
+    )
+
+    csv_backup = backup_path(
+        csv_path
+    )
+
+    raw_had_existing = (
+        raw_path.exists()
+    )
+
+    csv_had_existing = (
+        csv_path.exists()
+    )
+
+    snapshot_published: list[
+        Path
+    ] = []
+
+    current_published: list[
+        Path
+    ] = []
+
+    published_successfully = False
+
+    try:
+        write_json_file(
+            temp_raw,
+            raw_payload,
+        )
+
+        write_csv_file(
+            temp_csv,
+            rows,
+        )
+
+        write_json_file(
+            temp_raw_snapshot,
+            raw_payload,
+        )
+
+        write_csv_file(
+            temp_csv_snapshot,
+            rows,
+        )
+
+        if raw_had_existing:
+            os.replace(
+                raw_path,
+                raw_backup,
+            )
+
+        if csv_had_existing:
+            os.replace(
+                csv_path,
+                csv_backup,
+            )
+
+        os.replace(
+            temp_raw_snapshot,
+            raw_snapshot_path,
+        )
+
+        snapshot_published.append(
+            raw_snapshot_path
+        )
+
+        os.replace(
+            temp_csv_snapshot,
+            csv_snapshot_path,
+        )
+
+        snapshot_published.append(
+            csv_snapshot_path
+        )
+
+        os.replace(
+            temp_raw,
+            raw_path,
+        )
+
+        current_published.append(
+            raw_path
+        )
+
+        os.replace(
+            temp_csv,
+            csv_path,
+        )
+
+        current_published.append(
+            csv_path
+        )
+
+        published_successfully = True
+
+    except Exception:
+        for path in current_published:
+            try:
+                path.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+        if raw_backup.exists():
+            try:
+                os.replace(
+                    raw_backup,
+                    raw_path,
+                )
+            except Exception:
+                pass
+
+        elif not raw_had_existing:
+            try:
+                raw_path.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+        if csv_backup.exists():
+            try:
+                os.replace(
+                    csv_backup,
+                    csv_path,
+                )
+            except Exception:
+                pass
+
+        elif not csv_had_existing:
+            try:
+                csv_path.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+        for path in snapshot_published:
+            try:
+                path.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+        raise
+
+    finally:
+        for path in temp_paths:
+            try:
+                path.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+        if published_successfully:
+            for path in (
+                raw_backup,
+                csv_backup,
+            ):
+                try:
+                    path.unlink(
+                        missing_ok=True
+                    )
+                except Exception:
+                    pass
+
+
+def main() -> int:
+    with PipelineReporter(
+        script=__file__,
+        stage="00_intake",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        extra_context={
+            "script_version": SCRIPT_VERSION,
+            "source": "ESPN Core API",
+        },
+    ) as report:
+        report.add_input(
+            CURRENT_WEEK_CONFIG_PATH
+        )
+
+        report.set_detail(
+            "output_modified",
+            False,
+        )
+
+        season, season_type, week = (
+            load_current_week()
+        )
+
+        report.season = season
+        report.week = week
+
+        report.set_detail(
+            "season_type",
+            season_type,
+        )
+
+        schedule_path, target_rows = (
+            load_target_schedule(
+                season,
+                season_type,
+                week,
+            )
+        )
+
+        report.add_input(
+            schedule_path
+        )
+
+        captured_at = utc_now()
+
+        run_date = captured_at.strftime(
+            "%Y_%m_%d"
+        )
+
+        snapshot_id = captured_at.strftime(
+            "%Y_%m_%d_%H%M%S_%f"
+        )
+
+        snapshot_fetched_at = (
+            captured_at.isoformat()
+        )
+
+        raw_path = (
+            RAW_ODDS_DIR
+            / f"{run_date}_cfb_odds.json"
+        )
+
+        csv_path = (
+            ODDS_DIR
+            / f"{run_date}_CFB_odds.csv"
+        )
+
+        raw_snapshot_path = (
+            RAW_SNAPSHOT_DIR
+            / f"{snapshot_id}_cfb_odds.json"
+        )
+
+        csv_snapshot_path = (
+            SNAPSHOT_DIR
+            / f"{snapshot_id}_CFB_odds.csv"
+        )
+
+        for path in (
+            raw_path,
+            csv_path,
+            raw_snapshot_path,
+            csv_snapshot_path,
         ):
-            locked_count += 1
-            kickoff = schedule_kickoff_iso(
-                schedule_row
+            report.add_output(
+                path
             )
-            log(
-                "ODDS_SKIPPED_LOCKED "
-                f"game_id={game_id} kickoff={kickoff}"
-            )
-            week_urls.append(
-                {
-                    "game_id": game_id,
-                    "url": "",
-                    "status": "LOCKED",
-                }
-            )
-            continue
 
-        odds_item, odds_url, status = (
-            fetch_game_odds(game_id)
+        locked_game_ids: list[
+            str
+        ] = []
+
+        empty_game_ids: list[
+            str
+        ] = []
+
+        hard_failures: list[
+            dict[str, str]
+        ] = []
+
+        raw_events: list[
+            dict[str, str]
+        ] = []
+
+        raw_odds: list[
+            dict
+        ] = []
+
+        rows: list[
+            dict[str, str]
+        ] = []
+
+        request_urls: list[
+            dict[str, object]
+        ] = []
+
+        attempted_count = 0
+
+        for schedule_row in target_rows:
+            game_id = str(
+                schedule_row[
+                    "game_id"
+                ]
+            ).strip()
+
+            kickoff = (
+                schedule_kickoff_iso(
+                    schedule_row
+                )
+            )
+
+            if is_game_locked(
+                schedule_row,
+                captured_at,
+            ):
+                locked_game_ids.append(
+                    game_id
+                )
+
+                request_urls.append(
+                    {
+                        "game_id": game_id,
+                        "url": "",
+                        "status": "LOCKED",
+                        "result": "LOCKED",
+                    }
+                )
+
+                continue
+
+            attempted_count += 1
+
+            try:
+                (
+                    odds_item,
+                    odds_url,
+                    status,
+                    result,
+                ) = fetch_game_odds(
+                    game_id
+                )
+
+                request_urls.append(
+                    {
+                        "game_id": game_id,
+                        "url": odds_url,
+                        "status": status,
+                        "result": result,
+                    }
+                )
+
+                if odds_item is None:
+                    empty_game_ids.append(
+                        game_id
+                    )
+                    continue
+
+                event = {
+                    "id": game_id,
+                    "date": kickoff,
+                    "home": str(
+                        schedule_row[
+                            "home_team"
+                        ]
+                    ).strip(),
+                    "away": str(
+                        schedule_row[
+                            "away_team"
+                        ]
+                    ).strip(),
+                }
+
+                (
+                    normalized_rows,
+                    provider,
+                ) = normalize_event_odds(
+                    event,
+                    odds_item,
+                    snapshot_id,
+                    snapshot_fetched_at,
+                )
+
+                if not normalized_rows:
+                    empty_game_ids.append(
+                        game_id
+                    )
+
+                    request_urls[-1][
+                        "result"
+                    ] = (
+                        "NO_SUPPORTED_MARKETS"
+                    )
+
+                    continue
+
+                raw_events.append(
+                    event
+                )
+
+                raw_odds.append(
+                    {
+                        "game_id": game_id,
+                        "provider": provider,
+                        "odds": odds_item,
+                    }
+                )
+
+                rows.extend(
+                    normalized_rows
+                )
+
+            except Exception as exc:
+                hard_failures.append(
+                    {
+                        "game_id": game_id,
+                        "error_type": (
+                            type(exc).__name__
+                        ),
+                        "message": str(exc),
+                    }
+                )
+
+                request_urls.append(
+                    {
+                        "game_id": game_id,
+                        "url": "",
+                        "status": "ERROR",
+                        "result": "HARD_FAILURE",
+                        "error": str(exc),
+                    }
+                )
+
+        provider_counts: dict[
+            str,
+            int,
+        ] = {}
+
+        for item in raw_odds:
+            provider = item.get(
+                "provider",
+                {},
+            )
+
+            provider_name = str(
+                provider.get("name")
+                or provider.get("id")
+                or "unknown"
+            ).strip()
+
+            provider_counts[
+                provider_name
+            ] = (
+                provider_counts.get(
+                    provider_name,
+                    0,
+                )
+                + 1
+            )
+
+        report.set_rows(
+            rows_in=len(
+                target_rows
+            ),
         )
-        week_urls.append(
+
+        report.update_details(
             {
-                "game_id": game_id,
-                "url": odds_url,
-                "status": status,
+                "snapshot_id": snapshot_id,
+                "snapshot_fetched_at": (
+                    snapshot_fetched_at
+                ),
+                "target_games": len(
+                    target_rows
+                ),
+                "locked_games": len(
+                    locked_game_ids
+                ),
+                "locked_game_ids": (
+                    locked_game_ids
+                ),
+                "games_requested": (
+                    attempted_count
+                ),
+                "games_with_odds": len(
+                    raw_odds
+                ),
+                "games_without_posted_odds": len(
+                    empty_game_ids
+                ),
+                "games_without_posted_odds_ids": (
+                    empty_game_ids
+                ),
+                "hard_fetch_failures": len(
+                    hard_failures
+                ),
+                "hard_fetch_failure_details": (
+                    hard_failures
+                ),
+                "provider_event_counts": (
+                    provider_counts
+                ),
+                "normalized_rows": len(
+                    rows
+                ),
             }
         )
 
-        if odds_item is None:
-            continue
+        if hard_failures:
+            raise RuntimeError(
+                "One or more target-week ESPN odds requests failed; "
+                "refusing to publish a partial odds snapshot. "
+                f"failures={len(hard_failures)}"
+            )
 
-        event = {
-            "id": game_id,
-            "date": schedule_kickoff_iso(
-                schedule_row
+        if attempted_count == 0:
+            raise RuntimeError(
+                "All configured target-week games are locked. "
+                "No odds outputs were modified."
+            )
+
+        if not rows:
+            raise RuntimeError(
+                "ESPN returned no supported current odds for any "
+                "unlocked configured target-week game. "
+                "No odds outputs were modified."
+            )
+
+        validate_normalized_rows(
+            rows,
+            target_rows,
+            snapshot_id,
+            snapshot_fetched_at,
+        )
+
+        raw_payload = {
+            "snapshot_id": snapshot_id,
+            "fetched_at": snapshot_fetched_at,
+            "sport": "football",
+            "league": "college-football",
+            "source": "ESPN Core API",
+            "schedule_input": str(
+                schedule_path
             ),
-            "home": str(
-                schedule_row.get(
-                    "home_team",
-                    "",
-                )
-            ).strip(),
-            "away": str(
-                schedule_row.get(
-                    "away_team",
-                    "",
-                )
-            ).strip(),
+            "selected_schedule_group": {
+                "season": str(
+                    season
+                ),
+                "season_type": str(
+                    season_type
+                ),
+                "week": str(
+                    week
+                ),
+            },
+            "request_urls": request_urls,
+            "target_games_count": len(
+                target_rows
+            ),
+            "locked_games_count": len(
+                locked_game_ids
+            ),
+            "empty_odds_games_count": len(
+                empty_game_ids
+            ),
+            "events_count": len(
+                raw_events
+            ),
+            "odds_events_count": len(
+                raw_odds
+            ),
+            "events": raw_events,
+            "odds": raw_odds,
         }
 
-        normalized_rows, provider = (
-            normalize_event_odds(
-                event,
-                odds_item,
-                snapshot_id,
-                snapshot_fetched_at,
-            )
+        publish_output_bundle(
+            raw_path=raw_path,
+            csv_path=csv_path,
+            raw_snapshot_path=(
+                raw_snapshot_path
+            ),
+            csv_snapshot_path=(
+                csv_snapshot_path
+            ),
+            raw_payload=raw_payload,
+            rows=rows,
         )
 
-        if not normalized_rows:
-            log(
-                "ODDS_NO_SUPPORTED_MARKETS "
-                f"game_id={game_id}"
-            )
-            continue
+        report.set_rows(
+            rows_out=len(rows),
+        )
 
-        week_events.append(event)
-        week_raw_odds.append(
+        report.update_details(
             {
-                "game_id": game_id,
-                "provider": provider,
-                "odds": odds_item,
+                "output_modified": True,
+                "current_raw_json": str(
+                    raw_path
+                ),
+                "current_normalized_csv": str(
+                    csv_path
+                ),
+                "snapshot_raw_json": str(
+                    raw_snapshot_path
+                ),
+                "snapshot_normalized_csv": str(
+                    csv_snapshot_path
+                ),
             }
         )
-        week_csv_rows.extend(
-            normalized_rows
+
+        print(
+            "pull_odds.py completed"
         )
 
-    if not week_csv_rows:
-        if locked_count == len(week_rows):
-            fail(
-                "All games in the current CFB schedule group "
-                "have kicked off. No odds were refreshed and the "
-                "pipeline will not advance to the next week yet."
-            )
-
-        fail(
-            "ESPN returned no supported current odds for the "
-            "earliest active CFB schedule group. The pipeline "
-            "will not skip ahead to a later week."
+        print(
+            f"season={season} "
+            f"season_type={season_type} "
+            f"week={week}"
         )
 
-    selected_week = week_key
-    raw_events = week_events
-    raw_odds = week_raw_odds
-    rows = week_csv_rows
-    request_urls = week_urls
+        print(
+            f"snapshot_id={snapshot_id}"
+        )
 
-    raw_payload = {
-        "snapshot_id": snapshot_id,
-        "fetched_at": snapshot_fetched_at,
-        "sport": "football",
-        "league": "college-football",
-        "source": "ESPN Core API",
-        "schedule_input": str(schedule_path),
-        "selected_schedule_group": {
-            "season": selected_week[0],
-            "season_type": selected_week[1],
-            "week": selected_week[2],
-        },
-        "request_urls": request_urls,
-        "events_count": len(raw_events),
-        "odds_events_count": len(raw_odds),
-        "events": raw_events,
-        "odds": raw_odds,
-    }
+        print(
+            f"target_games={len(target_rows)}"
+        )
 
-    write_json(
-        raw_path,
-        raw_payload,
-    )
-    write_json(
-        raw_snapshot_path,
-        raw_payload,
-    )
-    write_csv(
-        csv_path,
-        rows,
-    )
-    write_csv(
-        csv_snapshot_path,
-        rows,
-    )
+        print(
+            f"games_requested={attempted_count}"
+        )
 
-    log(f"Schedule input: {schedule_path}")
-    log(f"Selected schedule group: {selected_week}")
-    log(f"Snapshot ID: {snapshot_id}")
-    log(
-        f"Snapshot fetched at: "
-        f"{snapshot_fetched_at}"
-    )
-    log(
-        f"ESPN odds events returned: "
-        f"{len(raw_odds)}"
-    )
-    log(
-        f"CSV rows written: {len(rows)}"
-    )
-    log(
-        f"Current raw JSON written: "
-        f"{raw_path}"
-    )
-    log(
-        f"Current normalized CSV written: "
-        f"{csv_path}"
-    )
-    log(
-        f"Archived raw JSON written: "
-        f"{raw_snapshot_path}"
-    )
-    log(
-        f"Archived normalized CSV written: "
-        f"{csv_snapshot_path}"
-    )
+        print(
+            f"games_with_odds={len(raw_odds)}"
+        )
 
-    print(
-        f"Selected schedule group: "
-        f"season={selected_week[0]} "
-        f"season_type={selected_week[1]} "
-        f"week={selected_week[2]}"
-    )
-    print(
-        f"Snapshot ID: {snapshot_id}"
-    )
-    print(
-        f"Current raw JSON written: "
-        f"{raw_path}"
-    )
-    print(
-        f"Current normalized CSV written: "
-        f"{csv_path}"
-    )
-    print(
-        f"Archived raw JSON written: "
-        f"{raw_snapshot_path}"
-    )
-    print(
-        f"Archived normalized CSV written: "
-        f"{csv_snapshot_path}"
-    )
-    print(
-        f"Rows written: {len(rows)}"
-    )
+        print(
+            "games_without_posted_odds="
+            f"{len(empty_game_ids)}"
+        )
+
+        print(
+            f"normalized_rows={len(rows)}"
+        )
+
+        print(
+            f"current_csv={csv_path}"
+        )
+
+        print(
+            f"snapshot_csv={csv_snapshot_path}"
+        )
+
+    return 0
 
 
 if __name__ == "__main__":
-    try:
+    raise SystemExit(
         main()
-    except Exception:
-        log(
-            traceback.format_exc()
-        )
-        print(
-            f"ERROR: see {LOG_FILE}",
-            file=sys.stderr,
-        )
-        raise
+    )
