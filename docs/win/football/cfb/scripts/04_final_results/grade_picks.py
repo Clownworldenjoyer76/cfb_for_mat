@@ -67,6 +67,16 @@ SCRIPT_VERSION = "cfb-grade-picks-v1-2026-08-26"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
+SCRIPTS_DIR = SCRIPT_DIR.parent
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(
+        0,
+        str(SCRIPTS_DIR),
+    )
+
+from pipeline_reporter import PipelineReporter
+
 
 DEFAULT_PICKS_DIR = (
     CFB_ROOT
@@ -83,6 +93,11 @@ DEFAULT_OUTPUT_DIR = (
     CFB_ROOT
     / "04_final_results"
     / "graded"
+)
+
+REPORT_ROOT = (
+    CFB_ROOT
+    / "errors"
 )
 
 PICKS_FILE_RE = re.compile(
@@ -343,6 +358,33 @@ def profit_for_grade(
 
     return None
 
+
+def selected_odds_or_raise(
+    *,
+    selected: bool,
+    value: Any,
+    game_id: str,
+    market: str,
+) -> float | None:
+    if not selected:
+        return None
+
+    odds = parse_float(
+        value
+    )
+
+    if (
+        odds is None
+        or odds == 0
+    ):
+        raise ValueError(
+            "Invalid American odds for "
+            f"selected {market} bet: "
+            f"game_id={game_id} "
+            f"value={clean(value)!r}"
+        )
+
+    return odds
 
 def is_void_status(
     status: Any,
@@ -871,6 +913,36 @@ def grade_week(
             )
         )
 
+        ml_odds = selected_odds_or_raise(
+            selected=ml_selected,
+            value=pick.get(
+                "ml_odds_american",
+                "",
+            ),
+            game_id=game_id,
+            market="moneyline",
+        )
+
+        spread_odds = selected_odds_or_raise(
+            selected=spread_selected,
+            value=pick.get(
+                "spread_odds_american",
+                "",
+            ),
+            game_id=game_id,
+            market="spread",
+        )
+
+        total_odds = selected_odds_or_raise(
+            selected=total_selected,
+            value=pick.get(
+                "total_odds_american",
+                "",
+            ),
+            game_id=game_id,
+            market="total",
+        )
+
         ml_grade = grade_moneyline(
             selected=ml_selected,
             selection=pick.get(
@@ -921,32 +993,17 @@ def grade_week(
 
         ml_profit = profit_for_grade(
             ml_grade,
-            parse_float(
-                pick.get(
-                    "ml_odds_american",
-                    "",
-                )
-            ),
+            ml_odds,
         )
 
         spread_profit = profit_for_grade(
             spread_grade,
-            parse_float(
-                pick.get(
-                    "spread_odds_american",
-                    "",
-                )
-            ),
+            spread_odds,
         )
 
         total_profit = profit_for_grade(
             total_grade,
-            parse_float(
-                pick.get(
-                    "total_odds_american",
-                    "",
-                )
-            ),
+            total_odds,
         )
 
         ml_grades.append(
@@ -1673,142 +1730,340 @@ def build_season_summary(
     return output_path
 
 
-def main() -> int:
-    args = parse_args()
-
-    season = get_season(
-        args.season
-    )
-
-    print(
-        "grade_picks.py "
-        f"version={SCRIPT_VERSION}"
-    )
-
-    print(
-        f"season={season}"
-    )
-
-    if not args.picks_dir.is_dir():
-        raise FileNotFoundError(
-            "Missing picks directory: "
-            f"{args.picks_dir}"
+def numeric_column_sum(
+    df: pd.DataFrame,
+    column: str,
+) -> float:
+    if column not in df.columns:
+        raise ValueError(
+            "Generated graded output "
+            f"missing required column: {column}"
         )
 
-    if args.week is not None:
-        pick_files = [
-            args.picks_dir
-            / (
-                f"week_{args.week}_"
-                "CFB_picks.csv"
-            )
-        ]
+    return float(
+        pd.to_numeric(
+            df[column],
+            errors="coerce",
+        )
+        .fillna(
+            0
+        )
+        .sum()
+    )
 
-    else:
-        pick_files = sorted(
-            args.picks_dir.glob(
-                "week_*_CFB_picks.csv"
-            ),
-            key=lambda path: int(
-                PICKS_FILE_RE.fullmatch(
+
+def main() -> int:
+    with PipelineReporter(
+        script=__file__,
+        stage="04_final_results",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+    ) as report:
+        args = parse_args()
+
+        season = get_season(
+            args.season
+        )
+
+        report.season = season
+        report.week = args.week
+
+        report.update_details(
+            {
+                "script_version": (
+                    SCRIPT_VERSION
+                ),
+                "picks_dir": (
+                    str(args.picks_dir)
+                ),
+                "results_dir": (
+                    str(args.results_dir)
+                ),
+                "output_dir": (
+                    str(args.output_dir)
+                ),
+            }
+        )
+
+        print(
+            "grade_picks.py "
+            f"version={SCRIPT_VERSION}"
+        )
+
+        print(
+            f"season={season}"
+        )
+
+        if args.week is not None:
+            print(
+                f"week={args.week}"
+            )
+
+        if not args.picks_dir.is_dir():
+            raise FileNotFoundError(
+                "Missing picks directory: "
+                f"{args.picks_dir}"
+            )
+
+        if args.week is not None:
+            pick_files = [
+                args.picks_dir
+                / (
+                    f"week_{args.week}_"
+                    "CFB_picks.csv"
+                )
+            ]
+
+        else:
+            pick_files = sorted(
+                args.picks_dir.glob(
+                    "week_*_CFB_picks.csv"
+                ),
+                key=lambda path: int(
+                    PICKS_FILE_RE.fullmatch(
+                        path.name
+                    ).group(
+                        1
+                    )
+                )
+                if PICKS_FILE_RE.fullmatch(
                     path.name
-                ).group(
+                )
+                else 10_000,
+            )
+
+        processed = 0
+        processed_weeks: list[int] = []
+
+        games_processed = 0
+        selected_bets = 0
+        graded_bets = 0
+        wins = 0
+        losses = 0
+        pushes = 0
+        voids = 0
+        pending = 0
+        net_units = 0.0
+
+        for picks_path in pick_files:
+            if not picks_path.is_file():
+                continue
+
+            match = PICKS_FILE_RE.fullmatch(
+                picks_path.name
+            )
+
+            if match is None:
+                continue
+
+            week = int(
+                match.group(
                     1
                 )
             )
-            if PICKS_FILE_RE.fullmatch(
-                path.name
-            )
-            else 10_000,
-        )
 
-    processed = 0
-
-    for picks_path in pick_files:
-        if not picks_path.is_file():
-            continue
-
-        match = PICKS_FILE_RE.fullmatch(
-            picks_path.name
-        )
-
-        if match is None:
-            continue
-
-        week = int(
-            match.group(
-                1
-            )
-        )
-
-        preview = pd.read_csv(
-            picks_path,
-            dtype=str,
-            nrows=1,
-            encoding="utf-8-sig",
-        )
-
-        if preview.empty:
-            continue
-
-        file_season = parse_float(
-            preview.iloc[0].get(
-                "season",
-                "",
-            )
-        )
-
-        if (
-            file_season is None
-            or int(
-                file_season
-            )
-            != season
-        ):
-            continue
-
-        grade_week(
-            picks_path=(
+            report.add_input(
                 picks_path
-            ),
-            results_dir=(
-                args.results_dir
-            ),
-            output_dir=(
-                args.output_dir
-            ),
-            season=season,
-            week=week,
+            )
+
+            preview = pd.read_csv(
+                picks_path,
+                dtype=str,
+                nrows=1,
+                encoding="utf-8-sig",
+            )
+
+            if preview.empty:
+                continue
+
+            file_season = parse_float(
+                preview.iloc[0].get(
+                    "season",
+                    "",
+                )
+            )
+
+            if (
+                file_season is None
+                or int(
+                    file_season
+                )
+                != season
+            ):
+                continue
+
+            result_paths = sorted(
+                args.results_dir.glob(
+                    f"{season}_*_{week}.csv"
+                )
+            )
+
+            for result_path in result_paths:
+                report.add_input(
+                    result_path
+                )
+
+            graded_path = grade_week(
+                picks_path=(
+                    picks_path
+                ),
+                results_dir=(
+                    args.results_dir
+                ),
+                output_dir=(
+                    args.output_dir
+                ),
+                season=season,
+                week=week,
+            )
+
+            report.add_output(
+                graded_path
+            )
+
+            graded_df = pd.read_csv(
+                graded_path,
+                low_memory=False,
+            )
+
+            games_processed += len(
+                graded_df
+            )
+
+            selected_bets += int(
+                numeric_column_sum(
+                    graded_df,
+                    "selected_bets",
+                )
+            )
+
+            graded_bets += int(
+                numeric_column_sum(
+                    graded_df,
+                    "graded_bets",
+                )
+            )
+
+            wins += int(
+                numeric_column_sum(
+                    graded_df,
+                    "wins",
+                )
+            )
+
+            losses += int(
+                numeric_column_sum(
+                    graded_df,
+                    "losses",
+                )
+            )
+
+            pushes += int(
+                numeric_column_sum(
+                    graded_df,
+                    "pushes",
+                )
+            )
+
+            voids += int(
+                numeric_column_sum(
+                    graded_df,
+                    "voids",
+                )
+            )
+
+            pending += int(
+                numeric_column_sum(
+                    graded_df,
+                    "pending_bets",
+                )
+            )
+
+            net_units += numeric_column_sum(
+                graded_df,
+                "net_units",
+            )
+
+            processed += 1
+            processed_weeks.append(
+                week
+            )
+
+        for summary_input in sorted(
+            args.output_dir.glob(
+                "week_*_CFB_graded.csv"
+            )
+        ):
+            report.add_input(
+                summary_input
+            )
+
+        summary_path = build_season_summary(
+            args.output_dir,
+            season,
         )
 
-        processed += 1
+        report.add_output(
+            summary_path
+        )
 
-    build_season_summary(
-        args.output_dir,
-        season,
-    )
+        report.set_rows(
+            rows_in=games_processed,
+            rows_out=games_processed,
+        )
 
-    print(
-        f"graded_pick_files={processed}"
-    )
+        report.update_details(
+            {
+                "graded_pick_files": (
+                    processed
+                ),
+                "weeks_processed": (
+                    sorted(
+                        processed_weeks
+                    )
+                ),
+                "games_processed": (
+                    games_processed
+                ),
+                "selected_bets": (
+                    selected_bets
+                ),
+                "graded_bets": (
+                    graded_bets
+                ),
+                "wins": wins,
+                "losses": losses,
+                "pushes": pushes,
+                "voids": voids,
+                "pending_bets": (
+                    pending
+                ),
+                "net_units": round(
+                    net_units,
+                    6,
+                ),
+                "graded_files_written": (
+                    processed
+                ),
+                "files_written": (
+                    processed + 1
+                ),
+            }
+        )
 
-    print(
-        "status=success"
-    )
+        print(
+            f"graded_pick_files={processed}"
+        )
 
-    return 0
+        print(
+            "status=success"
+        )
+
+        return 0
 
 
 if __name__ == "__main__":
-    try:
-        raise SystemExit(
-            main()
-        )
-
-    except Exception as exc:
-        print(
-            f"ERROR: {exc}",
-            file=sys.stderr,
-        )
-
-        raise
+    raise SystemExit(
+        main()
+    )
