@@ -50,7 +50,7 @@ TEAM_MAP_PATH = CFB_ROOT / "config" / "mapping" / "team_map.csv"
 OUTPUT_DIR = CFB_ROOT / "00_intake" / "injuries"
 REPORT_ROOT = CFB_ROOT / "errors"
 
-SCRIPT_VERSION = "cfb-pull-injuries-v3-freshness-2026-09-15"
+SCRIPT_VERSION = "cfb-pull-injuries-v4-stale-zero-current-2026-09-15"
 
 # Keep intake freshness aligned with the projection's default
 # injury-report freshness window. ESPN's payload timestamp is used
@@ -1837,6 +1837,25 @@ def update_report_details(
             _RAW_INJURY_COUNT > 0
             and _FRESH_INJURY_COUNT == 0
         ),
+        "freshness_outcome": (
+            "all_stale_zero_current"
+            if (
+                _RAW_INJURY_COUNT > 0
+                and _FRESH_INJURY_COUNT == 0
+            )
+            else (
+                "mixed_fresh_and_stale"
+                if (
+                    _FRESH_INJURY_COUNT > 0
+                    and _STALE_INJURY_COUNT > 0
+                )
+                else (
+                    "fresh_only"
+                    if _FRESH_INJURY_COUNT > 0
+                    else "provider_zero_injuries"
+                )
+            )
+        ),
         "published_injury_count": len(
             rows
         ),
@@ -1970,23 +1989,25 @@ def run(
             canonical_by_id=canonical_by_id,
         )
 
-        if _STALE_INJURY_COUNT:
+        if (
+            _RAW_INJURY_COUNT > 0
+            and _FRESH_INJURY_COUNT == 0
+        ):
             report.warning(
-                "Excluded stale ESPN injury records: "
+                "ESPN returned only stale injury records; "
+                "all stale records were excluded and zero "
+                "current injuries will be published: "
+                f"raw={_RAW_INJURY_COUNT}, "
                 f"stale={_STALE_INJURY_COUNT}, "
                 f"fresh={_FRESH_INJURY_COUNT}, "
                 f"max_age_days={MAX_REPORT_AGE_DAYS:.1f}"
             )
 
-        if (
-            _RAW_INJURY_COUNT > 0
-            and _FRESH_INJURY_COUNT == 0
-        ):
-            raise InjuryValidationError(
-                "All ESPN injury records are stale; "
-                "refusing to publish the response. "
-                f"raw={_RAW_INJURY_COUNT}, "
+        elif _STALE_INJURY_COUNT:
+            report.warning(
+                "Excluded stale ESPN injury records: "
                 f"stale={_STALE_INJURY_COUNT}, "
+                f"fresh={_FRESH_INJURY_COUNT}, "
                 f"max_age_days={MAX_REPORT_AGE_DAYS:.1f}"
             )
 
