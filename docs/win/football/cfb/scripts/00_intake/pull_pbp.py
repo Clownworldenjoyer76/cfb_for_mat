@@ -295,6 +295,22 @@ def load_schedule(season: int) -> dict[str, dict[str, str]]:
             + ", ".join(duplicates[:20])
         )
 
+    invalid_game_dates: list[str] = []
+
+    for _, row in schedule.iterrows():
+        try:
+            parse_game_date(row["game_date"])
+        except ValueError as exc:
+            invalid_game_dates.append(
+                f"game_id={row['game_id']}: {exc}"
+            )
+
+    if invalid_game_dates:
+        raise ValueError(
+            f"{schedule_path} contains invalid game_date values: "
+            + "; ".join(invalid_game_dates[:20])
+        )
+
     return {
         row["game_id"]: {
             column: clean_text(row[column])
@@ -306,21 +322,21 @@ def load_schedule(season: int) -> dict[str, dict[str, str]]:
 
 def parse_game_date(value: Any):
     text = clean_text(value)
+
     if not text:
-        return None
+        raise ValueError("game_date is blank")
 
     # Current local schedule uses YYYY-MM-DD. Accept an ISO timestamp too.
     parsed = pd.to_datetime(text, errors="coerce")
+
     if pd.isna(parsed):
-        return None
+        raise ValueError(f"invalid game_date {text!r}")
 
     return parsed.date()
 
-
 def schedule_game_is_future(row: dict[str, str]) -> bool:
     game_date = parse_game_date(row.get("game_date"))
-    if game_date is None:
-        return False
+
 
     # Automatic PBP processing is limited to games dated before today.
     # Games scheduled today or later are excluded.
