@@ -1,34 +1,44 @@
 #!/usr/bin/env python3
 # docs/win/football/cfb/scripts/00_intake/pull_opening_odds.py
 
+from __future__ import annotations
+
 import csv
 import json
+import math
+import os
 import re
 import sys
-import traceback
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
+import yaml
 
-BASE_DIR = Path("docs/win/football/cfb")
-WEEKLY_DIR = BASE_DIR / "00_intake" / "schedule" / "weekly"
-OPENERS_DIR = BASE_DIR / "00_intake" / "odds" / "openers"
-ERROR_DIR = BASE_DIR / "errors" / "00_intake"
+SCRIPT_PATH = Path(__file__).resolve()
+SCRIPTS_DIR = SCRIPT_PATH.parents[1]
+CFB_ROOT = SCRIPT_PATH.parents[2]
 
-ERROR_DIR.mkdir(parents=True, exist_ok=True)
-OPENERS_DIR.mkdir(parents=True, exist_ok=True)
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 
-LOG_FILE = ERROR_DIR / "pull_opening_odds.txt"
+from pipeline_reporter import PipelineReporter
+
+CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
+WEEKLY_DIR = CFB_ROOT / "00_intake" / "schedule" / "weekly"
+OPENERS_DIR = CFB_ROOT / "00_intake" / "odds" / "openers"
+REPORT_ROOT = CFB_ROOT / "errors"
 
 ESPN_BASE = (
     "https://sports.core.api.espn.com/v2/sports/football/"
     "leagues/college-football"
 )
+SCRIPT_VERSION = "cfb-opening-odds-v2-2026-09-15"
 
-OUTPUT_COLUMNS = [
+LEGACY_OUTPUT_COLUMNS = [
     "game_id",
     "odds_provider_game_id",
     "market_type",
@@ -51,11 +61,18 @@ OUTPUT_COLUMNS = [
     "opener_http_status",
 ]
 
+OUTPUT_COLUMNS = LEGACY_OUTPUT_COLUMNS[:7] + [
+    "opening_captured_at",
+] + LEGACY_OUTPUT_COLUMNS[7:]
+
 WEEKLY_REQUIRED_COLUMNS = [
     "season",
+    "season_type",
     "week",
     "game_id",
     "odds_provider_game_id",
+    "kickoff_utc",
+    "game_locked",
     "away_team",
     "home_team",
     "bookmaker",
@@ -65,49 +82,125 @@ WEEKLY_REQUIRED_COLUMNS = [
     "away_spread",
     "total",
     "odds_available",
+    "odds_missing_reason",
 ]
 
+VALID_MARKET_SIDES = {
+    "h2h": {"home", "away"},
+    "spreads": {"home", "away"},
+    "totals": {"over", "under"},
+}
 
-def utc_now_iso():
-    return datetime.now(timezone.utc).isoformat()
+VALID_STATUSES = {
+    "ok",
+    "missing",
+    "error",
+}
+
+NUMERIC_FIELDS = {
+    "opening_line",
+    "opening_odds_american",
+    "opening_spread",
+    "current_spread",
+    "spread_movement",
+    "opening_total",
+    "current_total",
+    "total_movement",
+    "opening_moneyline",
+    "current_moneyline",
+    "moneyline_movement",
+}
 
 
-def log(message):
-    with LOG_FILE.open("a", encoding="utf-8") as f:
-        f.write(f"[{utc_now_iso()}] {message}\n")
+class HardFetchError(RuntimeError):
+    pass
 
 
-def fail(message):
-    log(f"ERROR: {message}")
-    raise RuntimeError(message)
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
 
-def latest_file(directory, pattern, label):
-    files = sorted(
-        directory.glob(pattern),
-        key=lambda p: p.stat().st_mtime,
-        reverse=True,
-    )
-
-    if not files:
-        fail(
-            f"No {label} found in "
-            f"{directory} matching {pattern}"
+def load_current_week() -> tuple[int, int, int]:
+    if not CURRENT_WEEK_CONFIG_PATH.exists():
+        raise FileNotFoundError(
+            f"Missing current-week config: {CURRENT_WEEK_CONFIG_PATH}"
         )
 
-    return files[0]
+    with CURRENT_WEEK_CONFIG_PATH.open(
+        "r",
+        encoding="utf-8",
+    ) as handle:
+        payload = yaml.safe_load(handle)
+
+    if not isinstance(payload, dict):
+        raise ValueError(
+            "Current-week config must contain a YAML mapping"
+        )
+
+    values: dict[str, int] = {}
+
+    for key in (
+        "season",
+        "season_type",
+        "week",
+    ):
+        raw = payload.get(key)
+
+        if isinstance(raw, bool):
+            raise ValueError(
+                f"Current-week config {key} must be an integer"
+            )
+
+        try:
+            values[key] = int(
+                str(raw).strip()
+            )
+        except (
+            TypeError,
+            ValueError,
+        ) as exc:
+            raise ValueError(
+                f"Current-week config {key} must be an integer"
+            ) from exc
+
+    if values["season"] < 2000:
+        raise ValueError(
+            f"Invalid season: {values['season']}"
+        )
+
+    if values["season_type"] < 1:
+        raise ValueError(
+            f"Invalid season_type: {values['season_type']}"
+        )
+
+    if values["week"] < 1:
+        raise ValueError(
+            f"Invalid week: {values['week']}"
+        )
+
+    return (
+        values["season"],
+        values["season_type"],
+        values["week"],
+    )
 
 
-def read_csv(path, required_columns, label):
+def read_csv(
+    path: Path,
+    required_columns: list[str],
+    label: str,
+) -> list[dict[str, str]]:
     if not path.exists():
-        fail(f"Missing {label}: {path}")
+        raise FileNotFoundError(
+            f"Missing {label}: {path}"
+        )
 
     with path.open(
         "r",
         newline="",
         encoding="utf-8-sig",
-    ) as f:
-        reader = csv.DictReader(f)
+    ) as handle:
+        reader = csv.DictReader(handle)
         fieldnames = reader.fieldnames or []
 
         missing = [
@@ -117,49 +210,241 @@ def read_csv(path, required_columns, label):
         ]
 
         if missing:
-            fail(
-                f"{label} missing columns: "
-                f"{missing}"
+            raise ValueError(
+                f"{label} missing columns: {missing}"
             )
 
         return list(reader)
 
 
-def write_csv(path, rows):
-    with path.open(
-        "w",
-        newline="",
-        encoding="utf-8",
-    ) as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=OUTPUT_COLUMNS,
-        )
-        writer.writeheader()
+def parse_aware_iso(
+    value: object,
+    label: str,
+) -> datetime:
+    text = str(
+        value or ""
+    ).strip()
 
-        for row in rows:
-            writer.writerow(
-                {
-                    column: row.get(column, "")
-                    for column in OUTPUT_COLUMNS
-                }
+    if not text:
+        raise ValueError(
+            f"{label} is blank"
+        )
+
+    if text.endswith("Z"):
+        text = (
+            text[:-1]
+            + "+00:00"
+        )
+
+    try:
+        parsed = datetime.fromisoformat(
+            text
+        )
+    except ValueError as exc:
+        raise ValueError(
+            f"{label} is not a valid ISO timestamp: {value!r}"
+        ) from exc
+
+    if parsed.tzinfo is None:
+        raise ValueError(
+            f"{label} must include a timezone: {value!r}"
+        )
+
+    return parsed.astimezone(
+        timezone.utc
+    )
+
+
+def validate_weekly_rows(
+    rows: list[dict[str, str]],
+    season: int,
+    season_type: int,
+    week: int,
+) -> None:
+    if not rows:
+        raise ValueError(
+            "Weekly schedule is empty"
+        )
+
+    seen: set[str] = set()
+
+    for index, row in enumerate(rows):
+        game_id = str(
+            row.get(
+                "game_id",
+                "",
+            )
+        ).strip()
+
+        provider_game_id = str(
+            row.get(
+                "odds_provider_game_id",
+                "",
+            )
+        ).strip()
+
+        home_team = str(
+            row.get(
+                "home_team",
+                "",
+            )
+        ).strip()
+
+        away_team = str(
+            row.get(
+                "away_team",
+                "",
+            )
+        ).strip()
+
+        if not game_id:
+            raise ValueError(
+                f"Weekly schedule row {index} has blank game_id"
+            )
+
+        if game_id in seen:
+            raise ValueError(
+                "Weekly schedule contains duplicate "
+                f"game_id={game_id}"
+            )
+
+        seen.add(game_id)
+
+        if provider_game_id != game_id:
+            raise ValueError(
+                "Weekly schedule odds_provider_game_id "
+                "must equal game_id for "
+                f"game_id={game_id}: "
+                f"{provider_game_id!r}"
+            )
+
+        if str(
+            row.get(
+                "season",
+                "",
+            )
+        ).strip() != str(season):
+            raise ValueError(
+                "Weekly schedule season mismatch "
+                f"for game_id={game_id}"
+            )
+
+        if str(
+            row.get(
+                "season_type",
+                "",
+            )
+        ).strip() != str(season_type):
+            raise ValueError(
+                "Weekly schedule season_type mismatch "
+                f"for game_id={game_id}"
+            )
+
+        if str(
+            row.get(
+                "week",
+                "",
+            )
+        ).strip() != str(week):
+            raise ValueError(
+                "Weekly schedule week mismatch "
+                f"for game_id={game_id}"
+            )
+
+        if not home_team or not away_team:
+            raise ValueError(
+                "Weekly schedule has blank team "
+                f"for game_id={game_id}"
+            )
+
+        parse_aware_iso(
+            row.get(
+                "kickoff_utc",
+                "",
+            ),
+            f"kickoff_utc game_id={game_id}",
+        )
+
+        game_locked = str(
+            row.get(
+                "game_locked",
+                "",
+            )
+        ).strip()
+
+        if game_locked not in {
+            "0",
+            "1",
+        }:
+            raise ValueError(
+                "Weekly schedule has invalid "
+                "game_locked for "
+                f"game_id={game_id}: "
+                f"{game_locked!r}"
+            )
+
+        odds_available = str(
+            row.get(
+                "odds_available",
+                "",
+            )
+        ).strip()
+
+        if odds_available not in {
+            "0",
+            "1",
+        }:
+            raise ValueError(
+                "Weekly schedule has invalid "
+                "odds_available for "
+                f"game_id={game_id}: "
+                f"{odds_available!r}"
+            )
+
+        bookmaker = canonical_bookmaker(
+            row.get(
+                "bookmaker",
+                "",
+            )
+        )
+
+        if (
+            odds_available == "1"
+            and not bookmaker
+        ):
+            raise ValueError(
+                "Weekly schedule has odds_available=1 "
+                "with blank bookmaker for "
+                f"game_id={game_id}"
             )
 
 
-def build_url(path, params=None):
+def build_url(
+    path: str,
+    params: dict[str, object] | None = None,
+) -> str:
     url = f"{ESPN_BASE}{path}"
 
     if params:
-        return f"{url}?{urlencode(params)}"
+        return (
+            f"{url}?"
+            f"{urlencode(params)}"
+        )
 
     return url
 
 
-def http_get_json(url):
+def http_get_json(
+    url: str,
+) -> tuple[
+    int | None,
+    object | None,
+    str,
+]:
     request = Request(
         url,
         headers={
-            "User-Agent": "cfb-pull-opening-odds/3.0",
+            "User-Agent": "cfb-pull-opening-odds/4.0",
             "Accept": "application/json",
         },
     )
@@ -170,56 +455,76 @@ def http_get_json(url):
             timeout=45,
         ) as response:
             status = response.status
-            body = response.read().decode("utf-8")
+            body = (
+                response.read()
+                .decode("utf-8")
+            )
 
     except HTTPError as exc:
         body = ""
 
         try:
-            body = exc.read().decode("utf-8")
+            body = (
+                exc.read()
+                .decode("utf-8")
+            )
         except Exception:
             pass
 
-        return {
-            "_request_failed": True,
-            "_http_status": exc.code,
-            "_error": body or str(exc),
-        }
+        return (
+            exc.code,
+            None,
+            body or str(exc),
+        )
 
     except URLError as exc:
-        return {
-            "_request_failed": True,
-            "_http_status": "",
-            "_error": str(exc),
-        }
+        return (
+            None,
+            None,
+            str(exc),
+        )
 
     except Exception as exc:
-        return {
-            "_request_failed": True,
-            "_http_status": "",
-            "_error": str(exc),
-        }
+        return (
+            None,
+            None,
+            str(exc),
+        )
 
-    if status < 200 or status >= 300:
-        return {
-            "_request_failed": True,
-            "_http_status": status,
-            "_error": body,
-        }
+    if (
+        status < 200
+        or status >= 300
+    ):
+        return (
+            status,
+            None,
+            body,
+        )
 
     try:
-        return json.loads(body)
-
+        return (
+            status,
+            json.loads(body),
+            "",
+        )
     except Exception as exc:
-        return {
-            "_request_failed": True,
-            "_http_status": status,
-            "_error": f"JSON parse failed: {exc}",
-        }
+        return (
+            status,
+            None,
+            f"JSON parse failed: {exc}",
+        )
 
 
-def to_float(value):
-    if value is None:
+def to_float(
+    value: object,
+) -> float | None:
+    if (
+        value is None
+        or isinstance(
+            value,
+            bool,
+        )
+    ):
         return None
 
     text = str(value).strip()
@@ -227,7 +532,7 @@ def to_float(value):
     if not text:
         return None
 
-    if text.lower() in {
+    if text.casefold() in {
         "even",
         "ev",
         "evens",
@@ -235,54 +540,64 @@ def to_float(value):
         return 100.0
 
     try:
-        return float(text)
-
-    except Exception:
+        number = float(text)
+    except (
+        TypeError,
+        ValueError,
+    ):
         return None
 
+    if not math.isfinite(number):
+        return None
 
-def clean_number(value):
+    return number
+
+
+def clean_number(
+    value: object,
+) -> str:
     number = to_float(value)
 
     if number is None:
         return ""
 
     if number.is_integer():
-        return str(int(number))
+        return str(
+            int(number)
+        )
 
     return str(number)
 
 
-def normalize_american(value):
-    if value is None:
+def normalize_american(
+    value: object,
+) -> str:
+    number = to_float(value)
+
+    if (
+        number is None
+        or number == 0
+    ):
         return ""
 
-    text = str(value).strip()
-
-    if not text:
-        return ""
-
-    if text.lower() in {
-        "even",
-        "ev",
-        "evens",
-    }:
-        return "100"
-
-    number = to_float(text)
-
-    if number is None:
-        return ""
-
-    return str(int(round(number)))
+    return str(
+        int(
+            round(number)
+        )
+    )
 
 
 def numeric_movement(
-    current_value,
-    opening_value,
-):
-    current = to_float(current_value)
-    opening = to_float(opening_value)
+    current_value: object,
+    opening_value: object,
+) -> str:
+    current = to_float(
+        current_value
+    )
+
+    opening = to_float(
+        opening_value
+    )
 
     if (
         current is None
@@ -290,10 +605,15 @@ def numeric_movement(
     ):
         return ""
 
-    movement = current - opening
+    movement = (
+        current
+        - opening
+    )
 
     if movement.is_integer():
-        return str(int(movement))
+        return str(
+            int(movement)
+        )
 
     return str(
         round(
@@ -303,11 +623,12 @@ def numeric_movement(
     )
 
 
-def normalize_timestamp(value):
-    if value is None:
-        return ""
-
-    text = str(value).strip()
+def normalize_provider_timestamp(
+    value: object,
+) -> str:
+    text = str(
+        value or ""
+    ).strip()
 
     if not text:
         return ""
@@ -315,38 +636,43 @@ def normalize_timestamp(value):
     number = to_float(text)
 
     if number is not None:
-        try:
-            if number > 1_000_000_000_000:
-                dt = datetime.fromtimestamp(
-                    number / 1000,
-                    tz=timezone.utc,
-                )
-                return dt.isoformat()
+        if number > 1_000_000_000_000:
+            return datetime.fromtimestamp(
+                number / 1000,
+                tz=timezone.utc,
+            ).isoformat()
 
-            if number > 1_000_000_000:
-                dt = datetime.fromtimestamp(
-                    number,
-                    tz=timezone.utc,
-                )
-                return dt.isoformat()
+        if number > 1_000_000_000:
+            return datetime.fromtimestamp(
+                number,
+                tz=timezone.utc,
+            ).isoformat()
 
-        except Exception:
-            pass
+    parsed = parse_aware_iso(
+        text,
+        "ESPN opening timestamp",
+    )
 
-    return text
+    return parsed.isoformat()
 
 
-def bookmaker_key(value):
+def bookmaker_key(
+    value: object,
+) -> str:
     return re.sub(
         r"[^a-z0-9]+",
         "",
-        str(value or "")
+        str(
+            value or ""
+        )
         .strip()
         .lower(),
     )
 
 
-def canonical_bookmaker(value):
+def canonical_bookmaker(
+    value: object,
+) -> str:
     text = str(
         value or ""
     ).strip()
@@ -362,37 +688,54 @@ def canonical_bookmaker(value):
     return text
 
 
-def fetch_ref(ref):
-    if not ref:
-        return None
-
-    if ref.startswith("http://"):
+def fetch_ref(
+    ref: str,
+    label: str,
+) -> dict:
+    if ref.startswith(
+        "http://"
+    ):
         ref = (
             "https://"
-            + ref[len("http://"):]
+            + ref[
+                len("http://"):
+            ]
         )
 
-    response = http_get_json(ref)
+    (
+        status,
+        payload,
+        error,
+    ) = http_get_json(ref)
 
     if (
-        isinstance(response, dict)
-        and response.get(
-            "_request_failed"
-        )
+        status is None
+        or status < 200
+        or status >= 300
+        or payload is None
     ):
-        log(
-            "REF_FETCH_FAILED "
-            f"status={response.get('_http_status', '')} "
-            f"ref={ref} "
-            f"error={response.get('_error', '')}"
+        raise HardFetchError(
+            f"{label} fetch failed: "
+            f"status={status!r}, "
+            f"ref={ref}, "
+            f"error={error}"
         )
 
-        return None
+    if not isinstance(
+        payload,
+        dict,
+    ):
+        raise HardFetchError(
+            f"{label} returned "
+            f"non-object JSON: {ref}"
+        )
 
-    return response
+    return payload
 
 
-def provider_info(odds_item):
+def provider_info(
+    odds_item: dict,
+) -> dict[str, object]:
     provider = odds_item.get(
         "provider"
     )
@@ -422,15 +765,12 @@ def provider_info(odds_item):
             )
         )
     ):
-        resolved = fetch_ref(
-            provider.get("$ref")
+        provider_data = fetch_ref(
+            str(
+                provider["$ref"]
+            ),
+            "provider reference",
         )
-
-        if isinstance(
-            resolved,
-            dict,
-        ):
-            provider_data = resolved
 
     return {
         "id": str(
@@ -458,13 +798,16 @@ def provider_info(odds_item):
 
 
 def resolve_collection_items(
-    collection,
-):
+    collection: object,
+) -> list[dict]:
     if not isinstance(
         collection,
         dict,
     ):
-        return []
+        raise HardFetchError(
+            "ESPN odds response was "
+            "not a JSON object"
+        )
 
     items = collection.get(
         "items",
@@ -475,16 +818,25 @@ def resolve_collection_items(
         items,
         list,
     ):
-        return []
+        raise HardFetchError(
+            "ESPN odds response items "
+            "field was not a list"
+        )
 
-    resolved = []
+    resolved: list[dict] = []
 
-    for item in items:
+    for index, item in enumerate(
+        items
+    ):
         if not isinstance(
             item,
             dict,
         ):
-            continue
+            raise HardFetchError(
+                "ESPN odds response contains "
+                "non-object item at index "
+                f"{index}"
+            )
 
         if (
             item.get("$ref")
@@ -503,30 +855,30 @@ def resolve_collection_items(
                 ) is not None
             )
         ):
-            fetched = fetch_ref(
-                item.get("$ref")
+            item = fetch_ref(
+                str(
+                    item["$ref"]
+                ),
+                "odds item reference",
             )
 
-            if isinstance(
-                fetched,
-                dict,
-            ):
-                resolved.append(
-                    fetched
-                )
-
-        else:
-            resolved.append(item)
+        resolved.append(item)
 
     return resolved
 
 
-def select_primary_odds_item(
-    items,
-    bookmaker_name="",
-):
+def select_odds_item(
+    items: list[dict],
+    bookmaker_name: str,
+) -> tuple[
+    dict | None,
+    str,
+]:
     if not items:
-        return None
+        return (
+            None,
+            "no_current_odds_items",
+        )
 
     desired_key = bookmaker_key(
         bookmaker_name
@@ -535,30 +887,47 @@ def select_primary_odds_item(
     if desired_key:
         for item in items:
             info = provider_info(item)
+            candidate = (
+                info["name"]
+                or info["id"]
+            )
 
             if (
                 bookmaker_key(
-                    info["name"]
+                    candidate
                 )
                 == desired_key
             ):
-                return item
+                return (
+                    item,
+                    "",
+                )
 
-    ranked = []
+        return (
+            None,
+            "bookmaker_not_found",
+        )
+
+    ranked: list[
+        tuple[
+            float,
+            int,
+            dict,
+        ]
+    ] = []
 
     for index, item in enumerate(
         items
     ):
         info = provider_info(item)
-
         priority = info[
             "priority"
         ]
 
         rank = (
-            priority
+            float(priority)
             if priority is not None
-            else 1_000_000
+            else 1_000_000.0
         )
 
         ranked.append(
@@ -576,13 +945,21 @@ def select_primary_odds_item(
         )
     )
 
-    return ranked[0][2]
+    return (
+        ranked[0][2],
+        "",
+    )
 
 
 def fetch_current_odds(
-    game_id,
-    bookmaker_name="",
-):
+    game_id: str,
+    bookmaker_name: str,
+) -> tuple[
+    dict | None,
+    int | str,
+    str,
+    str,
+]:
     path = (
         f"/events/{game_id}/"
         f"competitions/{game_id}/odds"
@@ -597,53 +974,65 @@ def fetch_current_odds(
         },
     )
 
-    response = http_get_json(url)
+    (
+        status,
+        collection,
+        error,
+    ) = http_get_json(url)
 
-    if (
-        isinstance(response, dict)
-        and response.get(
-            "_request_failed"
-        )
-    ):
+    if status == 404:
         return (
             None,
-            response.get(
-                "_http_status",
-                "",
-            ),
-            response.get(
-                "_error",
-                "",
-            ),
+            404,
+            "not_found",
+            url,
+        )
+
+    if (
+        status is None
+        or status < 200
+        or status >= 300
+        or collection is None
+    ):
+        raise HardFetchError(
+            "Opening-odds request failed "
+            f"for game_id={game_id}: "
+            f"status={status!r}, "
+            f"error={error}"
         )
 
     items = resolve_collection_items(
-        response
+        collection
     )
 
-    selected = select_primary_odds_item(
+    (
+        selected,
+        missing_reason,
+    ) = select_odds_item(
         items,
-        bookmaker_name=bookmaker_name,
+        bookmaker_name,
     )
 
     if selected is None:
         return (
             None,
-            200,
-            "no_current_odds_items",
+            status,
+            missing_reason,
+            url,
         )
 
     return (
         selected,
-        200,
+        status,
         "",
+        url,
     )
 
 
 def market_block(
-    parent,
-    snapshot,
-):
+    parent: object,
+    snapshot: str,
+) -> dict:
     if not isinstance(
         parent,
         dict,
@@ -654,42 +1043,42 @@ def market_block(
         snapshot
     )
 
-    if not isinstance(
-        block,
-        dict,
-    ):
-        return {}
-
-    return block
+    return (
+        block
+        if isinstance(
+            block,
+            dict,
+        )
+        else {}
+    )
 
 
 def market_object(
-    block,
-    market,
-):
+    block: object,
+    market: str,
+) -> dict:
     if not isinstance(
         block,
         dict,
     ):
         return {}
 
-    obj = block.get(
-        market
+    obj = block.get(market)
+
+    return (
+        obj
+        if isinstance(
+            obj,
+            dict,
+        )
+        else {}
     )
-
-    if not isinstance(
-        obj,
-        dict,
-    ):
-        return {}
-
-    return obj
 
 
 def market_value(
-    block,
-    market,
-):
+    block: object,
+    market: str,
+) -> str:
     obj = market_object(
         block,
         market,
@@ -708,9 +1097,9 @@ def market_value(
 
 
 def market_american(
-    block,
-    market,
-):
+    block: object,
+    market: str,
+) -> str:
     obj = market_object(
         block,
         market,
@@ -724,12 +1113,13 @@ def market_american(
         or obj.get(
             "alternateDisplayValue"
         )
+        or obj.get("value")
     )
 
 
 def first_block_timestamp(
-    block,
-):
+    block: object,
+) -> str:
     if not isinstance(
         block,
         dict,
@@ -747,9 +1137,11 @@ def first_block_timestamp(
 
         if (
             value is not None
-            and str(value).strip()
+            and str(
+                value
+            ).strip()
         ):
-            return normalize_timestamp(
+            return normalize_provider_timestamp(
                 value
             )
 
@@ -777,7 +1169,7 @@ def first_block_timestamp(
                     candidate
                 ).strip()
             ):
-                return normalize_timestamp(
+                return normalize_provider_timestamp(
                     candidate
                 )
 
@@ -785,14 +1177,15 @@ def first_block_timestamp(
 
 
 def infer_opening_favorite(
-    home_open,
-    away_open,
-    home_moneyline,
-    away_moneyline,
-):
+    home_open: dict,
+    away_open: dict,
+    home_moneyline: str,
+    away_moneyline: str,
+) -> str:
     home_ml = to_float(
         home_moneyline
     )
+
     away_ml = to_float(
         away_moneyline
     )
@@ -814,12 +1207,16 @@ def infer_opening_favorite(
             return "away"
 
     home_favorite = (
-        home_open.get("favorite")
+        home_open.get(
+            "favorite"
+        )
         is True
     )
 
     away_favorite = (
-        away_open.get("favorite")
+        away_open.get(
+            "favorite"
+        )
         is True
     )
 
@@ -839,34 +1236,33 @@ def infer_opening_favorite(
 
 
 def normalize_opening_spreads(
-    home_open,
-    away_open,
-    home_moneyline,
-    away_moneyline,
-):
-    raw_home = market_value(
-        home_open,
-        "pointSpread",
-    )
-
-    raw_away = market_value(
-        away_open,
-        "pointSpread",
-    )
-
+    home_open: dict,
+    away_open: dict,
+    home_moneyline: str,
+    away_moneyline: str,
+) -> tuple[str, str]:
     home_num = to_float(
-        raw_home
+        market_value(
+            home_open,
+            "pointSpread",
+        )
     )
 
     away_num = to_float(
-        raw_away
+        market_value(
+            away_open,
+            "pointSpread",
+        )
     )
 
     if (
         home_num is None
         and away_num is None
     ):
-        return "", ""
+        return (
+            "",
+            "",
+        )
 
     favorite = infer_opening_favorite(
         home_open,
@@ -876,14 +1272,11 @@ def normalize_opening_spreads(
     )
 
     if favorite:
-        if home_num is not None:
-            magnitude = abs(
-                home_num
-            )
-        else:
-            magnitude = abs(
-                away_num
-            )
+        magnitude = abs(
+            home_num
+            if home_num is not None
+            else away_num
+        )
 
         if favorite == "home":
             return (
@@ -908,6 +1301,17 @@ def normalize_opening_spreads(
         home_num is not None
         and away_num is not None
     ):
+        if abs(
+            home_num
+            + away_num
+        ) > 0.000001:
+            raise ValueError(
+                "ESPN opening spreads are "
+                "not symmetric: "
+                f"home={home_num}, "
+                f"away={away_num}"
+            )
+
         return (
             clean_number(
                 home_num
@@ -938,14 +1342,8 @@ def normalize_opening_spreads(
 
 
 def get_opening(
-    odds_item,
-):
-    if not isinstance(
-        odds_item,
-        dict,
-    ):
-        return {}
-
+    odds_item: dict,
+) -> dict[str, str]:
     game_open = market_block(
         odds_item,
         "open",
@@ -1011,7 +1409,7 @@ def get_opening(
         away_moneyline,
     )
 
-    opening_timestamp = (
+    timestamp = (
         first_block_timestamp(
             game_open
         )
@@ -1064,516 +1462,13 @@ def get_opening(
                 "under",
             )
         ),
-        "timestamp": (
-            opening_timestamp
-        ),
+        "timestamp": timestamp,
     }
-
-
-def status_fields(
-    status,
-    reason="",
-    http_status="",
-):
-    return {
-        "opener_status": status,
-        "opener_missing_reason": reason,
-        "opener_http_status": str(
-            http_status or ""
-        ),
-    }
-
-
-def market_status(
-    value,
-    http_status,
-    request_error,
-    missing_reason,
-):
-    if request_error:
-        status = (
-            "missing"
-            if str(http_status) == "404"
-            else "error"
-        )
-
-        return status_fields(
-            status,
-            request_error,
-            http_status,
-        )
-
-    if (
-        str(
-            value or ""
-        ).strip()
-        == ""
-    ):
-        return status_fields(
-            "missing",
-            missing_reason,
-            http_status,
-        )
-
-    return status_fields(
-        "ok",
-        "",
-        http_status,
-    )
-
-
-def base_row(
-    weekly_row,
-    market_type,
-    bet_side,
-    bookmaker,
-):
-    return {
-        "game_id": weekly_row.get(
-            "game_id",
-            "",
-        ),
-        "odds_provider_game_id": (
-            weekly_row.get(
-                "odds_provider_game_id",
-                "",
-            )
-            or weekly_row.get(
-                "game_id",
-                "",
-            )
-        ),
-        "market_type": (
-            market_type
-        ),
-        "bet_side": (
-            bet_side
-        ),
-        "opening_line": "",
-        "opening_odds_american": "",
-        "opening_timestamp": "",
-        "bookmaker": (
-            canonical_bookmaker(
-                bookmaker
-            )
-        ),
-        "opening_spread": "",
-        "current_spread": "",
-        "spread_movement": "",
-        "opening_total": "",
-        "current_total": "",
-        "total_movement": "",
-        "opening_moneyline": "",
-        "current_moneyline": "",
-        "moneyline_movement": "",
-        "opener_status": "",
-        "opener_missing_reason": "",
-        "opener_http_status": "",
-    }
-
-
-def add_h2h_rows(
-    rows,
-    weekly_row,
-    opening,
-    bookmaker,
-    http_status,
-    request_error,
-):
-    for side in (
-        "home",
-        "away",
-    ):
-        opening_value = (
-            opening.get(
-                f"{side}_moneyline",
-                "",
-            )
-        )
-
-        current_value = str(
-            weekly_row.get(
-                f"{side}_moneyline_american",
-                "",
-            )
-        ).strip()
-
-        status = market_status(
-            opening_value,
-            http_status,
-            request_error,
-            (
-                f"opening_{side}_"
-                "moneyline_missing"
-            ),
-        )
-
-        row = base_row(
-            weekly_row,
-            "h2h",
-            side,
-            bookmaker,
-        )
-
-        row.update(
-            {
-                "opening_odds_american": (
-                    opening_value
-                ),
-                "opening_timestamp": (
-                    opening.get(
-                        "timestamp",
-                        "",
-                    )
-                ),
-                "opening_moneyline": (
-                    opening_value
-                ),
-                "current_moneyline": (
-                    current_value
-                ),
-                "moneyline_movement": (
-                    numeric_movement(
-                        current_value,
-                        opening_value,
-                    )
-                ),
-                **status,
-            }
-        )
-
-        rows.append(row)
-
-
-def add_spread_rows(
-    rows,
-    weekly_row,
-    opening,
-    bookmaker,
-    http_status,
-    request_error,
-):
-    for side in (
-        "home",
-        "away",
-    ):
-        opening_spread = (
-            opening.get(
-                f"{side}_spread",
-                "",
-            )
-        )
-
-        opening_odds = (
-            opening.get(
-                f"{side}_spread_odds",
-                "",
-            )
-        )
-
-        current_spread = str(
-            weekly_row.get(
-                f"{side}_spread",
-                "",
-            )
-        ).strip()
-
-        status = market_status(
-            opening_spread,
-            http_status,
-            request_error,
-            (
-                f"opening_{side}_"
-                "spread_missing"
-            ),
-        )
-
-        row = base_row(
-            weekly_row,
-            "spreads",
-            side,
-            bookmaker,
-        )
-
-        row.update(
-            {
-                "opening_line": (
-                    opening_spread
-                ),
-                "opening_odds_american": (
-                    opening_odds
-                ),
-                "opening_timestamp": (
-                    opening.get(
-                        "timestamp",
-                        "",
-                    )
-                ),
-                "opening_spread": (
-                    opening_spread
-                ),
-                "current_spread": (
-                    current_spread
-                ),
-                "spread_movement": (
-                    numeric_movement(
-                        current_spread,
-                        opening_spread,
-                    )
-                ),
-                **status,
-            }
-        )
-
-        rows.append(row)
-
-
-def add_total_rows(
-    rows,
-    weekly_row,
-    opening,
-    bookmaker,
-    http_status,
-    request_error,
-):
-    opening_total = (
-        opening.get(
-            "total",
-            "",
-        )
-    )
-
-    current_total = str(
-        weekly_row.get(
-            "total",
-            "",
-        )
-    ).strip()
-
-    for side in (
-        "over",
-        "under",
-    ):
-        opening_odds = (
-            opening.get(
-                f"{side}_odds",
-                "",
-            )
-        )
-
-        status = market_status(
-            opening_total,
-            http_status,
-            request_error,
-            "opening_total_missing",
-        )
-
-        row = base_row(
-            weekly_row,
-            "totals",
-            side,
-            bookmaker,
-        )
-
-        row.update(
-            {
-                "opening_line": (
-                    opening_total
-                ),
-                "opening_odds_american": (
-                    opening_odds
-                ),
-                "opening_timestamp": (
-                    opening.get(
-                        "timestamp",
-                        "",
-                    )
-                ),
-                "opening_total": (
-                    opening_total
-                ),
-                "current_total": (
-                    current_total
-                ),
-                "total_movement": (
-                    numeric_movement(
-                        current_total,
-                        opening_total,
-                    )
-                ),
-                **status,
-            }
-        )
-
-        rows.append(row)
-
-
-def build_opening_rows(
-    weekly_rows,
-):
-    output_rows = []
-
-    for weekly_row in weekly_rows:
-        if (
-            str(
-                weekly_row.get(
-                    "odds_available",
-                    "",
-                )
-            ).strip()
-            != "1"
-        ):
-            continue
-
-        game_id = str(
-            weekly_row.get(
-                "game_id",
-                "",
-            )
-        ).strip()
-
-        if not game_id:
-            log(
-                "SKIP_ROW_BLANK_GAME_ID"
-            )
-            continue
-
-        weekly_bookmaker = (
-            canonical_bookmaker(
-                weekly_row.get(
-                    "bookmaker",
-                    "",
-                )
-            )
-        )
-
-        (
-            odds_item,
-            http_status,
-            request_error,
-        ) = fetch_current_odds(
-            game_id,
-            bookmaker_name=(
-                weekly_bookmaker
-            ),
-        )
-
-        if odds_item is None:
-            opening = {}
-            bookmaker = (
-                weekly_bookmaker
-            )
-
-        else:
-            opening = get_opening(
-                odds_item
-            )
-
-            provider = provider_info(
-                odds_item
-            )
-
-            bookmaker = (
-                canonical_bookmaker(
-                    provider["name"]
-                    or weekly_bookmaker
-                    or provider["id"]
-                )
-            )
-
-        add_h2h_rows(
-            output_rows,
-            weekly_row,
-            opening,
-            bookmaker,
-            http_status,
-            request_error,
-        )
-
-        add_spread_rows(
-            output_rows,
-            weekly_row,
-            opening,
-            bookmaker,
-            http_status,
-            request_error,
-        )
-
-        add_total_rows(
-            output_rows,
-            weekly_row,
-            opening,
-            bookmaker,
-            http_status,
-            request_error,
-        )
-
-    return output_rows
-
-
-def read_existing_openers(
-    path,
-):
-    if not path.exists():
-        return []
-
-    with path.open(
-        "r",
-        newline="",
-        encoding="utf-8-sig",
-    ) as f:
-        reader = csv.DictReader(f)
-
-        fieldnames = (
-            reader.fieldnames or []
-        )
-
-        existing_rows = []
-
-        for row in reader:
-            normalized = {
-                column: row.get(
-                    column,
-                    "",
-                )
-                for column in (
-                    OUTPUT_COLUMNS
-                )
-            }
-
-            normalized[
-                "bookmaker"
-            ] = canonical_bookmaker(
-                normalized.get(
-                    "bookmaker",
-                    "",
-                )
-            )
-
-            existing_rows.append(
-                normalized
-            )
-
-        missing = [
-            column
-            for column in OUTPUT_COLUMNS
-            if column not in fieldnames
-        ]
-
-        if missing:
-            log(
-                "Existing opener file "
-                "missing columns; "
-                "blanks inserted: "
-                f"{missing}"
-            )
-
-        return existing_rows
 
 
 def row_has_required_opening(
-    row,
-):
+    row: dict[str, str],
+) -> bool:
     market_type = str(
         row.get(
             "market_type",
@@ -1632,40 +1527,505 @@ def row_has_required_opening(
     return False
 
 
-def row_status_rank(
-    row,
-):
-    status = str(
-        row.get(
-            "opener_status",
+def status_fields(
+    value: object,
+    missing_reason: str,
+    http_status: object,
+) -> dict[str, str]:
+    if str(
+        value or ""
+    ).strip():
+        return {
+            "opener_status": "ok",
+            "opener_missing_reason": "",
+            "opener_http_status": str(
+                http_status or ""
+            ),
+        }
+
+    return {
+        "opener_status": "missing",
+        "opener_missing_reason": (
+            missing_reason
+        ),
+        "opener_http_status": str(
+            http_status or ""
+        ),
+    }
+
+
+def base_row(
+    weekly_row: dict[str, str],
+    market_type: str,
+    bet_side: str,
+    bookmaker: str,
+) -> dict[str, str]:
+    game_id = str(
+        weekly_row.get(
+            "game_id",
             "",
         )
     ).strip()
 
-    has_required_opening = (
-        row_has_required_opening(
-            row
+    return {
+        "game_id": game_id,
+        "odds_provider_game_id": (
+            game_id
+        ),
+        "market_type": market_type,
+        "bet_side": bet_side,
+        "opening_line": "",
+        "opening_odds_american": "",
+        "opening_timestamp": "",
+        "opening_captured_at": "",
+        "bookmaker": (
+            canonical_bookmaker(
+                bookmaker
+            )
+        ),
+        "opening_spread": "",
+        "current_spread": "",
+        "spread_movement": "",
+        "opening_total": "",
+        "current_total": "",
+        "total_movement": "",
+        "opening_moneyline": "",
+        "current_moneyline": "",
+        "moneyline_movement": "",
+        "opener_status": "",
+        "opener_missing_reason": "",
+        "opener_http_status": "",
+    }
+
+
+def build_game_rows(
+    weekly_row: dict[str, str],
+    opening: dict[str, str],
+    bookmaker: str,
+    http_status: object,
+    request_missing_reason: str,
+    captured_at: str,
+) -> list[dict[str, str]]:
+    rows: list[
+        dict[str, str]
+    ] = []
+
+    provider_missing = bool(
+        request_missing_reason
+    )
+
+    for side in (
+        "home",
+        "away",
+    ):
+        opening_value = (
+            opening.get(
+                f"{side}_moneyline",
+                "",
+            )
+        )
+
+        current_value = str(
+            weekly_row.get(
+                f"{side}_moneyline_american",
+                "",
+            )
+        ).strip()
+
+        reason = (
+            request_missing_reason
+            if provider_missing
+            else (
+                f"opening_{side}_"
+                "moneyline_missing"
+            )
+        )
+
+        row = base_row(
+            weekly_row,
+            "h2h",
+            side,
+            bookmaker,
+        )
+
+        row.update(
+            {
+                "opening_odds_american": (
+                    opening_value
+                ),
+                "opening_timestamp": (
+                    opening.get(
+                        "timestamp",
+                        "",
+                    )
+                ),
+                "opening_captured_at": (
+                    captured_at
+                    if opening_value
+                    else ""
+                ),
+                "opening_moneyline": (
+                    opening_value
+                ),
+                "current_moneyline": (
+                    current_value
+                ),
+                "moneyline_movement": (
+                    numeric_movement(
+                        current_value,
+                        opening_value,
+                    )
+                ),
+                **status_fields(
+                    opening_value,
+                    reason,
+                    http_status,
+                ),
+            }
+        )
+
+        rows.append(row)
+
+    for side in (
+        "home",
+        "away",
+    ):
+        opening_spread = (
+            opening.get(
+                f"{side}_spread",
+                "",
+            )
+        )
+
+        opening_odds = (
+            opening.get(
+                f"{side}_spread_odds",
+                "",
+            )
+        )
+
+        current_spread = str(
+            weekly_row.get(
+                f"{side}_spread",
+                "",
+            )
+        ).strip()
+
+        reason = (
+            request_missing_reason
+            if provider_missing
+            else (
+                f"opening_{side}_"
+                "spread_missing"
+            )
+        )
+
+        row = base_row(
+            weekly_row,
+            "spreads",
+            side,
+            bookmaker,
+        )
+
+        row.update(
+            {
+                "opening_line": (
+                    opening_spread
+                ),
+                "opening_odds_american": (
+                    opening_odds
+                ),
+                "opening_timestamp": (
+                    opening.get(
+                        "timestamp",
+                        "",
+                    )
+                ),
+                "opening_captured_at": (
+                    captured_at
+                    if opening_spread
+                    else ""
+                ),
+                "opening_spread": (
+                    opening_spread
+                ),
+                "current_spread": (
+                    current_spread
+                ),
+                "spread_movement": (
+                    numeric_movement(
+                        current_spread,
+                        opening_spread,
+                    )
+                ),
+                **status_fields(
+                    opening_spread,
+                    reason,
+                    http_status,
+                ),
+            }
+        )
+
+        rows.append(row)
+
+    opening_total = (
+        opening.get(
+            "total",
+            "",
         )
     )
 
-    if (
-        status == "ok"
-        and has_required_opening
+    current_total = str(
+        weekly_row.get(
+            "total",
+            "",
+        )
+    ).strip()
+
+    for side in (
+        "over",
+        "under",
     ):
-        return 3
+        opening_odds = (
+            opening.get(
+                f"{side}_odds",
+                "",
+            )
+        )
 
-    if has_required_opening:
-        return 2
+        reason = (
+            request_missing_reason
+            if provider_missing
+            else "opening_total_missing"
+        )
 
-    if status == "missing":
-        return 1
+        row = base_row(
+            weekly_row,
+            "totals",
+            side,
+            bookmaker,
+        )
 
-    return 0
+        row.update(
+            {
+                "opening_line": (
+                    opening_total
+                ),
+                "opening_odds_american": (
+                    opening_odds
+                ),
+                "opening_timestamp": (
+                    opening.get(
+                        "timestamp",
+                        "",
+                    )
+                ),
+                "opening_captured_at": (
+                    captured_at
+                    if opening_total
+                    else ""
+                ),
+                "opening_total": (
+                    opening_total
+                ),
+                "current_total": (
+                    current_total
+                ),
+                "total_movement": (
+                    numeric_movement(
+                        current_total,
+                        opening_total,
+                    )
+                ),
+                **status_fields(
+                    opening_total,
+                    reason,
+                    http_status,
+                ),
+            }
+        )
+
+        rows.append(row)
+
+    return rows
+
+
+def build_opening_rows(
+    weekly_rows: list[
+        dict[str, str]
+    ],
+    captured_at: str,
+) -> tuple[
+    list[dict[str, str]],
+    list[dict[str, str]],
+    dict[str, int],
+]:
+    output_rows: list[
+        dict[str, str]
+    ] = []
+
+    hard_failures: list[
+        dict[str, str]
+    ] = []
+
+    provider_counts: dict[
+        str,
+        int,
+    ] = {}
+
+    for weekly_row in weekly_rows:
+        game_id = str(
+            weekly_row[
+                "game_id"
+            ]
+        ).strip()
+
+        weekly_bookmaker = (
+            canonical_bookmaker(
+                weekly_row.get(
+                    "bookmaker",
+                    "",
+                )
+            )
+        )
+
+        desired_bookmaker = (
+            weekly_bookmaker
+            if str(
+                weekly_row.get(
+                    "odds_available",
+                    "",
+                )
+            ).strip() == "1"
+            else ""
+        )
+
+        try:
+            (
+                odds_item,
+                http_status,
+                missing_reason,
+                _url,
+            ) = fetch_current_odds(
+                game_id,
+                desired_bookmaker,
+            )
+
+        except HardFetchError as exc:
+            hard_failures.append(
+                {
+                    "game_id": game_id,
+                    "error_type": (
+                        type(exc).__name__
+                    ),
+                    "message": str(exc),
+                }
+            )
+
+            continue
+
+        if odds_item is None:
+            bookmaker = (
+                weekly_bookmaker
+            )
+            opening: dict[
+                str,
+                str,
+            ] = {}
+
+        else:
+            provider = provider_info(
+                odds_item
+            )
+
+            bookmaker = canonical_bookmaker(
+                provider["name"]
+                or provider["id"]
+                or weekly_bookmaker
+            )
+
+            if not bookmaker:
+                hard_failures.append(
+                    {
+                        "game_id": game_id,
+                        "error_type": (
+                            "ProviderIdentityError"
+                        ),
+                        "message": (
+                            "ESPN opener item has "
+                            "no provider identity"
+                        ),
+                    }
+                )
+
+                continue
+
+            if (
+                desired_bookmaker
+                and bookmaker_key(
+                    bookmaker
+                )
+                != bookmaker_key(
+                    desired_bookmaker
+                )
+            ):
+                hard_failures.append(
+                    {
+                        "game_id": game_id,
+                        "error_type": (
+                            "BookmakerMismatchError"
+                        ),
+                        "message": (
+                            "Requested bookmaker="
+                            f"{desired_bookmaker!r}, "
+                            "received bookmaker="
+                            f"{bookmaker!r}"
+                        ),
+                    }
+                )
+
+                continue
+
+            provider_counts[
+                bookmaker
+            ] = (
+                provider_counts.get(
+                    bookmaker,
+                    0,
+                )
+                + 1
+            )
+
+            opening = get_opening(
+                odds_item
+            )
+
+        output_rows.extend(
+            build_game_rows(
+                weekly_row,
+                opening,
+                bookmaker,
+                http_status,
+                missing_reason,
+                captured_at,
+            )
+        )
+
+    return (
+        output_rows,
+        hard_failures,
+        provider_counts,
+    )
 
 
 def row_key(
-    row,
-):
+    row: dict[str, str],
+) -> tuple[
+    str,
+    str,
+    str,
+    str,
+]:
     return (
         str(
             row.get(
@@ -1694,64 +2054,704 @@ def row_key(
     )
 
 
-def upsert_rows(
-    existing_rows,
-    new_rows,
-):
-    keyed = {}
+def expected_movement(
+    row: dict[str, str],
+) -> str:
+    market_type = str(
+        row.get(
+            "market_type",
+            "",
+        )
+    ).strip()
 
-    for row in existing_rows:
-        row[
-            "bookmaker"
-        ] = canonical_bookmaker(
+    if market_type == "h2h":
+        return numeric_movement(
             row.get(
-                "bookmaker",
+                "current_moneyline",
+                "",
+            ),
+            row.get(
+                "opening_moneyline",
+                "",
+            ),
+        )
+
+    if market_type == "spreads":
+        return numeric_movement(
+            row.get(
+                "current_spread",
+                "",
+            ),
+            row.get(
+                "opening_spread",
+                "",
+            ),
+        )
+
+    if market_type == "totals":
+        return numeric_movement(
+            row.get(
+                "current_total",
+                "",
+            ),
+            row.get(
+                "opening_total",
+                "",
+            ),
+        )
+
+    return ""
+
+
+def validate_opener_row(
+    row: dict[str, str],
+    index: int,
+    label: str,
+) -> None:
+    game_id = str(
+        row.get(
+            "game_id",
+            "",
+        )
+    ).strip()
+
+    provider_game_id = str(
+        row.get(
+            "odds_provider_game_id",
+            "",
+        )
+    ).strip()
+
+    market_type = str(
+        row.get(
+            "market_type",
+            "",
+        )
+    ).strip()
+
+    bet_side = str(
+        row.get(
+            "bet_side",
+            "",
+        )
+    ).strip()
+
+    status = str(
+        row.get(
+            "opener_status",
+            "",
+        )
+    ).strip()
+
+    if not game_id:
+        raise ValueError(
+            f"{label} row {index} "
+            "has blank game_id"
+        )
+
+    if provider_game_id != game_id:
+        raise ValueError(
+            f"{label} row {index} "
+            "provider game ID mismatch: "
+            f"game_id={game_id}, "
+            "odds_provider_game_id="
+            f"{provider_game_id!r}"
+        )
+
+    if (
+        market_type
+        not in VALID_MARKET_SIDES
+    ):
+        raise ValueError(
+            f"{label} row {index} "
+            "has invalid market_type="
+            f"{market_type!r}"
+        )
+
+    if (
+        bet_side
+        not in VALID_MARKET_SIDES[
+            market_type
+        ]
+    ):
+        raise ValueError(
+            f"{label} row {index} "
+            "has invalid bet_side="
+            f"{bet_side!r} for "
+            f"{market_type}"
+        )
+
+    if status not in VALID_STATUSES:
+        raise ValueError(
+            f"{label} row {index} "
+            "has invalid opener_status="
+            f"{status!r}"
+        )
+
+    bookmaker = canonical_bookmaker(
+        row.get(
+            "bookmaker",
+            "",
+        )
+    )
+
+    row["bookmaker"] = bookmaker
+
+    for field in NUMERIC_FIELDS:
+        text = str(
+            row.get(
+                field,
                 "",
             )
-        )
-
-        key = row_key(row)
-
-        existing = keyed.get(
-            key
-        )
+        ).strip()
 
         if (
-            existing is None
-            or row_status_rank(row)
-            > row_status_rank(
-                existing
+            text
+            and to_float(text) is None
+        ):
+            raise ValueError(
+                f"{label} row {index} "
+                "has invalid numeric "
+                f"{field}={text!r}"
+            )
+
+    for field in (
+        "opening_odds_american",
+        "opening_moneyline",
+        "current_moneyline",
+    ):
+        text = str(
+            row.get(
+                field,
+                "",
+            )
+        ).strip()
+
+        number = to_float(text)
+
+        if (
+            text
+            and (
+                number is None
+                or number == 0
             )
         ):
-            keyed[key] = row
+            raise ValueError(
+                f"{label} row {index} "
+                "has invalid American odds "
+                f"{field}={text!r}"
+            )
 
-    for row in new_rows:
-        row[
-            "bookmaker"
-        ] = canonical_bookmaker(
+    opening_timestamp = str(
+        row.get(
+            "opening_timestamp",
+            "",
+        )
+    ).strip()
+
+    if opening_timestamp:
+        parse_aware_iso(
+            opening_timestamp,
+            (
+                f"{label} "
+                "opening_timestamp "
+                f"row {index}"
+            ),
+        )
+
+    captured_at = str(
+        row.get(
+            "opening_captured_at",
+            "",
+        )
+    ).strip()
+
+    if captured_at:
+        parse_aware_iso(
+            captured_at,
+            (
+                f"{label} "
+                "opening_captured_at "
+                f"row {index}"
+            ),
+        )
+
+    has_opening = (
+        row_has_required_opening(
+            row
+        )
+    )
+
+    if (
+        status == "ok"
+        and not has_opening
+    ):
+        raise ValueError(
+            f"{label} row {index} "
+            "status=ok without opening value"
+        )
+
+    if (
+        has_opening
+        and status != "ok"
+    ):
+        raise ValueError(
+            f"{label} row {index} "
+            "has opening value but "
+            f"status={status!r}"
+        )
+
+    if (
+        status == "ok"
+        and not bookmaker
+    ):
+        raise ValueError(
+            f"{label} row {index} "
+            "status=ok with blank bookmaker"
+        )
+
+    expected = expected_movement(
+        row
+    )
+
+    if market_type == "h2h":
+        actual = str(
+            row.get(
+                "moneyline_movement",
+                "",
+            )
+        ).strip()
+
+    elif market_type == "spreads":
+        actual = str(
+            row.get(
+                "spread_movement",
+                "",
+            )
+        ).strip()
+
+    else:
+        actual = str(
+            row.get(
+                "total_movement",
+                "",
+            )
+        ).strip()
+
+    if actual != expected:
+        raise ValueError(
+            f"{label} row {index} "
+            "movement mismatch for "
+            f"key={row_key(row)}: "
+            f"actual={actual!r}, "
+            f"expected={expected!r}"
+        )
+
+
+def read_existing_openers(
+    path: Path,
+) -> tuple[
+    list[dict[str, str]],
+    bool,
+]:
+    if not path.exists():
+        return (
+            [],
+            False,
+        )
+
+    with path.open(
+        "r",
+        newline="",
+        encoding="utf-8-sig",
+    ) as handle:
+        reader = csv.DictReader(
+            handle
+        )
+
+        fieldnames = (
+            reader.fieldnames
+            or []
+        )
+
+        if fieldnames == OUTPUT_COLUMNS:
+            legacy_schema = False
+
+        elif (
+            fieldnames
+            == LEGACY_OUTPUT_COLUMNS
+        ):
+            legacy_schema = True
+
+        else:
+            raise ValueError(
+                "Existing opener file schema "
+                "mismatch. "
+                f"expected={OUTPUT_COLUMNS}, "
+                "legacy="
+                f"{LEGACY_OUTPUT_COLUMNS}, "
+                f"actual={fieldnames}"
+            )
+
+        rows: list[
+            dict[str, str]
+        ] = []
+
+        seen: set[
+            tuple[
+                str,
+                str,
+                str,
+                str,
+            ]
+        ] = set()
+
+        for index, source in enumerate(
+            reader
+        ):
+            row = {
+                column: source.get(
+                    column,
+                    "",
+                )
+                for column
+                in OUTPUT_COLUMNS
+            }
+
+            if legacy_schema:
+                row[
+                    "opening_captured_at"
+                ] = ""
+
+            row["bookmaker"] = (
+                canonical_bookmaker(
+                    row.get(
+                        "bookmaker",
+                        "",
+                    )
+                )
+            )
+
+            validate_opener_row(
+                row,
+                index,
+                "existing opener",
+            )
+
+            key = row_key(row)
+
+            if key in seen:
+                raise ValueError(
+                    "Existing opener file "
+                    "contains duplicate key: "
+                    f"{key}"
+                )
+
+            seen.add(key)
+            rows.append(row)
+
+    return (
+        rows,
+        legacy_schema,
+    )
+
+
+def opening_fields_for_market(
+    market_type: str,
+) -> tuple[str, ...]:
+    common = (
+        "opening_line",
+        "opening_odds_american",
+        "opening_timestamp",
+        "opening_captured_at",
+    )
+
+    if market_type == "h2h":
+        return (
+            common
+            + (
+                "opening_moneyline",
+            )
+        )
+
+    if market_type == "spreads":
+        return (
+            common
+            + (
+                "opening_spread",
+            )
+        )
+
+    if market_type == "totals":
+        return (
+            common
+            + (
+                "opening_total",
+            )
+        )
+
+    raise ValueError(
+        "Unsupported market_type="
+        f"{market_type!r}"
+    )
+
+
+def merge_row(
+    existing: dict[str, str],
+    new: dict[str, str],
+) -> tuple[
+    dict[str, str],
+    bool,
+    bool,
+]:
+    merged = dict(existing)
+
+    market_type = str(
+        new["market_type"]
+    ).strip()
+
+    existing_has_opening = (
+        row_has_required_opening(
+            existing
+        )
+    )
+
+    new_has_opening = (
+        row_has_required_opening(
+            new
+        )
+    )
+
+    preserved = False
+    captured = False
+
+    if existing_has_opening:
+        preserved = True
+
+        for field in (
+            opening_fields_for_market(
+                market_type
+            )
+        ):
+            merged[field] = (
+                existing.get(
+                    field,
+                    "",
+                )
+            )
+
+        merged[
+            "opener_status"
+        ] = "ok"
+
+        merged[
+            "opener_missing_reason"
+        ] = ""
+
+    elif new_has_opening:
+        captured = True
+
+        for field in (
+            opening_fields_for_market(
+                market_type
+            )
+        ):
+            merged[field] = (
+                new.get(
+                    field,
+                    "",
+                )
+            )
+
+        merged[
+            "opener_status"
+        ] = "ok"
+
+        merged[
+            "opener_missing_reason"
+        ] = ""
+
+    else:
+        for field in (
+            opening_fields_for_market(
+                market_type
+            )
+        ):
+            merged[field] = (
+                new.get(
+                    field,
+                    "",
+                )
+            )
+
+        merged[
+            "opener_status"
+        ] = new.get(
+            "opener_status",
+            "missing",
+        )
+
+        merged[
+            "opener_missing_reason"
+        ] = new.get(
+            "opener_missing_reason",
+            "",
+        )
+
+    for field in (
+        "game_id",
+        "odds_provider_game_id",
+        "market_type",
+        "bet_side",
+        "bookmaker",
+        "current_spread",
+        "current_total",
+        "current_moneyline",
+        "opener_http_status",
+    ):
+        merged[field] = new.get(
+            field,
+            merged.get(
+                field,
+                "",
+            ),
+        )
+
+    merged[
+        "spread_movement"
+    ] = numeric_movement(
+        merged.get(
+            "current_spread",
+            "",
+        ),
+        merged.get(
+            "opening_spread",
+            "",
+        ),
+    )
+
+    merged[
+        "total_movement"
+    ] = numeric_movement(
+        merged.get(
+            "current_total",
+            "",
+        ),
+        merged.get(
+            "opening_total",
+            "",
+        ),
+    )
+
+    merged[
+        "moneyline_movement"
+    ] = numeric_movement(
+        merged.get(
+            "current_moneyline",
+            "",
+        ),
+        merged.get(
+            "opening_moneyline",
+            "",
+        ),
+    )
+
+    return (
+        merged,
+        preserved,
+        captured,
+    )
+
+
+def upsert_rows(
+    existing_rows: list[
+        dict[str, str]
+    ],
+    new_rows: list[
+        dict[str, str]
+    ],
+) -> tuple[
+    list[dict[str, str]],
+    int,
+    int,
+    int,
+]:
+    keyed = {
+        row_key(row): dict(row)
+        for row in existing_rows
+    }
+
+    preserved_count = 0
+    captured_count = 0
+    inserted_count = 0
+
+    real_provider_keys = {
+        (
+            row["game_id"],
+            row["market_type"],
+            row["bet_side"],
+        )
+        for row in new_rows
+        if bookmaker_key(
             row.get(
                 "bookmaker",
                 "",
             )
         )
+    }
 
-        key = row_key(row)
+    for key in list(keyed):
+        (
+            game_id,
+            market_type,
+            bet_side,
+            bookmaker,
+        ) = key
 
-        existing = keyed.get(
-            key
-        )
+        if (
+            not bookmaker
+            and (
+                game_id,
+                market_type,
+                bet_side,
+            )
+            in real_provider_keys
+        ):
+            del keyed[key]
+
+    for new in new_rows:
+        key = row_key(new)
+        existing = keyed.get(key)
 
         if existing is None:
-            keyed[key] = row
+            keyed[key] = dict(new)
+            inserted_count += 1
+
+            if row_has_required_opening(
+                new
+            ):
+                captured_count += 1
+
             continue
 
-        if (
-            row_status_rank(row)
-            >= row_status_rank(
-                existing
-            )
-        ):
-            keyed[key] = row
+        (
+            merged,
+            preserved,
+            captured,
+        ) = merge_row(
+            existing,
+            new,
+        )
+
+        keyed[key] = merged
+
+        preserved_count += int(
+            preserved
+        )
+
+        captured_count += int(
+            captured
+        )
 
     rows = list(
         keyed.values()
@@ -1780,207 +2780,541 @@ def upsert_rows(
         )
     )
 
-    return rows
+    return (
+        rows,
+        preserved_count,
+        captured_count,
+        inserted_count,
+    )
 
 
-def detect_season(
-    weekly_rows,
-):
-    seasons = sorted(
-        {
+def validate_new_coverage(
+    weekly_rows: list[
+        dict[str, str]
+    ],
+    new_rows: list[
+        dict[str, str]
+    ],
+) -> None:
+    expected_games = {
+        str(
+            row["game_id"]
+        ).strip()
+        for row in weekly_rows
+    }
+
+    expected_pairs = {
+        (
+            game_id,
+            market_type,
+            side,
+        )
+        for game_id
+        in expected_games
+        for market_type, sides
+        in VALID_MARKET_SIDES.items()
+        for side
+        in sides
+    }
+
+    observed_pairs = {
+        (
             str(
                 row.get(
-                    "season",
+                    "game_id",
                     "",
                 )
-            ).strip()
-            for row in weekly_rows
-            if str(
+            ).strip(),
+            str(
                 row.get(
-                    "season",
+                    "market_type",
                     "",
                 )
-            ).strip()
-        }
-    )
+            ).strip(),
+            str(
+                row.get(
+                    "bet_side",
+                    "",
+                )
+            ).strip(),
+        )
+        for row in new_rows
+    }
 
-    if len(seasons) != 1:
-        fail(
-            "Expected exactly one season "
-            "in weekly schedule, found: "
-            f"{seasons}"
+    if (
+        len(new_rows)
+        != len(
+            expected_pairs
+        )
+    ):
+        raise ValueError(
+            "New opener coverage row "
+            "count mismatch: "
+            f"rows={len(new_rows)}, "
+            f"expected="
+            f"{len(expected_pairs)}"
         )
 
-    return seasons[0]
+    if (
+        observed_pairs
+        != expected_pairs
+    ):
+        missing = sorted(
+            expected_pairs
+            - observed_pairs
+        )
+
+        extra = sorted(
+            observed_pairs
+            - expected_pairs
+        )
+
+        raise ValueError(
+            "New opener coverage mismatch. "
+            f"missing={missing[:20]}, "
+            f"extra={extra[:20]}"
+        )
 
 
-def main():
-    LOG_FILE.write_text(
-        "",
-        encoding="utf-8",
+def validate_final_rows(
+    rows: list[
+        dict[str, str]
+    ],
+) -> None:
+    seen: set[
+        tuple[
+            str,
+            str,
+            str,
+            str,
+        ]
+    ] = set()
+
+    for index, row in enumerate(
+        rows
+    ):
+        if (
+            set(row)
+            != set(
+                OUTPUT_COLUMNS
+            )
+        ):
+            raise ValueError(
+                "Final opener row "
+                f"{index} does not match "
+                "output schema"
+            )
+
+        validate_opener_row(
+            row,
+            index,
+            "final opener",
+        )
+
+        key = row_key(row)
+
+        if key in seen:
+            raise ValueError(
+                "Final opener rows contain "
+                f"duplicate key: {key}"
+            )
+
+        seen.add(key)
+
+
+def write_csv_atomic(
+    path: Path,
+    rows: list[
+        dict[str, str]
+    ],
+) -> None:
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
     )
 
-    weekly_path = latest_file(
-        WEEKLY_DIR,
-        "week_*_CFB_weekly_schedule.csv",
-        "weekly schedule CSV",
+    temp_path = (
+        path.with_name(
+            f".{path.name}."
+            f"{uuid.uuid4().hex}.tmp"
+        )
     )
 
-    log(
-        f"Weekly schedule input: "
-        f"{weekly_path}"
-    )
+    try:
+        with temp_path.open(
+            "w",
+            newline="",
+            encoding="utf-8",
+        ) as handle:
+            writer = csv.DictWriter(
+                handle,
+                fieldnames=OUTPUT_COLUMNS,
+            )
 
-    weekly_rows = read_csv(
-        weekly_path,
-        WEEKLY_REQUIRED_COLUMNS,
-        "weekly schedule CSV",
-    )
+            writer.writeheader()
 
-    season = detect_season(
-        weekly_rows
-    )
+            for row in rows:
+                writer.writerow(
+                    {
+                        column: row.get(
+                            column,
+                            "",
+                        )
+                        for column
+                        in OUTPUT_COLUMNS
+                    }
+                )
 
-    output_path = (
-        OPENERS_DIR
-        / f"{season}_CFB_openers.csv"
-    )
+            handle.flush()
 
-    existing_rows = (
-        read_existing_openers(
+            os.fsync(
+                handle.fileno()
+            )
+
+        os.replace(
+            temp_path,
+            path,
+        )
+
+    finally:
+        try:
+            temp_path.unlink(
+                missing_ok=True
+            )
+        except Exception:
+            pass
+
+
+def main() -> int:
+    with PipelineReporter(
+        script=__file__,
+        stage="00_intake",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        extra_context={
+            "script_version": (
+                SCRIPT_VERSION
+            ),
+            "source": (
+                "ESPN Core API"
+            ),
+        },
+    ) as report:
+        report.add_input(
+            CURRENT_WEEK_CONFIG_PATH
+        )
+
+        report.set_detail(
+            "output_modified",
+            False,
+        )
+
+        (
+            season,
+            season_type,
+            week,
+        ) = load_current_week()
+
+        report.season = season
+        report.week = week
+
+        report.set_detail(
+            "season_type",
+            season_type,
+        )
+
+        weekly_path = (
+            WEEKLY_DIR
+            / (
+                f"week_{week}_"
+                "CFB_weekly_schedule.csv"
+            )
+        )
+
+        report.add_input(
+            weekly_path
+        )
+
+        weekly_rows = read_csv(
+            weekly_path,
+            WEEKLY_REQUIRED_COLUMNS,
+            "weekly schedule CSV",
+        )
+
+        validate_weekly_rows(
+            weekly_rows,
+            season,
+            season_type,
+            week,
+        )
+
+        output_path = (
+            OPENERS_DIR
+            / f"{season}_CFB_openers.csv"
+        )
+
+        if output_path.exists():
+            report.add_input(
+                output_path
+            )
+
+        report.add_output(
             output_path
         )
-    )
 
-    new_rows = build_opening_rows(
-        weekly_rows
-    )
+        (
+            existing_rows,
+            legacy_schema,
+        ) = read_existing_openers(
+            output_path
+        )
 
-    final_rows = upsert_rows(
-        existing_rows,
-        new_rows,
-    )
+        captured_at = (
+            utc_now()
+            .isoformat()
+        )
 
-    write_csv(
-        output_path,
-        final_rows,
-    )
+        (
+            new_rows,
+            hard_failures,
+            provider_counts,
+        ) = build_opening_rows(
+            weekly_rows,
+            captured_at,
+        )
 
-    ok_rows = sum(
-        1
-        for row in final_rows
-        if str(
-            row.get(
-                "opener_status",
-                "",
+        report.set_rows(
+            rows_in=len(
+                weekly_rows
+            ),
+        )
+
+        report.update_details(
+            {
+                "target_games": len(
+                    weekly_rows
+                ),
+                "games_requested": len(
+                    weekly_rows
+                ),
+                "hard_fetch_failures": len(
+                    hard_failures
+                ),
+                "hard_fetch_failure_details": (
+                    hard_failures
+                ),
+                "provider_game_counts": (
+                    provider_counts
+                ),
+                "existing_rows": len(
+                    existing_rows
+                ),
+                "legacy_schema_migrated": (
+                    legacy_schema
+                ),
+                "new_rows_built": len(
+                    new_rows
+                ),
+            }
+        )
+
+        if hard_failures:
+            raise RuntimeError(
+                "One or more ESPN "
+                "opening-odds requests failed; "
+                "refusing to modify opener history. "
+                f"failures={len(hard_failures)}"
             )
-        ).strip()
-        == "ok"
-    )
 
-    missing_rows = sum(
-        1
-        for row in final_rows
-        if str(
-            row.get(
-                "opener_status",
-                "",
+        validate_new_coverage(
+            weekly_rows,
+            new_rows,
+        )
+
+        (
+            final_rows,
+            preserved_count,
+            captured_count,
+            inserted_count,
+        ) = upsert_rows(
+            existing_rows,
+            new_rows,
+        )
+
+        validate_final_rows(
+            final_rows
+        )
+
+        ok_rows = sum(
+            1
+            for row in final_rows
+            if row[
+                "opener_status"
+            ] == "ok"
+        )
+
+        missing_rows = sum(
+            1
+            for row in final_rows
+            if row[
+                "opener_status"
+            ] == "missing"
+        )
+
+        error_rows = sum(
+            1
+            for row in final_rows
+            if row[
+                "opener_status"
+            ] == "error"
+        )
+
+        blank_provider_timestamps = sum(
+            1
+            for row in final_rows
+            if row_has_required_opening(
+                row
             )
-        ).strip()
-        == "missing"
-    )
+            and not str(
+                row.get(
+                    "opening_timestamp",
+                    "",
+                )
+            ).strip()
+        )
 
-    error_rows = sum(
-        1
-        for row in final_rows
-        if str(
-            row.get(
-                "opener_status",
-                "",
+        blank_capture_provenance = sum(
+            1
+            for row in final_rows
+            if row_has_required_opening(
+                row
             )
-        ).strip()
-        == "error"
-    )
+            and not str(
+                row.get(
+                    "opening_captured_at",
+                    "",
+                )
+            ).strip()
+        )
 
-    log(
-        f"Weekly rows loaded: "
-        f"{len(weekly_rows)}"
-    )
-    log(
-        f"Existing opener rows loaded: "
-        f"{len(existing_rows)}"
-    )
-    log(
-        f"New opener rows built: "
-        f"{len(new_rows)}"
-    )
-    log(
-        f"Final opener rows written: "
-        f"{len(final_rows)}"
-    )
-    log(
-        f"Final opener ok rows: "
-        f"{ok_rows}"
-    )
-    log(
-        f"Final opener missing rows: "
-        f"{missing_rows}"
-    )
-    log(
-        f"Final opener error rows: "
-        f"{error_rows}"
-    )
-    log(
-        f"Output written: "
-        f"{output_path}"
-    )
+        current_week_missing_rows = sum(
+            1
+            for row in new_rows
+            if row[
+                "opener_status"
+            ] == "missing"
+        )
 
-    print(
-        f"Opening odds written: "
-        f"{output_path}"
-    )
-    print(
-        f"Weekly rows loaded: "
-        f"{len(weekly_rows)}"
-    )
-    print(
-        f"Existing opener rows loaded: "
-        f"{len(existing_rows)}"
-    )
-    print(
-        f"New opener rows built: "
-        f"{len(new_rows)}"
-    )
-    print(
-        f"Final opener rows written: "
-        f"{len(final_rows)}"
-    )
-    print(
-        f"Final opener ok rows: "
-        f"{ok_rows}"
-    )
-    print(
-        f"Final opener missing rows: "
-        f"{missing_rows}"
-    )
-    print(
-        f"Final opener error rows: "
-        f"{error_rows}"
-    )
+        report.update_details(
+            {
+                "opening_rows_preserved": (
+                    preserved_count
+                ),
+                "opening_rows_newly_captured": (
+                    captured_count
+                ),
+                "rows_inserted": (
+                    inserted_count
+                ),
+                "final_rows": len(
+                    final_rows
+                ),
+                "final_ok_rows": (
+                    ok_rows
+                ),
+                "final_missing_rows": (
+                    missing_rows
+                ),
+                "final_error_rows": (
+                    error_rows
+                ),
+                "current_week_missing_rows": (
+                    current_week_missing_rows
+                ),
+                "blank_provider_timestamps_on_valid_openers": (
+                    blank_provider_timestamps
+                ),
+                "blank_capture_provenance_on_valid_openers": (
+                    blank_capture_provenance
+                ),
+                "output_modified": False,
+            }
+        )
 
+        write_csv_atomic(
+            output_path,
+            final_rows,
+        )
 
-if __name__ == "__main__":
-    try:
-        main()
+        report.set_rows(
+            rows_out=len(
+                final_rows
+            ),
+        )
 
-    except Exception:
-        log(
-            traceback.format_exc()
+        report.update_details(
+            {
+                "output_modified": True,
+                "output_path": str(
+                    output_path
+                ),
+            }
         )
 
         print(
-            f"ERROR: see {LOG_FILE}",
-            file=sys.stderr,
+            "pull_opening_odds.py completed"
         )
 
-        raise
+        print(
+            f"season={season} "
+            f"season_type={season_type} "
+            f"week={week}"
+        )
+
+        print(
+            f"target_games="
+            f"{len(weekly_rows)}"
+        )
+
+        print(
+            f"new_rows_built="
+            f"{len(new_rows)}"
+        )
+
+        print(
+            "opening_rows_preserved="
+            f"{preserved_count}"
+        )
+
+        print(
+            "opening_rows_newly_captured="
+            f"{captured_count}"
+        )
+
+        print(
+            f"final_rows="
+            f"{len(final_rows)}"
+        )
+
+        print(
+            f"final_ok_rows="
+            f"{ok_rows}"
+        )
+
+        print(
+            f"final_missing_rows="
+            f"{missing_rows}"
+        )
+
+        print(
+            f"output={output_path}"
+        )
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(
+        main()
+    )
