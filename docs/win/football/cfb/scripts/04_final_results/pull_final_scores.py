@@ -18,9 +18,9 @@ Output:
     docs/win/football/cfb/04_final_results/results/
         {season}_{season_type}_{week}.csv
 
-Error/run log:
+Run/error report:
     docs/win/football/cfb/errors/04_final_results/
-        pull_final_scores.txt
+        pull_final_scores.json
 
 Behavior:
 - CFB only.
@@ -30,6 +30,7 @@ Behavior:
 - Writes both completed and not-yet-final games.
 - completed=1 means the game is safe for grading.
 - fetch_error records ESPN lookup problems without destroying other results.
+- Existing valid score/status data is preserved when a later ESPN fetch fails.
 """
 
 from __future__ import annotations
@@ -52,15 +53,20 @@ SCRIPT_VERSION = "cfb-final-scores-v2-2026-08-26"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
+SCRIPTS_DIR = SCRIPT_DIR.parent
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(
+        0,
+        str(SCRIPTS_DIR),
+    )
+
+from pipeline_reporter import PipelineReporter
+
 
 RESULTS_DIR = CFB_ROOT / "04_final_results" / "results"
 PICKS_DIR = CFB_ROOT / "03_picks"
-ERROR_LOG_PATH = (
-    CFB_ROOT
-    / "errors"
-    / "04_final_results"
-    / "pull_final_scores.txt"
-)
+REPORT_ROOT = CFB_ROOT / "errors"
 
 SUMMARY_URL_TEMPLATE = (
     "https://site.api.espn.com/apis/site/v2/"
@@ -168,32 +174,6 @@ def normalize_game_id(value: Any) -> str:
         return text[:-2]
 
     return text
-
-
-def log(lines: list[str]) -> None:
-    ERROR_LOG_PATH.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    timestamp = datetime.now(
-        timezone.utc
-    ).isoformat()
-
-    with ERROR_LOG_PATH.open(
-        "a",
-        encoding="utf-8",
-    ) as handle:
-        handle.write(
-            f"--- run {timestamp} ---\n"
-        )
-
-        for line in lines:
-            handle.write(
-                str(line) + "\n"
-            )
-
-        handle.write("\n")
 
 
 def fetch_json(
@@ -684,300 +664,687 @@ def atomic_write_csv(
     )
 
 
-def main() -> int:
-    args = parse_args()
-
-    season = get_season(
-        args.season
+def result_path_for_row(
+    row: dict[str, Any],
+) -> Path | None:
+    season = clean(
+        row.get(
+            "season",
+            "",
+        )
     )
 
-    print(
-        "pull_final_scores.py "
-        f"version={SCRIPT_VERSION}"
+    season_type = clean(
+        row.get(
+            "season_type",
+            "",
+        )
     )
 
-    print(
-        f"season={season}"
+    week = clean(
+        row.get(
+            "week",
+            "",
+        )
     )
 
-    if args.week is not None:
-        print(
-            f"week={args.week}"
+    if (
+        not season
+        or not season_type
+        or not week
+    ):
+        return None
+
+    return (
+        RESULTS_DIR
+        / (
+            f"{season}_"
+            f"{season_type}_"
+            f"{week}.csv"
+        )
+    )
+
+
+def read_existing_result_rows(
+    path: Path,
+    report: PipelineReporter,
+) -> dict[str, dict[str, str]]:
+    if not path.is_file():
+        return {}
+
+    report.add_input(
+        path
+    )
+
+    try:
+        with path.open(
+            "r",
+            newline="",
+            encoding="utf-8-sig",
+        ) as handle:
+            reader = csv.DictReader(
+                handle
+            )
+
+            fieldnames = set(
+                reader.fieldnames
+                or []
+            )
+
+            missing = (
+                set(OUTPUT_HEADER)
+                - fieldnames
+            )
+
+            if missing:
+                report.warning(
+                    "Existing result file "
+                    "cannot be used for "
+                    "fetch-failure recovery",
+                    path=str(path),
+                    missing_columns=(
+                        sorted(missing)
+                    ),
+                )
+
+                return {}
+
+            existing: dict[
+                str,
+                dict[str, str],
+            ] = {}
+
+            for (
+                line_number,
+                row,
+            ) in enumerate(
+                reader,
+                start=2,
+            ):
+                if None in row:
+                    report.warning(
+                        "Malformed row in "
+                        "existing result file",
+                        path=str(path),
+                        line=line_number,
+                    )
+
+                    continue
+
+                game_id = (
+                    normalize_game_id(
+                        row.get(
+                            "game_id",
+                            "",
+                        )
+                    )
+                )
+
+                if not game_id:
+                    continue
+
+                existing[
+                    game_id
+                ] = {
+                    column: clean(
+                        row.get(
+                            column,
+                            "",
+                        )
+                    )
+                    for column
+                    in OUTPUT_HEADER
+                }
+
+            return existing
+
+    except Exception as exc:
+        report.warning(
+            "Existing result file "
+            "could not be read for "
+            "fetch-failure recovery",
+            path=str(path),
+            error_type=(
+                type(exc).__name__
+            ),
+            error=str(exc),
         )
 
-    schedule_rows = read_schedule(
-        season,
-        args.week,
+        return {}
+
+
+def has_preservable_result(
+    row: dict[str, str],
+) -> bool:
+    away_score = clean(
+        row.get(
+            "away_score",
+            "",
+        )
     )
 
-    if not schedule_rows:
+    home_score = clean(
+        row.get(
+            "home_score",
+            "",
+        )
+    )
+
+    status = clean(
+        row.get(
+            "status",
+            "",
+        )
+    )
+
+    completed = clean(
+        row.get(
+            "completed",
+            "",
+        )
+    )
+
+    if completed == "1":
+        return bool(
+            away_score
+            and home_score
+        )
+
+    return bool(
+        away_score
+        or home_score
+        or status
+    )
+
+
+def parse_completed(
+    value: Any,
+) -> int:
+    text = clean(
+        value
+    )
+
+    if not text:
         return 0
 
-    checked_utc = datetime.now(
-        timezone.utc
-    ).isoformat()
+    try:
+        return int(
+            float(text) != 0.0
+        )
 
-    score_results = pull_scores(
-        schedule_rows,
-        args.workers,
-    )
+    except (
+        TypeError,
+        ValueError,
+    ):
+        return 0
 
-    rows_by_week: dict[
-        tuple[str, str, str],
-        list[dict[str, Any]],
-    ] = defaultdict(
-        list
-    )
 
-    completed_count = 0
-    not_final_count = 0
-    failed_count = 0
+def main() -> int:
+    with PipelineReporter(
+        script=__file__,
+        stage="04_final_results",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+    ) as report:
+        args = parse_args()
 
-    log_lines = [
-        f"version={SCRIPT_VERSION}",
-        f"season={season}",
-    ]
+        season = get_season(
+            args.season
+        )
 
-    for row in schedule_rows:
-        game_id = row[
-            "game_id"
-        ]
+        report.season = season
+        report.week = args.week
 
-        score = score_results.get(
-            game_id,
+        report.update_details(
             {
-                "away_score": "",
-                "home_score": "",
-                "completed": 0,
-                "status": "",
-                "fetch_error": (
-                    "missing worker result"
+                "script_version": (
+                    SCRIPT_VERSION
                 ),
-            },
+                "workers": (
+                    args.workers
+                ),
+            }
         )
 
-        completed = int(
-            score.get(
-                "completed",
-                0,
-            )
+        schedule_path = (
+            CFB_ROOT
+            / "00_intake"
+            / "schedule"
+            / f"{season}_schedule.csv"
         )
 
-        fetch_error = clean(
-            score.get(
-                "fetch_error",
-                "",
-            )
+        report.add_input(
+            schedule_path
         )
 
-        if fetch_error:
-            failed_count += 1
+        if args.week is None:
+            for path in sorted(
+                PICKS_DIR.glob(
+                    "week_*_CFB_picks.csv"
+                )
+            ):
+                report.add_input(
+                    path
+                )
 
-            log_lines.append(
-                f"game_id={game_id} "
-                f"error={fetch_error}"
+        print(
+            "pull_final_scores.py "
+            f"version={SCRIPT_VERSION}"
+        )
+
+        print(
+            f"season={season}"
+        )
+
+        if args.week is not None:
+            print(
+                f"week={args.week}"
             )
 
-        elif completed:
-            completed_count += 1
+        schedule_rows = read_schedule(
+            season,
+            args.week,
+        )
 
-        else:
-            not_final_count += 1
+        if not schedule_rows:
+            report.set_rows(
+                rows_in=0,
+                rows_out=0,
+            )
 
-        out_row = {
-            "season": clean(
-                row.get(
-                    "season",
-                    "",
+            report.update_details(
+                {
+                    "games_processed": 0,
+                    "completed": 0,
+                    "not_final": 0,
+                    "failed": 0,
+                    "preserved_fetch_failures": 0,
+                    "files_written": 0,
+                }
+            )
+
+            return 0
+
+        existing_by_path: dict[
+            Path,
+            dict[str, dict[str, str]],
+        ] = {}
+
+        for row in schedule_rows:
+            output_path = (
+                result_path_for_row(
+                    row
                 )
-            ),
-            "season_type": clean(
-                row.get(
-                    "season_type",
-                    "",
+            )
+
+            if (
+                output_path is not None
+                and output_path
+                not in existing_by_path
+            ):
+                existing_by_path[
+                    output_path
+                ] = (
+                    read_existing_result_rows(
+                        output_path,
+                        report,
+                    )
                 )
-            ),
-            "week": clean(
-                row.get(
-                    "week",
-                    "",
-                )
-            ),
-            "game_id": game_id,
-            "game_date": clean(
-                row.get(
-                    "game_date",
-                    "",
-                )
-            ),
-            "game_time": clean(
-                row.get(
-                    "game_time",
-                    "",
-                )
-            ),
-            "away_team": clean(
-                row.get(
-                    "away_team",
-                    "",
-                )
-            ),
-            "home_team": clean(
-                row.get(
-                    "home_team",
-                    "",
-                )
-            ),
-            "away_score": clean(
+
+        checked_utc = datetime.now(
+            timezone.utc
+        ).isoformat()
+
+        score_results = pull_scores(
+            schedule_rows,
+            args.workers,
+        )
+
+        rows_by_week: dict[
+            tuple[str, str, str],
+            list[dict[str, Any]],
+        ] = defaultdict(
+            list
+        )
+
+        completed_count = 0
+        not_final_count = 0
+        failed_count = 0
+        preserved_count = 0
+
+        for row in schedule_rows:
+            game_id = row[
+                "game_id"
+            ]
+
+            score = score_results.get(
+                game_id,
+                {
+                    "away_score": "",
+                    "home_score": "",
+                    "completed": 0,
+                    "status": "",
+                    "fetch_error": (
+                        "missing worker result"
+                    ),
+                },
+            )
+
+            away_score = clean(
                 score.get(
                     "away_score",
                     "",
                 )
-            ),
-            "home_score": clean(
+            )
+
+            home_score = clean(
                 score.get(
                     "home_score",
                     "",
                 )
-            ),
-            "status": clean(
+            )
+
+            status = clean(
                 score.get(
                     "status",
                     "",
                 )
-            ),
-            "completed": completed,
-            "fetch_error": (
-                fetch_error
-            ),
-            "last_checked_utc": (
-                checked_utc
-            ),
-        }
+            )
 
-        key = (
-            out_row["season"],
-            out_row["season_type"],
-            out_row["week"],
-        )
-
-        rows_by_week[
-            key
-        ].append(
-            out_row
-        )
-
-    files_written = 0
-
-    for (
-        season_value,
-        season_type,
-        week,
-    ), rows in sorted(
-        rows_by_week.items(),
-        key=lambda item: (
-            item[0][0],
-            item[0][1],
-            int(
-                float(
-                    item[0][2]
+            completed = parse_completed(
+                score.get(
+                    "completed",
+                    0,
                 )
+            )
+
+            fetch_error = clean(
+                score.get(
+                    "fetch_error",
+                    "",
+                )
+            )
+
+            if fetch_error:
+                failed_count += 1
+
+                output_path = (
+                    result_path_for_row(
+                        row
+                    )
+                )
+
+                prior_row = None
+
+                if output_path is not None:
+                    prior_row = (
+                        existing_by_path
+                        .get(
+                            output_path,
+                            {},
+                        )
+                        .get(
+                            game_id
+                        )
+                    )
+
+                if (
+                    prior_row is not None
+                    and has_preservable_result(
+                        prior_row
+                    )
+                ):
+                    away_score = clean(
+                        prior_row.get(
+                            "away_score",
+                            "",
+                        )
+                    )
+
+                    home_score = clean(
+                        prior_row.get(
+                            "home_score",
+                            "",
+                        )
+                    )
+
+                    status = clean(
+                        prior_row.get(
+                            "status",
+                            "",
+                        )
+                    )
+
+                    completed = (
+                        parse_completed(
+                            prior_row.get(
+                                "completed",
+                                0,
+                            )
+                        )
+                    )
+
+                    preserved_count += 1
+
+                    report.warning(
+                        "ESPN score fetch "
+                        "failed; prior valid "
+                        "score/status preserved",
+                        game_id=game_id,
+                        fetch_error=(
+                            fetch_error
+                        ),
+                    )
+
+                else:
+                    report.warning(
+                        "ESPN score fetch "
+                        "failed; no prior "
+                        "valid score/status "
+                        "was available",
+                        game_id=game_id,
+                        fetch_error=(
+                            fetch_error
+                        ),
+                    )
+
+            elif completed:
+                completed_count += 1
+
+            else:
+                not_final_count += 1
+
+            out_row = {
+                "season": clean(
+                    row.get(
+                        "season",
+                        "",
+                    )
+                ),
+                "season_type": clean(
+                    row.get(
+                        "season_type",
+                        "",
+                    )
+                ),
+                "week": clean(
+                    row.get(
+                        "week",
+                        "",
+                    )
+                ),
+                "game_id": game_id,
+                "game_date": clean(
+                    row.get(
+                        "game_date",
+                        "",
+                    )
+                ),
+                "game_time": clean(
+                    row.get(
+                        "game_time",
+                        "",
+                    )
+                ),
+                "away_team": clean(
+                    row.get(
+                        "away_team",
+                        "",
+                    )
+                ),
+                "home_team": clean(
+                    row.get(
+                        "home_team",
+                        "",
+                    )
+                ),
+                "away_score": (
+                    away_score
+                ),
+                "home_score": (
+                    home_score
+                ),
+                "status": status,
+                "completed": completed,
+                "fetch_error": (
+                    fetch_error
+                ),
+                "last_checked_utc": (
+                    checked_utc
+                ),
+            }
+
+            key = (
+                out_row["season"],
+                out_row["season_type"],
+                out_row["week"],
+            )
+
+            rows_by_week[
+                key
+            ].append(
+                out_row
+            )
+
+        files_written = 0
+        rows_written = 0
+
+        for (
+            season_value,
+            season_type,
+            week,
+        ), rows in sorted(
+            rows_by_week.items(),
+            key=lambda item: (
+                item[0][0],
+                item[0][1],
+                int(
+                    float(
+                        item[0][2]
+                    )
+                ),
             ),
-        ),
-    ):
-        if (
-            not season_value
-            or not season_type
-            or not week
         ):
-            continue
+            if (
+                not season_value
+                or not season_type
+                or not week
+            ):
+                continue
 
-        output_path = (
-            RESULTS_DIR
-            / (
-                f"{season_value}_"
-                f"{season_type}_"
-                f"{week}.csv"
+            output_path = (
+                RESULTS_DIR
+                / (
+                    f"{season_value}_"
+                    f"{season_type}_"
+                    f"{week}.csv"
+                )
             )
-        )
 
-        rows.sort(
-            key=lambda row: (
-                row.get(
-                    "game_date",
-                    "",
-                ),
-                row.get(
-                    "game_time",
-                    "",
-                ),
-                row.get(
-                    "game_id",
-                    "",
-                ),
+            rows.sort(
+                key=lambda row: (
+                    row.get(
+                        "game_date",
+                        "",
+                    ),
+                    row.get(
+                        "game_time",
+                        "",
+                    ),
+                    row.get(
+                        "game_id",
+                        "",
+                    ),
+                )
             )
+
+            atomic_write_csv(
+                output_path,
+                rows,
+            )
+
+            report.add_output(
+                output_path
+            )
+
+            files_written += 1
+            rows_written += len(
+                rows
+            )
+
+            print(
+                f"WROTE {output_path} "
+                f"| games={len(rows)}"
+            )
+
+        report.set_rows(
+            rows_in=len(
+                schedule_rows
+            ),
+            rows_out=rows_written,
         )
 
-        atomic_write_csv(
-            output_path,
-            rows,
+        report.update_details(
+            {
+                "games_processed": (
+                    len(schedule_rows)
+                ),
+                "completed": (
+                    completed_count
+                ),
+                "not_final": (
+                    not_final_count
+                ),
+                "failed": (
+                    failed_count
+                ),
+                "preserved_fetch_failures": (
+                    preserved_count
+                ),
+                "files_written": (
+                    files_written
+                ),
+            }
         )
 
-        files_written += 1
+        summary = (
+            f"games_processed={len(schedule_rows)} "
+            f"completed={completed_count} "
+            f"not_final={not_final_count} "
+            f"failed={failed_count} "
+            f"preserved={preserved_count} "
+            f"files_written={files_written}"
+        )
 
         print(
-            f"WROTE {output_path} "
-            f"| games={len(rows)}"
+            summary
         )
 
-        log_lines.append(
-            f"wrote {len(rows)} rows "
-            f"to {output_path}"
-        )
-
-    summary = (
-        f"games_processed={len(schedule_rows)} "
-        f"completed={completed_count} "
-        f"not_final={not_final_count} "
-        f"failed={failed_count} "
-        f"files_written={files_written}"
-    )
-
-    print(
-        summary
-    )
-
-    log_lines.append(
-        summary
-    )
-
-    log(
-        log_lines
-    )
-
-    return 0
+        return 0
 
 
 if __name__ == "__main__":
-    try:
-        raise SystemExit(
-            main()
-        )
-
-    except Exception as exc:
-        message = (
-            f"ERROR: {exc}"
-        )
-
-        print(
-            message,
-            file=sys.stderr,
-        )
-
-        log(
-            [
-                message,
-            ]
-        )
-
-        raise
+    raise SystemExit(
+        main()
+    )
