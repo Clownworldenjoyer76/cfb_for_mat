@@ -452,9 +452,14 @@ def validate_processed_game(
 
 def process_one_game(
     task: tuple[int, int],
-) -> tuple[int, pd.DataFrame | None, str]:
+) -> tuple[int, pd.DataFrame | None, str, str]:
     """
     Worker entry point. Kept at module scope so it is picklable on Windows.
+
+    disposition:
+      processed = completed game returned valid PBP
+      skipped   = expected nonfatal state
+      failed    = processor, worker, or validation failure
     """
     game_id, season = task
 
@@ -465,7 +470,12 @@ def process_one_game(
 
     try:
         if CFBPlayProcess is None:
-            return game_id, None, "sportsdataverse import unavailable"
+            return (
+                game_id,
+                None,
+                "failed",
+                "sportsdataverse import unavailable",
+            )
 
         proc = CFBPlayProcess(gameId=game_id, join_participants=False)
 
@@ -493,6 +503,7 @@ def process_one_game(
             return (
                 game_id,
                 None,
+                "failed",
                 f"processor returned {type(result).__name__}, expected dict",
             )
 
@@ -502,11 +513,17 @@ def process_one_game(
             return (
                 game_id,
                 None,
+                "failed",
                 f"result['plays'] returned {type(plays).__name__}, expected list",
             )
 
         if not plays:
-            return game_id, None, "no plays returned"
+            return (
+                game_id,
+                None,
+                "skipped",
+                "no plays returned",
+            )
 
         df = pd.DataFrame(plays)
 
@@ -517,14 +534,25 @@ def process_one_game(
         )
 
         if not game_is_completed(df):
-            return game_id, None, "game not completed"
+            return (
+                game_id,
+                None,
+                "skipped",
+                "game not completed",
+            )
 
-        return game_id, df, ""
+        return (
+            game_id,
+            df,
+            "processed",
+            "",
+        )
 
     except Exception as exc:
         return (
             game_id,
             None,
+            "failed",
             f"{type(exc).__name__}: {exc}",
         )
 
@@ -533,36 +561,67 @@ def process_games(
     game_ids: list[int],
     season: int,
     workers: int,
-) -> tuple[list[pd.DataFrame], list[tuple[int, str]]]:
+) -> tuple[
+    list[pd.DataFrame],
+    list[tuple[int, str]],
+    list[tuple[int, str]],
+]:
     if not game_ids:
-        return [], []
+        return [], [], []
 
     frames: list[pd.DataFrame] = []
     skipped: list[tuple[int, str]] = []
+    failures: list[tuple[int, str]] = []
 
     tasks = [(game_id, season) for game_id in game_ids]
 
-    # Direct execution is useful for one-game smoke tests and avoids Windows
-    # process-spawn overhead when concurrency cannot help.
     if workers == 1 or len(tasks) == 1:
         for index, task in enumerate(tasks, start=1):
-            game_id, frame, reason = process_one_game(task)
+            game_id, frame, disposition, reason = process_one_game(task)
 
-            if frame is not None and not frame.empty:
-                frames.append(frame)
-                print(
-                    f"game={game_id} plays={len(frame)} "
-                    f"columns={len(frame.columns)} "
-                    f"completed={index}/{len(tasks)}"
-                )
-            else:
+            if disposition == "processed":
+                if frame is None or frame.empty:
+                    failure_reason = (
+                        "processor reported processed but returned no frame"
+                    )
+                    failures.append((game_id, failure_reason))
+                    print(
+                        f"game={game_id} failed={failure_reason} "
+                        f"completed={index}/{len(tasks)}"
+                    )
+                else:
+                    frames.append(frame)
+                    print(
+                        f"game={game_id} plays={len(frame)} "
+                        f"columns={len(frame.columns)} "
+                        f"completed={index}/{len(tasks)}"
+                    )
+
+            elif disposition == "skipped":
                 skipped.append((game_id, reason))
                 print(
                     f"game={game_id} skipped={reason} "
                     f"completed={index}/{len(tasks)}"
                 )
 
-        return frames, skipped
+            elif disposition == "failed":
+                failures.append((game_id, reason))
+                print(
+                    f"game={game_id} failed={reason} "
+                    f"completed={index}/{len(tasks)}"
+                )
+
+            else:
+                failure_reason = (
+                    f"unexpected disposition={disposition!r}"
+                )
+                failures.append((game_id, failure_reason))
+                print(
+                    f"game={game_id} failed={failure_reason} "
+                    f"completed={index}/{len(tasks)}"
+                )
+
+        return frames, skipped, failures
 
     with ProcessPoolExecutor(max_workers=workers) as executor:
         future_to_game = {
@@ -577,28 +636,59 @@ def process_games(
             completed += 1
 
             try:
-                game_id, frame, reason = future.result()
+                game_id, frame, disposition, reason = future.result()
+
             except Exception as exc:
                 game_id = requested_game_id
                 frame = None
-                reason = f"worker failed: {type(exc).__name__}: {exc}"
-
-            if frame is not None and not frame.empty:
-                frames.append(frame)
-                print(
-                    f"game={game_id} plays={len(frame)} "
-                    f"columns={len(frame.columns)} "
-                    f"completed={completed}/{len(tasks)}"
+                disposition = "failed"
+                reason = (
+                    f"worker failed: {type(exc).__name__}: {exc}"
                 )
-            else:
+
+            if disposition == "processed":
+                if frame is None or frame.empty:
+                    failure_reason = (
+                        "processor reported processed but returned no frame"
+                    )
+                    failures.append((game_id, failure_reason))
+                    print(
+                        f"game={game_id} failed={failure_reason} "
+                        f"completed={completed}/{len(tasks)}"
+                    )
+                else:
+                    frames.append(frame)
+                    print(
+                        f"game={game_id} plays={len(frame)} "
+                        f"columns={len(frame.columns)} "
+                        f"completed={completed}/{len(tasks)}"
+                    )
+
+            elif disposition == "skipped":
                 skipped.append((game_id, reason))
                 print(
                     f"game={game_id} skipped={reason} "
                     f"completed={completed}/{len(tasks)}"
                 )
 
-    return frames, skipped
+            elif disposition == "failed":
+                failures.append((game_id, reason))
+                print(
+                    f"game={game_id} failed={reason} "
+                    f"completed={completed}/{len(tasks)}"
+                )
 
+            else:
+                failure_reason = (
+                    f"unexpected disposition={disposition!r}"
+                )
+                failures.append((game_id, failure_reason))
+                print(
+                    f"game={game_id} failed={failure_reason} "
+                    f"completed={completed}/{len(tasks)}"
+                )
+
+    return frames, skipped, failures
 
 # ─────────────────────────────────────────────
 # EXISTING / SEASON ASSEMBLY
@@ -895,11 +985,32 @@ def main() -> int:
             print("status: no_new_games")
             return 0
 
-        new_frames, skipped = process_games(
+        new_frames, skipped, failures = process_games(
             game_ids=process_ids,
             season=season,
             workers=args.workers,
         )
+
+        if failures:
+            log(f"games_processed_before_failure={len(new_frames)}")
+            log(f"games_skipped={len(skipped)}")
+            log(f"games_failed={len(failures)}")
+
+            for game_id, reason in sorted(skipped):
+                log(f"SKIPPED game_id={game_id} reason={reason}")
+
+            for game_id, reason in sorted(failures):
+                log(f"FAILED game_id={game_id} reason={reason}")
+
+            failure_detail = "; ".join(
+                f"game_id={game_id}: {reason}"
+                for game_id, reason in sorted(failures)
+            )
+
+            raise RuntimeError(
+                f"{len(failures)} game(s) failed PBP processing: "
+                f"{failure_detail}"
+            )
 
         if args.dry_run:
             if new_frames:
