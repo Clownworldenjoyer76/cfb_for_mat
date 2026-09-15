@@ -145,6 +145,49 @@ def require_columns(df: pd.DataFrame, columns: list[str], context: str) -> None:
         raise ValueError(f"Missing required columns for {context}: {missing}")
 
 
+def validate_pbp_season(
+    pbp: pd.DataFrame,
+    requested_season: str,
+) -> None:
+    try:
+        expected_season = int(str(requested_season).strip())
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            f"Configured season must be an integer; found {requested_season!r}"
+        ) from exc
+
+    season_values = pd.to_numeric(
+        pbp["season"],
+        errors="coerce",
+    )
+
+    invalid_mask = season_values.isna() | season_values.mod(1).ne(0)
+
+    if invalid_mask.any():
+        examples = (
+            pbp.loc[invalid_mask, "season"]
+            .astype(str)
+            .drop_duplicates()
+            .head(10)
+            .tolist()
+        )
+        raise ValueError(
+            "PBP contains blank, non-numeric, or non-integer season values: "
+            f"{examples}"
+        )
+
+    observed_seasons = sorted(
+        season_values.astype(int).unique().tolist()
+    )
+
+    if observed_seasons != [expected_season]:
+        raise ValueError(
+            "PBP season does not match requested output season. "
+            f"requested_season={expected_season}, "
+            f"observed_seasons={observed_seasons}"
+        )
+
+
 def _full_team_name(name: object, mascot: object = None) -> str | None:
     if pd.isna(name):
         return None
@@ -702,6 +745,11 @@ def run() -> int:
             pbp,
             SDV_REQUIRED_COLUMNS,
             "native SportsDataverse CFB PBP",
+        )
+
+        validate_pbp_season(
+            pbp,
+            season,
         )
 
         team_stats = build_team_stats(pbp)
