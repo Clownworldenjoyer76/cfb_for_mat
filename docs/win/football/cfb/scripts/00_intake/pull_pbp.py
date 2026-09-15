@@ -65,7 +65,7 @@ else:
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
-SETTINGS_FILE = BASE_DIR / "config" / "settings.yaml"
+CURRENT_WEEK_FILE = BASE_DIR / "config" / "current_week.yaml"
 SCHEDULE_DIR = BASE_DIR / "00_intake" / "schedule"
 PBP_DIR = BASE_DIR / "00_intake" / "pbp"
 ERROR_DIR = BASE_DIR / "errors" / "00_intake"
@@ -143,35 +143,52 @@ def log(message: str) -> None:
 # SETTINGS / CLI
 # ──────────────────────────────────────────────
 
-def read_settings() -> dict[str, Any]:
-    if not SETTINGS_FILE.exists() or yaml is None:
-        return {}
+def read_current_week() -> dict[str, Any]:
+    if yaml is None:
+        raise RuntimeError(
+            "PyYAML is required to read "
+            "docs/win/football/cfb/config/current_week.yaml"
+        )
 
-    with SETTINGS_FILE.open("r", encoding="utf-8") as f:
+    if not CURRENT_WEEK_FILE.exists():
+        raise FileNotFoundError(
+            f"Missing CFB current-week config: {CURRENT_WEEK_FILE}"
+        )
+
+    with CURRENT_WEEK_FILE.open("r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
 
-    return data if isinstance(data, dict) else {}
+    if not isinstance(data, dict):
+        raise ValueError(
+            f"{CURRENT_WEEK_FILE} must contain a YAML mapping"
+        )
+
+    return data
 
 
 def get_season(args: argparse.Namespace) -> int:
-    if args.season is not None:
-        return int(args.season)
+    config = read_current_week()
+    configured_season = config.get("season")
 
-    settings = read_settings()
-    season = settings.get("season")
+    if configured_season in (None, ""):
+        raise ValueError(
+            f"{CURRENT_WEEK_FILE} is missing required season"
+        )
 
-    if season not in (None, ""):
-        return int(season)
+    try:
+        season = int(configured_season)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            f"{CURRENT_WEEK_FILE} has invalid season={configured_season!r}"
+        ) from exc
 
-    env_season = os.getenv("CFB_SEASON")
-    if env_season:
-        return int(env_season)
+    if args.season is not None and int(args.season) != season:
+        raise ValueError(
+            f"--season={args.season} does not match "
+            f"{CURRENT_WEEK_FILE} season={season}"
+        )
 
-    raise ValueError(
-        "Missing season. Provide --season, set season in "
-        "docs/win/football/cfb/config/settings.yaml, or set CFB_SEASON."
-    )
-
+    return season
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -184,7 +201,10 @@ def parse_args() -> argparse.Namespace:
         "--season",
         type=int,
         default=None,
-        help="CFB season to process.",
+        help=(
+            "Optional consistency check. Must match "
+            "config/current_week.yaml."
+        ),
     )
 
     parser.add_argument(
