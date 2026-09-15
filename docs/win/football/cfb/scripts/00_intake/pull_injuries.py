@@ -50,7 +50,12 @@ TEAM_MAP_PATH = CFB_ROOT / "config" / "mapping" / "team_map.csv"
 OUTPUT_DIR = CFB_ROOT / "00_intake" / "injuries"
 REPORT_ROOT = CFB_ROOT / "errors"
 
-SCRIPT_VERSION = "cfb-pull-injuries-v2-2026-09-15"
+SCRIPT_VERSION = "cfb-pull-injuries-v3-freshness-2026-09-15"
+
+# Keep intake freshness aligned with the projection's default
+# injury-report freshness window. ESPN's payload timestamp is used
+# as the reference clock so runner clock drift cannot change results.
+MAX_REPORT_AGE_DAYS = 60.0
 
 INJURIES_URL = (
     "https://site.api.espn.com/apis/site/v2/sports/football/"
@@ -82,6 +87,7 @@ _REQUEST_FAILURES: list[dict[str, str]] = []
 
 _PROVIDER_STATUS = ""
 _PROVIDER_TIMESTAMP = ""
+_PROVIDER_TIMESTAMP_UTC: datetime | None = None
 _PROVIDER_SEASON: int | None = None
 _PROVIDER_SEASON_TYPE: int | None = None
 
@@ -90,6 +96,8 @@ _PROVIDER_TEAM_GROUPS_WITH_INJURIES = 0
 _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES = 0
 
 _RAW_INJURY_COUNT = 0
+_FRESH_INJURY_COUNT = 0
+_STALE_INJURY_COUNT = 0
 _DUPLICATE_INJURY_ID_COUNT = 0
 _DUPLICATE_OUTPUT_IDENTITY_COUNT = 0
 _MISSING_PLAYER_ID_COUNT = 0
@@ -108,12 +116,15 @@ def reset_runtime_state() -> None:
     global _REQUEST_COUNT
     global _PROVIDER_STATUS
     global _PROVIDER_TIMESTAMP
+    global _PROVIDER_TIMESTAMP_UTC
     global _PROVIDER_SEASON
     global _PROVIDER_SEASON_TYPE
     global _PROVIDER_TEAM_GROUP_COUNT
     global _PROVIDER_TEAM_GROUPS_WITH_INJURIES
     global _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES
     global _RAW_INJURY_COUNT
+    global _FRESH_INJURY_COUNT
+    global _STALE_INJURY_COUNT
     global _DUPLICATE_INJURY_ID_COUNT
     global _DUPLICATE_OUTPUT_IDENTITY_COUNT
     global _MISSING_PLAYER_ID_COUNT
@@ -122,6 +133,7 @@ def reset_runtime_state() -> None:
     _REQUEST_COUNT = 0
     _PROVIDER_STATUS = ""
     _PROVIDER_TIMESTAMP = ""
+    _PROVIDER_TIMESTAMP_UTC = None
     _PROVIDER_SEASON = None
     _PROVIDER_SEASON_TYPE = None
 
@@ -130,6 +142,8 @@ def reset_runtime_state() -> None:
     _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES = 0
 
     _RAW_INJURY_COUNT = 0
+    _FRESH_INJURY_COUNT = 0
+    _STALE_INJURY_COUNT = 0
     _DUPLICATE_INJURY_ID_COUNT = 0
     _DUPLICATE_OUTPUT_IDENTITY_COUNT = 0
     _MISSING_PLAYER_ID_COUNT = 0
@@ -725,6 +739,30 @@ def parse_timestamp(
     )
 
 
+def report_age_days(
+    report_date_utc: datetime,
+) -> float:
+    if _PROVIDER_TIMESTAMP_UTC is None:
+        raise InjuryValidationError(
+            "Provider timestamp is unavailable for "
+            "injury freshness validation"
+        )
+
+    age_seconds = (
+        _PROVIDER_TIMESTAMP_UTC
+        - report_date_utc
+    ).total_seconds()
+
+    # Small provider clock skew must not make a report stale.
+    if age_seconds < 0:
+        return 0.0
+
+    return (
+        age_seconds
+        / 86400.0
+    )
+
+
 def validate_provider_envelope(
     data: dict,
     *,
@@ -733,6 +771,7 @@ def validate_provider_envelope(
 ) -> list[dict]:
     global _PROVIDER_STATUS
     global _PROVIDER_TIMESTAMP
+    global _PROVIDER_TIMESTAMP_UTC
     global _PROVIDER_SEASON
     global _PROVIDER_SEASON_TYPE
 
@@ -755,16 +794,27 @@ def validate_provider_envelope(
         data.get("timestamp") or ""
     ).strip()
 
-    if provider_timestamp:
-        parse_timestamp(
-            provider_timestamp,
-            label=(
-                "ESPN injuries payload timestamp"
-            ),
+    if not provider_timestamp:
+        raise InjuryValidationError(
+            "ESPN injuries payload timestamp is required "
+            "for freshness validation"
         )
+
+    (
+        _,
+        provider_timestamp_utc,
+    ) = parse_timestamp(
+        provider_timestamp,
+        label=(
+            "ESPN injuries payload timestamp"
+        ),
+    )
 
     _PROVIDER_TIMESTAMP = (
         provider_timestamp
+    )
+    _PROVIDER_TIMESTAMP_UTC = (
+        provider_timestamp_utc
     )
 
     season_obj = data.get(
@@ -1100,6 +1150,8 @@ def build_rows(
     global _PROVIDER_TEAM_GROUPS_WITH_INJURIES
     global _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES
     global _RAW_INJURY_COUNT
+    global _FRESH_INJURY_COUNT
+    global _STALE_INJURY_COUNT
     global _DUPLICATE_INJURY_ID_COUNT
     global _DUPLICATE_OUTPUT_IDENTITY_COUNT
     global _REPORT_YEAR_MISMATCH_COUNT
@@ -1288,6 +1340,16 @@ def build_rows(
             ):
                 _REPORT_YEAR_MISMATCH_COUNT += 1
 
+            age_days = report_age_days(
+                report_date_utc
+            )
+
+            if age_days > MAX_REPORT_AGE_DAYS:
+                _STALE_INJURY_COUNT += 1
+                continue
+
+            _FRESH_INJURY_COUNT += 1
+
             provider_identity = (
                 team_id,
                 player_id,
@@ -1470,13 +1532,29 @@ def validate_output_rows(
                 f"row_index={row_index}"
             )
 
-        report_date, _ = parse_timestamp(
+        (
+            report_date,
+            report_date_utc,
+        ) = parse_timestamp(
             row.get("report_date"),
             label=(
                 "injury output report_date at "
                 f"row_index={row_index}"
             ),
         )
+
+        age_days = report_age_days(
+            report_date_utc
+        )
+
+        if age_days > MAX_REPORT_AGE_DAYS:
+            raise InjuryValidationError(
+                "Injury output contains stale report at "
+                f"row_index={row_index}: "
+                f"report_date={report_date!r}, "
+                f"age_days={age_days:.3f}, "
+                f"max_age_days={MAX_REPORT_AGE_DAYS:.3f}"
+            )
 
         identity = (
             team_id,
@@ -1704,6 +1782,13 @@ def update_report_details(
     details: dict[str, object] = {
         "provider_status": _PROVIDER_STATUS,
         "provider_timestamp": _PROVIDER_TIMESTAMP,
+        "freshness_reference": "espn_payload_timestamp",
+        "freshness_reference_utc": (
+            _PROVIDER_TIMESTAMP_UTC.isoformat()
+            if _PROVIDER_TIMESTAMP_UTC is not None
+            else ""
+        ),
+        "max_report_age_days": MAX_REPORT_AGE_DAYS,
         "provider_season": _PROVIDER_SEASON,
         "provider_season_type": _PROVIDER_SEASON_TYPE,
         "espn_request_count": _REQUEST_COUNT,
@@ -1745,6 +1830,13 @@ def update_report_details(
             key=lambda value: int(value),
         ),
         "raw_injury_count": _RAW_INJURY_COUNT,
+        "fresh_injury_count": _FRESH_INJURY_COUNT,
+        "stale_injury_count": _STALE_INJURY_COUNT,
+        "stale_injury_disposition": "excluded_from_output",
+        "all_provider_injuries_stale": (
+            _RAW_INJURY_COUNT > 0
+            and _FRESH_INJURY_COUNT == 0
+        ),
         "published_injury_count": len(
             rows
         ),
@@ -1877,6 +1969,26 @@ def run(
             ),
             canonical_by_id=canonical_by_id,
         )
+
+        if _STALE_INJURY_COUNT:
+            report.warning(
+                "Excluded stale ESPN injury records: "
+                f"stale={_STALE_INJURY_COUNT}, "
+                f"fresh={_FRESH_INJURY_COUNT}, "
+                f"max_age_days={MAX_REPORT_AGE_DAYS:.1f}"
+            )
+
+        if (
+            _RAW_INJURY_COUNT > 0
+            and _FRESH_INJURY_COUNT == 0
+        ):
+            raise InjuryValidationError(
+                "All ESPN injury records are stale; "
+                "refusing to publish the response. "
+                f"raw={_RAW_INJURY_COUNT}, "
+                f"stale={_STALE_INJURY_COUNT}, "
+                f"max_age_days={MAX_REPORT_AGE_DAYS:.1f}"
+            )
 
         validate_output_rows(
             rows,
