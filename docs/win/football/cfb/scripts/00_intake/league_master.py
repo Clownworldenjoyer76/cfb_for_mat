@@ -10,6 +10,7 @@ import json
 import os
 import re
 import sys
+import time
 import uuid
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -64,7 +65,7 @@ LEAGUE_STANDINGS_PATH = (
 REPORT_ROOT = CFB_ROOT / "errors"
 
 SCRIPT_VERSION = (
-    "cfb-league-master-v2-2026-09-15"
+    "cfb-league-master-v3-retries-2026-09-15"
 )
 
 ESPN_BASE = (
@@ -113,18 +114,54 @@ _GROUP_CACHE: dict[str, dict] = {}
 _COLLECTION_CACHE: dict[str, dict] = {}
 _TEAM_CACHE: dict[str, dict] = {}
 
+TRANSIENT_HTTP_STATUSES = frozenset(
+    {
+        429,
+        500,
+        502,
+        503,
+        504,
+    }
+)
+
+MAX_REQUEST_ATTEMPTS = 4
+
+RETRY_BACKOFF_SECONDS = (
+    1.0,
+    2.0,
+    4.0,
+)
+
+
 _REQUEST_COUNT = 0
+_REQUEST_ATTEMPT_COUNT = 0
+_REQUEST_RETRY_COUNT = 0
+_RECOVERED_TRANSIENT_REQUESTS = 0
+_EXHAUSTED_TRANSIENT_FAILURES = 0
+
 _REQUEST_FAILURES: list[dict[str, str]] = []
+_RETRY_DETAILS: list[dict[str, str]] = []
 
 
 def reset_runtime_state() -> None:
     global _REQUEST_COUNT
+    global _REQUEST_ATTEMPT_COUNT
+    global _REQUEST_RETRY_COUNT
+    global _RECOVERED_TRANSIENT_REQUESTS
+    global _EXHAUSTED_TRANSIENT_FAILURES
 
     _GROUP_CACHE.clear()
     _COLLECTION_CACHE.clear()
     _TEAM_CACHE.clear()
+
     _REQUEST_FAILURES.clear()
+    _RETRY_DETAILS.clear()
+
     _REQUEST_COUNT = 0
+    _REQUEST_ATTEMPT_COUNT = 0
+    _REQUEST_RETRY_COUNT = 0
+    _RECOVERED_TRANSIENT_REQUESTS = 0
+    _EXHAUSTED_TRANSIENT_FAILURES = 0
 
 
 def load_current_week() -> tuple[int, int, int]:
@@ -234,132 +271,377 @@ def fetch_json(
     timeout: int = 20,
 ) -> dict:
     global _REQUEST_COUNT
+    global _REQUEST_ATTEMPT_COUNT
+    global _REQUEST_RETRY_COUNT
+    global _RECOVERED_TRANSIENT_REQUESTS
+    global _EXHAUSTED_TRANSIENT_FAILURES
 
-    url = normalize_ref_url(url)
+    url = normalize_ref_url(
+        url
+    )
 
     if not url:
         raise ValueError(
             f"{label} URL is blank"
         )
 
+    # Count the requested resource once regardless
+    # of how many network attempts are required.
     _REQUEST_COUNT += 1
 
-    request = Request(
-        url,
-        headers={
-            "User-Agent": "cfb-league-master/2.0",
-            "Accept": "application/json",
-        },
-    )
+    for attempt_number in range(
+        1,
+        MAX_REQUEST_ATTEMPTS + 1,
+    ):
+        _REQUEST_ATTEMPT_COUNT += 1
 
-    try:
-        with urlopen(
-            request,
-            timeout=timeout,
-        ) as response:
-            status = response.status
-            body = response.read().decode("utf-8")
-
-    except HTTPError as exc:
-        error_body = ""
+        request = Request(
+            url,
+            headers={
+                "User-Agent": (
+                    "cfb-league-master/3.0"
+                ),
+                "Accept": "application/json",
+            },
+        )
 
         try:
-            error_body = exc.read().decode("utf-8")
-        except Exception:
-            pass
+            with urlopen(
+                request,
+                timeout=timeout,
+            ) as response:
+                status = int(
+                    response.status
+                )
 
-        failure = {
-            "label": label,
-            "url": url,
-            "status": str(exc.code),
-            "error": error_body or str(exc),
-        }
+                body = (
+                    response.read()
+                    .decode(
+                        "utf-8"
+                    )
+                )
 
-        _REQUEST_FAILURES.append(failure)
+        except HTTPError as exc:
+            error_body = ""
 
-        raise RuntimeError(
-            f"{label} request failed: "
-            f"status={exc.code}, "
-            f"url={url}, "
-            f"error={failure['error']}"
-        ) from exc
+            try:
+                error_body = (
+                    exc.read()
+                    .decode(
+                        "utf-8",
+                        errors="replace",
+                    )
+                )
+            except Exception:
+                pass
 
-    except URLError as exc:
-        failure = {
-            "label": label,
-            "url": url,
-            "status": "",
-            "error": str(exc),
-        }
+            is_transient = (
+                exc.code
+                in TRANSIENT_HTTP_STATUSES
+            )
 
-        _REQUEST_FAILURES.append(failure)
+            if (
+                is_transient
+                and attempt_number
+                < MAX_REQUEST_ATTEMPTS
+            ):
+                delay_seconds = (
+                    RETRY_BACKOFF_SECONDS[
+                        attempt_number - 1
+                    ]
+                )
 
-        raise RuntimeError(
-            f"{label} request failed: "
-            f"url={url}, error={exc}"
-        ) from exc
+                _REQUEST_RETRY_COUNT += 1
 
-    except Exception as exc:
-        failure = {
-            "label": label,
-            "url": url,
-            "status": "",
-            "error": str(exc),
-        }
+                _RETRY_DETAILS.append(
+                    {
+                        "label": label,
+                        "url": url,
+                        "attempt": str(
+                            attempt_number
+                        ),
+                        "status": str(
+                            exc.code
+                        ),
+                        "error": (
+                            error_body[:1000]
+                            or str(exc)
+                        ),
+                        "delay_seconds": str(
+                            delay_seconds
+                        ),
+                    }
+                )
 
-        _REQUEST_FAILURES.append(failure)
+                time.sleep(
+                    delay_seconds
+                )
 
-        raise RuntimeError(
-            f"{label} request failed: "
-            f"url={url}, error={exc}"
-        ) from exc
+                continue
 
-    if status < 200 or status >= 300:
-        failure = {
-            "label": label,
-            "url": url,
-            "status": str(status),
-            "error": body,
-        }
+            if is_transient:
+                _EXHAUSTED_TRANSIENT_FAILURES += 1
 
-        _REQUEST_FAILURES.append(failure)
+            failure = {
+                "label": label,
+                "url": url,
+                "status": str(
+                    exc.code
+                ),
+                "attempt": str(
+                    attempt_number
+                ),
+                "transient": str(
+                    is_transient
+                ).lower(),
+                "error": (
+                    error_body[:2000]
+                    or str(exc)
+                ),
+            }
 
-        raise RuntimeError(
-            f"{label} request failed: "
-            f"status={status}, url={url}"
-        )
+            _REQUEST_FAILURES.append(
+                failure
+            )
 
-    try:
-        payload = json.loads(body)
-    except Exception as exc:
-        failure = {
-            "label": label,
-            "url": url,
-            "status": str(status),
-            "error": f"JSON parse failed: {exc}",
-        }
+            raise RuntimeError(
+                f"{label} request failed: "
+                f"status={exc.code}, "
+                f"attempt={attempt_number}/"
+                f"{MAX_REQUEST_ATTEMPTS}, "
+                f"url={url}, "
+                f"error={failure['error']}"
+            ) from exc
 
-        _REQUEST_FAILURES.append(failure)
+        except (
+            URLError,
+            TimeoutError,
+        ) as exc:
+            if (
+                attempt_number
+                < MAX_REQUEST_ATTEMPTS
+            ):
+                delay_seconds = (
+                    RETRY_BACKOFF_SECONDS[
+                        attempt_number - 1
+                    ]
+                )
 
-        raise RuntimeError(
-            f"{label} returned malformed JSON: url={url}"
-        ) from exc
+                _REQUEST_RETRY_COUNT += 1
 
-    if not isinstance(payload, dict):
-        failure = {
-            "label": label,
-            "url": url,
-            "status": str(status),
-            "error": "response JSON is not an object",
-        }
+                _RETRY_DETAILS.append(
+                    {
+                        "label": label,
+                        "url": url,
+                        "attempt": str(
+                            attempt_number
+                        ),
+                        "status": "",
+                        "error": str(
+                            exc
+                        )[:1000],
+                        "delay_seconds": str(
+                            delay_seconds
+                        ),
+                    }
+                )
 
-        _REQUEST_FAILURES.append(failure)
+                time.sleep(
+                    delay_seconds
+                )
 
-        raise RuntimeError(
-            f"{label} returned non-object JSON: url={url}"
-        )
+                continue
 
-    return payload
+            _EXHAUSTED_TRANSIENT_FAILURES += 1
+
+            failure = {
+                "label": label,
+                "url": url,
+                "status": "",
+                "attempt": str(
+                    attempt_number
+                ),
+                "transient": "true",
+                "error": str(
+                    exc
+                )[:2000],
+            }
+
+            _REQUEST_FAILURES.append(
+                failure
+            )
+
+            raise RuntimeError(
+                f"{label} request failed after "
+                f"{attempt_number} attempts: "
+                f"url={url}, error={exc}"
+            ) from exc
+
+        except Exception as exc:
+            failure = {
+                "label": label,
+                "url": url,
+                "status": "",
+                "attempt": str(
+                    attempt_number
+                ),
+                "transient": "false",
+                "error": str(
+                    exc
+                )[:2000],
+            }
+
+            _REQUEST_FAILURES.append(
+                failure
+            )
+
+            raise RuntimeError(
+                f"{label} request failed: "
+                f"url={url}, error={exc}"
+            ) from exc
+
+        if (
+            status < 200
+            or status >= 300
+        ):
+            is_transient = (
+                status
+                in TRANSIENT_HTTP_STATUSES
+            )
+
+            if (
+                is_transient
+                and attempt_number
+                < MAX_REQUEST_ATTEMPTS
+            ):
+                delay_seconds = (
+                    RETRY_BACKOFF_SECONDS[
+                        attempt_number - 1
+                    ]
+                )
+
+                _REQUEST_RETRY_COUNT += 1
+
+                _RETRY_DETAILS.append(
+                    {
+                        "label": label,
+                        "url": url,
+                        "attempt": str(
+                            attempt_number
+                        ),
+                        "status": str(
+                            status
+                        ),
+                        "error": body[:1000],
+                        "delay_seconds": str(
+                            delay_seconds
+                        ),
+                    }
+                )
+
+                time.sleep(
+                    delay_seconds
+                )
+
+                continue
+
+            if is_transient:
+                _EXHAUSTED_TRANSIENT_FAILURES += 1
+
+            failure = {
+                "label": label,
+                "url": url,
+                "status": str(
+                    status
+                ),
+                "attempt": str(
+                    attempt_number
+                ),
+                "transient": str(
+                    is_transient
+                ).lower(),
+                "error": body[:2000],
+            }
+
+            _REQUEST_FAILURES.append(
+                failure
+            )
+
+            raise RuntimeError(
+                f"{label} request failed: "
+                f"status={status}, "
+                f"attempt={attempt_number}/"
+                f"{MAX_REQUEST_ATTEMPTS}, "
+                f"url={url}"
+            )
+
+        try:
+            payload = json.loads(
+                body
+            )
+        except Exception as exc:
+            failure = {
+                "label": label,
+                "url": url,
+                "status": str(
+                    status
+                ),
+                "attempt": str(
+                    attempt_number
+                ),
+                "transient": "false",
+                "error": (
+                    "JSON parse failed: "
+                    f"{exc}"
+                ),
+            }
+
+            _REQUEST_FAILURES.append(
+                failure
+            )
+
+            raise RuntimeError(
+                f"{label} returned malformed JSON: "
+                f"url={url}"
+            ) from exc
+
+        if not isinstance(
+            payload,
+            dict,
+        ):
+            failure = {
+                "label": label,
+                "url": url,
+                "status": str(
+                    status
+                ),
+                "attempt": str(
+                    attempt_number
+                ),
+                "transient": "false",
+                "error": (
+                    "response JSON is not an object"
+                ),
+            }
+
+            _REQUEST_FAILURES.append(
+                failure
+            )
+
+            raise RuntimeError(
+                f"{label} returned non-object JSON: "
+                f"url={url}"
+            )
+
+        if attempt_number > 1:
+            _RECOVERED_TRANSIENT_REQUESTS += 1
+
+        return payload
+
+    raise RuntimeError(
+        f"{label} exhausted request loop unexpectedly: "
+        f"url={url}"
+    )
 
 
 def fetch_cached(
@@ -2861,6 +3143,23 @@ def main() -> int:
                 {
                     "espn_request_count": (
                         _REQUEST_COUNT
+                    ),
+                    "espn_request_attempt_count": (
+                        _REQUEST_ATTEMPT_COUNT
+                    ),
+                    "espn_request_retry_count": (
+                        _REQUEST_RETRY_COUNT
+                    ),
+                    "espn_recovered_transient_requests": (
+                        _RECOVERED_TRANSIENT_REQUESTS
+                    ),
+                    "espn_exhausted_transient_failures": (
+                        _EXHAUSTED_TRANSIENT_FAILURES
+                    ),
+                    "espn_retry_details": (
+                        list(
+                            _RETRY_DETAILS
+                        )
                     ),
                     "espn_request_failures": (
                         len(
