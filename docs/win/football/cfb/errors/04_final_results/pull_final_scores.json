@@ -1,0 +1,65 @@
+{
+  "schema_version": "2.0",
+  "run_id": "github-34968974956-attempt-1",
+  "status": "SUCCESS",
+  "exit_code": 0,
+  "pipeline": "cfb",
+  "league": "CFB",
+  "stage": "04_final_results",
+  "script": "pull_final_scores.py",
+  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/04_final_results/pull_final_scores.py",
+  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/04_final_results/pull_final_scores.json",
+  "started_at_utc": "2026-09-15T12:28:48.279760+00:00",
+  "finished_at_utc": "2026-09-15T12:28:52.618169+00:00",
+  "duration_seconds": 4.338,
+  "environment": {
+    "hostname": "runnervmlun5p",
+    "python_version": "3.12.14",
+    "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
+    "platform": "linux",
+    "process_id": 2444,
+    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
+    "github_run_id": "34968974956",
+    "github_run_attempt": "1",
+    "github_workflow": "CFB 01 Pipeline",
+    "github_job": "run-cfb-pipeline",
+    "github_ref_name": "main",
+    "github_sha": "5d969a26ef6c02286b1e25645b57ccfe4b1f68ce",
+    "github_actor": "Clownworldenjoyer76",
+    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+  },
+  "context": {
+    "season": 2026,
+    "week": null
+  },
+  "inputs": [
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/week_1_CFB_picks.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/week_2_CFB_picks.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/week_3_CFB_picks.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_1.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_2.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_3.csv"
+  ],
+  "outputs": [
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_1.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_2.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_3.csv"
+  ],
+  "rows_in": 260,
+  "rows_out": 260,
+  "warning_count": 0,
+  "error_count": 0,
+  "warnings": [],
+  "errors": [],
+  "details": {
+    "script_version": "cfb-final-scores-v2-2026-08-26",
+    "workers": 6,
+    "games_processed": 260,
+    "completed": 185,
+    "not_final": 75,
+    "failed": 0,
+    "preserved_fetch_failures": 0,
+    "files_written": 3
+  }
+}
