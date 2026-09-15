@@ -3,7 +3,7 @@
     "CFB workflow status is FAILURE"
   ],
   "game_date_new_york": "2026_09_15",
-  "generated_at_utc": "2026-09-15T20:19:56.617128+00:00",
+  "generated_at_utc": "2026-09-15T20:45:22.122330+00:00",
   "leagues": {
     "cfb": {
       "counts": {
@@ -112,8 +112,8 @@
     "name": "CFB Pipeline",
     "ref_name": "main",
     "run_attempt": "1",
-    "run_id": "35018584035",
-    "sha": "ce81f1c242480a96a664fdc8f26cae8324d30b10",
+    "run_id": "35021308095",
+    "sha": "56d5c0fc2d69fff7a62dd832a89cabb790211cbe",
     "status": "failure"
   }
 }
