@@ -44,7 +44,7 @@ LEAGUE_MASTER_PATH = CFB_ROOT / "data" / "master" / "league_master.csv"
 OUTPUT_PATH = CFB_ROOT / "data" / "master" / "coaches_master.csv"
 REPORT_ROOT = CFB_ROOT / "errors"
 
-SCRIPT_VERSION = "cfb-coaches-v2-2026-09-15"
+SCRIPT_VERSION = "cfb-coaches-v3-2026-09-15"
 
 COACHES_URL_TEMPLATE = (
     "https://sports.core.api.espn.com/v2/sports/football/"
@@ -65,7 +65,12 @@ HEADER = [
 ]
 
 ESPN_CORE_HOST = "sports.core.api.espn.com"
-COACH_TEAM_REF_PATTERN = re.compile(r"/seasons/(\d+)/teams/(\d+)(?:[/?#]|$)")
+COACH_REF_SEASON_PATTERN = re.compile(
+    r"/seasons/(\d+)(?:[/?#]|$)"
+)
+COACH_TEAM_REF_PATTERN = re.compile(
+    r"/teams/(\d+)(?:[/?#]|$)"
+)
 
 _REQUEST_COUNTS = {
     "coach_list": 0,
@@ -329,24 +334,60 @@ def fetch_json(
     return payload
 
 
-def extract_team_identity_from_coach(coach: dict) -> tuple[int, str]:
+def extract_season_from_coach_ref(
+    coach_ref: str,
+    *,
+    team_id: str,
+    item_index: int,
+) -> int:
+    parsed = urlparse(coach_ref)
+
+    match = COACH_REF_SEASON_PATTERN.search(
+        parsed.path
+    )
+
+    if not match:
+        raise CoachValidationError(
+            "Coach-list $ref does not contain season identity for "
+            f"team_id={team_id}, item_index={item_index}: "
+            f"{coach_ref!r}"
+        )
+
+    return int(
+        match.group(1)
+    )
+
+
+def extract_team_id_from_coach(
+    coach: dict,
+) -> str:
     team_obj = coach.get("team")
+
     if not isinstance(team_obj, dict):
-        raise CoachValidationError("Coach payload missing team object")
+        raise CoachValidationError(
+            "Coach payload missing team object"
+        )
 
     team_ref = validate_espn_ref(
         team_obj.get("$ref", ""),
         label="coach team $ref",
     )
-    match = COACH_TEAM_REF_PATTERN.search(team_ref)
+
+    parsed = urlparse(
+        team_ref
+    )
+
+    match = COACH_TEAM_REF_PATTERN.search(
+        parsed.path
+    )
 
     if not match:
         raise CoachValidationError(
-            "Coach team $ref does not contain season/team identity: "
+            "Coach team $ref does not contain team identity: "
             f"{team_ref!r}"
         )
 
-    return int(match.group(1)), match.group(2)
+    return match.group(1)
 
 
 def collect_role_markers(obj: object) -> list[str]:
@@ -476,6 +517,20 @@ def resolve_team_head_coach(
             item.get("$ref", ""),
             label=f"coach $ref team_id={team_id} item_index={item_index}",
         )
+
+        coach_ref_season = extract_season_from_coach_ref(
+            coach_ref,
+            team_id=team_id,
+            item_index=item_index,
+        )
+
+        if coach_ref_season != season:
+            raise CoachValidationError(
+                "Coach-list $ref season mismatch for "
+                f"team_id={team_id}, item_index={item_index}: "
+                f"expected={season}, actual={coach_ref_season}"
+            )
+
         if coach_ref in seen_refs:
             raise CoachValidationError(
                 "Coach-list payload contains duplicate coach $ref for "
@@ -489,16 +544,15 @@ def resolve_team_head_coach(
             label=f"coach detail team_id={team_id} item_index={item_index}",
         )
 
-        coach_season, coach_team_id = extract_team_identity_from_coach(coach)
-        if coach_season != season:
-            raise CoachValidationError(
-                "Coach payload season mismatch for "
-                f"team_id={team_id}: expected={season}, actual={coach_season}"
-            )
+        coach_team_id = extract_team_id_from_coach(
+            coach
+        )
+
         if coach_team_id != team_id:
             raise CoachValidationError(
                 "Coach payload team mismatch for "
-                f"requested_team_id={team_id}: coach_team_id={coach_team_id}"
+                f"requested_team_id={team_id}: "
+                f"coach_team_id={coach_team_id}"
             )
 
         candidates.append((item, coach))
@@ -965,9 +1019,30 @@ def run(report: PipelineReporter) -> int:
         )
 
         if failures:
+            failure_examples: list[str] = []
+
+            for failure in failures[:5]:
+                message = " ".join(
+                    str(
+                        failure.get(
+                            "message",
+                            "",
+                        )
+                    ).split()
+                )
+
+                failure_examples.append(
+                    f"{failure.get('team_abbr', '')}"
+                    f"({failure.get('team_id', '')}): "
+                    f"{failure.get('error_type', '')}: "
+                    f"{message}"
+                )
+
             raise RuntimeError(
-                "Failed to resolve complete authoritative head-coach coverage: "
-                f"failure_count={len(failures)}"
+                "Failed to resolve complete authoritative "
+                "head-coach coverage: "
+                f"failure_count={len(failures)}; "
+                f"examples={' | '.join(failure_examples)}"
             )
 
         validate_final_rows(rows, teams=teams)
