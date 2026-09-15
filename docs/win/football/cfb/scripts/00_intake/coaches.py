@@ -2,32 +2,54 @@
 """
 coaches.py
 
-Pulls each CFB team's current head coach from the ESPN API and writes
-one combined CSV.
+Pull the configured-season head coach for every authoritative CFB team from
+ESPN and publish one validated coaches_master.csv.
 
-Sources:
-    https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams
-    https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/seasons/{season}/teams/{id}/coaches
-    (coach $ref, person $ref, and career record $ref links resolved automatically)
+Inputs:
+    docs/win/football/cfb/config/current_week.yaml
+    docs/win/football/cfb/data/master/league_master.csv
 
 Output:
     docs/win/football/cfb/data/master/coaches_master.csv
 """
 
+from __future__ import annotations
+
 import csv
 import json
 import os
-import urllib.request
+import re
+import sys
+import uuid
+from pathlib import Path
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 
-SEASON = 2026
+import yaml
 
-TEAMS_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
+
+SCRIPT_PATH = Path(__file__).resolve()
+SCRIPTS_DIR = SCRIPT_PATH.parents[1]
+CFB_ROOT = SCRIPT_PATH.parents[2]
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from pipeline_reporter import PipelineReporter
+
+
+CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
+LEAGUE_MASTER_PATH = CFB_ROOT / "data" / "master" / "league_master.csv"
+OUTPUT_PATH = CFB_ROOT / "data" / "master" / "coaches_master.csv"
+REPORT_ROOT = CFB_ROOT / "errors"
+
+SCRIPT_VERSION = "cfb-coaches-v2-2026-09-15"
+
 COACHES_URL_TEMPLATE = (
     "https://sports.core.api.espn.com/v2/sports/football/"
     "leagues/college-football/seasons/{season}/teams/{team_id}/coaches"
 )
-
-OUTPUT_PATH = "docs/win/football/cfb/data/master/coaches_master.csv"
 
 HEADER = [
     "sport",
@@ -42,185 +64,958 @@ HEADER = [
     "uid",
 ]
 
+ESPN_CORE_HOST = "sports.core.api.espn.com"
+COACH_TEAM_REF_PATTERN = re.compile(r"/seasons/(\d+)/teams/(\d+)(?:[/?#]|$)")
 
-def fetch_json(url, timeout=10):
-    with urllib.request.urlopen(url, timeout=timeout) as response:
-        return json.loads(response.read().decode())
-
-
-def get_teams():
-    """
-    Pulls ESPN CFB teams and returns:
-        [(team_id, team_abbr), ...]
-
-    The ESPN team_id returned here is carried directly into the final
-    coaches output rather than being looked up again by abbreviation.
-    """
-    data = fetch_json(TEAMS_URL)
-
-    teams = []
-
-    for league in data.get("sports", [{}])[0].get("leagues", [{}]):
-        for team_entry in league.get("teams", []):
-            team = team_entry.get("team", {})
-
-            team_id = team.get("id")
-            team_abbr = team.get("abbreviation")
-
-            if team_id:
-                teams.append((team_id, team_abbr))
-
-    return teams
+_REQUEST_COUNTS = {
+    "coach_list": 0,
+    "coach_ref": 0,
+    "person_ref": 0,
+    "career_record": 0,
+}
+_REQUEST_FAILURES: list[dict[str, str]] = []
 
 
-def get_career_records(coach):
-    """
-    Resolves the coach's person record and career record refs.
+class CoachValidationError(RuntimeError):
+    pass
 
-    Returns:
-        career_record
-        post_season_career_record
-    """
-    career_record = ""
-    post_season_career_record = ""
 
-    person_ref = coach.get("person", {}).get("$ref")
+def reset_runtime_state() -> None:
+    for key in _REQUEST_COUNTS:
+        _REQUEST_COUNTS[key] = 0
+    _REQUEST_FAILURES.clear()
 
-    if not person_ref:
-        return career_record, post_season_career_record
+
+def load_current_week() -> tuple[int, int, int]:
+    if not CURRENT_WEEK_CONFIG_PATH.exists():
+        raise FileNotFoundError(
+            f"Missing current-week config: {CURRENT_WEEK_CONFIG_PATH}"
+        )
+
+    with CURRENT_WEEK_CONFIG_PATH.open("r", encoding="utf-8") as handle:
+        payload = yaml.safe_load(handle)
+
+    if not isinstance(payload, dict):
+        raise ValueError("Current-week config must contain a YAML mapping")
+
+    values: dict[str, int] = {}
+    for key in ("season", "season_type", "week"):
+        if key not in payload:
+            raise ValueError(f"Current-week config missing required key: {key}")
+
+        raw = payload.get(key)
+        if isinstance(raw, bool):
+            raise ValueError(f"Current-week config {key} must be an integer")
+
+        try:
+            values[key] = int(str(raw).strip())
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"Current-week config {key} must be an integer"
+            ) from exc
+
+    if values["season"] < 2000:
+        raise ValueError(f"Invalid configured season: {values['season']}")
+    if values["season_type"] < 1:
+        raise ValueError(
+            f"Invalid configured season_type: {values['season_type']}"
+        )
+    if values["week"] < 1:
+        raise ValueError(f"Invalid configured week: {values['week']}")
+
+    return values["season"], values["season_type"], values["week"]
+
+
+def load_authoritative_teams(
+    *,
+    season: int,
+    season_type: int,
+) -> list[tuple[str, str]]:
+    if not LEAGUE_MASTER_PATH.exists():
+        raise FileNotFoundError(f"Missing league master: {LEAGUE_MASTER_PATH}")
+
+    with LEAGUE_MASTER_PATH.open(
+        "r",
+        newline="",
+        encoding="utf-8-sig",
+    ) as handle:
+        reader = csv.DictReader(handle)
+        fieldnames = reader.fieldnames or []
+        required = {"team_id", "team_abbr", "season", "season_type"}
+        missing = sorted(required - set(fieldnames))
+
+        if missing:
+            raise ValueError(
+                f"league_master.csv missing required columns: {missing}"
+            )
+
+        teams: dict[str, str] = {}
+
+        for row_number, row in enumerate(reader, start=2):
+            if None in row:
+                raise ValueError(
+                    "league_master.csv contains a malformed row at "
+                    f"CSV line {row_number}"
+                )
+
+            team_id = str(row.get("team_id") or "").strip()
+            team_abbr = str(row.get("team_abbr") or "").strip()
+            row_season = str(row.get("season") or "").strip()
+            row_season_type = str(row.get("season_type") or "").strip()
+
+            if not team_id:
+                raise ValueError(
+                    f"league_master.csv has blank team_id at CSV line {row_number}"
+                )
+            if not team_id.isdigit() or int(team_id) <= 0:
+                raise ValueError(
+                    "league_master.csv has invalid team_id at "
+                    f"CSV line {row_number}: {team_id!r}"
+                )
+            if not team_abbr:
+                raise ValueError(
+                    "league_master.csv has blank team_abbr at "
+                    f"CSV line {row_number}"
+                )
+            if row_season != str(season):
+                raise ValueError(
+                    "league_master.csv season mismatch at "
+                    f"CSV line {row_number}: expected={season}, "
+                    f"actual={row_season!r}"
+                )
+            if row_season_type != str(season_type):
+                raise ValueError(
+                    "league_master.csv season_type mismatch at "
+                    f"CSV line {row_number}: expected={season_type}, "
+                    f"actual={row_season_type!r}"
+                )
+
+            if team_id in teams:
+                prior_abbr = teams[team_id]
+                if prior_abbr != team_abbr:
+                    raise ValueError(
+                        "league_master.csv contains conflicting abbreviations "
+                        f"for team_id={team_id}: "
+                        f"{prior_abbr!r} vs {team_abbr!r}"
+                    )
+                raise ValueError(
+                    f"league_master.csv contains duplicate team_id={team_id}"
+                )
+
+            teams[team_id] = team_abbr
+
+    if not teams:
+        raise ValueError("league_master.csv contains no authoritative teams")
+
+    return sorted(teams.items(), key=lambda item: int(item[0]))
+
+
+def validate_espn_ref(url: str, *, label: str) -> str:
+    text = str(url or "").strip()
+    if not text:
+        raise CoachValidationError(f"{label} is blank")
+
+    parsed = urlparse(text)
+    if parsed.scheme != "https" or parsed.hostname != ESPN_CORE_HOST:
+        raise CoachValidationError(
+            f"{label} is not an approved ESPN Core URL: {text!r}"
+        )
+
+    return text
+
+
+def fetch_json(
+    url: str,
+    *,
+    request_kind: str,
+    label: str,
+    timeout: int = 30,
+) -> dict:
+    if request_kind not in _REQUEST_COUNTS:
+        raise ValueError(f"Unknown request kind: {request_kind}")
+
+    if request_kind != "coach_list":
+        url = validate_espn_ref(url, label=f"{label} URL")
+
+    _REQUEST_COUNTS[request_kind] += 1
+
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "cfb-coaches/2.0",
+            "Accept": "application/json",
+        },
+    )
 
     try:
-        person = fetch_json(person_ref)
-    except Exception as e:
-        print(f"failed to resolve person ref: {e}")
-        return career_record, post_season_career_record
-
-    for rec_ref_obj in person.get("careerRecords", []):
-        rec_ref = rec_ref_obj.get("$ref")
-
-        if not rec_ref:
-            continue
-
+        with urlopen(request, timeout=timeout) as response:
+            status = response.status
+            body = response.read().decode("utf-8")
+    except HTTPError as exc:
+        error_body = ""
         try:
-            rec = fetch_json(rec_ref)
-        except Exception as e:
-            print(f"failed to resolve career record: {e}")
-            continue
+            error_body = exc.read().decode("utf-8")
+        except Exception:
+            pass
 
-        rec_type = rec.get("type", "")
-        summary = rec.get("summary", "")
+        failure = {
+            "request_kind": request_kind,
+            "label": label,
+            "url": url,
+            "http_status": str(exc.code),
+            "error": error_body or str(exc),
+        }
+        _REQUEST_FAILURES.append(failure)
+        raise RuntimeError(
+            f"{label} request failed: status={exc.code}, "
+            f"error={failure['error']}"
+        ) from exc
+    except URLError as exc:
+        failure = {
+            "request_kind": request_kind,
+            "label": label,
+            "url": url,
+            "http_status": "",
+            "error": str(exc),
+        }
+        _REQUEST_FAILURES.append(failure)
+        raise RuntimeError(f"{label} request failed: {exc}") from exc
+    except Exception as exc:
+        failure = {
+            "request_kind": request_kind,
+            "label": label,
+            "url": url,
+            "http_status": "",
+            "error": str(exc),
+        }
+        _REQUEST_FAILURES.append(failure)
+        raise RuntimeError(f"{label} request failed: {exc}") from exc
 
-        if rec_type == "Post Season":
-            post_season_career_record = summary
+    if status < 200 or status >= 300:
+        failure = {
+            "request_kind": request_kind,
+            "label": label,
+            "url": url,
+            "http_status": str(status),
+            "error": body,
+        }
+        _REQUEST_FAILURES.append(failure)
+        raise RuntimeError(f"{label} request failed: status={status}")
 
-        elif rec_type == "Total":
-            career_record = summary
+    try:
+        payload = json.loads(body)
+    except Exception as exc:
+        failure = {
+            "request_kind": request_kind,
+            "label": label,
+            "url": url,
+            "http_status": str(status),
+            "error": f"JSON parse failed: {exc}",
+        }
+        _REQUEST_FAILURES.append(failure)
+        raise RuntimeError(f"{label} returned malformed JSON") from exc
 
-    return career_record, post_season_career_record
+    if not isinstance(payload, dict):
+        failure = {
+            "request_kind": request_kind,
+            "label": label,
+            "url": url,
+            "http_status": str(status),
+            "error": "JSON root is not an object",
+        }
+        _REQUEST_FAILURES.append(failure)
+        raise RuntimeError(f"{label} returned non-object JSON")
+
+    return payload
 
 
-def main():
-    teams = get_teams()
-    rows = []
+def extract_team_identity_from_coach(coach: dict) -> tuple[int, str]:
+    team_obj = coach.get("team")
+    if not isinstance(team_obj, dict):
+        raise CoachValidationError("Coach payload missing team object")
+
+    team_ref = validate_espn_ref(
+        team_obj.get("$ref", ""),
+        label="coach team $ref",
+    )
+    match = COACH_TEAM_REF_PATTERN.search(team_ref)
+
+    if not match:
+        raise CoachValidationError(
+            "Coach team $ref does not contain season/team identity: "
+            f"{team_ref!r}"
+        )
+
+    return int(match.group(1)), match.group(2)
+
+
+def collect_role_markers(obj: object) -> list[str]:
+    if not isinstance(obj, dict):
+        return []
+
+    markers: list[str] = []
+    role_keys = {
+        "role",
+        "position",
+        "title",
+        "job",
+        "designation",
+        "coachType",
+        "coach_type",
+    }
+
+    def collect(value: object) -> None:
+        if isinstance(value, str):
+            text = value.strip()
+            if text:
+                markers.append(text)
+        elif isinstance(value, dict):
+            for key in (
+                "name",
+                "displayName",
+                "shortName",
+                "abbreviation",
+                "type",
+                "description",
+                "text",
+                "value",
+            ):
+                if key in value:
+                    collect(value.get(key))
+        elif isinstance(value, list):
+            for nested in value:
+                collect(nested)
+
+    for key in role_keys:
+        if key in obj:
+            collect(obj.get(key))
+
+    return markers
+
+
+def is_head_coach_marker(value: str) -> bool:
+    normalized = re.sub(r"[^a-z0-9]+", "", str(value).lower())
+    return normalized in {"headcoach", "headfootballcoach", "hc"}
+
+
+def select_head_coach(
+    candidates: list[tuple[dict, dict]],
+    *,
+    team_id: str,
+) -> tuple[dict, str]:
+    if not candidates:
+        raise CoachValidationError(
+            f"No resolved coach candidates for team_id={team_id}"
+        )
+
+    marked: list[dict] = []
+    for item, coach in candidates:
+        markers = collect_role_markers(item) + collect_role_markers(coach)
+        if any(is_head_coach_marker(marker) for marker in markers):
+            marked.append(coach)
+
+    if len(marked) == 1:
+        return marked[0], "explicit_role"
+
+    if len(marked) > 1:
+        ids = [str(coach.get("id") or "").strip() for coach in marked]
+        raise CoachValidationError(
+            "Multiple candidates identify as head coach for "
+            f"team_id={team_id}: coach_ids={ids}"
+        )
+
+    if len(candidates) == 1:
+        return candidates[0][1], "sole_provider_candidate"
+
+    ids = [
+        str(coach.get("id") or "").strip()
+        for _, coach in candidates
+    ]
+    raise CoachValidationError(
+        "Multiple coach candidates returned without exactly one head-coach "
+        f"role marker for team_id={team_id}: coach_ids={ids}"
+    )
+
+
+def resolve_team_head_coach(
+    *,
+    team_id: str,
+    team_abbr: str,
+    season: int,
+) -> tuple[dict, str]:
+    url = COACHES_URL_TEMPLATE.format(season=season, team_id=team_id)
+    payload = fetch_json(
+        url,
+        request_kind="coach_list",
+        label=f"coach list team_id={team_id}",
+    )
+
+    items = payload.get("items")
+    if not isinstance(items, list):
+        raise CoachValidationError(
+            "Coach-list payload items field is not a list for "
+            f"team={team_abbr}, team_id={team_id}"
+        )
+    if not items:
+        raise CoachValidationError(
+            "Coach-list payload contains no coach candidates for "
+            f"team={team_abbr}, team_id={team_id}"
+        )
+
+    candidates: list[tuple[dict, dict]] = []
+    seen_refs: set[str] = set()
+
+    for item_index, item in enumerate(items):
+        if not isinstance(item, dict):
+            raise CoachValidationError(
+                "Coach-list payload contains non-object item for "
+                f"team_id={team_id}, item_index={item_index}"
+            )
+
+        coach_ref = validate_espn_ref(
+            item.get("$ref", ""),
+            label=f"coach $ref team_id={team_id} item_index={item_index}",
+        )
+        if coach_ref in seen_refs:
+            raise CoachValidationError(
+                "Coach-list payload contains duplicate coach $ref for "
+                f"team_id={team_id}: {coach_ref}"
+            )
+        seen_refs.add(coach_ref)
+
+        coach = fetch_json(
+            coach_ref,
+            request_kind="coach_ref",
+            label=f"coach detail team_id={team_id} item_index={item_index}",
+        )
+
+        coach_season, coach_team_id = extract_team_identity_from_coach(coach)
+        if coach_season != season:
+            raise CoachValidationError(
+                "Coach payload season mismatch for "
+                f"team_id={team_id}: expected={season}, actual={coach_season}"
+            )
+        if coach_team_id != team_id:
+            raise CoachValidationError(
+                "Coach payload team mismatch for "
+                f"requested_team_id={team_id}: coach_team_id={coach_team_id}"
+            )
+
+        candidates.append((item, coach))
+
+    return select_head_coach(candidates, team_id=team_id)
+
+
+def get_career_records(
+    coach: dict,
+    *,
+    team_id: str,
+    coach_id: str,
+) -> tuple[str, str, dict[str, int]]:
+    diagnostics = {
+        "missing_person_ref": 0,
+        "missing_career_records_collection": 0,
+        "missing_total_record": 0,
+        "missing_postseason_record": 0,
+    }
+
+    person_obj = coach.get("person")
+    if not isinstance(person_obj, dict):
+        diagnostics = {key: 1 for key in diagnostics}
+        return "", "", diagnostics
+
+    person_ref = str(person_obj.get("$ref") or "").strip()
+    if not person_ref:
+        diagnostics = {key: 1 for key in diagnostics}
+        return "", "", diagnostics
+
+    person = fetch_json(
+        person_ref,
+        request_kind="person_ref",
+        label=f"coach person team_id={team_id} coach_id={coach_id}",
+    )
+
+    career_records = person.get("careerRecords")
+    if career_records is None:
+        diagnostics["missing_career_records_collection"] = 1
+        diagnostics["missing_total_record"] = 1
+        diagnostics["missing_postseason_record"] = 1
+        return "", "", diagnostics
+
+    if not isinstance(career_records, list):
+        raise CoachValidationError(
+            "Coach person careerRecords is not a list for "
+            f"team_id={team_id}, coach_id={coach_id}"
+        )
+
+    if not career_records:
+        diagnostics["missing_career_records_collection"] = 1
+        diagnostics["missing_total_record"] = 1
+        diagnostics["missing_postseason_record"] = 1
+        return "", "", diagnostics
+
+    record_values: dict[str, set[str]] = {
+        "Total": set(),
+        "Post Season": set(),
+    }
+
+    for record_index, record_ref_obj in enumerate(career_records):
+        if not isinstance(record_ref_obj, dict):
+            raise CoachValidationError(
+                "careerRecords contains non-object entry for "
+                f"team_id={team_id}, coach_id={coach_id}, "
+                f"record_index={record_index}"
+            )
+
+        record_ref = validate_espn_ref(
+            record_ref_obj.get("$ref", ""),
+            label=(
+                f"career record $ref team_id={team_id} "
+                f"coach_id={coach_id} record_index={record_index}"
+            ),
+        )
+        record = fetch_json(
+            record_ref,
+            request_kind="career_record",
+            label=(
+                f"career record team_id={team_id} "
+                f"coach_id={coach_id} record_index={record_index}"
+            ),
+        )
+
+        record_type = str(record.get("type") or "").strip()
+        summary = str(record.get("summary") or "").strip()
+        if record_type in record_values and summary:
+            record_values[record_type].add(summary)
+
+    for record_type, summaries in record_values.items():
+        if len(summaries) > 1:
+            raise CoachValidationError(
+                "Conflicting coach career record summaries for "
+                f"team_id={team_id}, coach_id={coach_id}, "
+                f"record_type={record_type!r}: {sorted(summaries)}"
+            )
+
+    career_record = next(iter(record_values["Total"]), "")
+    postseason_record = next(iter(record_values["Post Season"]), "")
+
+    if not career_record:
+        diagnostics["missing_total_record"] = 1
+    if not postseason_record:
+        diagnostics["missing_postseason_record"] = 1
+
+    return career_record, postseason_record, diagnostics
+
+
+def empty_diagnostics() -> dict[str, int]:
+    return {
+        "explicit_role_selections": 0,
+        "sole_provider_candidate_selections": 0,
+        "missing_person_ref_count": 0,
+        "missing_career_records_collection_count": 0,
+        "missing_total_career_record_count": 0,
+        "missing_postseason_career_record_count": 0,
+    }
+
+
+def build_rows(
+    *,
+    teams: list[tuple[str, str]],
+    season: int,
+) -> tuple[
+    list[dict[str, str]],
+    list[dict[str, str]],
+    dict[str, int],
+]:
+    rows: list[dict[str, str]] = []
+    failures: list[dict[str, str]] = []
+    diagnostics = empty_diagnostics()
 
     for team_id, team_abbr in teams:
-        url = COACHES_URL_TEMPLATE.format(
-            season=SEASON,
-            team_id=team_id,
-        )
-
         try:
-            coaches_list = fetch_json(url)
-        except Exception as e:
-            print(
-                f"team={team_abbr} "
-                f"team_id={team_id} "
-                f"failed to pull coaches list: {e}"
+            coach, selection_method = resolve_team_head_coach(
+                team_id=team_id,
+                team_abbr=team_abbr,
+                season=season,
             )
-            continue
 
-        items = coaches_list.get("items", [])
+            coach_id = str(coach.get("id") or "").strip()
+            uid = str(coach.get("uid") or "").strip()
+            first_name = str(coach.get("firstName") or "").strip()
+            last_name = str(coach.get("lastName") or "").strip()
+            name = f"{first_name} {last_name}".strip()
 
-        if not items:
-            print(
-                f"team={team_abbr} "
-                f"team_id={team_id} "
-                f"no coach found"
+            if not coach_id:
+                raise CoachValidationError(
+                    f"Resolved head coach has blank id for team_id={team_id}"
+                )
+            if not name:
+                raise CoachValidationError(
+                    "Resolved head coach has blank name for "
+                    f"team_id={team_id}, coach_id={coach_id}"
+                )
+
+            career_record, postseason_record, record_diag = get_career_records(
+                coach,
+                team_id=team_id,
+                coach_id=coach_id,
             )
-            continue
 
-        coach_ref = items[0].get("$ref")
+            if selection_method == "explicit_role":
+                diagnostics["explicit_role_selections"] += 1
+            else:
+                diagnostics["sole_provider_candidate_selections"] += 1
 
-        if not coach_ref:
-            print(
-                f"team={team_abbr} "
-                f"team_id={team_id} "
-                f"coach ref missing"
+            diagnostics["missing_person_ref_count"] += (
+                record_diag["missing_person_ref"]
             )
-            continue
-
-        try:
-            coach = fetch_json(coach_ref)
-        except Exception as e:
-            print(
-                f"team={team_abbr} "
-                f"team_id={team_id} "
-                f"failed to resolve coach: {e}"
+            diagnostics["missing_career_records_collection_count"] += (
+                record_diag["missing_career_records_collection"]
             )
-            continue
+            diagnostics["missing_total_career_record_count"] += (
+                record_diag["missing_total_record"]
+            )
+            diagnostics["missing_postseason_career_record_count"] += (
+                record_diag["missing_postseason_record"]
+            )
 
-        career_record, post_season_career_record = get_career_records(
-            coach
+            experience_raw = coach.get("experience")
+            experience = (
+                "" if experience_raw is None else str(experience_raw).strip()
+            )
+
+            rows.append(
+                {
+                    "sport": "football",
+                    "league": "college-football",
+                    "name": name,
+                    "team": team_abbr,
+                    "team_id": team_id,
+                    "experience": experience,
+                    "career_record": career_record,
+                    "post_season_career_record": postseason_record,
+                    "id": coach_id,
+                    "uid": uid,
+                }
+            )
+        except Exception as exc:
+            failures.append(
+                {
+                    "team_id": team_id,
+                    "team_abbr": team_abbr,
+                    "error_type": type(exc).__name__,
+                    "message": str(exc),
+                }
+            )
+
+    return rows, failures, diagnostics
+
+
+def validate_final_rows(
+    rows: list[dict[str, str]],
+    *,
+    teams: list[tuple[str, str]],
+) -> None:
+    if not rows:
+        raise ValueError("Coaches output would be empty")
+
+    expected_by_team = dict(teams)
+    expected_team_ids = set(expected_by_team)
+
+    if len(rows) != len(expected_team_ids):
+        raise ValueError(
+            "Coaches row count does not match authoritative team count: "
+            f"rows={len(rows)}, teams={len(expected_team_ids)}"
         )
 
-        rows.append(
-            {
-                "sport": "football",
-                "league": "college-football",
-                "name": (
-                    f"{coach.get('firstName', '')} "
-                    f"{coach.get('lastName', '')}"
-                ).strip(),
-                "team": team_abbr,
-                "team_id": team_id,
-                "experience": coach.get("experience", ""),
-                "career_record": career_record,
-                "post_season_career_record": post_season_career_record,
-                "id": coach.get("id", ""),
-                "uid": coach.get("uid", ""),
-            }
+    seen_team_ids: set[str] = set()
+    coach_team_assignments: dict[str, str] = {}
+
+    for index, row in enumerate(rows):
+        if set(row) != set(HEADER):
+            raise ValueError(f"Coaches row schema mismatch at row_index={index}")
+
+        team_id = str(row.get("team_id") or "").strip()
+        team_abbr = str(row.get("team") or "").strip()
+        coach_id = str(row.get("id") or "").strip()
+        name = str(row.get("name") or "").strip()
+
+        if team_id not in expected_team_ids:
+            raise ValueError(
+                "Coaches output references foreign team_id at "
+                f"row_index={index}: {team_id!r}"
+            )
+        if team_abbr != expected_by_team[team_id]:
+            raise ValueError(
+                "Coaches output abbreviation mismatch for "
+                f"team_id={team_id}: expected={expected_by_team[team_id]!r}, "
+                f"actual={team_abbr!r}"
+            )
+        if not coach_id:
+            raise ValueError(
+                f"Coaches output contains blank coach id for team_id={team_id}"
+            )
+        if not coach_id.isdigit() or int(coach_id) <= 0:
+            raise ValueError(
+                "Coaches output contains invalid coach id for "
+                f"team_id={team_id}: {coach_id!r}"
+            )
+        if not name:
+            raise ValueError(
+                f"Coaches output contains blank coach name for team_id={team_id}"
+            )
+        if team_id in seen_team_ids:
+            raise ValueError(f"Coaches output contains duplicate team_id={team_id}")
+
+        prior_team = coach_team_assignments.get(coach_id)
+        if prior_team is not None and prior_team != team_id:
+            raise ValueError(
+                "One coach id is assigned to multiple authoritative teams: "
+                f"coach_id={coach_id}, teams={prior_team},{team_id}"
+            )
+
+        seen_team_ids.add(team_id)
+        coach_team_assignments[coach_id] = team_id
+
+    if seen_team_ids != expected_team_ids:
+        missing = sorted(
+            expected_team_ids - seen_team_ids,
+            key=lambda value: int(value),
+        )
+        foreign = sorted(
+            seen_team_ids - expected_team_ids,
+            key=lambda value: int(value),
+        )
+        raise ValueError(
+            "Coaches output team coverage mismatch. "
+            f"missing={missing[:50]}, foreign={foreign[:50]}"
         )
 
-        print(
-            f"team={team_abbr} "
-            f"team_id={team_id} "
-            f"done"
-        )
 
-    os.makedirs(
-        os.path.dirname(OUTPUT_PATH),
-        exist_ok=True,
+def temporary_path(final_path: Path) -> Path:
+    return final_path.with_name(
+        f".{final_path.name}.{uuid.uuid4().hex}.tmp"
     )
 
-    with open(
-        OUTPUT_PATH,
-        "w",
-        newline="",
-        encoding="utf-8",
-    ) as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=HEADER,
-        )
 
+def write_staged_csv(path: Path, rows: list[dict[str, str]]) -> None:
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=HEADER)
         writer.writeheader()
         writer.writerows(rows)
+        handle.flush()
+        os.fsync(handle.fileno())
 
-    print(
-        f"rows={len(rows)} "
-        f"output={OUTPUT_PATH}"
+
+def validate_staged_csv(
+    path: Path,
+    *,
+    expected_rows: list[dict[str, str]],
+    teams: list[tuple[str, str]],
+) -> None:
+    with path.open("r", newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        fieldnames = reader.fieldnames or []
+        if fieldnames != HEADER:
+            raise ValueError("Serialized coaches_master.csv header mismatch")
+        rows = list(reader)
+
+    if rows != expected_rows:
+        raise ValueError(
+            "Serialized coaches_master.csv does not exactly match validated rows"
+        )
+
+    validate_final_rows(rows, teams=teams)
+
+
+def publish_atomic(
+    rows: list[dict[str, str]],
+    *,
+    teams: list[tuple[str, str]],
+) -> bool:
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = temporary_path(OUTPUT_PATH)
+
+    try:
+        write_staged_csv(temp_path, rows)
+        validate_staged_csv(
+            temp_path,
+            expected_rows=rows,
+            teams=teams,
+        )
+
+        if OUTPUT_PATH.exists():
+            if OUTPUT_PATH.read_bytes() == temp_path.read_bytes():
+                return False
+
+        os.replace(temp_path, OUTPUT_PATH)
+        return True
+    finally:
+        try:
+            temp_path.unlink(missing_ok=True)
+        except Exception:
+            pass
+
+
+def update_report_diagnostics(
+    report: PipelineReporter,
+    *,
+    teams: list[tuple[str, str]],
+    rows: list[dict[str, str]],
+    failures: list[dict[str, str]],
+    diagnostics: dict[str, int],
+    output_modified: bool | None,
+) -> None:
+    resolved_team_ids = {
+        str(row.get("team_id") or "").strip()
+        for row in rows
+        if str(row.get("team_id") or "").strip()
+    }
+    expected_team_ids = {team_id for team_id, _ in teams}
+    missing_team_ids = sorted(
+        expected_team_ids - resolved_team_ids,
+        key=lambda value: int(value),
     )
+    unique_coach_ids = {
+        str(row.get("id") or "").strip()
+        for row in rows
+        if str(row.get("id") or "").strip()
+    }
+
+    request_failures_by_kind = {key: 0 for key in _REQUEST_COUNTS}
+    for failure in _REQUEST_FAILURES:
+        request_kind = failure.get("request_kind", "")
+        if request_kind in request_failures_by_kind:
+            request_failures_by_kind[request_kind] += 1
+
+    details: dict[str, object] = {
+        "authoritative_team_count": len(teams),
+        "teams_requested": len(teams),
+        "teams_successfully_resolved": len(resolved_team_ids),
+        "missing_team_count": len(missing_team_ids),
+        "missing_team_ids": missing_team_ids,
+        "processing_failure_count": len(failures),
+        "processing_failure_details": failures,
+        "final_row_count": len(rows),
+        "unique_team_count": len(resolved_team_ids),
+        "unique_coach_id_count": len(unique_coach_ids),
+        "coach_list_request_count": _REQUEST_COUNTS["coach_list"],
+        "coach_ref_request_count": _REQUEST_COUNTS["coach_ref"],
+        "person_ref_request_count": _REQUEST_COUNTS["person_ref"],
+        "career_record_request_count": _REQUEST_COUNTS["career_record"],
+        "coach_list_request_failure_count": (
+            request_failures_by_kind["coach_list"]
+        ),
+        "coach_ref_request_failure_count": (
+            request_failures_by_kind["coach_ref"]
+        ),
+        "person_ref_request_failure_count": (
+            request_failures_by_kind["person_ref"]
+        ),
+        "career_record_request_failure_count": (
+            request_failures_by_kind["career_record"]
+        ),
+        "espn_request_failure_count": len(_REQUEST_FAILURES),
+        "espn_request_failure_details": _REQUEST_FAILURES,
+        "explicit_role_selections": diagnostics["explicit_role_selections"],
+        "sole_provider_candidate_selections": diagnostics[
+            "sole_provider_candidate_selections"
+        ],
+        "missing_person_ref_count": diagnostics["missing_person_ref_count"],
+        "missing_career_records_collection_count": diagnostics[
+            "missing_career_records_collection_count"
+        ],
+        "missing_total_career_record_count": diagnostics[
+            "missing_total_career_record_count"
+        ],
+        "missing_postseason_career_record_count": diagnostics[
+            "missing_postseason_career_record_count"
+        ],
+        "output_path": str(OUTPUT_PATH),
+    }
+
+    if output_modified is not None:
+        details["output_modified"] = output_modified
+
+    report.update_details(details)
+
+
+def run(report: PipelineReporter) -> int:
+    reset_runtime_state()
+
+    season, season_type, week = load_current_week()
+    report.season = season
+    report.week = week
+    report.set_detail("season_type", season_type)
+
+    teams = load_authoritative_teams(
+        season=season,
+        season_type=season_type,
+    )
+    report.set_rows(rows_in=len(teams))
+
+    rows: list[dict[str, str]] = []
+    failures: list[dict[str, str]] = []
+    diagnostics = empty_diagnostics()
+
+    try:
+        rows, failures, diagnostics = build_rows(
+            teams=teams,
+            season=season,
+        )
+
+        if failures:
+            raise RuntimeError(
+                "Failed to resolve complete authoritative head-coach coverage: "
+                f"failure_count={len(failures)}"
+            )
+
+        validate_final_rows(rows, teams=teams)
+        output_modified = publish_atomic(rows, teams=teams)
+
+        report.set_rows(
+            rows_in=len(teams),
+            rows_out=len(rows),
+        )
+        update_report_diagnostics(
+            report,
+            teams=teams,
+            rows=rows,
+            failures=failures,
+            diagnostics=diagnostics,
+            output_modified=output_modified,
+        )
+        return 0
+    except Exception:
+        update_report_diagnostics(
+            report,
+            teams=teams,
+            rows=rows,
+            failures=failures,
+            diagnostics=diagnostics,
+            output_modified=None,
+        )
+        raise
+
+
+def main() -> int:
+    with PipelineReporter(
+        script=SCRIPT_PATH,
+        stage="00_intake",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        extra_context={
+            "script_version": SCRIPT_VERSION,
+            "source": "ESPN Core API",
+        },
+    ) as report:
+        report.set_detail("output_modified", False)
+        report.add_input(CURRENT_WEEK_CONFIG_PATH)
+        report.add_input(LEAGUE_MASTER_PATH)
+        report.add_output(OUTPUT_PATH)
+        return run(report)
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
