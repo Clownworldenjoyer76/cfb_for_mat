@@ -1,7 +1,9 @@
 {
-  "fatal_errors": [],
+  "fatal_errors": [
+    "CFB workflow status is FAILURE"
+  ],
   "game_date_new_york": "2026_09_15",
-  "generated_at_utc": "2026-09-15T14:41:21.138212+00:00",
+  "generated_at_utc": "2026-09-15T18:51:11.905367+00:00",
   "leagues": {
     "cfb": {
       "counts": {
@@ -10,30 +12,14 @@
         "prediction_games": 75,
         "scheduled_games": 75,
         "selected_bets": 7,
-        "sportsbook_games": 57
+        "sportsbook_games": 73
       },
       "coverage": {
         "predictions_not_merged": [],
         "scheduled_missing_predictions": [],
         "scheduled_missing_sportsbook": [
-          "401856803",
-          "401858227",
-          "401858228",
           "401858233",
-          "401858448",
-          "401858452",
-          "401858455",
-          "401858459",
-          "401858471",
-          "401860885",
-          "401860886",
-          "401860890",
-          "401862772",
-          "401862775",
-          "401862777",
-          "401866424",
-          "401868317",
-          "401870764"
+          "401862775"
         ]
       },
       "identity": {
@@ -118,16 +104,16 @@
       "status": "STATUS: SUCCESS"
     }
   ],
-  "status": "warning",
+  "status": "failed",
   "warnings": [
-    "CFB Week 3: 18 scheduled game(s) do not have sportsbook odds"
+    "CFB Week 3: 2 scheduled game(s) do not have sportsbook odds"
   ],
   "workflow": {
     "name": "CFB Pipeline",
     "ref_name": "main",
     "run_attempt": "1",
-    "run_id": "34982762005",
-    "sha": "12819fb2ed6d7158dec873d3ec56325eb34717ca",
-    "status": "success"
+    "run_id": "35009658700",
+    "sha": "321d7aaebfc92d0fb7a92b04aee8fab05e08c1db",
+    "status": "failure"
   }
 }
