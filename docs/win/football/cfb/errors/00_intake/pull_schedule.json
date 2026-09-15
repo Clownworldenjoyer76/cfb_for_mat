@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-34904703474-attempt-1",
+  "run_id": "github-34956675742-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,28 +9,28 @@
   "script": "pull_schedule.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_schedule.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_schedule.json",
-  "started_at_utc": "2026-09-14T22:34:24.643061+00:00",
-  "finished_at_utc": "2026-09-14T22:34:58.661912+00:00",
-  "duration_seconds": 34.019,
+  "started_at_utc": "2026-09-15T10:13:04.524066+00:00",
+  "finished_at_utc": "2026-09-15T10:13:18.946244+00:00",
+  "duration_seconds": 14.422,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2133,
+    "process_id": 2360,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "34904703474",
+    "github_run_id": "34956675742",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "98d2abf9e34e1c45338c67969126af10a0241948",
+    "github_sha": "7d12f4b26016cde8df869370d5afe516920cf0b5",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
   "context": {
     "season": 2026,
-    "week": null
+    "week": 3
   },
   "inputs": [
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
@@ -38,7 +38,7 @@
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/stadium_map.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/updates/2026_schedule_20260914_223458.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/updates/2026_schedule_20260915_101318.csv",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv"
   ],
   "rows_in": 1653,
@@ -60,6 +60,16 @@
     "skipped_events": 0,
     "unique_games_pulled": 892,
     "existing_schedule_rows": 892,
-    "schedule_rows_written": 892
+    "schedule_rows_written": 892,
+    "schedule_games_added": 0,
+    "schedule_games_updated": 6,
+    "schedule_games_unchanged": 886,
+    "schedule_games_preserved": 0,
+    "missing_stadium": 0,
+    "missing_surface": 7,
+    "missing_roof": 0,
+    "missing_home_timezone": 0,
+    "missing_away_timezone": 66,
+    "missing_game_timezone": 0
   }
 }
