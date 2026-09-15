@@ -900,6 +900,12 @@ def main() -> int:
 
         schedule = load_schedule(season)
         existing = read_existing_pbp(output_file)
+
+        validate_season_pbp(
+            existing,
+            season=season,
+        )
+
         existing_game_ids = game_ids_in_frame(existing)
 
         requested_game_ids = {
