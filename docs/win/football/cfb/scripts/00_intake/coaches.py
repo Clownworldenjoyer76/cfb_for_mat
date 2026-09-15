@@ -44,7 +44,7 @@ LEAGUE_MASTER_PATH = CFB_ROOT / "data" / "master" / "league_master.csv"
 OUTPUT_PATH = CFB_ROOT / "data" / "master" / "coaches_master.csv"
 REPORT_ROOT = CFB_ROOT / "errors"
 
-SCRIPT_VERSION = "cfb-coaches-v3-2026-09-15"
+SCRIPT_VERSION = "cfb-coaches-v4-2026-09-15"
 
 COACHES_URL_TEMPLATE = (
     "https://sports.core.api.espn.com/v2/sports/football/"
@@ -217,14 +217,31 @@ def load_authoritative_teams(
 
 def validate_espn_ref(url: str, *, label: str) -> str:
     text = str(url or "").strip()
-    if not text:
-        raise CoachValidationError(f"{label} is blank")
 
-    parsed = urlparse(text)
-    if parsed.scheme != "https" or parsed.hostname != ESPN_CORE_HOST:
+    if not text:
         raise CoachValidationError(
-            f"{label} is not an approved ESPN Core URL: {text!r}"
+            f"{label} is blank"
         )
+
+    parsed = urlparse(
+        text
+    )
+
+    if (
+        parsed.scheme not in {"http", "https"}
+        or parsed.hostname != ESPN_CORE_HOST
+    ):
+        raise CoachValidationError(
+            f"{label} is not an approved ESPN Core URL: "
+            f"{text!r}"
+        )
+
+    if parsed.scheme == "http":
+        parsed = parsed._replace(
+            scheme="https"
+        )
+
+        return parsed.geturl()
 
     return text
 
