@@ -1,20 +1,18 @@
 {
-  "fatal_errors": [
-    "CFB workflow status is FAILURE"
-  ],
+  "fatal_errors": [],
   "game_date_new_york": "2026_09_16",
-  "generated_at_utc": "2026-09-16T19:12:49.436902+00:00",
+  "generated_at_utc": "2026-09-16T19:29:40.170401+00:00",
   "leagues": {
     "cfb": {
       "counts": {
         "all_games_games": 75,
-        "locked_bets": 10,
-        "locked_games": 10,
+        "locked_bets": 11,
+        "locked_games": 11,
         "merged_games": 75,
         "prediction_games": 75,
         "scheduled_games": 75,
-        "selected_bets": 10,
-        "selected_games": 10,
+        "selected_bets": 11,
+        "selected_games": 11,
         "sportsbook_games": 74
       },
       "coverage": {
@@ -125,18 +123,18 @@
       "exists": true,
       "name": "Final Selected Picks",
       "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/selected/week_3_CFB_select_picks.csv",
-      "rows": 10,
+      "rows": 11,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "Locked Selected Picks",
       "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/selected/locked/week_3_CFB_select_picks.csv",
-      "rows": 10,
+      "rows": 11,
       "status": "STATUS: SUCCESS"
     }
   ],
-  "status": "failed",
+  "status": "warning",
   "warnings": [
     "CFB Week 3: 1 scheduled game(s) do not have sportsbook odds"
   ],
@@ -144,8 +142,8 @@
     "name": "CFB Pipeline",
     "ref_name": "main",
     "run_attempt": "1",
-    "run_id": "35138187848",
-    "sha": "012bccbb5a74970284e0e3fb34dd4d07581cd351",
-    "status": "failure"
+    "run_id": "35140165010",
+    "sha": "7d71e973dc32f823ab7855efa8c4a9dbb72c659f",
+    "status": "success"
   }
 }

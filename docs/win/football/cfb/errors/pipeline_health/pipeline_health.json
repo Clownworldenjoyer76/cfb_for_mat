@@ -1,30 +1,30 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35138187848-attempt-1",
-  "status": "FAILED",
-  "exit_code": 1,
+  "run_id": "github-35140165010-attempt-1",
+  "status": "WARNING",
+  "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "pipeline_health",
   "script": "pipeline_health.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/pipeline_health.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/pipeline_health/pipeline_health.json",
-  "started_at_utc": "2026-09-16T19:12:49.436978+00:00",
-  "finished_at_utc": "2026-09-16T19:12:49.465925+00:00",
+  "started_at_utc": "2026-09-16T19:29:40.170476+00:00",
+  "finished_at_utc": "2026-09-16T19:29:40.199361+00:00",
   "duration_seconds": 0.029,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2751,
+    "process_id": 2626,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35138187848",
+    "github_run_id": "35140165010",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "012bccbb5a74970284e0e3fb34dd4d07581cd351",
+    "github_sha": "7d71e973dc32f823ab7855efa8c4a9dbb72c659f",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -52,42 +52,34 @@
     "/home/runner/work/cfb_for_mat/cfb_for_mat/frontend/data/pipeline_health/cfb.json"
   ],
   "rows_in": 75,
-  "rows_out": 10,
+  "rows_out": 11,
   "warning_count": 1,
-  "error_count": 1,
+  "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-16T19:12:49.465896+00:00",
+      "timestamp_utc": "2026-09-16T19:29:40.199339+00:00",
       "message": "CFB Week 3: 1 scheduled game(s) do not have sportsbook odds",
       "details": null
     }
   ],
-  "errors": [
-    {
-      "timestamp_utc": "2026-09-16T19:12:49.465909+00:00",
-      "type": null,
-      "message": "CFB workflow status is FAILURE",
-      "traceback": null,
-      "details": null
-    }
-  ],
+  "errors": [],
   "details": {
     "script_version": "cfb-pipeline-health-v2-hardened-2026-09-16",
     "season_type": 2,
-    "workflow_status": "failure",
-    "health_status": "failed",
+    "workflow_status": "success",
+    "health_status": "warning",
     "counts": {
       "scheduled_games": 75,
       "prediction_games": 75,
       "sportsbook_games": 74,
       "merged_games": 75,
       "all_games_games": 75,
-      "selected_games": 10,
-      "selected_bets": 10,
-      "locked_games": 10,
-      "locked_bets": 10
+      "selected_games": 11,
+      "selected_bets": 11,
+      "locked_games": 11,
+      "locked_bets": 11
     },
-    "fatal_errors": 1,
+    "fatal_errors": 0,
     "warnings": 1,
     "output_modified": true
   }
