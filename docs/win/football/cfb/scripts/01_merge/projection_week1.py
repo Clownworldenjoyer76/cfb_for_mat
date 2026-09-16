@@ -52,7 +52,7 @@ import numpy as np
 import pandas as pd
 
 
-SCRIPT_VERSION = "cfb-week1-v7-game-lock-2026-08-30"
+SCRIPT_VERSION = "cfb-week1-v8-injury-dtypes-2026-09-15"
 MIN_PRIOR_TEAM_WEEKS = 10
 ESPN_MARGIN_SYMMETRY_TOLERANCE = 0.25
 DEFAULT_MARGIN_SD = 14.0
@@ -2157,6 +2157,11 @@ def build_injury_lookup(
         "injuries",
     )
 
+    # Header-only injury files are the valid upstream
+    # representation of zero current injuries.
+    if injuries.empty:
+        return {}
+
     injuries[
         "team"
     ] = injuries[
@@ -2183,12 +2188,74 @@ def build_injury_lookup(
         injury_status_multiplier
     )
 
+    status_multiplier_numeric = pd.to_numeric(
+        injuries[
+            "status_multiplier"
+        ],
+        errors="coerce",
+    )
+
+    if status_multiplier_numeric.isna().any():
+        bad_rows = injuries.loc[
+            status_multiplier_numeric.isna(),
+            [
+                "team",
+                "game_status",
+            ],
+        ].head(
+            10
+        ).to_dict(
+            orient="records"
+        )
+
+        raise ValueError(
+            "Injury status multiplier conversion "
+            f"failed: examples={bad_rows}"
+        )
+
+    injuries[
+        "status_multiplier"
+    ] = status_multiplier_numeric.astype(
+        float
+    )
+
     injuries[
         "position_cost"
     ] = injuries[
         "position"
     ].map(
         position_cost
+    )
+
+    position_cost_numeric = pd.to_numeric(
+        injuries[
+            "position_cost"
+        ],
+        errors="coerce",
+    )
+
+    if position_cost_numeric.isna().any():
+        bad_rows = injuries.loc[
+            position_cost_numeric.isna(),
+            [
+                "team",
+                "position",
+            ],
+        ].head(
+            10
+        ).to_dict(
+            orient="records"
+        )
+
+        raise ValueError(
+            "Injury position-cost conversion "
+            f"failed: examples={bad_rows}"
+        )
+
+    injuries[
+        "position_cost"
+    ] = position_cost_numeric.astype(
+        float
     )
 
     injuries[

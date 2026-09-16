@@ -88,7 +88,21 @@ import pandas as pd
 import projection_week1 as base
 
 
-SCRIPT_VERSION = "cfb-inseason-v3-game-lock-2026-08-30"
+SCRIPT_PATH = Path(__file__).resolve()
+SCRIPTS_DIR = SCRIPT_PATH.parents[1]
+CFB_ROOT = SCRIPT_PATH.parents[2]
+REPORT_ROOT = CFB_ROOT / "errors"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(
+        0,
+        str(SCRIPTS_DIR),
+    )
+
+from pipeline_reporter import PipelineReporter
+
+
+SCRIPT_VERSION = "cfb-inseason-v4-injury-reporter-2026-09-15"
 
 WEEKLY_FILE_RE = re.compile(
     r"^week_(\d+)_CFB_weekly_schedule\.csv$"
@@ -727,17 +741,11 @@ def validate_output(
     )
 
 
-def main() -> int:
-    args = parse_args()
-
-    validate_args(
-        args
-    )
-
-    season = resolve_season(
-        args.season
-    )
-
+def run(
+    report: PipelineReporter,
+    args: argparse.Namespace,
+    season: int,
+) -> int:
     cfb_root = base.repo_cfb_root()
 
     if args.week is None:
@@ -842,10 +850,61 @@ def main() -> int:
         / "travel_weather_coefficients.csv"
     )
 
+    report.season = season
+    report.week = week
+
+    for input_path in (
+        schedule_path,
+        team_stats_path,
+        team_map_path,
+        stadium_map_path,
+        fpi_path,
+        predictions_dir,
+        injuries_path,
+        travel_path,
+        weather_path,
+        travel_weather_coefficients_path,
+    ):
+        report.add_input(
+            input_path
+        )
+
+    report.add_output(
+        output_path
+    )
+
+    report.update_details(
+        {
+            "dry_run": bool(
+                args.dry_run
+            ),
+            "fresh_injury_days": int(
+                args.fresh_injury_days
+            ),
+            "min_current_team_weeks": int(
+                args.min_current_team_weeks
+            ),
+            "output_modified": False,
+        }
+    )
+
     schedule = load_target_schedule(
         schedule_path,
         season,
         week,
+    )
+
+    report.set_rows(
+        rows_in=len(
+            schedule
+        ),
+    )
+
+    report.set_detail(
+        "schedule_game_count",
+        len(
+            schedule
+        ),
     )
 
     team_map = base.read_csv(
@@ -974,6 +1033,224 @@ def main() -> int:
             "prior_team_weeks"
         ],
         errors="coerce",
+    )
+
+    market_spread_count = int(
+        pd.to_numeric(
+            projected[
+                "market_home_margin"
+            ],
+            errors="coerce",
+        ).notna().sum()
+    )
+
+    fpi_component_count = int(
+        pd.to_numeric(
+            projected[
+                "fpi_home_margin"
+            ],
+            errors="coerce",
+        ).notna().sum()
+    )
+
+    espn_component_count = int(
+        pd.to_numeric(
+            projected[
+                "espn_home_margin"
+            ],
+            errors="coerce",
+        ).notna().sum()
+    )
+
+    team_stats_component_count = int(
+        pd.to_numeric(
+            projected[
+                "prior_home_margin"
+            ],
+            errors="coerce",
+        ).notna().sum()
+    )
+
+    market_total_count = int(
+        pd.to_numeric(
+            projected[
+                "market_total"
+            ],
+            errors="coerce",
+        ).notna().sum()
+    )
+
+    injury_adjustment_count = int(
+        pd.to_numeric(
+            projected[
+                "injury_margin_adjustment"
+            ],
+            errors="coerce",
+        )
+        .fillna(
+            0
+        )
+        .abs()
+        .gt(
+            0
+        )
+        .sum()
+    )
+
+    travel_adjustment_count = int(
+        pd.to_numeric(
+            projected[
+                "travel_margin_adjustment"
+            ],
+            errors="coerce",
+        )
+        .fillna(
+            0
+        )
+        .abs()
+        .gt(
+            0
+        )
+        .sum()
+    )
+
+    weather_adjustment_count = int(
+        pd.to_numeric(
+            projected[
+                "weather_total_adjustment"
+            ],
+            errors="coerce",
+        )
+        .fillna(
+            0
+        )
+        .abs()
+        .gt(
+            0
+        )
+        .sum()
+    )
+
+    injury_input_rows = sum(
+        len(
+            group
+        )
+        for group
+        in injury_lookup.values()
+    )
+
+    report.set_rows(
+        rows_out=len(
+            projected
+        ),
+    )
+
+    report.update_details(
+        {
+            "projection_game_count": len(
+                projected
+            ),
+            "locked_games_preserved": (
+                locked_games_preserved
+            ),
+            "team_stats_source_rows": len(
+                current_team_stats
+            ),
+            "latest_completed_team_stats_week": (
+                latest_completed_week
+            ),
+            "teams_with_current_stats": len(
+                current_prior
+            ),
+            "fpi_team_count": len(
+                fpi
+            ),
+            "espn_prediction_game_count": len(
+                espn_predictions
+            ),
+            "injury_lookup_team_count": len(
+                injury_lookup
+            ),
+            "injury_input_rows": (
+                injury_input_rows
+            ),
+            "travel_input_rows": len(
+                travel
+            ),
+            "weather_input_rows": len(
+                weather
+            ),
+            "travel_weather_coefficient_count": len(
+                travel_weather_coefficients
+            ),
+            "games_with_market_spread": (
+                market_spread_count
+            ),
+            "games_with_fpi_component": (
+                fpi_component_count
+            ),
+            "games_with_espn_component": (
+                espn_component_count
+            ),
+            "games_with_current_team_stats_component": (
+                team_stats_component_count
+            ),
+            "games_with_market_total": (
+                market_total_count
+            ),
+            "games_with_fresh_injury_adjustment": (
+                injury_adjustment_count
+            ),
+            "games_with_travel_adjustment": (
+                travel_adjustment_count
+            ),
+            "games_with_weather_adjustment": (
+                weather_adjustment_count
+            ),
+            "home_team_stats_fallbacks": int(
+                pd.to_numeric(
+                    projected[
+                        "home_prior_fallback"
+                    ],
+                    errors="coerce",
+                )
+                .fillna(
+                    0
+                )
+                .sum()
+            ),
+            "away_team_stats_fallbacks": int(
+                pd.to_numeric(
+                    projected[
+                        "away_prior_fallback"
+                    ],
+                    errors="coerce",
+                )
+                .fillna(
+                    0
+                )
+                .sum()
+            ),
+            "team_stats_margin_disabled": int(
+                pd.to_numeric(
+                    projected[
+                        "prior_home_margin"
+                    ],
+                    errors="coerce",
+                )
+                .isna()
+                .sum()
+            ),
+            "probability_margin_sd": float(
+                args.margin_sd
+            ),
+            "probability_total_sd": float(
+                args.total_sd
+            ),
+            "output_path": str(
+                output_path
+            ),
+        }
     )
 
     print(
@@ -1130,6 +1407,11 @@ def main() -> int:
         output_path,
     )
 
+    report.set_detail(
+        "output_modified",
+        True,
+    )
+
     print(
         f"output={output_path}"
     )
@@ -1141,16 +1423,47 @@ def main() -> int:
     return 0
 
 
+def main() -> int:
+    args = parse_args()
+
+    with PipelineReporter(
+        script=__file__,
+        stage="01_merge",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        season=(
+            args.season
+            if args.season is not None
+            else None
+        ),
+        extra_context={
+            "script_version": (
+                SCRIPT_VERSION
+            ),
+            "projection_scope": (
+                "week_2_plus"
+            ),
+        },
+    ) as report:
+        validate_args(
+            args
+        )
+
+        season = resolve_season(
+            args.season
+        )
+
+        report.season = season
+
+        return run(
+            report,
+            args,
+            season,
+        )
+
+
 if __name__ == "__main__":
-    try:
-        raise SystemExit(
-            main()
-        )
-
-    except Exception as exc:
-        print(
-            f"ERROR: {exc}",
-            file=sys.stderr,
-        )
-
-        raise
+    raise SystemExit(
+        main()
+    )
