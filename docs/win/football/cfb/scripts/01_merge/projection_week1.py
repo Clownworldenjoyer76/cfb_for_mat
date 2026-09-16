@@ -52,7 +52,7 @@ import numpy as np
 import pandas as pd
 
 
-SCRIPT_VERSION = "cfb-week1-v8-injury-dtypes-2026-09-15"
+SCRIPT_VERSION = "cfb-week1-v9-metric-shrink-injury-time-2026-09-16"
 MIN_PRIOR_TEAM_WEEKS = 10
 ESPN_MARGIN_SYMMETRY_TOLERANCE = 0.25
 DEFAULT_MARGIN_SD = 14.0
@@ -504,16 +504,36 @@ def normalize_game_id(
 def schedule_kickoff_utc(
     row: pd.Series,
 ) -> datetime | None:
+    authoritative_text = clean(
+        row.get(
+            "kickoff_utc"
+        )
+    )
+
+    if authoritative_text:
+        authoritative = pd.to_datetime(
+            authoritative_text,
+            errors="coerce",
+            utc=True,
+        )
+
+        if not pd.isna(
+            authoritative
+        ):
+            return authoritative.to_pydatetime()
+
     game_date = clean(
         row.get(
             "game_date"
         )
     )
+
     game_time = clean(
         row.get(
             "game_time"
         )
     )
+
     game_timezone = clean(
         row.get(
             "game_timezone"
@@ -536,12 +556,14 @@ def schedule_kickoff_utc(
                 game_timezone
             )
         )
+
     except Exception:
         return None
 
     return local_dt.astimezone(
         timezone.utc
     )
+
 
 
 def locked_game_ids(
@@ -1425,6 +1447,13 @@ def shrink_metric(
         0.0
     )
 
+    mean = pd.to_numeric(
+        team_mean,
+        errors="coerce",
+    ).fillna(
+        global_mean
+    )
+
     weight = count / (
         count
         + strength
@@ -1432,13 +1461,14 @@ def shrink_metric(
 
     return (
         weight
-        * team_mean
+        * mean
         + (
             1.0
             - weight
         )
         * global_mean
     )
+
 
 
 def build_prior_table(
@@ -1504,10 +1534,34 @@ def build_prior_table(
         )
     )
 
-    prior = grouped_mean.merge(
-        grouped_count,
-        on="team",
-        how="left",
+    grouped_metric_count = (
+        work.groupby(
+            "team",
+            as_index=False,
+        )[
+            TEAM_METRICS
+        ]
+        .count()
+        .rename(
+            columns={
+                metric:
+                    f"{metric}_observations"
+                for metric in TEAM_METRICS
+            }
+        )
+    )
+
+    prior = (
+        grouped_mean.merge(
+            grouped_count,
+            on="team",
+            how="left",
+        )
+        .merge(
+            grouped_metric_count,
+            on="team",
+            how="left",
+        )
     )
 
     for metric in TEAM_METRICS:
@@ -1531,7 +1585,7 @@ def build_prior_table(
                 metric
             ],
             prior[
-                "prior_team_weeks"
+                f"{metric}_observations"
             ],
             global_mean,
         )
@@ -2283,7 +2337,7 @@ def build_injury_lookup(
 
 def injury_summary_for_game(
     team: str,
-    game_date: object,
+    game_kickoff_utc: object,
     injury_lookup: dict[
         str,
         pd.DataFrame,
@@ -2311,9 +2365,7 @@ def injury_summary_for_game(
         )
 
     game_ts = pd.to_datetime(
-        clean(
-            game_date
-        ),
+        game_kickoff_utc,
         errors="coerce",
         utc=True,
     )
@@ -2407,6 +2459,7 @@ def injury_summary_for_game(
         questionable_count,
         penalty,
     )
+
 
 
 def weighted_blend(
@@ -3170,6 +3223,10 @@ def build_projection(
             margin_feature_coefficients,
         )
 
+        game_kickoff_utc = schedule_kickoff_utc(
+            sched_row
+        )
+
         (
             home_out,
             home_doubtful,
@@ -3177,9 +3234,7 @@ def build_projection(
             home_injury_penalty,
         ) = injury_summary_for_game(
             home_team,
-            sched_row.get(
-                "game_date"
-            ),
+            game_kickoff_utc,
             injury_lookup,
             args.fresh_injury_days,
         )
@@ -3191,9 +3246,7 @@ def build_projection(
             away_injury_penalty,
         ) = injury_summary_for_game(
             away_team,
-            sched_row.get(
-                "game_date"
-            ),
+            game_kickoff_utc,
             injury_lookup,
             args.fresh_injury_days,
         )
