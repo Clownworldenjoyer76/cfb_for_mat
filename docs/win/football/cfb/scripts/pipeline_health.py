@@ -333,20 +333,21 @@ def validate_stage(
                 row.get("season"),
                 f"{path} line {line}: season",
             )
-            row_type = parse_int(
-                row.get("season_type"),
-                f"{path} line {line}: season_type",
-            )
-
             if row_season != int(season):
                 raise RuntimeError(
                     f"wrong season at line {line}"
                 )
 
-            if row_type != season_type:
-                raise RuntimeError(
-                    f"wrong season_type at line {line}"
+            if key != "all_games":
+                row_type = parse_int(
+                    row.get("season_type"),
+                    f"{path} line {line}: season_type",
                 )
+
+                if row_type != season_type:
+                    raise RuntimeError(
+                        f"wrong season_type at line {line}"
+                    )
 
             if key != "season_schedule":
                 row_week = parse_int(
