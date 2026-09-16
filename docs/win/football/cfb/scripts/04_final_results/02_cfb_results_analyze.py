@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
 """
-CFB graded-results analysis layer.
+Build the CFB one-row-per-bet grading ledger from grade_picks.py outputs.
 
-Reads the existing per-game graded CFB files produced by grade_picks.py and
-converts selected wagers into a one-row-per-bet ledger suitable for reporting.
+Reads:
+    config/current_week.yaml
+    04_final_results/graded/week_*_CFB_graded.csv
 
-READS:
-    docs/win/football/cfb/04_final_results/graded/
-        week_*_CFB_graded.csv
+Writes:
+    04_final_results/intermediate/work_cfb.csv
 
-WRITES:
-    docs/win/football/cfb/04_final_results/intermediate/
-        work_cfb.csv
-
-The existing CFB grader remains the source of truth for bet result and units.
-This script does not re-grade wagers or recalculate P&L.
+The grader remains the source of truth for grades and profit units. This script
+validates the graded files, verifies its extracted ledger against the grader's
+per-game totals, then publishes the reporting ledger.
 """
 
 from __future__ import annotations
@@ -23,15 +20,29 @@ import argparse
 import math
 import os
 import re
+import sys
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
+import yaml
 
+
+SCRIPT_VERSION = "cfb-results-analyze-v2-hardened-2026-09-16"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
+SCRIPTS_DIR = SCRIPT_DIR.parent
+REPORT_ROOT = CFB_ROOT / "errors"
+CURRENT_WEEK_CONFIG = CFB_ROOT / "config" / "current_week.yaml"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from pipeline_reporter import PipelineReporter
+
 
 DEFAULT_GRADED_DIR = CFB_ROOT / "04_final_results" / "graded"
 DEFAULT_OUTPUT_DIR = CFB_ROOT / "04_final_results" / "intermediate"
@@ -43,29 +54,63 @@ MARKETS = {
     "moneyline": {
         "prefix": "ml",
         "line_column": None,
+        "allowed_sides": {"HOME", "AWAY"},
     },
     "spread": {
         "prefix": "spread",
         "line_column": "spread_line",
+        "allowed_sides": {"HOME", "AWAY"},
     },
     "total": {
         "prefix": "total",
         "line_column": "total_line",
+        "allowed_sides": {"OVER", "UNDER"},
     },
 }
+
+VALID_GRADES = {
+    "Win",
+    "Loss",
+    "Push",
+    "Void",
+    "Pending",
+    "No Bet",
+    "Invalid Selection",
+    "Invalid Line",
+}
+
+SETTLED_GRADES = {"Win", "Loss", "Push", "Void"}
+PENDING_GRADES = {"Pending", "Invalid Selection", "Invalid Line"}
 
 BASE_REQUIRED_COLUMNS = [
     "season",
     "season_type",
     "week",
     "game_id",
+    "game_date",
+    "game_time",
     "away_team",
     "home_team",
+    "final_status",
+    "final_completed",
+    "final_away_score",
+    "final_home_score",
+    "final_total",
+    "final_home_margin",
+    "selected_bets",
+    "graded_bets",
+    "wins",
+    "losses",
+    "pushes",
+    "voids",
+    "pending_bets",
+    "net_units",
 ]
 
 MARKET_REQUIRED_SUFFIXES = [
     "selected",
     "selection",
+    "selection_reason",
     "odds_american",
     "model_probability",
     "implied_probability",
@@ -77,10 +122,51 @@ MARKET_REQUIRED_SUFFIXES = [
     "profit_units",
 ]
 
+WORK_COLUMNS = [
+    "season",
+    "season_type",
+    "week",
+    "week_label",
+    "game_id",
+    "game_date",
+    "game_time",
+    "day_night",
+    "away_team",
+    "home_team",
+    "market_type",
+    "bet_side",
+    "side_group",
+    "line",
+    "odds_american",
+    "model_prob",
+    "implied_prob",
+    "edge",
+    "ev",
+    "full_kelly",
+    "kelly",
+    "selection_reason",
+    "bet_result",
+    "bet_units",
+    "final_status",
+    "final_completed",
+    "final_away_score",
+    "final_home_score",
+    "final_total",
+    "final_home_margin",
+    "ev_bucket",
+    "odds_bucket",
+    "kelly_bucket",
+    "model_prob_bucket",
+    "win_prob_bucket",
+    "spread_line_bucket",
+    "spread_role",
+    "total_bucket",
+]
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+
+def fail(message: str) -> None:
+    raise RuntimeError(message)
+
 
 def clean(value: Any) -> str:
     if value is None:
@@ -93,13 +179,25 @@ def clean(value: Any) -> str:
         pass
 
     text = str(value).strip()
+
     if text.casefold() in {"", "nan", "none", "null", "<na>", "nat"}:
         return ""
+
     return text
 
 
-def to_float(value: Any) -> float | None:
+def normalize_game_id(value: Any) -> str:
     text = clean(value)
+
+    if re.fullmatch(r"\d+\.0", text):
+        return text[:-2]
+
+    return text
+
+
+def optional_float(value: Any) -> float | None:
+    text = clean(value)
+
     if not text:
         return None
 
@@ -111,19 +209,55 @@ def to_float(value: Any) -> float | None:
     return result if math.isfinite(result) else None
 
 
-def to_int(value: Any) -> int | None:
-    number = to_float(value)
-    if number is None:
-        return None
+def required_float(value: Any, label: str) -> float:
+    text = clean(value)
+
+    if not text:
+        fail(f"{label} is required")
+
+    try:
+        result = float(text)
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError(
+            f"{label} must be numeric; found {value!r}"
+        ) from exc
+
+    if not math.isfinite(result):
+        fail(f"{label} must be finite; found {value!r}")
+
+    return result
+
+
+def required_int(value: Any, label: str) -> int:
+    number = required_float(value, label)
+
+    if not number.is_integer():
+        fail(
+            f"{label} must be a whole number; "
+            f"found {value!r}"
+        )
+
     return int(number)
 
 
-def selected_flag(value: Any) -> bool:
-    return clean(value).casefold() in {"1", "1.0", "true", "yes", "y"}
+def strict_flag(value: Any, label: str) -> bool:
+    text = clean(value).casefold()
+
+    if text in {"1", "1.0", "true", "yes", "y"}:
+        return True
+
+    if text in {"0", "0.0", "false", "no", "n"}:
+        return False
+
+    fail(
+        f"{label} must be a valid boolean/0/1 flag; "
+        f"found {value!r}"
+    )
 
 
-def normalize_grade(value: Any) -> str:
+def normalize_grade(value: Any, label: str) -> str:
     raw = clean(value).upper()
+
     mapping = {
         "WIN": "Win",
         "LOSS": "Loss",
@@ -134,25 +268,219 @@ def normalize_grade(value: Any) -> str:
         "INVALID_SELECTION": "Invalid Selection",
         "INVALID_LINE": "Invalid Line",
     }
-    return mapping.get(raw, raw.title() if raw else "")
+
+    result = mapping.get(
+        raw,
+        raw.title() if raw else "",
+    )
+
+    if result not in VALID_GRADES:
+        fail(
+            f"{label} has unsupported grade "
+            f"{value!r}"
+        )
+
+    return result
 
 
-def build_side_group(market_type: str, bet_side: str) -> str:
-    side = clean(bet_side).upper()
+def require_columns(
+    df: pd.DataFrame,
+    columns: list[str],
+    label: str,
+) -> None:
+    missing = [
+        column
+        for column in columns
+        if column not in df.columns
+    ]
 
-    if market_type in {"moneyline", "spread"} and side in {"HOME", "AWAY"}:
+    if missing:
+        fail(
+            f"{label} missing required columns: "
+            f"{missing}"
+        )
+
+
+def load_config(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        fail(
+            f"Missing current-week config: {path}"
+        )
+
+    with path.open(
+        "r",
+        encoding="utf-8",
+    ) as handle:
+        data = yaml.safe_load(handle)
+
+    if not isinstance(data, dict):
+        fail(
+            f"{path} must contain a YAML mapping"
+        )
+
+    return data
+
+
+def resolve_target(
+    config: dict[str, Any],
+    season_override: int | None,
+    season_type_override: int | None,
+) -> tuple[int, int]:
+    configured_season = required_int(
+        config.get("season"),
+        "current_week.season",
+    )
+
+    configured_season_type = required_int(
+        config.get("season_type"),
+        "current_week.season_type",
+    )
+
+    season = (
+        configured_season
+        if season_override is None
+        else int(season_override)
+    )
+
+    season_type = (
+        configured_season_type
+        if season_type_override is None
+        else int(season_type_override)
+    )
+
+    if season < 1900:
+        fail(
+            f"Invalid season: {season}"
+        )
+
+    if season_type <= 0:
+        fail(
+            f"Invalid season_type: {season_type}"
+        )
+
+    return season, season_type
+
+
+def required_columns_for_file() -> list[str]:
+    required = list(BASE_REQUIRED_COLUMNS)
+
+    for spec in MARKETS.values():
+        prefix = spec["prefix"]
+
+        for suffix in MARKET_REQUIRED_SUFFIXES:
+            required.append(
+                f"{prefix}_{suffix}"
+            )
+
+        if spec["line_column"]:
+            required.append(
+                spec["line_column"]
+            )
+
+    return required
+
+
+def discover_files(
+    graded_dir: Path,
+) -> list[tuple[int, Path]]:
+    if not graded_dir.is_dir():
+        fail(
+            f"Graded directory not found: "
+            f"{graded_dir}"
+        )
+
+    discovered: list[
+        tuple[int, Path]
+    ] = []
+
+    for path in graded_dir.glob(
+        "week_*_CFB_graded.csv"
+    ):
+        match = GRADED_FILE_RE.fullmatch(
+            path.name
+        )
+
+        if match:
+            discovered.append(
+                (
+                    int(match.group(1)),
+                    path,
+                )
+            )
+
+    return sorted(
+        discovered,
+        key=lambda item: (
+            item[0],
+            item[1].name,
+        ),
+    )
+
+
+def read_graded_file(
+    path: Path,
+) -> pd.DataFrame:
+    if not path.is_file():
+        fail(
+            f"Missing graded file: {path}"
+        )
+
+    df = pd.read_csv(
+        path,
+        dtype=str,
+        keep_default_na=False,
+        na_filter=False,
+        encoding="utf-8-sig",
+        low_memory=False,
+    )
+
+    if df.empty:
+        fail(
+            f"{path} contains no data rows"
+        )
+
+    require_columns(
+        df,
+        required_columns_for_file(),
+        str(path),
+    )
+
+    return df
+
+
+def build_side_group(
+    market_type: str,
+    bet_side: str,
+) -> str:
+    side = clean(
+        bet_side
+    ).upper()
+
+    if (
+        market_type in {"moneyline", "spread"}
+        and side in {"HOME", "AWAY"}
+    ):
         return side
 
-    if market_type == "total" and side in {"OVER", "UNDER"}:
+    if (
+        market_type == "total"
+        and side in {"OVER", "UNDER"}
+    ):
         return side
 
     return ""
 
 
-def build_day_night(value: Any) -> str:
+def build_day_night(
+    value: Any,
+    label: str,
+) -> str:
     raw = clean(value)
+
     if not raw:
-        return ""
+        fail(
+            f"{label} is required"
+        )
 
     formats = (
         "%I:%M %p",
@@ -163,33 +491,29 @@ def build_day_night(value: Any) -> str:
 
     for fmt in formats:
         try:
-            parsed = datetime.strptime(raw, fmt)
-            return "Day" if parsed.hour < 17 else "Night"
+            parsed = datetime.strptime(
+                raw,
+                fmt,
+            )
+
+            return (
+                "Day"
+                if parsed.hour < 17
+                else "Night"
+            )
+
         except ValueError:
             continue
 
-    return ""
+    fail(
+        f"{label} has unsupported time value "
+        f"{value!r}"
+    )
 
-
-def require_columns(df: pd.DataFrame, columns: list[str], label: str) -> None:
-    missing = [column for column in columns if column not in df.columns]
-    if missing:
-        raise ValueError(f"{label} missing required columns: {missing}")
-
-
-def atomic_write_csv(df: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temp = path.with_suffix(path.suffix + ".tmp")
-    df.to_csv(temp, index=False)
-    os.replace(temp, path)
-
-
-# ---------------------------------------------------------------------------
-# Buckets -- intentionally modeled on the MLB reporting layer
-# ---------------------------------------------------------------------------
 
 def ev_bucket(value: Any) -> str:
-    value = to_float(value)
+    value = optional_float(value)
+
     if value is None:
         return "UNBUCKETED"
     if value < 0:
@@ -208,11 +532,13 @@ def ev_bucket(value: Any) -> str:
         return "0.05_to_0.0749"
     if value < 0.10:
         return "0.075_to_0.0999"
+
     return "0.10_plus"
 
 
 def odds_bucket(value: Any) -> str:
-    value = to_float(value)
+    value = optional_float(value)
+
     if value is None:
         return "UNBUCKETED"
     if value <= -200:
@@ -233,11 +559,13 @@ def odds_bucket(value: Any) -> str:
         return "plus_126_to_plus_150"
     if value <= 200:
         return "plus_151_to_plus_200"
+
     return "plus_201_or_higher"
 
 
 def kelly_bucket(value: Any) -> str:
-    value = to_float(value)
+    value = optional_float(value)
+
     if value is None:
         return "UNBUCKETED"
     if value <= 0:
@@ -256,15 +584,17 @@ def kelly_bucket(value: Any) -> str:
         return "0.10_to_0.1499"
     if value < 0.20:
         return "0.15_to_0.1999"
+
     return "0.20_plus"
 
 
 def model_prob_bucket(value: Any) -> str:
-    value = to_float(value)
+    value = optional_float(value)
+
     if value is None:
         return "UNBUCKETED"
 
-    pct = value * 100.0 if value <= 1.0 else value
+    pct = value * 100.0
 
     if pct < 50:
         return "<50"
@@ -280,15 +610,18 @@ def model_prob_bucket(value: Any) -> str:
         return "70_to_74.9"
     if pct < 80:
         return "75_to_79.9"
+
     return "80_plus"
 
 
 def spread_line_bucket(value: Any) -> str:
-    value = to_float(value)
+    value = optional_float(value)
+
     if value is None:
         return "UNBUCKETED"
 
     absolute = abs(value)
+
     if absolute < 3:
         return "0.0_to_2.9"
     if absolute < 7:
@@ -301,322 +634,1520 @@ def spread_line_bucket(value: Any) -> str:
         return "14.0_to_20.9"
     if absolute < 28:
         return "21.0_to_27.9"
+
     return "28.0_plus"
 
 
 def spread_role(value: Any) -> str:
-    value = to_float(value)
+    value = optional_float(value)
+
     if value is None:
         return "UNBUCKETED"
     if value < 0:
         return "FAVORITE"
     if value > 0:
         return "UNDERDOG"
+
     return "PICKEM"
 
 
 def total_bucket(value: Any) -> str:
-    value = to_float(value)
+    value = optional_float(value)
+
     if value is None:
         return "UNBUCKETED"
 
-    start = int(math.floor(value / 5.0) * 5)
-    return f"{start}_to_{start + 4.9:.1f}"
+    start = int(
+        math.floor(
+            value / 5.0
+        )
+        * 5
+    )
+
+    return (
+        f"{start}_to_"
+        f"{start + 4.9:.1f}"
+    )
 
 
-# ---------------------------------------------------------------------------
-# Input discovery / conversion
-# ---------------------------------------------------------------------------
+def validate_probability(
+    value: Any,
+    label: str,
+) -> float:
+    number = required_float(
+        value,
+        label,
+    )
 
-def required_columns_for_file() -> list[str]:
-    required = list(BASE_REQUIRED_COLUMNS)
+    if not 0.0 <= number <= 1.0:
+        fail(
+            f"{label} must be in [0,1]; "
+            f"found {value!r}"
+        )
 
-    optional_base = [
-        "game_date",
-        "game_time",
-        "final_status",
-        "final_completed",
-        "final_away_score",
-        "final_home_score",
-        "final_total",
-        "final_home_margin",
+    return number
+
+
+def validate_nonnegative_int(
+    value: Any,
+    label: str,
+) -> int:
+    number = required_int(
+        value,
+        label,
+    )
+
+    if number < 0:
+        fail(
+            f"{label} cannot be negative; "
+            f"found {value!r}"
+        )
+
+    return number
+
+
+def validate_market(
+    row: pd.Series,
+    market_type: str,
+    game_id: str,
+) -> tuple[
+    bool,
+    str,
+    float | None,
+]:
+    spec = MARKETS[
+        market_type
     ]
 
-    for column in optional_base:
-        if column not in required:
-            required.append(column)
+    prefix = spec[
+        "prefix"
+    ]
 
-    for market_name, spec in MARKETS.items():
-        prefix = spec["prefix"]
-        for suffix in MARKET_REQUIRED_SUFFIXES:
-            required.append(f"{prefix}_{suffix}")
-
-        if spec["line_column"]:
-            required.append(spec["line_column"])
-
-    return required
-
-
-def discover_files(graded_dir: Path) -> list[tuple[int, Path]]:
-    discovered: list[tuple[int, Path]] = []
-
-    for path in graded_dir.glob("week_*_CFB_graded.csv"):
-        match = GRADED_FILE_RE.match(path.name)
-        if match:
-            discovered.append((int(match.group(1)), path))
-
-    return sorted(discovered, key=lambda item: (item[0], item[1].name))
-
-
-def read_graded_file(path: Path) -> pd.DataFrame:
-    df = pd.read_csv(
-        path,
-        dtype=str,
-        keep_default_na=False,
-        na_filter=False,
-        encoding="utf-8-sig",
-        low_memory=False,
+    selected = strict_flag(
+        row.get(
+            f"{prefix}_selected",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_selected"
+        ),
     )
 
-    if df.empty:
-        return df
-
-    require_columns(df, required_columns_for_file(), str(path))
-
-    game_ids = df["game_id"].map(clean)
-    if game_ids.eq("").any():
-        raise ValueError(f"{path} contains blank game_id values")
-
-    if game_ids.duplicated().any():
-        examples = game_ids[game_ids.duplicated(False)].head(10).tolist()
-        raise ValueError(f"{path} contains duplicate game_id values: {examples}")
-
-    return df
-
-
-def bet_row(row: pd.Series, market_type: str) -> dict[str, Any] | None:
-    spec = MARKETS[market_type]
-    prefix = spec["prefix"]
-
-    if not selected_flag(row.get(f"{prefix}_selected", "")):
-        return None
-
-    selection = clean(row.get(f"{prefix}_selection", ""))
-    line = (
-        to_float(row.get(spec["line_column"], ""))
-        if spec["line_column"]
-        else None
+    grade = normalize_grade(
+        row.get(
+            f"{prefix}_grade",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_grade"
+        ),
     )
 
-    result = normalize_grade(row.get(f"{prefix}_grade", ""))
+    if (
+        selected
+        and grade == "No Bet"
+    ):
+        fail(
+            f"game_id={game_id}: selected "
+            f"{market_type} bet has grade NO_BET"
+        )
 
-    output = {
-        "season": to_int(row.get("season")),
-        "season_type": to_int(row.get("season_type")),
-        "week": to_int(row.get("week")),
-        "game_id": clean(row.get("game_id")),
-        "game_date": clean(row.get("game_date")),
-        "game_time": clean(row.get("game_time")),
-        "away_team": clean(row.get("away_team")),
-        "home_team": clean(row.get("home_team")),
-        "market_type": market_type,
-        "bet_side": selection.lower(),
-        "side_group": build_side_group(market_type, selection),
-        "line": line,
-        "odds_american": to_float(row.get(f"{prefix}_odds_american", "")),
-        "model_prob": to_float(row.get(f"{prefix}_model_probability", "")),
-        "implied_prob": to_float(row.get(f"{prefix}_implied_probability", "")),
-        "edge": to_float(row.get(f"{prefix}_edge", "")),
-        "ev": to_float(row.get(f"{prefix}_ev", "")),
-        "full_kelly": to_float(row.get(f"{prefix}_full_kelly", "")),
-        "kelly": to_float(row.get(f"{prefix}_kelly", "")),
-        "selection_reason": clean(row.get(f"{prefix}_selection_reason", "")),
-        "bet_result": result,
-        "bet_units": to_float(row.get(f"{prefix}_profit_units", "")),
-        "final_status": clean(row.get("final_status", "")),
-        "final_completed": to_int(row.get("final_completed")),
-        "final_away_score": to_float(row.get("final_away_score")),
-        "final_home_score": to_float(row.get("final_home_score")),
-        "final_total": to_float(row.get("final_total")),
-        "final_home_margin": to_float(row.get("final_home_margin")),
+    if (
+        not selected
+        and grade != "No Bet"
+    ):
+        fail(
+            f"game_id={game_id}: unselected "
+            f"{market_type} bet has grade "
+            f"{grade!r}"
+        )
+
+    line: float | None = None
+
+    if not selected:
+        return (
+            selected,
+            grade,
+            line,
+        )
+
+    selection = clean(
+        row.get(
+            f"{prefix}_selection",
+            "",
+        )
+    ).upper()
+
+    if (
+        grade != "Invalid Selection"
+        and selection not in spec[
+            "allowed_sides"
+        ]
+    ):
+        fail(
+            f"game_id={game_id}: selected "
+            f"{market_type} side must be one of "
+            f"{sorted(spec['allowed_sides'])}; "
+            f"found {selection!r}"
+        )
+
+    odds = required_float(
+        row.get(
+            f"{prefix}_odds_american",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_odds_american"
+        ),
+    )
+
+    if odds == 0:
+        fail(
+            f"game_id={game_id}: selected "
+            f"{market_type} odds cannot be zero"
+        )
+
+    validate_probability(
+        row.get(
+            f"{prefix}_model_probability",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_model_probability"
+        ),
+    )
+
+    validate_probability(
+        row.get(
+            f"{prefix}_implied_probability",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_implied_probability"
+        ),
+    )
+
+    for suffix in (
+        "edge",
+        "ev",
+        "full_kelly",
+        "kelly",
+    ):
+        required_float(
+            row.get(
+                f"{prefix}_{suffix}",
+                "",
+            ),
+            (
+                f"game_id={game_id}: "
+                f"{prefix}_{suffix}"
+            ),
+        )
+
+    if spec["line_column"] is not None:
+        line_raw = row.get(
+            spec["line_column"],
+            "",
+        )
+
+        if grade == "Invalid Line":
+            line = optional_float(
+                line_raw
+            )
+
+        else:
+            line = required_float(
+                line_raw,
+                (
+                    f"game_id={game_id}: "
+                    f"{spec['line_column']}"
+                ),
+            )
+
+    units_raw = row.get(
+        f"{prefix}_profit_units",
+        "",
+    )
+
+    if grade in SETTLED_GRADES:
+        required_float(
+            units_raw,
+            (
+                f"game_id={game_id}: "
+                f"{prefix}_profit_units"
+            ),
+        )
+
+    elif clean(units_raw):
+        required_float(
+            units_raw,
+            (
+                f"game_id={game_id}: "
+                f"{prefix}_profit_units"
+            ),
+        )
+
+    return (
+        selected,
+        grade,
+        line,
+    )
+
+
+def validate_graded_file(
+    df: pd.DataFrame,
+    path: Path,
+    filename_week: int,
+    season: int,
+    season_type: int,
+) -> dict[str, float | int]:
+    df["game_id"] = df[
+        "game_id"
+    ].map(
+        normalize_game_id
+    )
+
+    if df[
+        "game_id"
+    ].eq(
+        ""
+    ).any():
+        fail(
+            f"{path} contains blank game_id values"
+        )
+
+    if df[
+        "game_id"
+    ].duplicated().any():
+        examples = (
+            df.loc[
+                df[
+                    "game_id"
+                ].duplicated(
+                    keep=False
+                ),
+                "game_id",
+            ]
+            .drop_duplicates()
+            .head(10)
+            .tolist()
+        )
+
+        fail(
+            f"{path} contains duplicate "
+            f"game_id values: {examples}"
+        )
+
+    totals: dict[
+        str,
+        float | int,
+    ] = {
+        "selected_bets": 0,
+        "graded_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "voids": 0,
+        "pending_bets": 0,
+        "net_units": 0.0,
     }
 
-    output["week_label"] = (
-        f"Week {output['week']}" if output["week"] is not None else ""
+    for row_number, (_, row) in enumerate(
+        df.iterrows(),
+        start=2,
+    ):
+        game_id = row[
+            "game_id"
+        ]
+
+        row_label = (
+            f"{path}: line {row_number} "
+            f"game_id={game_id}"
+        )
+
+        row_season = required_int(
+            row.get("season"),
+            f"{row_label}: season",
+        )
+
+        row_season_type = required_int(
+            row.get("season_type"),
+            f"{row_label}: season_type",
+        )
+
+        row_week = required_int(
+            row.get("week"),
+            f"{row_label}: week",
+        )
+
+        if row_season != season:
+            fail(
+                f"{row_label}: expected "
+                f"season={season}; found "
+                f"{row_season}"
+            )
+
+        if row_season_type != season_type:
+            fail(
+                f"{row_label}: expected "
+                f"season_type={season_type}; "
+                f"found {row_season_type}"
+            )
+
+        if row_week != filename_week:
+            fail(
+                f"{row_label}: filename "
+                f"week={filename_week} does not "
+                f"match row week={row_week}"
+            )
+
+        if (
+            not clean(
+                row.get("away_team")
+            )
+            or not clean(
+                row.get("home_team")
+            )
+        ):
+            fail(
+                f"{row_label}: away_team and "
+                "home_team are required"
+            )
+
+        strict_flag(
+            row.get("final_completed"),
+            f"{row_label}: final_completed",
+        )
+
+        grades: list[str] = []
+        selected_count = 0
+        selected_units = 0.0
+
+        for market_type in MARKETS:
+            (
+                selected,
+                grade,
+                _,
+            ) = validate_market(
+                row,
+                market_type,
+                game_id,
+            )
+
+            grades.append(
+                grade
+            )
+
+            if selected:
+                selected_count += 1
+
+                prefix = MARKETS[
+                    market_type
+                ][
+                    "prefix"
+                ]
+
+                units = optional_float(
+                    row.get(
+                        f"{prefix}_profit_units",
+                        "",
+                    )
+                )
+
+                if units is not None:
+                    selected_units += units
+
+        derived = {
+            "selected_bets":
+                selected_count,
+            "graded_bets":
+                sum(
+                    grade in SETTLED_GRADES
+                    for grade in grades
+                ),
+            "wins":
+                grades.count("Win"),
+            "losses":
+                grades.count("Loss"),
+            "pushes":
+                grades.count("Push"),
+            "voids":
+                grades.count("Void"),
+            "pending_bets":
+                sum(
+                    grade in PENDING_GRADES
+                    for grade in grades
+                ),
+        }
+
+        for column, expected in derived.items():
+            actual = validate_nonnegative_int(
+                row.get(column),
+                f"{row_label}: {column}",
+            )
+
+            if actual != expected:
+                fail(
+                    f"{row_label}: grader "
+                    f"{column}={actual} does not "
+                    "match market grades="
+                    f"{expected}"
+                )
+
+            totals[
+                column
+            ] = (
+                int(
+                    totals[
+                        column
+                    ]
+                )
+                + actual
+            )
+
+        grader_units = required_float(
+            row.get("net_units"),
+            f"{row_label}: net_units",
+        )
+
+        if not math.isclose(
+            grader_units,
+            selected_units,
+            rel_tol=0.0,
+            abs_tol=1e-6,
+        ):
+            fail(
+                f"{row_label}: grader "
+                f"net_units={grader_units} "
+                "does not match selected "
+                f"market units={selected_units}"
+            )
+
+        totals[
+            "net_units"
+        ] = (
+            float(
+                totals[
+                    "net_units"
+                ]
+            )
+            + grader_units
+        )
+
+    return totals
+
+
+def bet_row(
+    row: pd.Series,
+    market_type: str,
+) -> dict[str, Any] | None:
+    spec = MARKETS[
+        market_type
+    ]
+
+    prefix = spec[
+        "prefix"
+    ]
+
+    game_id = normalize_game_id(
+        row.get(
+            "game_id"
+        )
     )
-    output["day_night"] = build_day_night(output["game_time"])
-    output["ev_bucket"] = ev_bucket(output["ev"])
-    output["odds_bucket"] = odds_bucket(output["odds_american"])
-    output["kelly_bucket"] = kelly_bucket(output["kelly"])
-    output["model_prob_bucket"] = model_prob_bucket(output["model_prob"])
-    output["win_prob_bucket"] = output["model_prob_bucket"]
-    output["spread_line_bucket"] = (
-        spread_line_bucket(line) if market_type == "spread" else "UNBUCKETED"
+
+    selected = strict_flag(
+        row.get(
+            f"{prefix}_selected",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_selected"
+        ),
     )
-    output["spread_role"] = (
-        spread_role(line) if market_type == "spread" else "UNBUCKETED"
+
+    if not selected:
+        return None
+
+    selection = clean(
+        row.get(
+            f"{prefix}_selection",
+            "",
+        )
     )
-    output["total_bucket"] = (
-        total_bucket(line) if market_type == "total" else "UNBUCKETED"
+
+    grade = normalize_grade(
+        row.get(
+            f"{prefix}_grade",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_grade"
+        ),
+    )
+
+    line: float | None = None
+
+    if spec["line_column"] is not None:
+        line = optional_float(
+            row.get(
+                spec["line_column"],
+                "",
+            )
+        )
+
+    model_prob = required_float(
+        row.get(
+            f"{prefix}_model_probability",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_model_probability"
+        ),
+    )
+
+    implied_prob = required_float(
+        row.get(
+            f"{prefix}_implied_probability",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_implied_probability"
+        ),
+    )
+
+    odds = required_float(
+        row.get(
+            f"{prefix}_odds_american",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_odds_american"
+        ),
+    )
+
+    edge = required_float(
+        row.get(
+            f"{prefix}_edge",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_edge"
+        ),
+    )
+
+    ev = required_float(
+        row.get(
+            f"{prefix}_ev",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_ev"
+        ),
+    )
+
+    full_kelly = required_float(
+        row.get(
+            f"{prefix}_full_kelly",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_full_kelly"
+        ),
+    )
+
+    kelly = required_float(
+        row.get(
+            f"{prefix}_kelly",
+            "",
+        ),
+        (
+            f"game_id={game_id}: "
+            f"{prefix}_kelly"
+        ),
+    )
+
+    output = {
+        "season":
+            required_int(
+                row.get("season"),
+                f"game_id={game_id}: season",
+            ),
+        "season_type":
+            required_int(
+                row.get("season_type"),
+                (
+                    f"game_id={game_id}: "
+                    "season_type"
+                ),
+            ),
+        "week":
+            required_int(
+                row.get("week"),
+                f"game_id={game_id}: week",
+            ),
+        "game_id":
+            game_id,
+        "game_date":
+            clean(
+                row.get("game_date")
+            ),
+        "game_time":
+            clean(
+                row.get("game_time")
+            ),
+        "away_team":
+            clean(
+                row.get("away_team")
+            ),
+        "home_team":
+            clean(
+                row.get("home_team")
+            ),
+        "market_type":
+            market_type,
+        "bet_side":
+            selection.lower(),
+        "side_group":
+            build_side_group(
+                market_type,
+                selection,
+            ),
+        "line":
+            line,
+        "odds_american":
+            odds,
+        "model_prob":
+            model_prob,
+        "implied_prob":
+            implied_prob,
+        "edge":
+            edge,
+        "ev":
+            ev,
+        "full_kelly":
+            full_kelly,
+        "kelly":
+            kelly,
+        "selection_reason":
+            clean(
+                row.get(
+                    f"{prefix}_selection_reason",
+                    "",
+                )
+            ),
+        "bet_result":
+            grade,
+        "bet_units":
+            optional_float(
+                row.get(
+                    f"{prefix}_profit_units",
+                    "",
+                )
+            ),
+        "final_status":
+            clean(
+                row.get("final_status")
+            ),
+        "final_completed":
+            int(
+                strict_flag(
+                    row.get("final_completed"),
+                    (
+                        f"game_id={game_id}: "
+                        "final_completed"
+                    ),
+                )
+            ),
+        "final_away_score":
+            optional_float(
+                row.get("final_away_score")
+            ),
+        "final_home_score":
+            optional_float(
+                row.get("final_home_score")
+            ),
+        "final_total":
+            optional_float(
+                row.get("final_total")
+            ),
+        "final_home_margin":
+            optional_float(
+                row.get("final_home_margin")
+            ),
+    }
+
+    output[
+        "week_label"
+    ] = (
+        f"Week {output['week']}"
+    )
+
+    output[
+        "day_night"
+    ] = build_day_night(
+        output[
+            "game_time"
+        ],
+        (
+            f"game_id={game_id}: "
+            "game_time"
+        ),
+    )
+
+    output[
+        "ev_bucket"
+    ] = ev_bucket(
+        ev
+    )
+
+    output[
+        "odds_bucket"
+    ] = odds_bucket(
+        odds
+    )
+
+    output[
+        "kelly_bucket"
+    ] = kelly_bucket(
+        kelly
+    )
+
+    output[
+        "model_prob_bucket"
+    ] = model_prob_bucket(
+        model_prob
+    )
+
+    output[
+        "win_prob_bucket"
+    ] = output[
+        "model_prob_bucket"
+    ]
+
+    output[
+        "spread_line_bucket"
+    ] = (
+        spread_line_bucket(
+            line
+        )
+        if market_type == "spread"
+        else "UNBUCKETED"
+    )
+
+    output[
+        "spread_role"
+    ] = (
+        spread_role(
+            line
+        )
+        if market_type == "spread"
+        else "UNBUCKETED"
+    )
+
+    output[
+        "total_bucket"
+    ] = (
+        total_bucket(
+            line
+        )
+        if market_type == "total"
+        else "UNBUCKETED"
     )
 
     return output
 
 
+def ledger_totals(
+    work: pd.DataFrame,
+) -> dict[str, float | int]:
+    if work.empty:
+        return {
+            "selected_bets": 0,
+            "graded_bets": 0,
+            "wins": 0,
+            "losses": 0,
+            "pushes": 0,
+            "voids": 0,
+            "pending_bets": 0,
+            "net_units": 0.0,
+        }
+
+    results = work[
+        "bet_result"
+    ]
+
+    units = pd.to_numeric(
+        work[
+            "bet_units"
+        ],
+        errors="coerce",
+    ).dropna()
+
+    return {
+        "selected_bets":
+            len(work),
+        "graded_bets":
+            int(
+                results.isin(
+                    SETTLED_GRADES
+                ).sum()
+            ),
+        "wins":
+            int(
+                results.eq(
+                    "Win"
+                ).sum()
+            ),
+        "losses":
+            int(
+                results.eq(
+                    "Loss"
+                ).sum()
+            ),
+        "pushes":
+            int(
+                results.eq(
+                    "Push"
+                ).sum()
+            ),
+        "voids":
+            int(
+                results.eq(
+                    "Void"
+                ).sum()
+            ),
+        "pending_bets":
+            int(
+                results.isin(
+                    PENDING_GRADES
+                ).sum()
+            ),
+        "net_units":
+            (
+                float(
+                    units.sum()
+                )
+                if not units.empty
+                else 0.0
+            ),
+    }
+
+
+def validate_ledger(
+    work: pd.DataFrame,
+    season: int,
+    season_type: int,
+    expected_totals: dict[str, float | int],
+) -> None:
+    if list(
+        work.columns
+    ) != WORK_COLUMNS:
+        fail(
+            "Generated work_cfb.csv "
+            "columns changed"
+        )
+
+    if not work.empty:
+        for column in (
+            "season",
+            "season_type",
+            "week",
+        ):
+            if work[
+                column
+            ].isna().any():
+                fail(
+                    "Generated ledger contains "
+                    f"blank {column}"
+                )
+
+        if set(
+            work[
+                "season"
+            ].astype(
+                int
+            ).tolist()
+        ) != {
+            season
+        }:
+            fail(
+                "Generated ledger contains "
+                "season values other than "
+                f"{season}"
+            )
+
+        if set(
+            work[
+                "season_type"
+            ].astype(
+                int
+            ).tolist()
+        ) != {
+            season_type
+        }:
+            fail(
+                "Generated ledger contains "
+                "season_type values other than "
+                f"{season_type}"
+            )
+
+        if work[
+            "game_id"
+        ].map(
+            clean
+        ).eq(
+            ""
+        ).any():
+            fail(
+                "Generated ledger contains "
+                "blank game_id"
+            )
+
+        if not set(
+            work[
+                "market_type"
+            ]
+        ).issubset(
+            set(
+                MARKETS
+            )
+        ):
+            fail(
+                "Generated ledger contains "
+                "unsupported market_type"
+            )
+
+        duplicate_key = [
+            "season",
+            "week",
+            "game_id",
+            "market_type",
+        ]
+
+        if work.duplicated(
+            duplicate_key
+        ).any():
+            examples = work.loc[
+                work.duplicated(
+                    duplicate_key,
+                    keep=False,
+                ),
+                duplicate_key,
+            ].head(
+                10
+            )
+
+            fail(
+                "Duplicate selected market "
+                "rows detected:\n"
+                + examples.to_string(
+                    index=False
+                )
+            )
+
+    actual_totals = ledger_totals(
+        work
+    )
+
+    for column in (
+        "selected_bets",
+        "graded_bets",
+        "wins",
+        "losses",
+        "pushes",
+        "voids",
+        "pending_bets",
+    ):
+        if (
+            int(
+                actual_totals[
+                    column
+                ]
+            )
+            != int(
+                expected_totals[
+                    column
+                ]
+            )
+        ):
+            fail(
+                f"Ledger {column}="
+                f"{actual_totals[column]} "
+                "does not match grader "
+                f"total={expected_totals[column]}"
+            )
+
+    if not math.isclose(
+        float(
+            actual_totals[
+                "net_units"
+            ]
+        ),
+        float(
+            expected_totals[
+                "net_units"
+            ]
+        ),
+        rel_tol=0.0,
+        abs_tol=1e-6,
+    ):
+        fail(
+            "Ledger net_units="
+            f"{actual_totals['net_units']} "
+            "does not match grader total="
+            f"{expected_totals['net_units']}"
+        )
+
+
+def publish_csv(
+    work: pd.DataFrame,
+    output_file: Path,
+    season: int,
+    season_type: int,
+    expected_totals: dict[str, float | int],
+) -> bool:
+    output_file.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    temporary = output_file.with_name(
+        f".{output_file.name}."
+        f"{uuid.uuid4().hex}.tmp"
+    )
+
+    try:
+        with temporary.open(
+            "w",
+            newline="",
+            encoding="utf-8",
+        ) as handle:
+            work.to_csv(
+                handle,
+                index=False,
+                lineterminator="\n",
+            )
+
+            handle.flush()
+
+            os.fsync(
+                handle.fileno()
+            )
+
+        serialized = pd.read_csv(
+            temporary,
+            dtype=str,
+            keep_default_na=False,
+            na_filter=False,
+            encoding="utf-8-sig",
+            low_memory=False,
+        )
+
+        require_columns(
+            serialized,
+            WORK_COLUMNS,
+            str(temporary),
+        )
+
+        typed = serialized.copy()
+
+        for column in (
+            "season",
+            "season_type",
+            "week",
+        ):
+            if not typed.empty:
+                typed[
+                    column
+                ] = typed[
+                    column
+                ].map(
+                    lambda value, c=column: (
+                        required_int(
+                            value,
+                            f"serialized {c}",
+                        )
+                    )
+                )
+
+        if not typed.empty:
+            typed[
+                "bet_units"
+            ] = typed[
+                "bet_units"
+            ].map(
+                optional_float
+            )
+
+        validate_ledger(
+            typed,
+            season,
+            season_type,
+            expected_totals,
+        )
+
+        modified = (
+            not output_file.is_file()
+            or output_file.read_bytes()
+            != temporary.read_bytes()
+        )
+
+        if modified:
+            os.replace(
+                temporary,
+                output_file,
+            )
+
+        return modified
+
+    finally:
+        temporary.unlink(
+            missing_ok=True
+        )
+
+
 def build_work_file(
     graded_dir: Path,
     output_file: Path,
-    season: int | None,
+    season: int,
+    season_type: int,
+    report: PipelineReporter,
 ) -> pd.DataFrame:
-    files = discover_files(graded_dir)
+    files = discover_files(
+        graded_dir
+    )
+
     if not files:
-        raise FileNotFoundError(
-            f"No week_*_CFB_graded.csv files found in {graded_dir}"
+        fail(
+            "No week_*_CFB_graded.csv "
+            f"files found in {graded_dir}"
         )
 
-    rows: list[dict[str, Any]] = []
-    source_files = 0
+    rows: list[
+        dict[str, Any]
+    ] = []
+
     source_games = 0
 
+    expected_totals: dict[
+        str,
+        float | int,
+    ] = {
+        "selected_bets": 0,
+        "graded_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "voids": 0,
+        "pending_bets": 0,
+        "net_units": 0.0,
+    }
+
+    weeks: list[int] = []
+
     for filename_week, path in files:
-        df = read_graded_file(path)
-        if df.empty:
-            continue
+        report.add_input(
+            path
+        )
 
-        if season is not None:
-            season_values = pd.to_numeric(df["season"], errors="coerce")
-            df = df.loc[season_values.eq(season)].copy()
-            if df.empty:
-                continue
+        df = read_graded_file(
+            path
+        )
 
-        file_weeks = pd.to_numeric(df["week"], errors="coerce").dropna().unique()
-        if len(file_weeks) != 1 or int(file_weeks[0]) != filename_week:
-            raise ValueError(
-                f"{path}: filename week={filename_week} does not match row week values "
-                f"{file_weeks.tolist()}"
-            )
+        file_totals = validate_graded_file(
+            df,
+            path,
+            filename_week,
+            season,
+            season_type,
+        )
 
-        source_files += 1
-        source_games += len(df)
+        weeks.append(
+            filename_week
+        )
+
+        source_games += len(
+            df
+        )
+
+        for key in expected_totals:
+            if key == "net_units":
+                expected_totals[
+                    key
+                ] = (
+                    float(
+                        expected_totals[
+                            key
+                        ]
+                    )
+                    + float(
+                        file_totals[
+                            key
+                        ]
+                    )
+                )
+
+            else:
+                expected_totals[
+                    key
+                ] = (
+                    int(
+                        expected_totals[
+                            key
+                        ]
+                    )
+                    + int(
+                        file_totals[
+                            key
+                        ]
+                    )
+                )
 
         for _, game in df.iterrows():
             for market_type in MARKETS:
-                item = bet_row(game, market_type)
+                item = bet_row(
+                    game,
+                    market_type,
+                )
+
                 if item is not None:
-                    rows.append(item)
+                    rows.append(
+                        item
+                    )
 
-    columns = [
-        "season",
-        "season_type",
-        "week",
-        "week_label",
-        "game_id",
-        "game_date",
-        "game_time",
-        "day_night",
-        "away_team",
-        "home_team",
-        "market_type",
-        "bet_side",
-        "side_group",
-        "line",
-        "odds_american",
-        "model_prob",
-        "implied_prob",
-        "edge",
-        "ev",
-        "full_kelly",
-        "kelly",
-        "selection_reason",
-        "bet_result",
-        "bet_units",
-        "final_status",
-        "final_completed",
-        "final_away_score",
-        "final_home_score",
-        "final_total",
-        "final_home_margin",
-        "ev_bucket",
-        "odds_bucket",
-        "kelly_bucket",
-        "model_prob_bucket",
-        "win_prob_bucket",
-        "spread_line_bucket",
-        "spread_role",
-        "total_bucket",
-    ]
-
-    work = pd.DataFrame(rows, columns=columns)
+    work = pd.DataFrame(
+        rows,
+        columns=WORK_COLUMNS,
+    )
 
     if not work.empty:
-        duplicate_key = ["season", "week", "game_id", "market_type"]
-        if work.duplicated(duplicate_key).any():
-            examples = work.loc[
-                work.duplicated(duplicate_key, keep=False), duplicate_key
-            ].head(10)
-            raise ValueError(
-                "Duplicate selected market rows detected:\n"
-                + examples.to_string(index=False)
-            )
-
         work = work.sort_values(
-            ["season", "week", "game_date", "game_time", "game_id", "market_type"],
+            [
+                "season",
+                "week",
+                "game_date",
+                "game_time",
+                "game_id",
+                "market_type",
+            ],
             kind="stable",
-        ).reset_index(drop=True)
+        ).reset_index(
+            drop=True
+        )
 
-    atomic_write_csv(work, output_file)
+    validate_ledger(
+        work,
+        season,
+        season_type,
+        expected_totals,
+    )
 
-    counts = (
-        work["bet_result"].value_counts(dropna=False).to_dict()
+    output_modified = publish_csv(
+        work,
+        output_file,
+        season,
+        season_type,
+        expected_totals,
+    )
+
+    result_counts = (
+        work[
+            "bet_result"
+        ].value_counts(
+            dropna=False
+        ).to_dict()
         if not work.empty
         else {}
     )
 
+    market_counts = (
+        work[
+            "market_type"
+        ].value_counts(
+            dropna=False
+        ).to_dict()
+        if not work.empty
+        else {}
+    )
+
+    report.set_rows(
+        rows_in=source_games,
+        rows_out=len(work),
+    )
+
+    report.update_details(
+        {
+            "script_version":
+                SCRIPT_VERSION,
+            "graded_dir":
+                str(
+                    graded_dir
+                ),
+            "output_file":
+                str(
+                    output_file
+                ),
+            "season_type":
+                season_type,
+            "source_files":
+                len(
+                    files
+                ),
+            "source_games":
+                source_games,
+            "weeks":
+                weeks,
+            "selected_bets":
+                len(
+                    work
+                ),
+            "market_counts":
+                market_counts,
+            "result_counts":
+                result_counts,
+            "grader_totals":
+                expected_totals,
+            "output_modified":
+                output_modified,
+        }
+    )
+
     print(
         "CFB analyze complete: "
-        f"files={source_files} games={source_games} selected_bets={len(work)} "
-        f"results={counts} output={output_file}"
+        f"version={SCRIPT_VERSION} "
+        f"files={len(files)} "
+        f"games={source_games} "
+        f"selected_bets={len(work)} "
+        f"results={result_counts} "
+        "output_modified="
+        f"{'yes' if output_modified else 'no'} "
+        f"output={output_file}"
     )
 
     return work
 
 
-# ---------------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------------
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Convert graded CFB game rows into a one-row-per-bet reporting ledger."
+        description=(
+            "Convert graded CFB game rows "
+            "into a validated one-row-per-bet "
+            "ledger."
+        )
     )
+
     parser.add_argument(
         "--season",
         type=int,
         default=None,
-        help="Optional season filter. If omitted, all seasons in graded files are included.",
+        help=(
+            "Target season. Defaults to "
+            "config/current_week.yaml."
+        ),
     )
+
+    parser.add_argument(
+        "--season-type",
+        type=int,
+        default=None,
+        help=(
+            "Target season type. Defaults to "
+            "config/current_week.yaml."
+        ),
+    )
+
     parser.add_argument(
         "--graded-dir",
         type=Path,
         default=DEFAULT_GRADED_DIR,
     )
+
     parser.add_argument(
         "--output",
         type=Path,
         default=DEFAULT_OUTPUT_FILE,
     )
+
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    build_work_file(
-        graded_dir=args.graded_dir.resolve(),
-        output_file=args.output.resolve(),
+
+    with PipelineReporter(
+        script=__file__,
+        stage="04_final_results",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
         season=args.season,
-    )
+        week=None,
+        extra_context={
+            "script_version":
+                SCRIPT_VERSION,
+            "output_scope":
+                "grading_analysis_ledger",
+        },
+    ) as report:
+        report.add_input(
+            CURRENT_WEEK_CONFIG
+        )
+
+        report.add_output(
+            args.output.resolve()
+        )
+
+        config = load_config(
+            CURRENT_WEEK_CONFIG
+        )
+
+        (
+            season,
+            season_type,
+        ) = resolve_target(
+            config,
+            args.season,
+            args.season_type,
+        )
+
+        report.season = season
+
+        report.update_details(
+            {
+                "season_type":
+                    season_type,
+            }
+        )
+
+        build_work_file(
+            graded_dir=(
+                args.grader_dir.resolve()
+                if hasattr(args, "grader_dir")
+                else args.graded_dir.resolve()
+            ),
+            output_file=args.output.resolve(),
+            season=season,
+            season_type=season_type,
+            report=report,
+        )
+
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(
+        main()
+    )
