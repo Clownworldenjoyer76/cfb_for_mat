@@ -52,6 +52,20 @@ import numpy as np
 import pandas as pd
 
 
+SCRIPT_PATH = Path(__file__).resolve()
+SCRIPTS_DIR = SCRIPT_PATH.parents[1]
+CFB_ROOT = SCRIPT_PATH.parents[2]
+REPORT_ROOT = CFB_ROOT / "errors"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(
+        0,
+        str(SCRIPTS_DIR),
+    )
+
+from pipeline_reporter import PipelineReporter
+
+
 SCRIPT_VERSION = "cfb-week1-v9-metric-shrink-injury-time-2026-09-16"
 MIN_PRIOR_TEAM_WEEKS = 10
 ESPN_MARGIN_SYMMETRY_TOLERANCE = 0.25
@@ -4063,7 +4077,7 @@ def validate_args(
         )
 
 
-def main() -> None:
+def _main_impl() -> None:
     args = parse_args()
 
     validate_args(
@@ -4467,6 +4481,238 @@ def main() -> None:
     print(
         "status=success"
     )
+
+
+def _pipeline_report_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        add_help=False,
+    )
+
+    parser.add_argument(
+        "--season",
+        type=int,
+        default=None,
+    )
+
+    parser.add_argument(
+        "--prior-season",
+        type=int,
+        default=None,
+    )
+
+    parser.add_argument(
+        "--week",
+        type=int,
+        default=1,
+    )
+
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+    )
+
+    args, _ = parser.parse_known_args()
+
+    return args
+
+
+def main() -> int:
+    # argparse --help is informational and should not create
+    # a FAILED pipeline report via SystemExit(0).
+    if any(
+        arg in {"-h", "--help"}
+        for arg in sys.argv[1:]
+    ):
+        _main_impl()
+        return 0
+
+    with PipelineReporter(
+        script=__file__,
+        stage="01_merge",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        extra_context={
+            "script_version": SCRIPT_VERSION,
+            "projection_scope": "week_1",
+        },
+    ) as report:
+        report_args = _pipeline_report_args()
+
+        season = report_args.season
+
+        if season is None:
+            season = int(
+                os.getenv(
+                    "CFB_SEASON",
+                    "2026",
+                )
+            )
+
+        week = int(
+            report_args.week
+        )
+
+        prior_season = (
+            int(
+                report_args.prior_season
+            )
+            if report_args.prior_season is not None
+            else season - 1
+        )
+
+        report.season = season
+        report.week = week
+
+        root = repo_cfb_root()
+
+        schedule_path = (
+            root
+            / "00_intake"
+            / "schedule"
+            / "weekly"
+            / f"week_{week}_CFB_weekly_schedule.csv"
+        )
+
+        prior_path = (
+            root
+            / "00_intake"
+            / "team_stats"
+            / f"{prior_season}_team_stats.csv"
+        )
+
+        fpi_path = (
+            root
+            / "data"
+            / "team_power_index"
+            / f"team_power_index_{season}.csv"
+        )
+
+        predictions_dir = (
+            root
+            / "00_intake"
+            / "predictions"
+            / "final"
+        )
+
+        injuries_path = (
+            root
+            / "00_intake"
+            / "injuries"
+            / f"{season}_injuries.csv"
+        )
+
+        team_map_path = (
+            root
+            / "config"
+            / "mapping"
+            / "team_map.csv"
+        )
+
+        stadium_map_path = (
+            root
+            / "config"
+            / "mapping"
+            / "stadium_map.csv"
+        )
+
+        travel_path = (
+            root
+            / "data"
+            / "travel"
+            / f"{season}_week_{week}_travel.csv"
+        )
+
+        weather_path = (
+            root
+            / "data"
+            / "weather"
+            / f"week_{week}_CFB_weekly_weather.csv"
+        )
+
+        coefficients_path = (
+            root
+            / "config"
+            / "travel_weather_coefficients.csv"
+        )
+
+        output_path = (
+            root
+            / "01_merge"
+            / f"week_{week}_CFB_enriched.csv"
+        )
+
+        for input_path in (
+            schedule_path,
+            prior_path,
+            fpi_path,
+            predictions_dir,
+            injuries_path,
+            team_map_path,
+            stadium_map_path,
+            travel_path,
+            weather_path,
+            coefficients_path,
+        ):
+            report.add_input(
+                input_path
+            )
+
+        report.update_details(
+            {
+                "prior_season": prior_season,
+                "dry_run": bool(
+                    report_args.dry_run
+                ),
+            }
+        )
+
+        result = _main_impl()
+
+        if not report_args.dry_run:
+            if not output_path.is_file():
+                raise RuntimeError(
+                    "Week 1 projection completed without "
+                    f"creating expected output: {output_path}"
+                )
+
+            output = pd.read_csv(
+                output_path,
+                dtype=str,
+                encoding="utf-8-sig",
+                low_memory=False,
+            )
+
+            report.add_output(
+                output_path
+            )
+
+            report.set_rows(
+                rows_out=len(
+                    output
+                )
+            )
+
+            report.update_details(
+                {
+                    "games": int(
+                        len(
+                            output
+                        )
+                    ),
+                    "output_file": str(
+                        output_path
+                    ),
+                }
+            )
+
+        return (
+            0
+            if result is None
+            else int(
+                result
+            )
+        )
 
 
 if __name__ == "__main__":

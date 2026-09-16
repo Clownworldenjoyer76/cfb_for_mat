@@ -14,6 +14,19 @@ import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
+SCRIPTS_DIR = CFB_ROOT / "scripts"
+REPORT_ROOT = CFB_ROOT / "errors"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(
+        0,
+        str(SCRIPTS_DIR),
+    )
+
+from pipeline_reporter import PipelineReporter
+
+
+SCRIPT_VERSION = "cfb-backtest-inputs-v1-reporter-2026-09-16"
 
 PROJECTION_PATH = CFB_ROOT / "scripts" / "01_merge" / "projection_week1.py"
 SELECTIONS_PATH = CFB_ROOT / "scripts" / "02_select" / "selections.py"
@@ -254,7 +267,7 @@ def projection_args(base: ModuleType) -> Namespace:
     )
 
 
-def main() -> int:
+def _main_impl() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--season", type=int, default=2025)
     parser.add_argument("--prior-season", type=int, default=2024)
@@ -491,6 +504,240 @@ def main() -> int:
     print(f"candidate_dir={candidate_dir}")
     print("status=success")
     return 0
+
+
+def _pipeline_report_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        add_help=False,
+    )
+
+    parser.add_argument(
+        "--season",
+        type=int,
+        default=2025,
+    )
+
+    parser.add_argument(
+        "--prior-season",
+        type=int,
+        default=2024,
+    )
+
+    args, _ = parser.parse_known_args()
+
+    return args
+
+
+def main() -> int:
+    if any(
+        arg in {"-h", "--help"}
+        for arg in sys.argv[1:]
+    ):
+        return int(
+            _main_impl()
+        )
+
+    with PipelineReporter(
+        script=__file__,
+        stage="05_backtest",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        extra_context={
+            "script_version": SCRIPT_VERSION,
+            "backtest_scope": "historical_input_builder",
+        },
+    ) as report:
+        report_args = _pipeline_report_args()
+
+        season = int(
+            report_args.season
+        )
+
+        prior_season = int(
+            report_args.prior_season
+        )
+
+        report.season = season
+
+        schedule_path = (
+            CFB_ROOT
+            / "00_intake"
+            / "schedule"
+            / f"{season}_schedule.csv"
+        )
+
+        current_stats_path = (
+            CFB_ROOT
+            / "00_intake"
+            / "team_stats"
+            / f"{season}_team_stats.csv"
+        )
+
+        prior_stats_path = (
+            CFB_ROOT
+            / "00_intake"
+            / "team_stats"
+            / f"{prior_season}_team_stats.csv"
+        )
+
+        output_root = (
+            CFB_ROOT
+            / "05_backtest"
+            / "input"
+            / str(
+                season
+            )
+        )
+
+        candidate_dir = (
+            output_root
+            / "candidates"
+        )
+
+        weekly_dir = (
+            output_root
+            / "weekly"
+        )
+
+        audit_dir = (
+            output_root
+            / "audit"
+        )
+
+        for input_path in (
+            schedule_path,
+            current_stats_path,
+            prior_stats_path,
+            TEAM_MAP_PATH,
+            STADIUM_MAP_PATH,
+            COEFFICIENTS_PATH,
+            SETTINGS_PATH,
+        ):
+            report.add_input(
+                input_path
+            )
+
+        report.update_details(
+            {
+                "prior_season": prior_season,
+                "output_root": str(
+                    output_root
+                ),
+            }
+        )
+
+        result = _main_impl()
+
+        candidate_files = sorted(
+            candidate_dir.glob(
+                "week_*_CFB_selected.csv"
+            )
+        )
+
+        weekly_files = sorted(
+            weekly_dir.glob(
+                "week_*_CFB_weekly_schedule.csv"
+            )
+        )
+
+        audit_files = sorted(
+            audit_dir.glob(
+                "week_*_audit.csv"
+            )
+        )
+
+        for output_path in (
+            candidate_files
+            + weekly_files
+            + audit_files
+        ):
+            report.add_output(
+                output_path
+            )
+
+        candidate_rows = 0
+
+        for path in candidate_files:
+            frame = pd.read_csv(
+                path,
+                dtype=str,
+                encoding="utf-8-sig",
+                low_memory=False,
+            )
+
+            candidate_rows += len(
+                frame
+            )
+
+        games = 0
+        games_with_historical_odds = 0
+
+        for path in audit_files:
+            audit = pd.read_csv(
+                path,
+                dtype=str,
+                encoding="utf-8-sig",
+                low_memory=False,
+            )
+
+            if "games" in audit.columns:
+                games += int(
+                    pd.to_numeric(
+                        audit[
+                            "games"
+                        ],
+                        errors="coerce",
+                    ).fillna(
+                        0
+                    ).sum()
+                )
+
+            if (
+                "games_with_historical_odds"
+                in audit.columns
+            ):
+                games_with_historical_odds += int(
+                    pd.to_numeric(
+                        audit[
+                            "games_with_historical_odds"
+                        ],
+                        errors="coerce",
+                    ).fillna(
+                        0
+                    ).sum()
+                )
+
+        report.set_rows(
+            rows_in=games,
+            rows_out=candidate_rows,
+        )
+
+        report.update_details(
+            {
+                "weeks": len(
+                    candidate_files
+                ),
+                "games": games,
+                "games_with_historical_odds": (
+                    games_with_historical_odds
+                ),
+                "candidate_rows": candidate_rows,
+                "candidate_files": len(
+                    candidate_files
+                ),
+                "weekly_files": len(
+                    weekly_files
+                ),
+                "audit_files": len(
+                    audit_files
+                ),
+            }
+        )
+
+        return int(
+            result
+        )
 
 
 if __name__ == "__main__":

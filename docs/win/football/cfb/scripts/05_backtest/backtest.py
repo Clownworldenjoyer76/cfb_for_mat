@@ -18,6 +18,19 @@ import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
+SCRIPTS_DIR = CFB_ROOT / "scripts"
+REPORT_ROOT = CFB_ROOT / "errors"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(
+        0,
+        str(SCRIPTS_DIR),
+    )
+
+from pipeline_reporter import PipelineReporter
+
+
+SCRIPT_VERSION = "cfb-backtest-v1-reporter-2026-09-16"
 
 PICKS_PATH = CFB_ROOT / "scripts" / "03_picks" / "picks.py"
 GRADE_PATH = CFB_ROOT / "scripts" / "04_final_results" / "grade_picks.py"
@@ -522,7 +535,7 @@ def write_workbook(
     os.replace(tmp, path)
 
 
-def main() -> int:
+def _main_impl() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--season", type=int, default=2025)
     parser.add_argument("--workers", type=int, default=8)
@@ -611,6 +624,258 @@ def main() -> int:
     print(f"summary={summary}")
     print("status=success")
     return 0
+
+
+def _pipeline_report_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        add_help=False,
+    )
+
+    parser.add_argument(
+        "--season",
+        type=int,
+        default=2025,
+    )
+
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=8,
+    )
+
+    args, _ = parser.parse_known_args()
+
+    return args
+
+
+def main() -> int:
+    if any(
+        arg in {"-h", "--help"}
+        for arg in sys.argv[1:]
+    ):
+        return int(
+            _main_impl()
+        )
+
+    with PipelineReporter(
+        script=__file__,
+        stage="05_backtest",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        extra_context={
+            "script_version": SCRIPT_VERSION,
+            "backtest_scope": "historical_filter_backtest",
+        },
+    ) as report:
+        report_args = _pipeline_report_args()
+
+        season = int(
+            report_args.season
+        )
+
+        report.season = season
+
+        candidate_dir = (
+            CFB_ROOT
+            / "05_backtest"
+            / "input"
+            / str(
+                season
+            )
+            / "candidates"
+        )
+
+        output_dir = (
+            CFB_ROOT
+            / "05_backtest"
+            / "output"
+            / str(
+                season
+            )
+        )
+
+        game_level = (
+            output_dir
+            / f"{season}_CFB_backtest_game_level.csv"
+        )
+
+        summary = (
+            output_dir
+            / f"{season}_CFB_backtest_summary.xlsx"
+        )
+
+        report.add_input(
+            candidate_dir
+        )
+
+        report.add_input(
+            MARKETS_PATH
+        )
+
+        report.update_details(
+            {
+                "workers": int(
+                    report_args.workers
+                ),
+                "candidate_directory": str(
+                    candidate_dir
+                ),
+            }
+        )
+
+        result = _main_impl()
+
+        if not game_level.is_file():
+            raise RuntimeError(
+                "Backtest completed without expected game-level output: "
+                f"{game_level}"
+            )
+
+        if not summary.is_file():
+            raise RuntimeError(
+                "Backtest completed without expected workbook output: "
+                f"{summary}"
+            )
+
+        ledger = pd.read_csv(
+            game_level,
+            dtype=str,
+            encoding="utf-8-sig",
+            low_memory=False,
+        )
+
+        report.add_output(
+            game_level
+        )
+
+        report.add_output(
+            summary
+        )
+
+        report.set_rows(
+            rows_out=len(
+                ledger
+            )
+        )
+
+        if "selected" in ledger.columns:
+            selected_mask = pd.to_numeric(
+                ledger[
+                    "selected"
+                ],
+                errors="coerce",
+            ).fillna(
+                0
+            ).eq(
+                1
+            )
+
+            selected = ledger.loc[
+                selected_mask
+            ].copy()
+        else:
+            selected = ledger.iloc[
+                0:0
+            ].copy()
+
+        grades = (
+            selected[
+                "grade"
+            ].astype(
+                str
+            )
+            if "grade" in selected.columns
+            else pd.Series(
+                dtype=str
+            )
+        )
+
+        net_units = (
+            float(
+                pd.to_numeric(
+                    ledger[
+                        "selected_profit_units"
+                    ],
+                    errors="coerce",
+                ).fillna(
+                    0.0
+                ).sum()
+            )
+            if "selected_profit_units" in ledger.columns
+            else 0.0
+        )
+
+        game_count = (
+            int(
+                ledger[
+                    "game_id"
+                ].astype(
+                    str
+                ).nunique()
+            )
+            if "game_id" in ledger.columns
+            else 0
+        )
+
+        week_count = (
+            int(
+                ledger[
+                    "week"
+                ].astype(
+                    str
+                ).nunique()
+            )
+            if "week" in ledger.columns
+            else 0
+        )
+
+        candidate_files = len(
+            list(
+                candidate_dir.glob(
+                    "week_*_CFB_selected.csv"
+                )
+            )
+        )
+
+        report.update_details(
+            {
+                "games": game_count,
+                "weeks": week_count,
+                "candidate_files": candidate_files,
+                "selected_bets": int(
+                    len(
+                        selected
+                    )
+                ),
+                "wins": int(
+                    grades.eq(
+                        "WIN"
+                    ).sum()
+                ),
+                "losses": int(
+                    grades.eq(
+                        "LOSS"
+                    ).sum()
+                ),
+                "pushes": int(
+                    grades.eq(
+                        "PUSH"
+                    ).sum()
+                ),
+                "net_units": net_units,
+                "game_level_output": str(
+                    game_level
+                ),
+                "summary_output": str(
+                    summary
+                ),
+            }
+        )
+
+        return int(
+            result
+        )
 
 
 if __name__ == "__main__":
