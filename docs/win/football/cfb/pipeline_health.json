@@ -1,107 +1,142 @@
 {
-  "fatal_errors": [],
+  "fatal_errors": [
+    "CFB workflow status is FAILURE"
+  ],
   "game_date_new_york": "2026_09_16",
-  "generated_at_utc": "2026-09-16T13:15:33.073666+00:00",
+  "generated_at_utc": "2026-09-16T19:12:49.436902+00:00",
   "leagues": {
     "cfb": {
       "counts": {
-        "locked_bets": 0,
+        "all_games_games": 75,
+        "locked_bets": 10,
+        "locked_games": 10,
         "merged_games": 75,
         "prediction_games": 75,
         "scheduled_games": 75,
         "selected_bets": 10,
+        "selected_games": 10,
         "sportsbook_games": 74
       },
       "coverage": {
+        "all_games_not_scheduled": [],
+        "locked_not_scheduled": [],
+        "merged_not_scheduled": [],
         "predictions_not_merged": [],
+        "scheduled_missing_all_games": [],
+        "scheduled_missing_merged": [],
         "scheduled_missing_predictions": [],
         "scheduled_missing_sportsbook": [
           "401858233"
-        ]
+        ],
+        "selected_not_scheduled": []
       },
       "identity": {
-        "blank_weekly_game_ids": 0,
-        "merged_duplicate_game_ids": [],
-        "prediction_duplicate_game_ids": [],
-        "weekly_duplicate_game_ids": []
+        "all_games_team_mismatch_game_ids": [],
+        "candidates_team_mismatch_game_ids": [],
+        "clean_picks_team_mismatch_game_ids": [],
+        "locked_team_mismatch_game_ids": [],
+        "merged_team_mismatch_game_ids": [],
+        "picks_team_mismatch_game_ids": [],
+        "predictions_team_mismatch_game_ids": [],
+        "selected_team_mismatch_game_ids": [],
+        "weekly_schedule_team_mismatch_game_ids": []
       },
       "in_season": true,
       "paths": {
-        "all_games": "docs/win/football/cfb/03_picks/all_games/all_week_3_CFB_picks.csv",
-        "candidates": "docs/win/football/cfb/02_select/week_3_CFB_selected.csv",
-        "clean_picks": "docs/win/football/cfb/03_picks/cleaned/week_3_CFB_clean_picks.csv",
-        "merged": "docs/win/football/cfb/01_merge/week_3_CFB_enriched.csv",
-        "picks": "docs/win/football/cfb/03_picks/week_3_CFB_picks.csv",
-        "predictions": "docs/win/football/cfb/00_intake/predictions/final/2026_2_3_clean_predictions.csv",
-        "season_schedule": "docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
-        "selected": "docs/win/football/cfb/03_picks/selected/week_3_CFB_select_picks.csv",
-        "weekly_schedule": "docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv"
+        "all_games": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/all_games/all_week_3_CFB_picks.csv",
+        "candidates": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/02_select/week_3_CFB_selected.csv",
+        "clean_picks": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/cleaned/week_3_CFB_clean_picks.csv",
+        "locked": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/selected/locked/week_3_CFB_select_picks.csv",
+        "merged": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/01_merge/week_3_CFB_enriched.csv",
+        "picks": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/week_3_CFB_picks.csv",
+        "predictions": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/predictions/final/2026_2_3_clean_predictions.csv",
+        "season_schedule": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
+        "selected": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/selected/week_3_CFB_select_picks.csv",
+        "weekly_schedule": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv"
       },
       "season": "2026",
+      "season_type": 2,
       "week": 3
     }
   },
   "report_week": 3,
   "schema_version": 1,
   "season": "2026",
+  "season_type": 2,
   "sport": "cfb",
   "stage_status": [
     {
       "exists": true,
       "name": "Season Schedule",
-      "path": "docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
+      "rows": 892,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "Weekly Schedule",
-      "path": "docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv",
+      "rows": 75,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "Final Predictions",
-      "path": "docs/win/football/cfb/00_intake/predictions/final/2026_2_3_clean_predictions.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/predictions/final/2026_2_3_clean_predictions.csv",
+      "rows": 75,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "Projection",
-      "path": "docs/win/football/cfb/01_merge/week_3_CFB_enriched.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/01_merge/week_3_CFB_enriched.csv",
+      "rows": 75,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "Betting Candidates",
-      "path": "docs/win/football/cfb/02_select/week_3_CFB_selected.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/02_select/week_3_CFB_selected.csv",
+      "rows": 75,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "Market Picks",
-      "path": "docs/win/football/cfb/03_picks/week_3_CFB_picks.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/week_3_CFB_picks.csv",
+      "rows": 75,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "Clean Weekly Picks",
-      "path": "docs/win/football/cfb/03_picks/cleaned/week_3_CFB_clean_picks.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/cleaned/week_3_CFB_clean_picks.csv",
+      "rows": 75,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "All Games Picks",
-      "path": "docs/win/football/cfb/03_picks/all_games/all_week_3_CFB_picks.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/all_games/all_week_3_CFB_picks.csv",
+      "rows": 75,
       "status": "STATUS: SUCCESS"
     },
     {
       "exists": true,
       "name": "Final Selected Picks",
-      "path": "docs/win/football/cfb/03_picks/selected/week_3_CFB_select_picks.csv",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/selected/week_3_CFB_select_picks.csv",
+      "rows": 10,
+      "status": "STATUS: SUCCESS"
+    },
+    {
+      "exists": true,
+      "name": "Locked Selected Picks",
+      "path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/selected/locked/week_3_CFB_select_picks.csv",
+      "rows": 10,
       "status": "STATUS: SUCCESS"
     }
   ],
-  "status": "warning",
+  "status": "failed",
   "warnings": [
     "CFB Week 3: 1 scheduled game(s) do not have sportsbook odds"
   ],
@@ -109,8 +144,8 @@
     "name": "CFB Pipeline",
     "ref_name": "main",
     "run_attempt": "1",
-    "run_id": "35100055970",
-    "sha": "e9bc07cdc3b593541558fc1d9c9422934a50fbd5",
-    "status": "success"
+    "run_id": "35138187848",
+    "sha": "012bccbb5a74970284e0e3fb34dd4d07581cd351",
+    "status": "failure"
   }
 }
