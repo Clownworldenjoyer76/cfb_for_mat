@@ -52,6 +52,8 @@ Safety checks
 - Week 1 is rejected. Use projection_week1.py for Week 1.
 - Only current-season team-stat rows with source week < target week are used.
 - The latest completed team-stat week must equal target_week - 1.
+- Prior completed-game IDs must exactly match the stored PBP game IDs.
+- PBP-derived prior team/week coverage must exactly match team-stat coverage.
 - Betting probabilities are validated.
 - Output season/week/game_id integrity is validated.
 
@@ -102,7 +104,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from pipeline_reporter import PipelineReporter
 
 
-SCRIPT_VERSION = "cfb-inseason-v5-hardened-math-2026-09-16"
+SCRIPT_VERSION = "cfb-inseason-v6-history-coverage-2026-09-16"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -1020,6 +1022,653 @@ def load_current_team_stats(
     )
 
 
+def target_season_type(
+    schedule: pd.DataFrame,
+    season: int,
+    week: int,
+) -> int:
+    if "season_type" not in schedule.columns:
+        raise ValueError(
+            "Target weekly schedule is missing season_type"
+        )
+
+    values = pd.to_numeric(
+        schedule["season_type"],
+        errors="coerce",
+    )
+
+    invalid = (
+        values.isna()
+        | values.mod(1).ne(0)
+        | values.le(0)
+    )
+
+    if invalid.any():
+        examples = (
+            schedule.loc[
+                invalid,
+                "season_type",
+            ]
+            .astype(str)
+            .drop_duplicates()
+            .head(10)
+            .tolist()
+        )
+
+        raise ValueError(
+            "Target weekly schedule contains invalid "
+            f"season_type values: {examples}"
+        )
+
+    observed = sorted(
+        {
+            int(value)
+            for value
+            in values.tolist()
+        }
+    )
+
+    if len(observed) != 1:
+        raise RuntimeError(
+            "Target weekly schedule contains multiple "
+            f"season_type values for season={season}, "
+            f"week={week}: {observed}"
+        )
+
+    return observed[0]
+
+
+def historical_result_paths(
+    results_dir: Path,
+    season: int,
+    season_type: int,
+    target_week: int,
+) -> list[Path]:
+    return [
+        (
+            results_dir
+            / f"{season}_{season_type}_{prior_week}.csv"
+        )
+        for prior_week
+        in range(
+            1,
+            target_week,
+        )
+    ]
+
+
+def _history_integer_column(
+    frame: pd.DataFrame,
+    column: str,
+    label: str,
+) -> pd.Series:
+    if column not in frame.columns:
+        raise ValueError(
+            f"{label} missing required column: {column}"
+        )
+
+    values = pd.to_numeric(
+        frame[column],
+        errors="coerce",
+    )
+
+    invalid = (
+        values.isna()
+        | values.mod(1).ne(0)
+    )
+
+    if invalid.any():
+        examples = (
+            frame.loc[
+                invalid,
+                column,
+            ]
+            .astype(str)
+            .drop_duplicates()
+            .head(10)
+            .tolist()
+        )
+
+        raise ValueError(
+            f"{label} contains invalid integer "
+            f"{column} values: {examples}"
+        )
+
+    return values.astype(int)
+
+
+def _history_completed_flag(
+    value: object,
+    label: str,
+) -> bool:
+    text = base.clean(
+        value
+    ).casefold()
+
+    if text in {
+        "1",
+        "1.0",
+        "true",
+        "yes",
+        "y",
+    }:
+        return True
+
+    if text in {
+        "0",
+        "0.0",
+        "false",
+        "no",
+        "n",
+    }:
+        return False
+
+    raise ValueError(
+        f"{label} must be a valid completed 0/1 flag; "
+        f"found {value!r}"
+    )
+
+
+def validate_completed_history_coverage(
+    *,
+    pbp_path: Path,
+    result_paths: list[Path],
+    team_stats: pd.DataFrame,
+    season: int,
+    season_type: int,
+    target_week: int,
+) -> dict[str, object]:
+    expected_completed: dict[
+        str,
+        int,
+    ] = {}
+
+    for expected_week, result_path in enumerate(
+        result_paths,
+        start=1,
+    ):
+        results = base.read_csv(
+            result_path,
+            [
+                "season",
+                "season_type",
+                "week",
+                "game_id",
+                "completed",
+            ],
+            (
+                "final-score results "
+                f"for week {expected_week}"
+            ),
+        )
+
+        result_season = _history_integer_column(
+            results,
+            "season",
+            str(result_path),
+        )
+
+        result_type = _history_integer_column(
+            results,
+            "season_type",
+            str(result_path),
+        )
+
+        result_week = _history_integer_column(
+            results,
+            "week",
+            str(result_path),
+        )
+
+        if not result_season.eq(
+            season
+        ).all():
+            raise RuntimeError(
+                f"{result_path}: wrong season"
+            )
+
+        if not result_type.eq(
+            season_type
+        ).all():
+            raise RuntimeError(
+                f"{result_path}: wrong season_type"
+            )
+
+        if not result_week.eq(
+            expected_week
+        ).all():
+            raise RuntimeError(
+                f"{result_path}: wrong week"
+            )
+
+        result_ids = results[
+            "game_id"
+        ].map(
+            base.normalize_game_id
+        )
+
+        if result_ids.eq(
+            ""
+        ).any():
+            raise RuntimeError(
+                f"{result_path}: blank game_id"
+            )
+
+        if result_ids.duplicated().any():
+            duplicates = (
+                result_ids[
+                    result_ids.duplicated(
+                        False
+                    )
+                ]
+                .drop_duplicates()
+                .head(10)
+                .tolist()
+            )
+
+            raise RuntimeError(
+                f"{result_path}: duplicate game_id "
+                f"values: {duplicates}"
+            )
+
+        for position, (
+            game_id,
+            completed_raw,
+        ) in enumerate(
+            zip(
+                result_ids,
+                results[
+                    "completed"
+                ],
+                strict=True,
+            ),
+            start=2,
+        ):
+            completed = _history_completed_flag(
+                completed_raw,
+                (
+                    f"{result_path} line "
+                    f"{position}: completed"
+                ),
+            )
+
+            if not completed:
+                continue
+
+            if game_id in expected_completed:
+                raise RuntimeError(
+                    "Completed game_id appears in multiple "
+                    f"prior result weeks: {game_id}"
+                )
+
+            expected_completed[
+                game_id
+            ] = expected_week
+
+    if not expected_completed:
+        raise RuntimeError(
+            "No completed games were found in prior-week "
+            "final-score results"
+        )
+
+    if not pbp_path.is_file():
+        raise FileNotFoundError(
+            f"Missing current-season PBP: {pbp_path}"
+        )
+
+    try:
+        pbp = pd.read_parquet(
+            pbp_path,
+            columns=[
+                "season",
+                "week",
+                "game_id",
+                "homeTeamId",
+                "awayTeamId",
+            ],
+        )
+    except Exception as exc:
+        raise RuntimeError(
+            f"Unable to read PBP coverage input {pbp_path}: "
+            f"{exc}"
+        ) from exc
+
+    if pbp.empty:
+        raise RuntimeError(
+            f"PBP coverage input is empty: {pbp_path}"
+        )
+
+    pbp_season = _history_integer_column(
+        pbp,
+        "season",
+        str(pbp_path),
+    )
+
+    pbp_week = _history_integer_column(
+        pbp,
+        "week",
+        str(pbp_path),
+    )
+
+    if not pbp_season.eq(
+        season
+    ).all():
+        observed = sorted(
+            pbp_season.unique().tolist()
+        )
+
+        raise RuntimeError(
+            f"{pbp_path}: PBP season mismatch: "
+            f"{observed}"
+        )
+
+    if pbp_week.le(
+        0
+    ).any():
+        raise RuntimeError(
+            f"{pbp_path}: PBP contains non-positive week"
+        )
+
+    prior_pbp = pbp.loc[
+        pbp_week.lt(
+            target_week
+        )
+    ].copy()
+
+    prior_pbp[
+        "_history_week"
+    ] = pbp_week.loc[
+        prior_pbp.index
+    ].astype(
+        int
+    )
+
+    prior_pbp[
+        "_history_game_id"
+    ] = prior_pbp[
+        "game_id"
+    ].map(
+        base.normalize_game_id
+    )
+
+    if prior_pbp[
+        "_history_game_id"
+    ].eq(
+        ""
+    ).any():
+        raise RuntimeError(
+            f"{pbp_path}: prior PBP contains blank game_id"
+        )
+
+    pbp_game_ids: set[
+        str
+    ] = set()
+
+    expected_team_week_pairs: set[
+        tuple[
+            int,
+            str,
+        ]
+    ] = set()
+
+    for game_id, group in prior_pbp.groupby(
+        "_history_game_id",
+        sort=False,
+    ):
+        weeks = {
+            int(value)
+            for value
+            in group[
+                "_history_week"
+            ].tolist()
+        }
+
+        if len(
+            weeks
+        ) != 1:
+            raise RuntimeError(
+                "PBP game appears in multiple weeks: "
+                f"game_id={game_id}, "
+                f"weeks={sorted(weeks)}"
+            )
+
+        week_value = next(
+            iter(
+                weeks
+            )
+        )
+
+        home_ids = {
+            base.normalize_game_id(
+                value
+            )
+            for value
+            in group[
+                "homeTeamId"
+            ]
+            if base.normalize_game_id(
+                value
+            )
+        }
+
+        away_ids = {
+            base.normalize_game_id(
+                value
+            )
+            for value
+            in group[
+                "awayTeamId"
+            ]
+            if base.normalize_game_id(
+                value
+            )
+        }
+
+        if (
+            len(
+                home_ids
+            ) != 1
+            or len(
+                away_ids
+            ) != 1
+        ):
+            raise RuntimeError(
+                "PBP does not contain one stable home/away "
+                "team identity for "
+                f"game_id={game_id}; "
+                f"home_ids={sorted(home_ids)}, "
+                f"away_ids={sorted(away_ids)}"
+            )
+
+        home_id = next(
+            iter(
+                home_ids
+            )
+        )
+
+        away_id = next(
+            iter(
+                away_ids
+            )
+        )
+
+        if home_id == away_id:
+            raise RuntimeError(
+                "PBP home/away team IDs are identical "
+                f"for game_id={game_id}: {home_id}"
+            )
+
+        pbp_game_ids.add(
+            game_id
+        )
+
+        expected_team_week_pairs.add(
+            (
+                week_value,
+                home_id,
+            )
+        )
+
+        expected_team_week_pairs.add(
+            (
+                week_value,
+                away_id,
+            )
+        )
+
+    expected_game_ids = set(
+        expected_completed
+    )
+
+    missing_pbp = sorted(
+        expected_game_ids
+        - pbp_game_ids
+    )
+
+    unexpected_pbp = sorted(
+        pbp_game_ids
+        - expected_game_ids
+    )
+
+    if (
+        missing_pbp
+        or unexpected_pbp
+    ):
+        raise RuntimeError(
+            "Completed-game PBP coverage mismatch. "
+            f"expected_completed_games={len(expected_game_ids)} "
+            f"pbp_games={len(pbp_game_ids)} "
+            f"missing_count={len(missing_pbp)} "
+            f"unexpected_count={len(unexpected_pbp)} "
+            f"missing_examples={missing_pbp[:10]} "
+            f"unexpected_examples={unexpected_pbp[:10]}"
+        )
+
+    stat_weeks = _history_integer_column(
+        team_stats,
+        "week",
+        "current-season team stats",
+    )
+
+    stat_team_ids = team_stats[
+        "team"
+    ].map(
+        base.normalize_game_id
+    )
+
+    if stat_team_ids.eq(
+        ""
+    ).any():
+        raise RuntimeError(
+            "Current-season team stats contain blank team IDs"
+        )
+
+    actual_pair_rows = list(
+        zip(
+            stat_weeks.tolist(),
+            stat_team_ids.tolist(),
+            strict=True,
+        )
+    )
+
+    if len(
+        actual_pair_rows
+    ) != len(
+        set(
+            actual_pair_rows
+        )
+    ):
+        duplicates = (
+            pd.DataFrame(
+                actual_pair_rows,
+                columns=[
+                    "week",
+                    "team",
+                ],
+            )
+            .loc[
+                lambda frame:
+                    frame.duplicated(
+                        [
+                            "week",
+                            "team",
+                        ],
+                        keep=False,
+                    )
+            ]
+            .drop_duplicates()
+            .head(10)
+            .to_dict(
+                orient="records"
+            )
+        )
+
+        raise RuntimeError(
+            "Current-season team stats contain duplicate "
+            f"(week, team) rows: {duplicates}"
+        )
+
+    actual_team_week_pairs = set(
+        actual_pair_rows
+    )
+
+    missing_team_stats = sorted(
+        expected_team_week_pairs
+        - actual_team_week_pairs
+    )
+
+    unexpected_team_stats = sorted(
+        actual_team_week_pairs
+        - expected_team_week_pairs
+    )
+
+    if (
+        missing_team_stats
+        or unexpected_team_stats
+    ):
+        raise RuntimeError(
+            "Current-season team-stat coverage does not "
+            "exactly match completed PBP team/week coverage. "
+            f"expected_rows={len(expected_team_week_pairs)} "
+            f"actual_rows={len(actual_team_week_pairs)} "
+            f"missing_count={len(missing_team_stats)} "
+            f"unexpected_count={len(unexpected_team_stats)} "
+            f"missing_examples={missing_team_stats[:10]} "
+            f"unexpected_examples="
+            f"{unexpected_team_stats[:10]}"
+        )
+
+    return {
+        "completed_result_games":
+            len(
+                expected_game_ids
+            ),
+        "pbp_prior_games":
+            len(
+                pbp_game_ids
+            ),
+        "expected_team_week_rows":
+            len(
+                expected_team_week_pairs
+            ),
+        "team_stats_team_week_rows":
+            len(
+                actual_team_week_pairs
+            ),
+        "result_files": [
+            str(
+                path
+            )
+            for path
+            in result_paths
+        ],
+        "pbp_path":
+            str(
+                pbp_path
+            ),
+    }
+
+
 def validate_output(
     projected: pd.DataFrame,
     schedule: pd.DataFrame,
@@ -1140,6 +1789,19 @@ def run(
         / f"{season}_team_stats.csv"
     )
 
+    pbp_path = (
+        cfb_root
+        / "00_intake"
+        / "pbp"
+        / f"{season}_pbp.parquet"
+    )
+
+    results_dir = (
+        cfb_root
+        / "04_final_results"
+        / "results"
+    )
+
     team_map_path = (
         cfb_root
         / "config"
@@ -1203,6 +1865,7 @@ def run(
 
     for input_path in (
         schedule_path,
+        pbp_path,
         team_stats_path,
         team_map_path,
         stadium_map_path,
@@ -1255,6 +1918,29 @@ def run(
         ),
     )
 
+    season_type = target_season_type(
+        schedule,
+        season,
+        week,
+    )
+
+    result_paths = historical_result_paths(
+        results_dir,
+        season,
+        season_type,
+        week,
+    )
+
+    for result_path in result_paths:
+        report.add_input(
+            result_path
+        )
+
+    report.set_detail(
+        "season_type",
+        season_type,
+    )
+
     team_map = base.read_csv(
         team_map_path,
         [
@@ -1275,6 +1961,22 @@ def run(
         team_stats_path,
         season,
         week,
+    )
+
+    history_coverage = (
+        validate_completed_history_coverage(
+            pbp_path=pbp_path,
+            result_paths=result_paths,
+            team_stats=current_team_stats,
+            season=season,
+            season_type=season_type,
+            target_week=week,
+        )
+    )
+
+    report.set_detail(
+        "completed_history_coverage",
+        history_coverage,
     )
 
     current_prior = base.build_prior_table(

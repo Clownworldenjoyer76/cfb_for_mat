@@ -412,6 +412,18 @@ jobs:
           PY
 
       # ----------------------------------------------------------------------
+      # PIPELINE HEALTH GATE
+      #
+      # Health runs before publication. Any fatal health failure stops the
+      # workflow before generated CFB artifacts can be committed to main.
+      # ----------------------------------------------------------------------
+
+      - name: CFB Pipeline Health Gate
+        env:
+          CFB_PIPELINE_JOB_STATUS: success
+        run: python docs/win/football/cfb/scripts/pipeline_health.py
+
+      # ----------------------------------------------------------------------
       # COMMIT EVERYTHING
       #
       # Includes:
@@ -424,6 +436,9 @@ jobs:
       # - current-week projections
       # - current-week selections/picks
       # - clean human-readable weekly picks
+      # - validated pipeline health outputs
+      #
+      # This step is reached only after the health gate succeeds.
       # ----------------------------------------------------------------------
 
       - name: Commit and push CFB pipeline outputs
@@ -432,6 +447,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add docs/win/football/cfb
+          git add frontend/data/pipeline_health/cfb.json
 
           if git diff --cached --quiet; then
             echo "No CFB pipeline changes to commit."
@@ -446,34 +462,4 @@ jobs:
             exit 1
           fi
 
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-
-      # ----------------------------------------------------------------------
-      # PIPELINE HEALTH
-      # ----------------------------------------------------------------------
-
-      - name: CFB Pipeline Health
-        if: always()
-        env:
-          CFB_PIPELINE_JOB_STATUS: ${{ job.status }}
-        run: python docs/win/football/cfb/scripts/pipeline_health.py
-
-      - name: Commit CFB pipeline health
-        if: always()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add docs/win/football/cfb/pipeline_health.json
-          git add docs/win/football/cfb/errors/pipeline_health.txt
-          git add docs/win/football/cfb/errors/pipeline_health/pipeline_health.json
-          git add frontend/data/pipeline_health/cfb.json
-
-          if git diff --cached --quiet; then
-            echo "No CFB pipeline health changes to commit."
-            exit 0
-          fi
-
-          git commit -m "Update CFB pipeline health"
-          git pull --rebase --autostash origin "$GITHUB_REF_NAME"
           git push origin "HEAD:${GITHUB_REF_NAME}"
