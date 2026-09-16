@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-34982762005-attempt-1",
+  "run_id": "github-35084974005-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,29 +9,29 @@
   "script": "league_master.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/league_master.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/league_master.json",
-  "started_at_utc": "2026-09-15T14:37:39.429089+00:00",
-  "finished_at_utc": "2026-09-15T14:38:02.968230+00:00",
-  "duration_seconds": 23.539,
+  "started_at_utc": "2026-09-16T10:28:00.395465+00:00",
+  "finished_at_utc": "2026-09-16T10:28:52.556559+00:00",
+  "duration_seconds": 52.161,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2454,
+    "process_id": 2200,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "34982762005",
+    "github_run_id": "35084974005",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "12819fb2ed6d7158dec873d3ec56325eb34717ca",
+    "github_sha": "e297b57ee28657b3d75f6ecf21f2d45ea8093617",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
   "context": {
     "season": 2026,
     "week": 3,
-    "script_version": "cfb-league-master-v2-2026-09-15",
+    "script_version": "cfb-league-master-v3-retries-2026-09-15",
     "source": "ESPN Core API"
   },
   "inputs": [
@@ -68,6 +68,11 @@
     "league_master_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/master/league_master.csv",
     "league_standings_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/master/league_standings.csv",
     "espn_request_count": 564,
+    "espn_request_attempt_count": 564,
+    "espn_request_retry_count": 0,
+    "espn_recovered_transient_requests": 0,
+    "espn_exhausted_transient_failures": 0,
+    "espn_retry_details": [],
     "espn_request_failures": 0,
     "espn_request_failure_details": []
   }
