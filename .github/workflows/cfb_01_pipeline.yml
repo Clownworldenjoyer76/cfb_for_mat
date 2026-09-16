@@ -466,6 +466,7 @@ jobs:
 
           git add docs/win/football/cfb/pipeline_health.json
           git add docs/win/football/cfb/errors/pipeline_health.txt
+          git add docs/win/football/cfb/errors/pipeline_health/pipeline_health.json
           git add frontend/data/pipeline_health/cfb.json
 
           if git diff --cached --quiet; then
