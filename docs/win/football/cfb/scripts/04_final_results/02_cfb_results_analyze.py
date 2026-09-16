@@ -30,7 +30,7 @@ import pandas as pd
 import yaml
 
 
-SCRIPT_VERSION = "cfb-results-analyze-v2-hardened-2026-09-16"
+SCRIPT_VERSION = "cfb-results-analyze-v3-rounding-contract-2026-09-16"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
@@ -1115,17 +1115,28 @@ def validate_graded_file(
             f"{row_label}: net_units",
         )
 
+        # grade_picks.py publishes each game's net_units
+        # rounded to six decimal places. Validate against
+        # that published precision, while retaining the
+        # unrounded market-level units for season totals.
+        expected_game_units = round(
+            selected_units,
+            6,
+        )
+
         if not math.isclose(
             grader_units,
-            selected_units,
+            expected_game_units,
             rel_tol=0.0,
-            abs_tol=1e-6,
+            abs_tol=1e-12,
         ):
             fail(
                 f"{row_label}: grader "
                 f"net_units={grader_units} "
-                "does not match selected "
-                f"market units={selected_units}"
+                "does not match selected market units "
+                "rounded to 6 decimals="
+                f"{expected_game_units} "
+                f"(raw={selected_units})"
             )
 
         totals[
@@ -1136,7 +1147,7 @@ def validate_graded_file(
                     "net_units"
                 ]
             )
-            + grader_units
+            + selected_units
         )
 
     return totals
