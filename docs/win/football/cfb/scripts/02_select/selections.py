@@ -38,6 +38,9 @@ import argparse
 import math
 import os
 import re
+import sys
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -47,8 +50,42 @@ import yaml
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+SCRIPTS_DIR = SCRIPT_DIR.parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
-DEFAULT_SETTINGS_PATH = CFB_ROOT / "config/settings.yaml"
+REPORT_ROOT = CFB_ROOT / "errors"
+
+DEFAULT_SETTINGS_PATH = (
+    CFB_ROOT
+    / "config"
+    / "settings.yaml"
+)
+
+CURRENT_WEEK_CONFIG_PATH = (
+    CFB_ROOT
+    / "config"
+    / "current_week.yaml"
+)
+
+if str(
+    SCRIPTS_DIR
+) not in sys.path:
+    sys.path.insert(
+        0,
+        str(
+            SCRIPTS_DIR
+        ),
+    )
+
+from pipeline_reporter import PipelineReporter
+
+
+SCRIPT_VERSION = (
+    "cfb-selections-v2-current-line-reprice-2026-09-16"
+)
+
+PROBABILITY_EPS = 1e-6
+SPREAD_LINE_TOLERANCE = 1e-9
+CALCULATION_TOLERANCE = 1e-8
 
 PREDICTION_COLUMNS = [
     "predicted_margin",
@@ -246,12 +283,353 @@ def normalize_season_type(value: Any) -> str:
     )
 
 
-def normalize_bookmaker(value: Any) -> str:
+def normalize_bookmaker(
+    value: Any,
+) -> str:
     return re.sub(
         r"[^a-z0-9]+",
         "",
-        clean(value).casefold(),
+        clean(
+            value
+        ).casefold(),
     )
+
+
+def parse_utc_timestamp(
+    value: Any,
+    label: str,
+) -> datetime:
+    text = clean(
+        value
+    )
+
+    if not text:
+        fail(
+            f"{label} is blank"
+        )
+
+    normalized = (
+        text[:-1]
+        + "+00:00"
+        if text.endswith(
+            "Z"
+        )
+        else text
+    )
+
+    try:
+        parsed = datetime.fromisoformat(
+            normalized
+        )
+
+    except ValueError as exc:
+        raise RuntimeError(
+            f"{label} is not a valid timestamp: {text!r}"
+        ) from exc
+
+    if parsed.tzinfo is None:
+        fail(
+            f"{label} must be timezone-aware: {text!r}"
+        )
+
+    return parsed.astimezone(
+        timezone.utc
+    )
+
+
+def normal_cdf(
+    z: float,
+) -> float:
+    probability = 0.5 * (
+        1.0
+        + math.erf(
+            z
+            / math.sqrt(
+                2.0
+            )
+        )
+    )
+
+    return float(
+        np.clip(
+            probability,
+            PROBABILITY_EPS,
+            1.0
+            - PROBABILITY_EPS,
+        )
+    )
+
+
+def required_numeric(
+    row: pd.Series,
+    column: str,
+) -> float:
+    value = parse_float(
+        row.get(
+            column,
+            "",
+        )
+    )
+
+    if value is None:
+        fail(
+            f"game_id={clean(row.get('game_id'))}: "
+            f"{column} must be finite; "
+            f"found {row.get(column)!r}"
+        )
+
+    return value
+
+
+def resolve_target(
+    current_week: dict[str, Any],
+    season_override: int | None,
+    week_override: int | None,
+) -> tuple[
+    int,
+    int,
+]:
+    configured_season = parse_int(
+        current_week.get(
+            "season"
+        )
+    )
+
+    configured_week = parse_int(
+        current_week.get(
+            "week"
+        )
+    )
+
+    season = (
+        int(
+            season_override
+        )
+        if season_override is not None
+        else configured_season
+    )
+
+    week = (
+        int(
+            week_override
+        )
+        if week_override is not None
+        else configured_week
+    )
+
+    if (
+        season is None
+        or season < 1900
+    ):
+        fail(
+            "Invalid target season from "
+            f"current_week.yaml/CLI: {season!r}"
+        )
+
+    if (
+        week is None
+        or week <= 0
+    ):
+        fail(
+            "Invalid target week from "
+            f"current_week.yaml/CLI: {week!r}"
+        )
+
+    return (
+        season,
+        week,
+    )
+
+
+def spread_model_probabilities(
+    row: pd.Series,
+    home_line: float,
+) -> tuple[
+    float,
+    float,
+]:
+    predicted_margin = required_numeric(
+        row,
+        "predicted_margin",
+    )
+
+    margin_sd = required_numeric(
+        row,
+        "probability_margin_sd",
+    )
+
+    if margin_sd <= 0:
+        fail(
+            f"game_id={row['game_id']}: "
+            "probability_margin_sd must be > 0"
+        )
+
+    home_probability = normal_cdf(
+        (
+            predicted_margin
+            + home_line
+        )
+        / margin_sd
+    )
+
+    return (
+        home_probability,
+        1.0
+        - home_probability,
+    )
+
+
+def total_model_probabilities(
+    row: pd.Series,
+    total_line: float,
+) -> tuple[
+    float,
+    float,
+]:
+    predicted_total = required_numeric(
+        row,
+        "predicted_total",
+    )
+
+    total_sd = required_numeric(
+        row,
+        "probability_total_sd",
+    )
+
+    if total_sd <= 0:
+        fail(
+            f"game_id={row['game_id']}: "
+            "probability_total_sd must be > 0"
+        )
+
+    over_probability = normal_cdf(
+        (
+            predicted_total
+            - total_line
+        )
+        / total_sd
+    )
+
+    return (
+        over_probability,
+        1.0
+        - over_probability,
+    )
+
+
+def locked_game_ids(
+    working: pd.DataFrame,
+    now_utc: datetime | None = None,
+) -> set[str]:
+    require_columns(
+        working,
+        [
+            "game_id",
+            "sched_game_locked",
+            "sched_kickoff_utc",
+        ],
+        "candidate working frame",
+    )
+
+    current_time = (
+        now_utc
+        if now_utc is not None
+        else datetime.now(
+            timezone.utc
+        )
+    )
+
+    if current_time.tzinfo is None:
+        fail(
+            "now_utc must be timezone-aware"
+        )
+
+    current_time = current_time.astimezone(
+        timezone.utc
+    )
+
+    locked: set[str] = set()
+
+    for _, row in working.iterrows():
+        game_id = normalize_game_id(
+            row.get(
+                "game_id"
+            )
+        )
+
+        explicit_lock = parse_int(
+            row.get(
+                "sched_game_locked"
+            )
+        )
+
+        if explicit_lock not in {
+            0,
+            1,
+        }:
+            fail(
+                f"game_id={game_id}: "
+                "sched_game_locked must be 0 or 1; "
+                f"found {row.get('sched_game_locked')!r}"
+            )
+
+        kickoff = parse_utc_timestamp(
+            row.get(
+                "sched_kickoff_utc"
+            ),
+            (
+                "sched_kickoff_utc "
+                f"for game_id={game_id}"
+            ),
+        )
+
+        if (
+            explicit_lock == 1
+            or current_time >= kickoff
+        ):
+            locked.add(
+                game_id
+            )
+
+    return locked
+
+
+def count_line_movements(
+    working: pd.DataFrame,
+    projection_column: str,
+    current_column: str,
+) -> int:
+    count = 0
+
+    for _, row in working.iterrows():
+        current = parse_float(
+            row.get(
+                current_column
+            )
+        )
+
+        if current is None:
+            continue
+
+        projected = parse_float(
+            row.get(
+                projection_column
+            )
+        )
+
+        if (
+            projected is None
+            or not math.isclose(
+                projected,
+                current,
+                rel_tol=0.0,
+                abs_tol=SPREAD_LINE_TOLERANCE,
+            )
+        ):
+            count += 1
+
+    return count
+
 
 
 def read_yaml(
@@ -834,19 +1212,56 @@ def evaluate_spread(
         "sched_away_spread_american",
     )
 
-    if any(
-        value is None
-        for value in [
-            home_line,
-            away_line,
-            home_odds,
-            away_odds,
-        ]
+    if (
+        home_line is None
+        and away_line is None
     ):
         return {
             **deferred_market(
                 "spread",
                 "CURRENT_LINE_MISSING",
+            ),
+            **blank_candidate(
+                "spread_home"
+            ),
+            **blank_candidate(
+                "spread_away"
+            ),
+        }
+
+    if (
+        home_line is None
+        or away_line is None
+    ):
+        fail(
+            f"game_id={row['game_id']}: "
+            "spread line pair is partial; "
+            f"home={row.get('sched_home_spread')!r} "
+            f"away={row.get('sched_away_spread')!r}"
+        )
+
+    if not math.isclose(
+        home_line
+        + away_line,
+        0.0,
+        rel_tol=0.0,
+        abs_tol=SPREAD_LINE_TOLERANCE,
+    ):
+        fail(
+            f"game_id={row['game_id']}: "
+            "home/away spread lines are not opposites; "
+            f"home={home_line} away={away_line}"
+        )
+
+    if (
+        home_odds is None
+        or away_odds is None
+    ):
+        return {
+            **deferred_market(
+                "spread",
+                "CURRENT_LINE_MISSING",
+                line=home_line,
             ),
             **blank_candidate(
                 "spread_home",
@@ -866,12 +1281,17 @@ def evaluate_spread(
         away_odds,
     )
 
+    (
+        home_model_probability,
+        away_model_probability,
+    ) = spread_model_probabilities(
+        row,
+        home_line,
+    )
+
     home_candidate = make_candidate(
         "HOME",
-        numeric_probability(
-            row,
-            "home_cover_probability",
-        ),
+        home_model_probability,
         home_odds,
         home_fair,
         line=home_line,
@@ -879,10 +1299,7 @@ def evaluate_spread(
 
     away_candidate = make_candidate(
         "AWAY",
-        numeric_probability(
-            row,
-            "away_cover_probability",
-        ),
+        away_model_probability,
         away_odds,
         away_fair,
         line=away_line,
@@ -904,6 +1321,7 @@ def evaluate_spread(
             include_line=True,
         ),
     }
+
 
 
 def evaluate_total(
@@ -955,12 +1373,17 @@ def evaluate_total(
         under_odds,
     )
 
+    (
+        over_model_probability,
+        under_model_probability,
+    ) = total_model_probabilities(
+        row,
+        total_line,
+    )
+
     over_candidate = make_candidate(
         "OVER",
-        numeric_probability(
-            row,
-            "over_probability",
-        ),
+        over_model_probability,
         over_odds,
         over_fair,
         line=total_line,
@@ -968,10 +1391,7 @@ def evaluate_total(
 
     under_candidate = make_candidate(
         "UNDER",
-        numeric_probability(
-            row,
-            "under_probability",
-        ),
+        under_model_probability,
         under_odds,
         under_fair,
         line=total_line,
@@ -994,6 +1414,7 @@ def evaluate_total(
             include_line=True,
         ),
     }
+
 
 
 def validate_probability_pairs(
@@ -1257,6 +1678,9 @@ def merge_schedule(
             "season_type",
             "week",
             "game_id",
+            "away_team",
+            "home_team",
+            "kickoff_utc",
             "neutral_site",
             "roof",
             "bookmaker",
@@ -1320,10 +1744,8 @@ def merge_schedule(
             f"season_type={season_type}"
         )
 
-    configured_book = (
-        normalize_bookmaker(
-            sportsbook
-        )
+    configured_book = normalize_bookmaker(
+        sportsbook
     )
 
     odds_available = pd.to_numeric(
@@ -1375,13 +1797,17 @@ def merge_schedule(
     base_ids = set(
         combined[
             "game_id"
-        ]
+        ].map(
+            normalize_game_id
+        )
     )
 
     schedule_ids = set(
         schedule[
             "game_id"
-        ]
+        ].map(
+            normalize_game_id
+        )
     )
 
     missing = sorted(
@@ -1389,15 +1815,101 @@ def merge_schedule(
         - schedule_ids
     )
 
-    if missing:
+    unexpected = sorted(
+        schedule_ids
+        - base_ids
+    )
+
+    if (
+        missing
+        or unexpected
+    ):
         fail(
-            "Weekly schedule missing "
-            f"{len(missing)} projected games; "
-            f"examples={missing[:10]}"
+            "Weekly schedule game coverage does not match "
+            "the projected input; "
+            f"missing_count={len(missing)} "
+            f"unexpected_count={len(unexpected)} "
+            f"missing_examples={missing[:10]} "
+            f"unexpected_examples={unexpected[:10]}"
+        )
+
+    schedule_lookup = schedule.set_index(
+        "game_id",
+        drop=False,
+    )
+
+    identity_mismatches: list[
+        dict[
+            str,
+            str,
+        ]
+    ] = []
+
+    for _, row in combined.iterrows():
+        game_id = normalize_game_id(
+            row.get(
+                "game_id"
+            )
+        )
+
+        schedule_row = schedule_lookup.loc[
+            game_id
+        ]
+
+        expected_away = clean(
+            row.get(
+                "away_team"
+            )
+        )
+
+        expected_home = clean(
+            row.get(
+                "home_team"
+            )
+        )
+
+        actual_away = clean(
+            schedule_row.get(
+                "away_team"
+            )
+        )
+
+        actual_home = clean(
+            schedule_row.get(
+                "home_team"
+            )
+        )
+
+        if (
+            actual_away != expected_away
+            or actual_home != expected_home
+        ):
+            identity_mismatches.append(
+                {
+                    "game_id":
+                        game_id,
+                    "projected_away":
+                        expected_away,
+                    "schedule_away":
+                        actual_away,
+                    "projected_home":
+                        expected_home,
+                    "schedule_home":
+                        actual_home,
+                }
+            )
+
+    if identity_mismatches:
+        fail(
+            "Weekly schedule team identity does not match "
+            "the projected input; "
+            f"count={len(identity_mismatches)} "
+            f"examples={identity_mismatches[:10]}"
         )
 
     columns = [
         "game_id",
+        "kickoff_utc",
         "neutral_site",
         "roof",
         "bookmaker",
@@ -1432,7 +1944,9 @@ def merge_schedule(
         on="game_id",
         how="left",
         validate="one_to_one",
+        sort=False,
     )
+
 
 
 def build_output(
@@ -1597,38 +2111,12 @@ def preserve_locked_selected_rows(
     output: pd.DataFrame,
     working: pd.DataFrame,
     existing_output_path: Path,
-) -> tuple[pd.DataFrame, int]:
-    require_columns(
-        working,
-        [
-            "game_id",
-            "sched_game_locked",
-        ],
-        "candidate working frame",
-    )
-
-    lock_values = pd.to_numeric(
-        working[
-            "sched_game_locked"
-        ],
-        errors="coerce",
-    ).fillna(
-        0
-    )
-
-    locked_ids = set(
-        working.loc[
-            lock_values.eq(
-                1
-            ),
-            "game_id",
-        ].map(
-            normalize_game_id
-        )
-    )
-
-    locked_ids.discard(
-        ""
+) -> tuple[
+    pd.DataFrame,
+    int,
+]:
+    locked_ids = locked_game_ids(
+        working
     )
 
     if not locked_ids:
@@ -1639,9 +2127,10 @@ def preserve_locked_selected_rows(
 
     if not existing_output_path.is_file():
         fail(
-            f"{len(locked_ids)} game(s) have already kicked off "
-            "but no existing selected output is available to "
-            "preserve. Refusing to rebuild locked selections. "
+            f"{len(locked_ids)} game(s) are locked "
+            "by schedule flag or kickoff time but no existing "
+            "selected output is available to preserve. "
+            "Refusing to rebuild locked selections. "
             f"game_ids={sorted(locked_ids)[:10]}"
         )
 
@@ -1652,10 +2141,7 @@ def preserve_locked_selected_rows(
 
     require_columns(
         existing,
-        [
-            "game_id",
-            *output.columns.tolist(),
-        ],
+        output.columns.tolist(),
         "existing selected output",
     )
 
@@ -1682,7 +2168,10 @@ def preserve_locked_selected_rows(
             f"game_ids={missing_locked[:10]}"
         )
 
-    result = output.astype(object).copy()
+    result = output.astype(
+        object
+    ).copy()
+
     result[
         "game_id"
     ] = result[
@@ -1705,8 +2194,8 @@ def preserve_locked_selected_rows(
 
         if not mask.any():
             fail(
-                f"Locked game_id={game_id} is missing from the "
-                "new selected output frame"
+                f"Locked game_id={game_id} is missing "
+                "from the new selected output frame"
             )
 
         prior_row = existing_lookup.loc[
@@ -1721,36 +2210,585 @@ def preserve_locked_selected_rows(
 
     return (
         result,
-        len(locked_ids),
+        len(
+            locked_ids
+        ),
+    )
+
+
+
+def assert_close(
+    actual: float,
+    expected: float,
+    label: str,
+) -> None:
+    if not math.isclose(
+        actual,
+        expected,
+        rel_tol=0.0,
+        abs_tol=CALCULATION_TOLERANCE,
+    ):
+        fail(
+            f"{label} mismatch: "
+            f"actual={actual} expected={expected}"
+        )
+
+
+def candidate_available(
+    row: pd.Series,
+    prefix: str,
+) -> int:
+    value = parse_int(
+        row.get(
+            f"{prefix}_available"
+        )
+    )
+
+    if value not in {
+        0,
+        1,
+    }:
+        fail(
+            f"game_id={row['game_id']}: "
+            f"{prefix}_available must be 0 or 1"
+        )
+
+    return value
+
+
+def validate_candidate_side(
+    row: pd.Series,
+    prefix: str,
+    expected_model_probability: float,
+    expected_fair_probability: float,
+    max_kelly: float,
+) -> None:
+    odds = required_numeric(
+        row,
+        f"{prefix}_odds_american",
+    )
+
+    if odds == 0:
+        fail(
+            f"game_id={row['game_id']}: "
+            f"{prefix}_odds_american cannot be 0"
+        )
+
+    model_probability = required_numeric(
+        row,
+        f"{prefix}_model_probability",
+    )
+
+    implied_probability = required_numeric(
+        row,
+        f"{prefix}_implied_probability",
+    )
+
+    edge = required_numeric(
+        row,
+        f"{prefix}_edge",
+    )
+
+    ev = required_numeric(
+        row,
+        f"{prefix}_ev",
+    )
+
+    full_kelly = required_numeric(
+        row,
+        f"{prefix}_full_kelly",
+    )
+
+    kelly = required_numeric(
+        row,
+        f"{prefix}_kelly",
+    )
+
+    assert_close(
+        model_probability,
+        expected_model_probability,
+        (
+            f"game_id={row['game_id']} "
+            f"{prefix} model probability"
+        ),
+    )
+
+    assert_close(
+        implied_probability,
+        expected_fair_probability,
+        (
+            f"game_id={row['game_id']} "
+            f"{prefix} no-vig probability"
+        ),
+    )
+
+    expected_metrics = calculate_metrics(
+        expected_model_probability,
+        odds,
+        expected_fair_probability,
+    )
+
+    assert_close(
+        edge,
+        expected_metrics[
+            "edge"
+        ],
+        (
+            f"game_id={row['game_id']} "
+            f"{prefix} edge"
+        ),
+    )
+
+    assert_close(
+        ev,
+        expected_metrics[
+            "ev"
+        ],
+        (
+            f"game_id={row['game_id']} "
+            f"{prefix} EV"
+        ),
+    )
+
+    assert_close(
+        full_kelly,
+        expected_metrics[
+            "full_kelly"
+        ],
+        (
+            f"game_id={row['game_id']} "
+            f"{prefix} full Kelly"
+        ),
+    )
+
+    expected_kelly = min(
+        expected_metrics[
+            "full_kelly"
+        ],
+        max_kelly,
+    )
+
+    assert_close(
+        kelly,
+        expected_kelly,
+        (
+            f"game_id={row['game_id']} "
+            f"{prefix} capped Kelly"
+        ),
+    )
+
+
+def validate_candidate_math(
+    df: pd.DataFrame,
+    max_kelly: float,
+) -> None:
+    for _, row in df.iterrows():
+        game_id = clean(
+            row.get(
+                "game_id"
+            )
+        )
+
+        ml_home_available = candidate_available(
+            row,
+            "ml_home",
+        )
+
+        ml_away_available = candidate_available(
+            row,
+            "ml_away",
+        )
+
+        if (
+            ml_home_available
+            != ml_away_available
+        ):
+            fail(
+                f"game_id={game_id}: "
+                "moneyline side availability mismatch"
+            )
+
+        if ml_home_available == 1:
+            home_odds = required_numeric(
+                row,
+                "ml_home_odds_american",
+            )
+
+            away_odds = required_numeric(
+                row,
+                "ml_away_odds_american",
+            )
+
+            (
+                home_fair,
+                away_fair,
+            ) = no_vig_probabilities(
+                home_odds,
+                away_odds,
+            )
+
+            home_model = numeric_probability(
+                row,
+                "home_win_probability",
+            )
+
+            away_model = numeric_probability(
+                row,
+                "away_win_probability",
+            )
+
+            validate_candidate_side(
+                row,
+                "ml_home",
+                home_model,
+                home_fair,
+                max_kelly,
+            )
+
+            validate_candidate_side(
+                row,
+                "ml_away",
+                away_model,
+                away_fair,
+                max_kelly,
+            )
+
+        spread_home_available = candidate_available(
+            row,
+            "spread_home",
+        )
+
+        spread_away_available = candidate_available(
+            row,
+            "spread_away",
+        )
+
+        if (
+            spread_home_available
+            != spread_away_available
+        ):
+            fail(
+                f"game_id={game_id}: "
+                "spread side availability mismatch"
+            )
+
+        if spread_home_available == 1:
+            home_line = required_numeric(
+                row,
+                "spread_home_line",
+            )
+
+            away_line = required_numeric(
+                row,
+                "spread_away_line",
+            )
+
+            if not math.isclose(
+                home_line
+                + away_line,
+                0.0,
+                rel_tol=0.0,
+                abs_tol=SPREAD_LINE_TOLERANCE,
+            ):
+                fail(
+                    f"game_id={game_id}: "
+                    "serialized spread lines are not opposites"
+                )
+
+            home_odds = required_numeric(
+                row,
+                "spread_home_odds_american",
+            )
+
+            away_odds = required_numeric(
+                row,
+                "spread_away_odds_american",
+            )
+
+            (
+                home_fair,
+                away_fair,
+            ) = no_vig_probabilities(
+                home_odds,
+                away_odds,
+            )
+
+            (
+                home_model,
+                away_model,
+            ) = spread_model_probabilities(
+                row,
+                home_line,
+            )
+
+            validate_candidate_side(
+                row,
+                "spread_home",
+                home_model,
+                home_fair,
+                max_kelly,
+            )
+
+            validate_candidate_side(
+                row,
+                "spread_away",
+                away_model,
+                away_fair,
+                max_kelly,
+            )
+
+        total_over_available = candidate_available(
+            row,
+            "total_over",
+        )
+
+        total_under_available = candidate_available(
+            row,
+            "total_under",
+        )
+
+        if (
+            total_over_available
+            != total_under_available
+        ):
+            fail(
+                f"game_id={game_id}: "
+                "total side availability mismatch"
+            )
+
+        if total_over_available == 1:
+            over_line = required_numeric(
+                row,
+                "total_over_line",
+            )
+
+            under_line = required_numeric(
+                row,
+                "total_under_line",
+            )
+
+            if not math.isclose(
+                over_line,
+                under_line,
+                rel_tol=0.0,
+                abs_tol=SPREAD_LINE_TOLERANCE,
+            ):
+                fail(
+                    f"game_id={game_id}: "
+                    "serialized total lines disagree"
+                )
+
+            over_odds = required_numeric(
+                row,
+                "total_over_odds_american",
+            )
+
+            under_odds = required_numeric(
+                row,
+                "total_under_odds_american",
+            )
+
+            (
+                over_fair,
+                under_fair,
+            ) = no_vig_probabilities(
+                over_odds,
+                under_odds,
+            )
+
+            (
+                over_model,
+                under_model,
+            ) = total_model_probabilities(
+                row,
+                over_line,
+            )
+
+            validate_candidate_side(
+                row,
+                "total_over",
+                over_model,
+                over_fair,
+                max_kelly,
+            )
+
+            validate_candidate_side(
+                row,
+                "total_under",
+                under_model,
+                under_fair,
+                max_kelly,
+            )
+
+
+def validate_output_frame(
+    output: pd.DataFrame,
+    original: pd.DataFrame,
+    expected_columns: list[str],
+    max_kelly: float,
+) -> None:
+    if list(
+        output.columns
+    ) != expected_columns:
+        fail(
+            "Final candidate column order/integrity check failed"
+        )
+
+    if len(
+        output
+    ) != len(
+        original
+    ):
+        fail(
+            "Final candidate row count does not match input"
+        )
+
+    validate_unique_game_ids(
+        output,
+        "candidate output",
+    )
+
+    expected_ids = original[
+        "game_id"
+    ].map(
+        normalize_game_id
+    ).tolist()
+
+    actual_ids = output[
+        "game_id"
+    ].map(
+        normalize_game_id
+    ).tolist()
+
+    if actual_ids != expected_ids:
+        fail(
+            "game_id order changed during candidate processing"
+        )
+
+    expected_away = original[
+        "away_team"
+    ].map(
+        clean
+    ).tolist()
+
+    actual_away = output[
+        "away_team"
+    ].map(
+        clean
+    ).tolist()
+
+    if actual_away != expected_away:
+        fail(
+            "away_team changed during candidate processing"
+        )
+
+    expected_home = original[
+        "home_team"
+    ].map(
+        clean
+    ).tolist()
+
+    actual_home = output[
+        "home_team"
+    ].map(
+        clean
+    ).tolist()
+
+    if actual_home != expected_home:
+        fail(
+            "home_team changed during candidate processing"
+        )
+
+    validate_probability_pairs(
+        output
+    )
+
+    validate_candidate_math(
+        output,
+        max_kelly,
     )
 
 
 def write_atomic_csv(
     df: pd.DataFrame,
     path: Path,
-) -> None:
+    *,
+    original: pd.DataFrame,
+    expected_columns: list[str],
+    max_kelly: float,
+) -> bool:
     path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    temporary = path.with_suffix(
-        path.suffix
-        + ".tmp"
+    temporary = path.with_name(
+        f".{path.name}."
+        f"{uuid.uuid4().hex}.tmp"
     )
 
-    df.to_csv(
-        temporary,
-        index=False,
-    )
+    try:
+        with temporary.open(
+            "w",
+            newline="",
+            encoding="utf-8",
+        ) as handle:
+            df.to_csv(
+                handle,
+                index=False,
+                lineterminator="\n",
+            )
 
-    os.replace(
-        temporary,
-        path,
-    )
+            handle.flush()
+
+            os.fsync(
+                handle.fileno()
+            )
+
+        serialized = pd.read_csv(
+            temporary,
+            dtype=str,
+            keep_default_na=False,
+            na_filter=False,
+            encoding="utf-8-sig",
+            low_memory=False,
+        )
+
+        validate_output_frame(
+            serialized,
+            original,
+            expected_columns,
+            max_kelly,
+        )
+
+        new_bytes = temporary.read_bytes()
+
+        if (
+            path.is_file()
+            and path.read_bytes()
+            == new_bytes
+        ):
+            temporary.unlink(
+                missing_ok=True
+            )
+
+            return False
+
+        os.replace(
+            temporary,
+            path,
+        )
+
+        return True
+
+    finally:
+        temporary.unlink(
+            missing_ok=True
+        )
 
 
-def main() -> int:
+
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -1783,11 +2821,40 @@ def main() -> int:
         default=None,
     )
 
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+def run(
+    report: PipelineReporter,
+    args: argparse.Namespace,
+) -> int:
+    settings_path = args.settings.resolve()
+
+    report.add_input(
+        settings_path
+    )
+
+    report.add_input(
+        CURRENT_WEEK_CONFIG_PATH
+    )
 
     settings = read_yaml(
-        args.settings.resolve(),
+        settings_path,
         "settings config",
+    )
+
+    current_week = read_yaml(
+        CURRENT_WEEK_CONFIG_PATH,
+        "current-week config",
+    )
+
+    (
+        season,
+        week,
+    ) = resolve_target(
+        current_week,
+        args.season,
+        args.week,
     )
 
     selection_defaults = settings.get(
@@ -1825,9 +2892,12 @@ def main() -> int:
         sportsbook,
     ) = validate_settings(
         settings,
-        args.season,
-        args.week,
+        season,
+        week,
     )
+
+    report.season = season
+    report.week = week
 
     input_path = (
         args.input.resolve()
@@ -1847,6 +2917,55 @@ def main() -> int:
             / "02_select"
             / f"week_{week}_CFB_selected.csv"
         )
+    )
+
+    schedule_path = (
+        CFB_ROOT
+        / "00_intake"
+        / "schedule"
+        / "weekly"
+        / f"week_{week}_CFB_weekly_schedule.csv"
+    )
+
+    report.add_input(
+        input_path
+    )
+
+    report.add_input(
+        schedule_path
+    )
+
+    report.add_output(
+        output_path
+    )
+
+    report.update_details(
+        {
+            "script_version":
+                SCRIPT_VERSION,
+            "season_type":
+                season_type,
+            "sportsbook":
+                sportsbook,
+            "max_kelly":
+                float(
+                    max_kelly
+                ),
+            "input_path":
+                str(
+                    input_path
+                ),
+            "schedule_path":
+                str(
+                    schedule_path
+                ),
+            "output_path":
+                str(
+                    output_path
+                ),
+            "output_modified":
+                False,
+        }
     )
 
     if output_path == input_path:
@@ -1885,12 +3004,21 @@ def main() -> int:
         ),
     )
 
-    schedule_path = (
-        CFB_ROOT
-        / "00_intake"
-        / "schedule"
-        / "weekly"
-        / f"week_{week}_CFB_weekly_schedule.csv"
+    require_columns(
+        combined,
+        [
+            "home_spread",
+            "total",
+            "probability_margin_sd",
+            "probability_total_sd",
+        ],
+        "projected combined enriched file",
+    )
+
+    report.set_rows(
+        rows_in=len(
+            combined
+        ),
     )
 
     schedule = read_csv(
@@ -1905,6 +3033,18 @@ def main() -> int:
         week,
         season_type,
         sportsbook,
+    )
+
+    spread_line_repriced_games = count_line_movements(
+        working,
+        "home_spread",
+        "sched_home_spread",
+    )
+
+    total_line_repriced_games = count_line_movements(
+        working,
+        "total",
+        "sched_total",
     )
 
     output = build_output(
@@ -1930,56 +3070,165 @@ def main() -> int:
         + CANDIDATE_COLUMNS
     )
 
-    if list(
-        output.columns
-    ) != expected_columns:
-        fail(
-            "Final candidate column "
-            "order/integrity check failed"
-        )
+    validate_output_frame(
+        output,
+        combined,
+        expected_columns,
+        max_kelly,
+    )
 
-    if (
-        output[
-            "game_id"
-        ].tolist()
-        != combined[
-            "game_id"
-        ].tolist()
-    ):
-        fail(
-            "game_id order changed during "
-            "candidate processing"
-        )
-
-    if (
-        output[
-            "away_team"
-        ].tolist()
-        != combined[
-            "away_team"
-        ].tolist()
-    ):
-        fail(
-            "away_team changed during "
-            "candidate processing"
-        )
-
-    if (
-        output[
-            "home_team"
-        ].tolist()
-        != combined[
-            "home_team"
-        ].tolist()
-    ):
-        fail(
-            "home_team changed during "
-            "candidate processing"
-        )
-
-    write_atomic_csv(
+    output_modified = write_atomic_csv(
         output,
         output_path,
+        original=combined,
+        expected_columns=expected_columns,
+        max_kelly=max_kelly,
+    )
+
+    candidate_counts: dict[
+        str,
+        int,
+    ] = {}
+
+    for prefix in [
+        "ml_home",
+        "ml_away",
+        "spread_home",
+        "spread_away",
+        "total_over",
+        "total_under",
+    ]:
+        candidate_counts[
+            prefix
+        ] = int(
+            pd.to_numeric(
+                output[
+                    f"{prefix}_available"
+                ],
+                errors="coerce",
+            )
+            .fillna(
+                0
+            )
+            .sum()
+        )
+
+    odds_available_games = int(
+        pd.to_numeric(
+            working[
+                "sched_odds_available"
+            ],
+            errors="coerce",
+        )
+        .fillna(
+            0
+        )
+        .eq(
+            1
+        )
+        .sum()
+    )
+
+    ml_current_line_missing = int(
+        output[
+            "ml_selection_reason"
+        ].eq(
+            "CURRENT_LINE_MISSING"
+        ).sum()
+    )
+
+    spread_current_line_missing = int(
+        output[
+            "spread_selection_reason"
+        ].eq(
+            "CURRENT_LINE_MISSING"
+        ).sum()
+    )
+
+    total_current_line_missing = int(
+        output[
+            "total_selection_reason"
+        ].eq(
+            "CURRENT_LINE_MISSING"
+        ).sum()
+    )
+
+    current_odds_unavailable_games = int(
+        output[
+            "ml_selection_reason"
+        ].eq(
+            "CURRENT_ODDS_UNAVAILABLE"
+        ).sum()
+    )
+
+    report.set_rows(
+        rows_out=len(
+            output
+        ),
+    )
+
+    report.update_details(
+        {
+            "candidate_game_count":
+                len(
+                    output
+                ),
+            "locked_games_preserved":
+                locked_games_preserved,
+            "odds_available_games":
+                odds_available_games,
+            "current_odds_unavailable_games":
+                current_odds_unavailable_games,
+            "moneyline_current_line_missing_games":
+                ml_current_line_missing,
+            "spread_current_line_missing_games":
+                spread_current_line_missing,
+            "total_current_line_missing_games":
+                total_current_line_missing,
+            "spread_probability_recomputed_games":
+                candidate_counts[
+                    "spread_home"
+                ],
+            "total_probability_recomputed_games":
+                candidate_counts[
+                    "total_over"
+                ],
+            "spread_line_repriced_games":
+                spread_line_repriced_games,
+            "total_line_repriced_games":
+                total_line_repriced_games,
+            "ml_home_candidates":
+                candidate_counts[
+                    "ml_home"
+                ],
+            "ml_away_candidates":
+                candidate_counts[
+                    "ml_away"
+                ],
+            "spread_home_candidates":
+                candidate_counts[
+                    "spread_home"
+                ],
+            "spread_away_candidates":
+                candidate_counts[
+                    "spread_away"
+                ],
+            "total_over_candidates":
+                candidate_counts[
+                    "total_over"
+                ],
+            "total_under_candidates":
+                candidate_counts[
+                    "total_under"
+                ],
+            "output_modified":
+                output_modified,
+        }
+    )
+
+    print(
+        "selections.py "
+        f"version={SCRIPT_VERSION}"
     )
 
     print(
@@ -1994,54 +3243,82 @@ def main() -> int:
         f"{locked_games_preserved}"
     )
 
-    for column, label in [
-        (
-            "ml_home_available",
-            "ml_home",
-        ),
-        (
-            "ml_away_available",
-            "ml_away",
-        ),
-        (
-            "spread_home_available",
-            "spread_home",
-        ),
-        (
-            "spread_away_available",
-            "spread_away",
-        ),
-        (
-            "total_over_available",
-            "total_over",
-        ),
-        (
-            "total_under_available",
-            "total_under",
-        ),
+    print(
+        "spread_probability_recomputed_games="
+        f"{candidate_counts['spread_home']}"
+    )
+
+    print(
+        "total_probability_recomputed_games="
+        f"{candidate_counts['total_over']}"
+    )
+
+    print(
+        "spread_line_repriced_games="
+        f"{spread_line_repriced_games}"
+    )
+
+    print(
+        "total_line_repriced_games="
+        f"{total_line_repriced_games}"
+    )
+
+    for prefix in [
+        "ml_home",
+        "ml_away",
+        "spread_home",
+        "spread_away",
+        "total_over",
+        "total_under",
     ]:
-        count = int(
-            pd.to_numeric(
-                output[
-                    column
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0
-            )
-            .sum()
+        print(
+            f"{prefix}_candidates="
+            f"{candidate_counts[prefix]}"
         )
 
-        print(
-            f"{label}_candidates={count}"
-        )
+    print(
+        "output_modified="
+        f"{'yes' if output_modified else 'no'}"
+    )
 
     print(
         f"Updated: {output_path}"
     )
 
     return 0
+
+
+def main() -> int:
+    args = parse_args()
+
+    with PipelineReporter(
+        script=__file__,
+        stage="02_select",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        season=(
+            args.season
+            if args.season is not None
+            else None
+        ),
+        week=(
+            args.week
+            if args.week is not None
+            else None
+        ),
+        extra_context={
+            "script_version":
+                SCRIPT_VERSION,
+            "selection_scope":
+                "candidate_enrichment",
+        },
+    ) as report:
+        return run(
+            report,
+            args,
+        )
+
 
 
 if __name__ == "__main__":
