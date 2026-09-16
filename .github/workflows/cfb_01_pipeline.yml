@@ -325,7 +325,7 @@ jobs:
           season = str(int(os.environ["CFB_SEASON"]))
           root = Path("docs/win/football/cfb/04_final_results")
 
-          def read_csv(path, required=(), require_rows=True):
+          def read_csv(path, required=(), require_rows=False):
               if not path.is_file() or path.stat().st_size == 0:
                   raise RuntimeError(f"{path}: missing or empty")
 
@@ -359,6 +359,8 @@ jobs:
               {"season", "week", "game_id", "market_type", "bet_result", "bet_units", "final_status"},
           )
 
+          has_bets = bool(work)
+
           for line, row in enumerate(work, start=2):
               if str(row["season"]).strip() != season:
                   raise RuntimeError(f"work_cfb.csv: wrong season at line {line}")
@@ -369,6 +371,11 @@ jobs:
               root / "cfb_summary_overall.csv",
               {"league", "season", "market_type", "Win", "Loss", "Pending", "Total", "Selected", "Win_Pct", "units"},
           )
+
+          if has_bets and not summary:
+              raise RuntimeError(
+                  "cfb_summary_overall.csv contains no data rows"
+              )
 
           for line, row in enumerate(summary, start=2):
               if str(row["league"]).strip() != "CFB":
@@ -383,7 +390,11 @@ jobs:
               "cfb_summary_by_week.csv",
               "cfb_bet_log.csv",
           ):
-              read_csv(overview / name)
+              rows = read_csv(overview / name)
+              if has_bets and not rows:
+                  raise RuntimeError(
+                      f"{overview / name}: contains no data rows"
+                  )
 
           for name in ("moneyline", "spread", "totals"):
               directory = root / "reports" / name

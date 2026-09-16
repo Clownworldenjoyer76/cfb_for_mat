@@ -20,18 +20,37 @@ import argparse
 import math
 import os
 import shutil
+import sys
+import tempfile
+import uuid
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
+import yaml
 
+
+SCRIPT_VERSION = "cfb-results-reports-v2-hardened-2026-09-16"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CFB_ROOT = SCRIPT_DIR.parents[1]
+SCRIPTS_DIR = SCRIPT_DIR.parent
+REPORT_ROOT = CFB_ROOT / "errors"
+CURRENT_WEEK_CONFIG = CFB_ROOT / "config" / "current_week.yaml"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from pipeline_reporter import PipelineReporter
 
 DEFAULT_INPUT_FILE = CFB_ROOT / "04_final_results" / "intermediate" / "work_cfb.csv"
-SUMMARY_DIR = CFB_ROOT / "04_final_results"
-REPORTS_DIR = SUMMARY_DIR / "reports"
+
+FINAL_RESULTS_DIR = CFB_ROOT / "04_final_results"
+FINAL_SUMMARY_FILE = FINAL_RESULTS_DIR / "cfb_summary_overall.csv"
+FINAL_REPORTS_DIR = FINAL_RESULTS_DIR / "reports"
+
+SUMMARY_DIR = FINAL_RESULTS_DIR
+REPORTS_DIR = FINAL_REPORTS_DIR
 OVERVIEW_DIR = REPORTS_DIR / "overview"
 ML_DIR = REPORTS_DIR / "moneyline"
 SPREAD_DIR = REPORTS_DIR / "spread"
@@ -39,7 +58,18 @@ TOTAL_DIR = REPORTS_DIR / "totals"
 
 LEAGUE = "CFB"
 
-VALID_GRADED_RESULTS = {"Win", "Loss", "Push"}
+VALID_RESULTS = {
+    "Win",
+    "Loss",
+    "Push",
+    "Void",
+    "Pending",
+    "Invalid Selection",
+    "Invalid Line",
+    "No Bet",
+}
+SETTLED_RESULTS = {"Win", "Loss", "Push", "Void"}
+MARKET_TYPES = {"moneyline", "spread", "total"}
 
 
 # ---------------------------------------------------------------------------
@@ -84,6 +114,7 @@ def clear_report_outputs() -> None:
         directory.mkdir(parents=True, exist_ok=True)
 
 
+
 def normalize_result(value: Any) -> str:
     raw = clean(value).casefold()
     mapping = {
@@ -96,8 +127,15 @@ def normalize_result(value: Any) -> str:
         "invalid line": "Invalid Line",
         "no bet": "No Bet",
     }
-    return mapping.get(raw, clean(value).title())
 
+    result = mapping.get(raw)
+
+    if result is None:
+        raise RuntimeError(
+            f"Unsupported bet_result value: {value!r}"
+        )
+
+    return result
 
 def require_columns(df: pd.DataFrame, columns: list[str], label: str) -> None:
     missing = [column for column in columns if column not in df.columns]
@@ -108,6 +146,492 @@ def require_columns(df: pd.DataFrame, columns: list[str], label: str) -> None:
 def numeric_sort_value(value: Any) -> tuple[int, float | str]:
     number = to_float(value)
     return (0, number) if number is not None else (1, clean(value))
+
+
+def required_float(value: Any, label: str) -> float:
+    text = clean(value)
+
+    if not text:
+        raise RuntimeError(f"{label} is required")
+
+    try:
+        number = float(text)
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError(
+            f"{label} must be numeric; found {value!r}"
+        ) from exc
+
+    if not math.isfinite(number):
+        raise RuntimeError(
+            f"{label} must be finite; found {value!r}"
+        )
+
+    return number
+
+
+def required_int(value: Any, label: str) -> int:
+    number = required_float(value, label)
+
+    if not number.is_integer():
+        raise RuntimeError(
+            f"{label} must be a whole number; found {value!r}"
+        )
+
+    return int(number)
+
+
+def load_config(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        raise RuntimeError(f"Missing config: {path}")
+
+    data = yaml.safe_load(
+        path.read_text(encoding="utf-8")
+    )
+
+    if not isinstance(data, dict):
+        raise RuntimeError(
+            f"{path} must contain a YAML mapping"
+        )
+
+    return data
+
+
+def resolve_target(
+    config: dict[str, Any],
+    season_override: int | None,
+    season_type_override: int | None,
+) -> tuple[int, int]:
+    season = (
+        required_int(config.get("season"), "current_week.season")
+        if season_override is None
+        else int(season_override)
+    )
+
+    season_type = (
+        required_int(
+            config.get("season_type"),
+            "current_week.season_type",
+        )
+        if season_type_override is None
+        else int(season_type_override)
+    )
+
+    if season < 1900:
+        raise RuntimeError(f"Invalid season: {season}")
+
+    if season_type <= 0:
+        raise RuntimeError(
+            f"Invalid season_type: {season_type}"
+        )
+
+    return season, season_type
+
+
+def configure_output_root(root: Path) -> None:
+    global SUMMARY_DIR
+    global REPORTS_DIR
+    global OVERVIEW_DIR
+    global ML_DIR
+    global SPREAD_DIR
+    global TOTAL_DIR
+
+    SUMMARY_DIR = root
+    REPORTS_DIR = root / "reports"
+    OVERVIEW_DIR = REPORTS_DIR / "overview"
+    ML_DIR = REPORTS_DIR / "moneyline"
+    SPREAD_DIR = REPORTS_DIR / "spread"
+    TOTAL_DIR = REPORTS_DIR / "totals"
+
+
+def validate_input(
+    df: pd.DataFrame,
+    season: int,
+    season_type: int,
+) -> None:
+    required = [
+        "season",
+        "season_type",
+        "week",
+        "game_id",
+        "game_date",
+        "game_time",
+        "away_team",
+        "home_team",
+        "market_type",
+        "bet_side",
+        "side_group",
+        "line",
+        "odds_american",
+        "model_prob",
+        "implied_prob",
+        "edge",
+        "ev",
+        "full_kelly",
+        "kelly",
+        "selection_reason",
+        "bet_result",
+        "bet_units",
+        "final_status",
+        "final_away_score",
+        "final_home_score",
+        "final_total",
+        "final_home_margin",
+        "ev_bucket",
+        "odds_bucket",
+        "kelly_bucket",
+        "win_prob_bucket",
+        "spread_line_bucket",
+        "spread_role",
+        "total_bucket",
+        "day_night",
+    ]
+
+    require_columns(df, required, "work_cfb.csv")
+
+    seen: set[tuple[int, int, str, str]] = set()
+
+    for line, (_, row) in enumerate(
+        df.iterrows(),
+        start=2,
+    ):
+        row_season = required_int(
+            row["season"],
+            f"work_cfb.csv line {line}: season",
+        )
+        row_season_type = required_int(
+            row["season_type"],
+            f"work_cfb.csv line {line}: season_type",
+        )
+        week = required_int(
+            row["week"],
+            f"work_cfb.csv line {line}: week",
+        )
+        game_id = clean(row["game_id"])
+        market = clean(row["market_type"]).lower()
+        result = normalize_result(row["bet_result"])
+        side_group = clean(row["side_group"]).upper()
+
+        if row_season != season:
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: wrong season"
+            )
+
+        if row_season_type != season_type:
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: wrong season_type"
+            )
+
+        if week <= 0:
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: invalid week"
+            )
+
+        if not game_id:
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: blank game_id"
+            )
+
+        if market not in MARKET_TYPES:
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: invalid market_type"
+            )
+
+        if result == "No Bet":
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: selected ledger contains No Bet"
+            )
+
+        allowed_sides = (
+            {"OVER", "UNDER"}
+            if market == "total"
+            else {"HOME", "AWAY"}
+        )
+
+        if side_group not in allowed_sides:
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: invalid side_group"
+            )
+
+        odds = required_float(
+            row["odds_american"],
+            f"work_cfb.csv line {line}: odds_american",
+        )
+        if odds == 0:
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: zero odds"
+            )
+
+        for column in (
+            "ev",
+            "edge",
+            "kelly",
+            "full_kelly",
+        ):
+            required_float(
+                row[column],
+                f"work_cfb.csv line {line}: {column}",
+            )
+
+        for column in (
+            "model_prob",
+            "implied_prob",
+        ):
+            probability = required_float(
+                row[column],
+                f"work_cfb.csv line {line}: {column}",
+            )
+
+            if not 0.0 <= probability <= 1.0:
+                raise RuntimeError(
+                    f"work_cfb.csv line {line}: "
+                    f"{column} outside [0,1]"
+                )
+
+        units = clean(row["bet_units"])
+
+        if result in SETTLED_RESULTS:
+            required_float(
+                units,
+                f"work_cfb.csv line {line}: bet_units",
+            )
+        elif units:
+            required_float(
+                units,
+                f"work_cfb.csv line {line}: bet_units",
+            )
+
+        key = (
+            row_season,
+            week,
+            game_id,
+            market,
+        )
+
+        if key in seen:
+            raise RuntimeError(
+                f"work_cfb.csv line {line}: duplicate selected market"
+            )
+
+        seen.add(key)
+
+
+def read_generated_csv(
+    path: Path,
+    require_rows: bool,
+) -> pd.DataFrame:
+    if not path.is_file() or path.stat().st_size == 0:
+        raise RuntimeError(
+            f"Generated report missing or empty: {path}"
+        )
+
+    frame = pd.read_csv(
+        path,
+        dtype=str,
+        keep_default_na=False,
+        na_filter=False,
+        encoding="utf-8-sig",
+        low_memory=False,
+    )
+
+    if len(frame.columns) == 0:
+        raise RuntimeError(
+            f"Generated report missing header: {path}"
+        )
+
+    if require_rows and frame.empty:
+        raise RuntimeError(
+            f"Generated report contains no rows: {path}"
+        )
+
+    return frame
+
+
+def validate_generated(
+    root: Path,
+    work: pd.DataFrame,
+) -> None:
+    has_bets = not work.empty
+
+    top = read_generated_csv(
+        root / "cfb_summary_overall.csv",
+        has_bets,
+    )
+
+    require_columns(
+        top,
+        [
+            "league",
+            "season",
+            "market_type",
+            "Selected",
+            "units",
+        ],
+        "generated cfb_summary_overall.csv",
+    )
+
+    core = [
+        "cfb_summary_overall.csv",
+        "cfb_summary_by_market.csv",
+        "cfb_summary_by_week.csv",
+        "cfb_bet_log.csv",
+    ]
+
+    for name in core:
+        read_generated_csv(
+            root / "reports" / "overview" / name,
+            has_bets,
+        )
+
+    for directory in (
+        "moneyline",
+        "spread",
+        "totals",
+    ):
+        files = sorted(
+            (root / "reports" / directory).glob("*.csv")
+        )
+
+        if not files:
+            raise RuntimeError(
+                f"Generated {directory} directory has no CSV reports"
+            )
+
+        for path in files:
+            read_generated_csv(path, False)
+
+    if has_bets:
+        selected = sum(
+            required_int(value, "generated Selected")
+            for value in top["Selected"]
+        )
+
+        if selected != len(work):
+            raise RuntimeError(
+                "Generated summary Selected total does not match work_cfb.csv"
+            )
+
+        input_units = float(
+            pd.to_numeric(
+                work["bet_units"],
+                errors="coerce",
+            )
+            .dropna()
+            .sum()
+        )
+
+        report_units = sum(
+            required_float(value, "generated units")
+            for value in top["units"]
+        )
+
+        if not math.isclose(
+            input_units,
+            report_units,
+            rel_tol=0.0,
+            abs_tol=1e-4,
+        ):
+            raise RuntimeError(
+                "Generated summary units do not match work_cfb.csv"
+            )
+
+    elif not top.empty:
+        raise RuntimeError(
+            "Generated summary has rows despite zero selected bets"
+        )
+
+
+def tree_snapshot(root: Path) -> dict[str, bytes]:
+    if not root.is_dir():
+        return {}
+
+    return {
+        str(path.relative_to(root)): path.read_bytes()
+        for path in sorted(root.rglob("*.csv"))
+    }
+
+
+def publish_generated(stage_root: Path) -> bool:
+    stage_summary = stage_root / "cfb_summary_overall.csv"
+    stage_reports = stage_root / "reports"
+
+    modified = (
+        not FINAL_SUMMARY_FILE.is_file()
+        or FINAL_SUMMARY_FILE.read_bytes()
+        != stage_summary.read_bytes()
+        or tree_snapshot(FINAL_REPORTS_DIR)
+        != tree_snapshot(stage_reports)
+    )
+
+    if not modified:
+        return False
+
+    token = uuid.uuid4().hex
+    summary_backup = FINAL_RESULTS_DIR / f".cfb_summary_overall.{token}.bak"
+    reports_backup = FINAL_RESULTS_DIR / f".reports.{token}.bak"
+
+    had_summary = FINAL_SUMMARY_FILE.exists()
+    had_reports = FINAL_REPORTS_DIR.exists()
+
+    try:
+        if had_summary:
+            os.replace(
+                FINAL_SUMMARY_FILE,
+                summary_backup,
+            )
+
+        if had_reports:
+            os.replace(
+                FINAL_REPORTS_DIR,
+                reports_backup,
+            )
+
+        os.replace(
+            stage_summary,
+            FINAL_SUMMARY_FILE,
+        )
+
+        os.replace(
+            stage_reports,
+            FINAL_REPORTS_DIR,
+        )
+
+    except Exception:
+        FINAL_SUMMARY_FILE.unlink(
+            missing_ok=True
+        )
+
+        if FINAL_REPORTS_DIR.exists():
+            shutil.rmtree(
+                FINAL_REPORTS_DIR,
+                ignore_errors=True,
+            )
+
+        if summary_backup.exists():
+            os.replace(
+                summary_backup,
+                FINAL_SUMMARY_FILE,
+            )
+
+        if reports_backup.exists():
+            os.replace(
+                reports_backup,
+                FINAL_REPORTS_DIR,
+            )
+
+        raise
+
+    finally:
+        summary_backup.unlink(
+            missing_ok=True
+        )
+
+        if reports_backup.exists():
+            shutil.rmtree(
+                reports_backup,
+                ignore_errors=True,
+            )
+
+    return True
 
 
 # ---------------------------------------------------------------------------
@@ -311,44 +835,44 @@ def write_bucket_report(
 # Enrichment / reports
 # ---------------------------------------------------------------------------
 
-def enrich(df: pd.DataFrame) -> pd.DataFrame:
+
+def enrich(
+    df: pd.DataFrame,
+    season: int,
+    season_type: int,
+) -> pd.DataFrame:
     work = df.copy()
 
-    require_columns(
+    validate_input(
         work,
-        [
-            "season",
-            "week",
-            "game_id",
-            "market_type",
-            "bet_side",
-            "side_group",
-            "odds_american",
-            "model_prob",
-            "ev",
-            "kelly",
-            "bet_result",
-            "bet_units",
-            "ev_bucket",
-            "odds_bucket",
-            "kelly_bucket",
-            "win_prob_bucket",
-            "spread_line_bucket",
-            "spread_role",
-            "total_bucket",
-        ],
-        "work_cfb.csv",
+        season,
+        season_type,
     )
 
     work["league"] = LEAGUE
-    work["market_type"] = work["market_type"].astype(str).str.strip().str.lower()
-    work["bet_side"] = work["bet_side"].astype(str).str.strip().str.lower()
-    work["side_group"] = work["side_group"].astype(str).str.strip().str.upper()
-    work["bet_result"] = work["bet_result"].map(normalize_result)
+    work["market_type"] = (
+        work["market_type"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
+    )
+    work["bet_side"] = (
+        work["bet_side"]
+        .astype(str)
+        .str.strip()
+        .str.lower()
+    )
+    work["side_group"] = (
+        work["side_group"]
+        .astype(str)
+        .str.strip()
+        .str.upper()
+    )
+    work["bet_result"] = work["bet_result"].map(
+        normalize_result
+    )
 
     return work
-
-
 
 def build_probability_validation(df: pd.DataFrame) -> None:
     metric_columns = [
@@ -580,9 +1104,6 @@ def build_overview(df: pd.DataFrame) -> None:
 
 def build_moneyline(df: pd.DataFrame) -> None:
     ml = df[df["market_type"].eq("moneyline")].copy()
-    if ml.empty:
-        return
-
     write_bucket_report(ml, ML_DIR, "ev_bucket", "cfb_moneyline_by_ev.csv")
     write_bucket_report(ml, ML_DIR, "odds_bucket", "cfb_moneyline_by_odds.csv")
     write_bucket_report(ml, ML_DIR, "kelly_bucket", "cfb_moneyline_by_kelly.csv")
@@ -615,9 +1136,6 @@ def build_moneyline(df: pd.DataFrame) -> None:
 
 def build_spread(df: pd.DataFrame) -> None:
     spread = df[df["market_type"].eq("spread")].copy()
-    if spread.empty:
-        return
-
     write_bucket_report(spread, SPREAD_DIR, "ev_bucket", "cfb_spread_by_ev.csv")
     write_bucket_report(spread, SPREAD_DIR, "odds_bucket", "cfb_spread_by_odds.csv")
     write_bucket_report(spread, SPREAD_DIR, "kelly_bucket", "cfb_spread_by_kelly.csv")
@@ -662,9 +1180,6 @@ def build_spread(df: pd.DataFrame) -> None:
 
 def build_totals(df: pd.DataFrame) -> None:
     totals = df[df["market_type"].eq("total")].copy()
-    if totals.empty:
-        return
-
     write_bucket_report(totals, TOTAL_DIR, "ev_bucket", "cfb_total_by_ev.csv")
     write_bucket_report(totals, TOTAL_DIR, "odds_bucket", "cfb_total_by_odds.csv")
     write_bucket_report(totals, TOTAL_DIR, "kelly_bucket", "cfb_total_by_kelly.csv")
@@ -702,57 +1217,238 @@ def build_totals(df: pd.DataFrame) -> None:
 # ---------------------------------------------------------------------------
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build CFB grading reports.")
+    parser = argparse.ArgumentParser(
+        description="Build validated CFB grading reports."
+    )
+
     parser.add_argument(
         "--input",
         type=Path,
         default=DEFAULT_INPUT_FILE,
     )
+
     parser.add_argument(
         "--season",
         type=int,
         default=None,
-        help="Optional season filter. If omitted, all seasons in work_cfb.csv are reported.",
+        help=(
+            "Target season. Defaults to "
+            "config/current_week.yaml."
+        ),
     )
+
+    parser.add_argument(
+        "--season-type",
+        type=int,
+        default=None,
+        help=(
+            "Target season type. Defaults to "
+            "config/current_week.yaml."
+        ),
+    )
+
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    input_file = args.input.resolve()
 
-    if not input_file.is_file():
-        raise FileNotFoundError(f"Input file not found: {input_file}")
+    with PipelineReporter(
+        script=__file__,
+        stage="04_final_results",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+        season=args.season,
+        week=None,
+        extra_context={
+            "script_version": SCRIPT_VERSION,
+            "output_scope": "grading_reports",
+        },
+    ) as report:
+        input_file = args.input.resolve()
 
-    clear_report_outputs()
+        report.add_input(
+            CURRENT_WEEK_CONFIG
+        )
+        report.add_input(
+            input_file
+        )
 
-    df = pd.read_csv(
-        input_file,
-        dtype=str,
-        keep_default_na=False,
-        na_filter=False,
-        encoding="utf-8-sig",
-        low_memory=False,
-    )
-    df = enrich(df)
+        if not input_file.is_file():
+            raise FileNotFoundError(
+                f"Input file not found: {input_file}"
+            )
 
-    if args.season is not None:
-        season_values = pd.to_numeric(df["season"], errors="coerce")
-        df = df.loc[season_values.eq(args.season)].copy()
+        config = load_config(
+            CURRENT_WEEK_CONFIG
+        )
 
-    build_top_summary(df)
-    build_overview(df)
-    build_moneyline(df)
-    build_spread(df)
-    build_totals(df)
+        season, season_type = resolve_target(
+            config,
+            args.season,
+            args.season_type,
+        )
 
-    print(
-        "CFB reports complete: "
-        f"selected_bets={len(df)} seasons={sorted(df['season'].dropna().unique().tolist()) if not df.empty else []} "
-        f"reports_dir={REPORTS_DIR}"
-    )
+        report.season = season
+
+        df = pd.read_csv(
+            input_file,
+            dtype=str,
+            keep_default_na=False,
+            na_filter=False,
+            encoding="utf-8-sig",
+            low_memory=False,
+        )
+
+        df = enrich(
+            df,
+            season,
+            season_type,
+        )
+
+        stage_root = Path(
+            tempfile.mkdtemp(
+                prefix=".cfb_reports_",
+                dir=FINAL_RESULTS_DIR,
+            )
+        )
+
+        try:
+            configure_output_root(
+                stage_root
+            )
+
+            clear_report_outputs()
+
+            build_top_summary(df)
+            build_overview(df)
+            build_moneyline(df)
+            build_spread(df)
+            build_totals(df)
+
+            validate_generated(
+                stage_root,
+                df,
+            )
+
+            configure_output_root(
+                FINAL_RESULTS_DIR
+            )
+
+            output_modified = publish_generated(
+                stage_root
+            )
+
+        finally:
+            configure_output_root(
+                FINAL_RESULTS_DIR
+            )
+
+            shutil.rmtree(
+                stage_root,
+                ignore_errors=True,
+            )
+
+        report.add_output(
+            FINAL_SUMMARY_FILE
+        )
+
+        report_files = sorted(
+            FINAL_REPORTS_DIR.rglob(
+                "*.csv"
+            )
+        )
+
+        for path in report_files:
+            report.add_output(
+                path
+            )
+
+        market_counts = (
+            df["market_type"]
+            .value_counts(dropna=False)
+            .to_dict()
+            if not df.empty
+            else {}
+        )
+
+        result_counts = (
+            df["bet_result"]
+            .value_counts(dropna=False)
+            .to_dict()
+            if not df.empty
+            else {}
+        )
+
+        settled_bets = int(
+            df["bet_result"]
+            .isin(SETTLED_RESULTS)
+            .sum()
+        )
+
+        probability_settled_bets = int(
+            df["bet_result"]
+            .isin({"Win", "Loss"})
+            .sum()
+        )
+
+        units = (
+            float(
+                pd.to_numeric(
+                    df["bet_units"],
+                    errors="coerce",
+                )
+                .dropna()
+                .sum()
+            )
+            if not df.empty
+            else 0.0
+        )
+
+        report.set_rows(
+            rows_in=len(df),
+            rows_out=len(df),
+        )
+
+        report.update_details(
+            {
+                "script_version":
+                    SCRIPT_VERSION,
+                "season_type":
+                    season_type,
+                "selected_bets":
+                    len(df),
+                "settled_bets":
+                    settled_bets,
+                "probability_settled_bets":
+                    probability_settled_bets,
+                "units":
+                    units,
+                "market_counts":
+                    market_counts,
+                "result_counts":
+                    result_counts,
+                "report_files":
+                    len(report_files) + 1,
+                "output_modified":
+                    output_modified,
+            }
+        )
+
+        print(
+            "CFB reports complete: "
+            f"version={SCRIPT_VERSION} "
+            f"selected_bets={len(df)} "
+            f"report_files={len(report_files) + 1} "
+            "output_modified="
+            f"{'yes' if output_modified else 'no'}"
+        )
+
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(
+        main()
+    )
