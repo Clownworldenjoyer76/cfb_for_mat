@@ -163,7 +163,12 @@ jobs:
               if not reader.fieldnames:
                   raise RuntimeError(f"{path}: missing CSV header")
 
-              if not rows:
+              is_selected_output = (
+                  path.parent.name == "selected"
+                  and path.name == f"week_{expected_week}_CFB_select_picks.csv"
+              )
+
+              if not rows and not is_selected_output:
                   raise RuntimeError(f"{path}: contains no data rows")
 
               for line, row in enumerate(rows, start=2):

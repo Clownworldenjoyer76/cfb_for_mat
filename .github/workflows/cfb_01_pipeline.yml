@@ -276,7 +276,12 @@ jobs:
               except csv.Error as exc:
                   raise RuntimeError(f"{path}: malformed CSV: {exc}") from exc
 
-              if not rows:
+              is_selected_output = (
+                  path.parent.name == "selected"
+                  and path.name == f"week_{week}_CFB_select_picks.csv"
+              )
+
+              if not rows and not is_selected_output:
                   raise RuntimeError(f"{path}: contains no data rows")
 
               for line, row in enumerate(rows, start=2):
