@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35084974005-attempt-1",
+  "run_id": "github-35100055970-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "pull_e_predictions.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_e_predictions.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_e_predictions.json",
-  "started_at_utc": "2026-09-16T10:30:07.125444+00:00",
-  "finished_at_utc": "2026-09-16T10:30:12.467880+00:00",
-  "duration_seconds": 5.342,
+  "started_at_utc": "2026-09-16T13:12:53.113386+00:00",
+  "finished_at_utc": "2026-09-16T13:12:59.772513+00:00",
+  "duration_seconds": 6.659,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2263,
+    "process_id": 2534,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35084974005",
+    "github_run_id": "35100055970",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "e297b57ee28657b3d75f6ecf21f2d45ea8093617",
+    "github_sha": "e9bc07cdc3b593541558fc1d9c9422934a50fbd5",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -80,6 +80,6 @@
       "teamPredPtDiff"
     ],
     "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/predictions/e_predictions/2026_2_3_e_predictions.csv",
-    "output_modified": true
+    "output_modified": false
   }
 }

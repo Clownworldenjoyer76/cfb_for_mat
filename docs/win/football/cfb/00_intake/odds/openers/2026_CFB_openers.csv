@@ -627,8 +627,8 @@ game_id,odds_provider_game_id,market_type,bet_side,opening_line,opening_odds_ame
 401858226,401858226,h2h,home,,750,,,DraftKings,,,,,,,750,850,100,ok,,200
 401858226,401858226,spreads,away,-19.5,-110,,,DraftKings,-19.5,-20.5,-1,,,,,,,ok,,200
 401858226,401858226,spreads,home,19.5,-110,,,DraftKings,19.5,20.5,1,,,,,,,ok,,200
-401858226,401858226,totals,over,50.5,-110,,,DraftKings,,,,50.5,55.5,5,,,,ok,,200
-401858226,401858226,totals,under,50.5,-110,,,DraftKings,,,,50.5,55.5,5,,,,ok,,200
+401858226,401858226,totals,over,50.5,-110,,,DraftKings,,,,50.5,56.5,6,,,,ok,,200
+401858226,401858226,totals,under,50.5,-110,,,DraftKings,,,,50.5,56.5,6,,,,ok,,200
 401858227,401858227,h2h,away,,,,,DraftKings,,,,,,,,,,missing,opening_away_moneyline_missing,200
 401858227,401858227,h2h,home,,,,,DraftKings,,,,,,,,,,missing,opening_home_moneyline_missing,200
 401858227,401858227,spreads,away,38.5,-110,,2026-09-16T10:27:54.977933+00:00,DraftKings,38.5,38.5,0,,,,,,,ok,,200
@@ -861,8 +861,8 @@ game_id,odds_provider_game_id,market_type,bet_side,opening_line,opening_odds_ame
 401858453,401858453,h2h,home,,-8000,,,DraftKings,,,,,,,-8000,-4500,3500,ok,,200
 401858453,401858453,spreads,away,29.5,-115,,,DraftKings,29.5,29.5,0,,,,,,,ok,,200
 401858453,401858453,spreads,home,-29.5,-105,,,DraftKings,-29.5,-29.5,0,,,,,,,ok,,200
-401858453,401858453,totals,over,53.5,-115,,,DraftKings,,,,53.5,52.5,-1,,,,ok,,200
-401858453,401858453,totals,under,53.5,-105,,,DraftKings,,,,53.5,52.5,-1,,,,ok,,200
+401858453,401858453,totals,over,53.5,-115,,,DraftKings,,,,53.5,51.5,-2,,,,ok,,200
+401858453,401858453,totals,under,53.5,-105,,,DraftKings,,,,53.5,51.5,-2,,,,ok,,200
 401858454,401858454,h2h,away,,,,,DraftKings,,,,,,,,,,missing,opening_away_moneyline_missing,200
 401858454,401858454,h2h,home,,,,,DraftKings,,,,,,,,,,missing,opening_home_moneyline_missing,200
 401858454,401858454,spreads,away,52.5,-102,,,DraftKings,52.5,52.5,0,,,,,,,ok,,200
@@ -1553,9 +1553,9 @@ game_id,odds_provider_game_id,market_type,bet_side,opening_line,opening_odds_ame
 401871046,401871046,spreads,home,-19.5,-110,,,DraftKings,-19.5,-16.5,3,,,,,,,ok,,200
 401871046,401871046,totals,over,52.5,-115,,,DraftKings,,,,52.5,52.5,0,,,,ok,,200
 401871046,401871046,totals,under,52.5,-105,,,DraftKings,,,,52.5,52.5,0,,,,ok,,200
-401871047,401871047,h2h,away,,-180,,,DraftKings,,,,,,,-180,-175,5,ok,,200
-401871047,401871047,h2h,home,,150,,,DraftKings,,,,,,,150,145,-5,ok,,200
-401871047,401871047,spreads,away,-4.5,-108,,,DraftKings,-4.5,-4,0.5,,,,,,,ok,,200
-401871047,401871047,spreads,home,4.5,-112,,,DraftKings,4.5,4,-0.5,,,,,,,ok,,200
+401871047,401871047,h2h,away,,-180,,,DraftKings,,,,,,,-180,-198,-18,ok,,200
+401871047,401871047,h2h,home,,150,,,DraftKings,,,,,,,150,164,14,ok,,200
+401871047,401871047,spreads,away,-4.5,-108,,,DraftKings,-4.5,-4.5,0,,,,,,,ok,,200
+401871047,401871047,spreads,home,4.5,-112,,,DraftKings,4.5,4.5,0,,,,,,,ok,,200
 401871047,401871047,totals,over,53.5,-108,,,DraftKings,,,,53.5,52.5,-1,,,,ok,,200
 401871047,401871047,totals,under,53.5,-112,,,DraftKings,,,,53.5,52.5,-1,,,,ok,,200
