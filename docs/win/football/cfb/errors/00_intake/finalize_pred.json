@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35100055970-attempt-1",
+  "run_id": "github-35140165010-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "finalize_pred.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/finalize_pred.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/finalize_pred.json",
-  "started_at_utc": "2026-09-16T13:12:59.949824+00:00",
-  "finished_at_utc": "2026-09-16T13:12:59.963989+00:00",
+  "started_at_utc": "2026-09-16T19:26:44.818671+00:00",
+  "finished_at_utc": "2026-09-16T19:26:44.832910+00:00",
   "duration_seconds": 0.014,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2539,
+    "process_id": 2520,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35100055970",
+    "github_run_id": "35140165010",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "e9bc07cdc3b593541558fc1d9c9422934a50fbd5",
+    "github_sha": "7d71e973dc32f823ab7855efa8c4a9dbb72c659f",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -48,12 +48,11 @@
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-16T13:12:59.963967+00:00",
+      "timestamp_utc": "2026-09-16T19:26:44.832892+00:00",
       "message": "Market total unavailable for one or more target games; projected score fields left blank",
       "details": {
-        "count": 2,
+        "count": 1,
         "game_ids": [
-          "401856811",
           "401858233"
         ]
       }
@@ -96,18 +95,12 @@
     "final_rows_expected": 75,
     "final_rows_produced": 75,
     "staged_rows_validated": 75,
-    "games_with_projected_scores": 73,
-    "missing_total_count": 2,
+    "games_with_projected_scores": 74,
+    "missing_total_count": 1,
     "missing_total_game_ids": [
-      "401856811",
       "401858233"
     ],
     "missing_total_details": [
-      {
-        "game_id": "401856811",
-        "odds_available": "1",
-        "odds_missing_reason": "total_market_unavailable"
-      },
       {
         "game_id": "401858233",
         "odds_available": "0",

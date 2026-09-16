@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35100055970-attempt-1",
+  "run_id": "github-35140165010-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,29 +9,29 @@
   "script": "projection.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/01_merge/projection.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/01_merge/projection.json",
-  "started_at_utc": "2026-09-16T13:15:21.483954+00:00",
-  "finished_at_utc": "2026-09-16T13:15:21.820822+00:00",
-  "duration_seconds": 0.337,
+  "started_at_utc": "2026-09-16T19:29:27.267789+00:00",
+  "finished_at_utc": "2026-09-16T19:29:27.771730+00:00",
+  "duration_seconds": 0.504,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2598,
+    "process_id": 2546,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35100055970",
+    "github_run_id": "35140165010",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "e9bc07cdc3b593541558fc1d9c9422934a50fbd5",
+    "github_sha": "7d71e973dc32f823ab7855efa8c4a9dbb72c659f",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
   "context": {
     "season": 2026,
     "week": 3,
-    "script_version": "cfb-inseason-v4-injury-reporter-2026-09-15",
+    "script_version": "cfb-inseason-v5-hardened-math-2026-09-16",
     "projection_scope": "week_2_plus"
   },
   "inputs": [
@@ -72,12 +72,19 @@
     "injury_input_rows": 0,
     "travel_input_rows": 75,
     "weather_input_rows": 75,
-    "travel_weather_coefficient_count": 2,
+    "travel_weather_coefficient_count": 3,
+    "travel_margin_features_selected": [
+      "travel_net_miles_1000",
+      "travel_net_west_to_east"
+    ],
+    "weather_total_features_selected": [
+      "weather_wind_speed_ms"
+    ],
     "games_with_market_spread": 74,
     "games_with_fpi_component": 57,
     "games_with_espn_component": 75,
     "games_with_current_team_stats_component": 57,
-    "games_with_market_total": 73,
+    "games_with_market_total": 74,
     "games_with_fresh_injury_adjustment": 0,
     "games_with_travel_adjustment": 63,
     "games_with_weather_adjustment": 75,
