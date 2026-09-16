@@ -290,7 +290,10 @@ def validate_stage(
     fields = set(state["fields"])
     rows = state["rows"]
 
-    required = {"season", "season_type", "game_id"}
+    required = {"season", "game_id"}
+
+    if key != "all_games":
+        required.add("season_type")
 
     if key != "season_schedule":
         required.add("week")
