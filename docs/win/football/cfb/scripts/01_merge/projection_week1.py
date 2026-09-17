@@ -4918,7 +4918,7 @@ def main() -> int:
             }
         )
 
-        result = _main_impl()
+        _main_impl()
 
         if not report_args.dry_run:
             if not output_path.is_file():
@@ -4957,13 +4957,7 @@ def main() -> int:
                 }
             )
 
-        return (
-            0
-            if result is None
-            else int(
-                result
-            )
-        )
+        return 0
 
 
 if __name__ == "__main__":
