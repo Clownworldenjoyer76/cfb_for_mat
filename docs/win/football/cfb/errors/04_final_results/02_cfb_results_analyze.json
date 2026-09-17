@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35225973997-attempt-1",
+  "run_id": "github-35230860400-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "02_cfb_results_analyze.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/04_final_results/02_cfb_results_analyze.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/04_final_results/02_cfb_results_analyze.json",
-  "started_at_utc": "2026-09-17T13:24:58.836194+00:00",
-  "finished_at_utc": "2026-09-17T13:24:59.026225+00:00",
-  "duration_seconds": 0.19,
+  "started_at_utc": "2026-09-17T14:08:21.450084+00:00",
+  "finished_at_utc": "2026-09-17T14:08:21.656143+00:00",
+  "duration_seconds": 0.206,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2626,
+    "process_id": 2584,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35225973997",
+    "github_run_id": "35230860400",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "16cb9fd4babbd2a9b53ce6e22626fbddde9c4206",
+    "github_sha": "c40365f09a2a9d7366274174e96af1b3ece2c5f4",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -44,7 +44,7 @@
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/intermediate/work_cfb.csv"
   ],
   "rows_in": 260,
-  "rows_out": 36,
+  "rows_out": 35,
   "warning_count": 0,
   "error_count": 0,
   "warnings": [],
@@ -61,25 +61,25 @@
       2,
       3
     ],
-    "selected_bets": 36,
+    "selected_bets": 35,
     "market_counts": {
-      "total": 21,
+      "total": 20,
       "moneyline": 9,
       "spread": 6
     },
     "result_counts": {
       "Win": 16,
-      "Pending": 11,
+      "Pending": 10,
       "Loss": 9
     },
     "grader_totals": {
-      "selected_bets": 36,
+      "selected_bets": 35,
       "graded_bets": 25,
       "wins": 16,
       "losses": 9,
       "pushes": 0,
       "voids": 0,
-      "pending_bets": 11,
+      "pending_bets": 10,
       "net_units": 2.2183578528993
     },
     "output_modified": true

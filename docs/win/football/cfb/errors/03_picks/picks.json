@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35225973997-attempt-1",
+  "run_id": "github-35230860400-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "picks.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/03_picks/picks.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/03_picks/picks.json",
-  "started_at_utc": "2026-09-17T13:24:55.258136+00:00",
-  "finished_at_utc": "2026-09-17T13:24:55.963034+00:00",
-  "duration_seconds": 0.705,
+  "started_at_utc": "2026-09-17T14:08:17.983444+00:00",
+  "finished_at_utc": "2026-09-17T14:08:18.672372+00:00",
+  "duration_seconds": 0.689,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2600,
+    "process_id": 2558,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35225973997",
+    "github_run_id": "35230860400",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "16cb9fd4babbd2a9b53ce6e22626fbddde9c4206",
+    "github_sha": "c40365f09a2a9d7366274174e96af1b3ece2c5f4",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -95,14 +95,14 @@
         "candidate_unavailable": 19
       },
       "spread_home": {
-        "band:prob_bands": 67,
         "band:line_bands": 49,
+        "band:prob_bands": 67,
         "max_spread_abs": 13,
         "candidate_unavailable": 1
       },
       "spread_away": {
-        "band:prob_bands": 49,
         "band:line_bands": 72,
+        "band:prob_bands": 49,
         "max_spread_abs": 13,
         "candidate_unavailable": 1
       },
@@ -115,8 +115,8 @@
       },
       "total_under": {
         "band:line_bands": 51,
-        "band:kelly_bands": 61,
-        "min_ev": 18,
+        "band:kelly_bands": 62,
+        "min_ev": 19,
         "candidate_unavailable": 1
       }
     },
