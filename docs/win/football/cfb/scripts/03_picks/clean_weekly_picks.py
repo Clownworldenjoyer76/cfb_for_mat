@@ -1088,6 +1088,8 @@ def team_for_side(
         side
     ).upper()
 
+    team = ""
+
     if normalized == "HOME":
         team = clean_text(
             row[
