@@ -3,8 +3,7 @@ name: CFB 01 Pipeline
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: {}
 
 concurrency:
   group: repo-write-lock-${{ github.ref }}
@@ -12,6 +11,8 @@ concurrency:
 
 jobs:
   run-cfb-pipeline:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
