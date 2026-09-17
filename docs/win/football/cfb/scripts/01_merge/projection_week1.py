@@ -1310,43 +1310,54 @@ def calculate_weather_adjustment(
     )
 
 
+
+def _stage4_validate_team_map_columns(team_map: pd.DataFrame) -> None:
+    required = ["team_id", "canonical_team"]
+    missing = [column for column in required if column not in team_map.columns]
+    if missing:
+        raise ValueError("team_map.csv missing required columns: " f"{missing}")
+
+
+def _stage4_team_alias_values(
+    team_map: pd.DataFrame,
+    row: pd.Series,
+    canonical: str,
+    alias_columns: list[str],
+) -> list[str]:
+    values = [canonical]
+    for column in alias_columns:
+        if column not in team_map.columns:
+            continue
+        value = clean(row.get(column))
+        if value:
+            values.append(value)
+    location = clean(row.get("location"))
+    nickname = clean(row.get("nickname"))
+    if location and nickname:
+        values.append(f"{location} {nickname}")
+    return values
+
+
+def _stage4_register_team_aliases(
+    alias_to_team: dict[str, str],
+    canonical: str,
+    values: list[str],
+) -> None:
+    for value in values:
+        key = normalize_key(value)
+        if not key:
+            continue
+        prior = alias_to_team.get(key)
+        if prior is None or prior == canonical:
+            alias_to_team[key] = canonical
+
+
 class TeamResolver:
-    def __init__(
-        self,
-        team_map: pd.DataFrame,
-    ) -> None:
-        required = [
-            "team_id",
-            "canonical_team",
-        ]
-
-        missing = [
-            column
-            for column in required
-            if column not in team_map.columns
-        ]
-
-        if missing:
-            raise ValueError(
-                "team_map.csv missing required columns: "
-                f"{missing}"
-            )
-
-        self.alias_to_team: dict[
-            str,
-            str,
-        ] = {}
-
-        self.team_to_id: dict[
-            str,
-            str,
-        ] = {}
-
-        self.id_to_team: dict[
-            str,
-            str,
-        ] = {}
-
+    def __init__(self, team_map: pd.DataFrame) -> None:
+        _stage4_validate_team_map_columns(team_map)
+        self.alias_to_team: dict[str, str] = {}
+        self.team_to_id: dict[str, str] = {}
+        self.id_to_team: dict[str, str] = {}
         alias_columns = [
             "canonical_team",
             "alias",
@@ -1355,92 +1366,26 @@ class TeamResolver:
             "shortDisplayName",
             "team_slug",
         ]
-
         for _, row in team_map.iterrows():
-            canonical = clean(
-                row.get(
-                    "canonical_team"
-                )
-            )
-
-            team_id = clean(
-                row.get(
-                    "team_id"
-                )
-            )
-
+            canonical = clean(row.get("canonical_team"))
+            team_id = clean(row.get("team_id"))
             if not canonical:
                 continue
-
-            self.team_to_id.setdefault(
-                canonical,
-                team_id,
-            )
-
+            self.team_to_id.setdefault(canonical, team_id)
             if team_id:
-                self.id_to_team.setdefault(
-                    team_id,
-                    canonical,
-                )
-
-            values = [
-                canonical
-            ]
-
-            for column in alias_columns:
-                if column not in team_map.columns:
-                    continue
-
-                value = clean(
-                    row.get(
-                        column
-                    )
-                )
-
-                if value:
-                    values.append(
-                        value
-                    )
-
-            location = clean(
-                row.get(
-                    "location"
-                )
+                self.id_to_team.setdefault(team_id, canonical)
+            values = _stage4_team_alias_values(
+                team_map,
+                row,
+                canonical,
+                alias_columns,
+            )
+            _stage4_register_team_aliases(
+                self.alias_to_team,
+                canonical,
+                values,
             )
 
-            nickname = clean(
-                row.get(
-                    "nickname"
-                )
-            )
-
-            if (
-                location
-                and nickname
-            ):
-                values.append(
-                    f"{location} {nickname}"
-                )
-
-            for value in values:
-                key = normalize_key(
-                    value
-                )
-
-                if not key:
-                    continue
-
-                prior = self.alias_to_team.get(
-                    key
-                )
-
-                if (
-                    prior is None
-                    or prior == canonical
-                ):
-                    self.alias_to_team[
-                        key
-                    ] = canonical
 
     def resolve(
         self,
@@ -1509,387 +1454,149 @@ def shrink_metric(
 
 
 
-def build_prior_table(
+def _stage4_prepare_prior_work(
     team_stats: pd.DataFrame,
     resolver: TeamResolver,
 ) -> pd.DataFrame:
     work = team_stats.copy()
-
-    work[
-        "team"
-    ] = work[
-        "team"
-    ].map(
-        resolver.resolve
-    )
-
+    work["team"] = work["team"].map(resolver.resolve)
     missing_count_columns = [
         count_column
-        for count_column
-        in TEAM_METRIC_COUNT_COLUMNS.values()
+        for count_column in TEAM_METRIC_COUNT_COLUMNS.values()
         if count_column not in work.columns
     ]
-
     if missing_count_columns:
         raise ValueError(
-            "Prior team-stats file is missing "
-            "metric denominator columns: "
+            "Prior team-stats file is missing metric denominator columns: "
             f"{missing_count_columns}"
         )
-
     for metric in TEAM_METRICS:
-        count_column = (
-            TEAM_METRIC_COUNT_COLUMNS[
-                metric
-            ]
+        count_column = TEAM_METRIC_COUNT_COLUMNS[metric]
+        work[metric] = pd.to_numeric(work[metric], errors="coerce")
+        work[count_column] = pd.to_numeric(work[count_column], errors="coerce")
+        invalid_count = work[count_column].notna() & (
+            work[count_column].lt(0) | work[count_column].mod(1).ne(0)
         )
-
-        work[
-            metric
-        ] = pd.to_numeric(
-            work[
-                metric
-            ],
-            errors="coerce",
-        )
-
-        work[
-            count_column
-        ] = pd.to_numeric(
-            work[
-                count_column
-            ],
-            errors="coerce",
-        )
-
-        invalid_count = (
-            work[
-                count_column
-            ].notna()
-            & (
-                work[
-                    count_column
-                ].lt(0)
-                | work[
-                    count_column
-                ].mod(1).ne(0)
-            )
-        )
-
         if invalid_count.any():
             raise ValueError(
-                "Prior team-stats file contains "
-                f"invalid {count_column}"
+                "Prior team-stats file contains " f"invalid {count_column}"
             )
-
-        metric_present = (
-            work[
-                metric
-            ].notna()
-        )
-
-        positive_count = (
-            work[
-                count_column
-            ].fillna(
-                0.0
-            ).gt(0)
-        )
-
-        if (
-            metric_present
-            != positive_count
-        ).any():
+        metric_present = work[metric].notna()
+        positive_count = work[count_column].fillna(0.0).gt(0)
+        if (metric_present != positive_count).any():
             raise ValueError(
-                "Prior team-stats metric/count "
-                f"contract failed for {metric}"
+                "Prior team-stats metric/count " f"contract failed for {metric}"
             )
-
-    work = work[
-        work[
-            "team"
-        ].map(
-            clean
-        ).ne(
-            ""
-        )
-    ].copy()
-
+    work = work[work["team"].map(clean).ne("")].copy()
     if work.empty:
-        raise ValueError(
-            "Prior team-stats file has no usable team rows."
-        )
+        raise ValueError("Prior team-stats file has no usable team rows.")
+    return work
 
-    pooled_metrics = (
-        work[
-            [
-                "team"
-            ]
-        ]
-        .drop_duplicates()
-        .reset_index(
-            drop=True
-        )
-    )
 
+def _stage4_pool_prior_metrics(work: pd.DataFrame) -> pd.DataFrame:
+    pooled_metrics = work[["team"]].drop_duplicates().reset_index(drop=True)
     for metric in TEAM_METRICS:
-        count_column = (
-            TEAM_METRIC_COUNT_COLUMNS[
-                metric
-            ]
-        )
-
-        valid = (
-            work[
-                metric
-            ].notna()
-            & work[
-                count_column
-            ].fillna(
-                0.0
-            ).gt(0)
-        )
-
+        count_column = TEAM_METRIC_COUNT_COLUMNS[metric]
+        valid = work[metric].notna() & work[count_column].fillna(0.0).gt(0)
         if not valid.any():
-            pooled_metrics[
-                metric
-            ] = np.nan
+            pooled_metrics[metric] = np.nan
             continue
-
         weighted = pd.DataFrame(
             {
-                "team":
-                    work.loc[
-                        valid,
-                        "team",
-                    ],
-                "_numerator":
-                    (
-                        work.loc[
-                            valid,
-                            metric,
-                        ]
-                        * work.loc[
-                            valid,
-                            count_column,
-                        ]
-                    ),
-                "_denominator":
-                    work.loc[
-                        valid,
-                        count_column,
-                    ],
+                "team": work.loc[valid, "team"],
+                "_numerator": work.loc[valid, metric]
+                * work.loc[valid, count_column],
+                "_denominator": work.loc[valid, count_column],
             }
         )
-
         grouped_metric = (
-            weighted.groupby(
-                "team",
-                as_index=False,
-            )
+            weighted.groupby("team", as_index=False)
             .agg(
-                _numerator=(
-                    "_numerator",
-                    "sum",
-                ),
-                _denominator=(
-                    "_denominator",
-                    "sum",
-                ),
+                _numerator=("_numerator", "sum"),
+                _denominator=("_denominator", "sum"),
             )
         )
-
-        grouped_metric[
-            metric
-        ] = (
-            grouped_metric[
-                "_numerator"
-            ]
-            / grouped_metric[
-                "_denominator"
-            ]
+        grouped_metric[metric] = (
+            grouped_metric["_numerator"] / grouped_metric["_denominator"]
         )
-
-        pooled_metrics = (
-            pooled_metrics.merge(
-                grouped_metric[
-                    [
-                        "team",
-                        metric,
-                    ]
-                ],
-                on="team",
-                how="left",
-            )
+        pooled_metrics = pooled_metrics.merge(
+            grouped_metric[["team", metric]],
+            on="team",
+            how="left",
         )
+    return pooled_metrics
 
+
+def _stage4_build_prior_counts(
+    work: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     grouped_count = (
-        work.groupby(
-            "team",
-            as_index=False,
-        )
+        work.groupby("team", as_index=False)
         .size()
-        .rename(
-            columns={
-                "size":
-                    "prior_team_weeks"
-            }
-        )
+        .rename(columns={"size": "prior_team_weeks"})
     )
-
     grouped_metric_count = (
-        work.groupby(
-            "team",
-            as_index=False,
-        )[
-            TEAM_METRICS
-        ]
+        work.groupby("team", as_index=False)[TEAM_METRICS]
         .count()
         .rename(
             columns={
-                metric:
-                    f"{metric}_observations"
+                metric: f"{metric}_observations"
                 for metric in TEAM_METRICS
             }
         )
     )
+    return grouped_count, grouped_metric_count
 
-    prior = (
-        pooled_metrics.merge(
-            grouped_count,
-            on="team",
-            how="left",
-        )
-        .merge(
-            grouped_metric_count,
-            on="team",
-            how="left",
-        )
+
+def _stage4_global_metric_mean(
+    work: pd.DataFrame,
+    metric: str,
+    count_column: str,
+) -> float:
+    valid = work[metric].notna() & work[count_column].fillna(0.0).gt(0)
+    denominator = float(work.loc[valid, count_column].sum())
+    if not math.isfinite(denominator) or denominator <= 0:
+        return 0.0
+    numerator = float(
+        (work.loc[valid, metric] * work.loc[valid, count_column]).sum()
     )
+    global_mean = numerator / denominator
+    if not math.isfinite(global_mean):
+        return 0.0
+    return global_mean
 
+
+def _stage4_shrink_prior_metrics(
+    work: pd.DataFrame,
+    prior: pd.DataFrame,
+) -> None:
     for metric in TEAM_METRICS:
-        count_column = (
-            TEAM_METRIC_COUNT_COLUMNS[
-                metric
-            ]
-        )
-
-        valid = (
-            work[
-                metric
-            ].notna()
-            & work[
-                count_column
-            ].fillna(
-                0.0
-            ).gt(0)
-        )
-
-        denominator = float(
-            work.loc[
-                valid,
-                count_column,
-            ].sum()
-        )
-
-        if (
-            not math.isfinite(
-                denominator
-            )
-            or denominator <= 0
-        ):
-            global_mean = 0.0
-        else:
-            numerator = float(
-                (
-                    work.loc[
-                        valid,
-                        metric,
-                    ]
-                    * work.loc[
-                        valid,
-                        count_column,
-                    ]
-                ).sum()
-            )
-
-            global_mean = (
-                numerator
-                / denominator
-            )
-
-            if not math.isfinite(
-                global_mean
-            ):
-                global_mean = 0.0
-
-        prior[
-            metric
-        ] = shrink_metric(
-            prior[
-                metric
-            ],
-            prior[
-                f"{metric}_observations"
-            ],
+        count_column = TEAM_METRIC_COUNT_COLUMNS[metric]
+        global_mean = _stage4_global_metric_mean(work, metric, count_column)
+        prior[metric] = shrink_metric(
+            prior[metric],
+            prior[f"{metric}_observations"],
             global_mean,
         )
 
-    prior[
-        "net_epa"
-    ] = (
-        prior[
-            "off_epa_per_play"
-        ]
-        - prior[
-            "def_epa_per_play"
-        ]
+
+def _stage4_add_prior_edges(prior: pd.DataFrame) -> None:
+    prior["net_epa"] = prior["off_epa_per_play"] - prior["def_epa_per_play"]
+    prior["success_edge"] = (
+        prior["off_success_rate"] - prior["def_success_rate"]
+    )
+    prior["ypp_edge"] = (
+        prior["yards_per_play"] - prior["yards_per_play_allowed"]
+    )
+    prior["ppd_edge"] = (
+        prior["points_per_drive"] - prior["points_per_drive_allowed"]
+    )
+    prior["red_zone_edge"] = (
+        prior["red_zone_td_rate"] - prior["red_zone_td_rate_allowed"]
     )
 
-    prior[
-        "success_edge"
-    ] = (
-        prior[
-            "off_success_rate"
-        ]
-        - prior[
-            "def_success_rate"
-        ]
-    )
 
-    prior[
-        "ypp_edge"
-    ] = (
-        prior[
-            "yards_per_play"
-        ]
-        - prior[
-            "yards_per_play_allowed"
-        ]
-    )
-
-    prior[
-        "ppd_edge"
-    ] = (
-        prior[
-            "points_per_drive"
-        ]
-        - prior[
-            "points_per_drive_allowed"
-        ]
-    )
-
-    prior[
-        "red_zone_edge"
-    ] = (
-        prior[
-            "red_zone_td_rate"
-        ]
-        - prior[
-            "red_zone_td_rate_allowed"
-        ]
-    )
-
+def _stage4_accumulate_prior_strength(prior: pd.DataFrame) -> None:
     strength_parts = {
         "net_epa": 0.30,
         "ppd_edge": 0.25,
@@ -1899,95 +1606,44 @@ def build_prior_table(
         "early_down_epa": 0.05,
         "third_down_conversion_rate": 0.05,
     }
-
-    prior[
-        "prior_strength_raw"
-    ] = 0.0
-
-    for (
-        metric,
-        weight,
-    ) in strength_parts.items():
-        values = pd.to_numeric(
-            prior[
-                metric
-            ],
-            errors="coerce",
-        )
-
-        mean = float(
-            values.mean(
-                skipna=True
-            )
-        )
-
-        std = float(
-            values.std(
-                skipna=True,
-                ddof=0,
-            )
-        )
-
-        if (
-            not math.isfinite(
-                std
-            )
-            or std < 1e-9
-        ):
-            z = pd.Series(
-                0.0,
-                index=prior.index,
-            )
-
+    prior["prior_strength_raw"] = 0.0
+    for metric, weight in strength_parts.items():
+        values = pd.to_numeric(prior[metric], errors="coerce")
+        mean = float(values.mean(skipna=True))
+        std = float(values.std(skipna=True, ddof=0))
+        if not math.isfinite(std) or std < 1e-9:
+            z = pd.Series(0.0, index=prior.index)
         else:
-            z = (
-                values.fillna(
-                    mean
-                )
-                - mean
-            ) / std
+            z = (values.fillna(mean) - mean) / std
+        prior["prior_strength_raw"] += weight * z
 
-        prior[
-            "prior_strength_raw"
-        ] += (
-            weight
-            * z
-        )
 
-    raw_mean = float(
-        prior[
-            "prior_strength_raw"
-        ].mean()
-    )
-
-    raw_std = float(
-        prior[
-            "prior_strength_raw"
-        ].std(
-            ddof=0
-        )
-    )
-
-    if (
-        not math.isfinite(
-            raw_std
-        )
-        or raw_std < 1e-9
-    ):
-        prior[
-            "prior_strength_z"
-        ] = 0.0
-
+def _stage4_normalize_prior_strength(prior: pd.DataFrame) -> None:
+    raw_mean = float(prior["prior_strength_raw"].mean())
+    raw_std = float(prior["prior_strength_raw"].std(ddof=0))
+    if not math.isfinite(raw_std) or raw_std < 1e-9:
+        prior["prior_strength_z"] = 0.0
     else:
-        prior[
-            "prior_strength_z"
-        ] = (
-            prior[
-                "prior_strength_raw"
-            ]
-            - raw_mean
+        prior["prior_strength_z"] = (
+            prior["prior_strength_raw"] - raw_mean
         ) / raw_std
 
+
+def build_prior_table(
+    team_stats: pd.DataFrame,
+    resolver: TeamResolver,
+) -> pd.DataFrame:
+    work = _stage4_prepare_prior_work(team_stats, resolver)
+    pooled_metrics = _stage4_pool_prior_metrics(work)
+    grouped_count, grouped_metric_count = _stage4_build_prior_counts(work)
+    prior = (
+        pooled_metrics.merge(grouped_count, on="team", how="left")
+        .merge(grouped_metric_count, on="team", how="left")
+    )
+    _stage4_shrink_prior_metrics(work, prior)
+    _stage4_add_prior_edges(prior)
+    _stage4_accumulate_prior_strength(prior)
+    _stage4_normalize_prior_strength(prior)
     return prior
 
 
