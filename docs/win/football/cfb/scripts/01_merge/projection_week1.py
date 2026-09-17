@@ -66,11 +66,30 @@ if str(SCRIPTS_DIR) not in sys.path:
 from pipeline_reporter import PipelineReporter
 
 
-SCRIPT_VERSION = "cfb-week1-v9-metric-shrink-injury-time-2026-09-16"
+SCRIPT_VERSION = "cfb-week1-v10-probability-calibrated-2026-09-17"
 MIN_PRIOR_TEAM_WEEKS = 10
 ESPN_MARGIN_SYMMETRY_TOLERANCE = 0.25
-DEFAULT_MARGIN_SD = 14.0
-DEFAULT_TOTAL_SD = 14.0
+
+# Probability-error calibration.
+#
+# Derived from 185 completed 2026 games using Git-preserved
+# pregame forecasts from Weeks 1 and 2. These values describe
+# observed zero-centered forecast-error dispersion; no historical
+# point-prediction bias adjustment is applied here.
+DEFAULT_MARGIN_SD = 16.36
+DEFAULT_TOTAL_SD = 15.22
+
+PROBABILITY_CALIBRATION_SAMPLE_GAMES = 185
+PROBABILITY_CALIBRATION_SEASON = 2026
+PROBABILITY_CALIBRATION_WEEKS = (1, 2)
+PROBABILITY_CALIBRATION_SOURCE_COMMITS = (
+    "aef7a4f01052019252a31980e4dd63cd08298e41",
+    "2855fc22c36ae2a75a83835595ea6cb380f4d827",
+)
+PROBABILITY_CALIBRATION_METHOD = (
+    "zero_centered_rmse_from_pregame_forecast_errors"
+)
+
 PROBABILITY_EPS = 1e-6
 
 TEAM_METRICS = [
@@ -4535,6 +4554,24 @@ def main() -> int:
         extra_context={
             "script_version": SCRIPT_VERSION,
             "projection_scope": "week_1",
+            "probability_calibration": {
+                "margin_sd": DEFAULT_MARGIN_SD,
+                "total_sd": DEFAULT_TOTAL_SD,
+                "sample_games":
+                    PROBABILITY_CALIBRATION_SAMPLE_GAMES,
+                "season":
+                    PROBABILITY_CALIBRATION_SEASON,
+                "weeks":
+                    list(
+                        PROBABILITY_CALIBRATION_WEEKS
+                    ),
+                "source_commits":
+                    list(
+                        PROBABILITY_CALIBRATION_SOURCE_COMMITS
+                    ),
+                "method":
+                    PROBABILITY_CALIBRATION_METHOD,
+            },
         },
     ) as report:
         report_args = _pipeline_report_args()
