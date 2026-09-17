@@ -2014,7 +2014,6 @@ def run(
         base.build_injury_lookup(
             injuries_path,
             resolver,
-            args.fresh_injury_days,
         )
     )
 

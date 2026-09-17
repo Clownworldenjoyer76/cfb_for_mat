@@ -2431,7 +2431,6 @@ def injury_status_multiplier(
 def build_injury_lookup(
     injuries_path: Path,
     resolver: TeamResolver,
-    fresh_days: int,
 ) -> dict[
     str,
     pd.DataFrame,
@@ -4536,7 +4535,6 @@ def _main_impl() -> None:
         build_injury_lookup(
             injuries_path,
             resolver,
-            args.fresh_injury_days,
         )
     )
 
