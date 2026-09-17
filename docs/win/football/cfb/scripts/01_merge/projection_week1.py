@@ -66,7 +66,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from pipeline_reporter import PipelineReporter
 
 
-SCRIPT_VERSION = "cfb-week1-v10-probability-calibrated-2026-09-17"
+SCRIPT_VERSION = "cfb-week1-v11-denominator-pooled-priors-2026-09-17"
 MIN_PRIOR_TEAM_WEEKS = 10
 ESPN_MARGIN_SYMMETRY_TOLERANCE = 0.25
 
@@ -106,6 +106,11 @@ TEAM_METRICS = [
     "early_down_epa",
     "third_down_conversion_rate",
 ]
+
+TEAM_METRIC_COUNT_COLUMNS = {
+    metric: f"{metric}_count"
+    for metric in TEAM_METRICS
+}
 
 OUTPUT_BASE_COLUMNS = [
     "season",
@@ -1518,7 +1523,27 @@ def build_prior_table(
         resolver.resolve
     )
 
+    missing_count_columns = [
+        count_column
+        for count_column
+        in TEAM_METRIC_COUNT_COLUMNS.values()
+        if count_column not in work.columns
+    ]
+
+    if missing_count_columns:
+        raise ValueError(
+            "Prior team-stats file is missing "
+            "metric denominator columns: "
+            f"{missing_count_columns}"
+        )
+
     for metric in TEAM_METRICS:
+        count_column = (
+            TEAM_METRIC_COUNT_COLUMNS[
+                metric
+            ]
+        )
+
         work[
             metric
         ] = pd.to_numeric(
@@ -1527,6 +1552,58 @@ def build_prior_table(
             ],
             errors="coerce",
         )
+
+        work[
+            count_column
+        ] = pd.to_numeric(
+            work[
+                count_column
+            ],
+            errors="coerce",
+        )
+
+        invalid_count = (
+            work[
+                count_column
+            ].notna()
+            & (
+                work[
+                    count_column
+                ].lt(0)
+                | work[
+                    count_column
+                ].mod(1).ne(0)
+            )
+        )
+
+        if invalid_count.any():
+            raise ValueError(
+                "Prior team-stats file contains "
+                f"invalid {count_column}"
+            )
+
+        metric_present = (
+            work[
+                metric
+            ].notna()
+        )
+
+        positive_count = (
+            work[
+                count_column
+            ].fillna(
+                0.0
+            ).gt(0)
+        )
+
+        if (
+            metric_present
+            != positive_count
+        ).any():
+            raise ValueError(
+                "Prior team-stats metric/count "
+                f"contract failed for {metric}"
+            )
 
     work = work[
         work[
@@ -1543,15 +1620,108 @@ def build_prior_table(
             "Prior team-stats file has no usable team rows."
         )
 
-    grouped_mean = (
-        work.groupby(
-            "team",
-            as_index=False,
-        )[
-            TEAM_METRICS
+    pooled_metrics = (
+        work[
+            [
+                "team"
+            ]
         ]
-        .mean()
+        .drop_duplicates()
+        .reset_index(
+            drop=True
+        )
     )
+
+    for metric in TEAM_METRICS:
+        count_column = (
+            TEAM_METRIC_COUNT_COLUMNS[
+                metric
+            ]
+        )
+
+        valid = (
+            work[
+                metric
+            ].notna()
+            & work[
+                count_column
+            ].fillna(
+                0.0
+            ).gt(0)
+        )
+
+        if not valid.any():
+            pooled_metrics[
+                metric
+            ] = np.nan
+            continue
+
+        weighted = pd.DataFrame(
+            {
+                "team":
+                    work.loc[
+                        valid,
+                        "team",
+                    ],
+                "_numerator":
+                    (
+                        work.loc[
+                            valid,
+                            metric,
+                        ]
+                        * work.loc[
+                            valid,
+                            count_column,
+                        ]
+                    ),
+                "_denominator":
+                    work.loc[
+                        valid,
+                        count_column,
+                    ],
+            }
+        )
+
+        grouped_metric = (
+            weighted.groupby(
+                "team",
+                as_index=False,
+            )
+            .agg(
+                _numerator=(
+                    "_numerator",
+                    "sum",
+                ),
+                _denominator=(
+                    "_denominator",
+                    "sum",
+                ),
+            )
+        )
+
+        grouped_metric[
+            metric
+        ] = (
+            grouped_metric[
+                "_numerator"
+            ]
+            / grouped_metric[
+                "_denominator"
+            ]
+        )
+
+        pooled_metrics = (
+            pooled_metrics.merge(
+                grouped_metric[
+                    [
+                        "team",
+                        metric,
+                    ]
+                ],
+                on="team",
+                how="left",
+            )
+        )
 
     grouped_count = (
         work.groupby(
@@ -1585,7 +1755,7 @@ def build_prior_table(
     )
 
     prior = (
-        grouped_mean.merge(
+        pooled_metrics.merge(
             grouped_count,
             on="team",
             how="left",
@@ -1598,18 +1768,60 @@ def build_prior_table(
     )
 
     for metric in TEAM_METRICS:
-        global_mean = float(
-            work[
+        count_column = (
+            TEAM_METRIC_COUNT_COLUMNS[
                 metric
-            ].mean(
-                skipna=True
-            )
+            ]
         )
 
-        if not math.isfinite(
-            global_mean
+        valid = (
+            work[
+                metric
+            ].notna()
+            & work[
+                count_column
+            ].fillna(
+                0.0
+            ).gt(0)
+        )
+
+        denominator = float(
+            work.loc[
+                valid,
+                count_column,
+            ].sum()
+        )
+
+        if (
+            not math.isfinite(
+                denominator
+            )
+            or denominator <= 0
         ):
             global_mean = 0.0
+        else:
+            numerator = float(
+                (
+                    work.loc[
+                        valid,
+                        metric,
+                    ]
+                    * work.loc[
+                        valid,
+                        count_column,
+                    ]
+                ).sum()
+            )
+
+            global_mean = (
+                numerator
+                / denominator
+            )
+
+            if not math.isfinite(
+                global_mean
+            ):
+                global_mean = 0.0
 
         prior[
             metric
@@ -4554,6 +4766,8 @@ def main() -> int:
         extra_context={
             "script_version": SCRIPT_VERSION,
             "projection_scope": "week_1",
+            "prior_aggregation":
+                "metric_denominator_weighted_pooling",
             "probability_calibration": {
                 "margin_sd": DEFAULT_MARGIN_SD,
                 "total_sd": DEFAULT_TOTAL_SD,

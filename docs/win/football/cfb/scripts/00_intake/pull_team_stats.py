@@ -25,12 +25,9 @@ PBP_DIR = CFB_ROOT / "00_intake" / "pbp"
 OUTPUT_DIR = CFB_ROOT / "00_intake" / "team_stats"
 REPORT_ROOT = CFB_ROOT / "errors"
 
-SCRIPT_VERSION = "cfb-team-stats-v2-2026-09-15"
+SCRIPT_VERSION = "cfb-team-stats-v3-denominator-counts-2026-09-17"
 
-OUTPUT_COLUMNS = [
-    "season",
-    "week",
-    "team",
+METRIC_COLUMNS = [
     "off_epa_per_play",
     "def_epa_per_play",
     "off_success_rate",
@@ -43,6 +40,24 @@ OUTPUT_COLUMNS = [
     "red_zone_td_rate_allowed",
     "early_down_epa",
     "third_down_conversion_rate",
+]
+
+METRIC_COUNT_COLUMNS = {
+    metric: f"{metric}_count"
+    for metric in METRIC_COLUMNS
+}
+
+COUNT_COLUMNS = [
+    METRIC_COUNT_COLUMNS[metric]
+    for metric in METRIC_COLUMNS
+]
+
+OUTPUT_COLUMNS = [
+    "season",
+    "week",
+    "team",
+    *METRIC_COLUMNS,
+    *COUNT_COLUMNS,
 ]
 
 SDV_REQUIRED_COLUMNS = [
@@ -797,6 +812,422 @@ def build_red_zone_stats(
     return off_rz, def_rz
 
 
+
+def build_metric_counts(
+    pbp: pd.DataFrame,
+    valid_plays: pd.DataFrame,
+) -> pd.DataFrame:
+    keys = [
+        "season",
+        "week",
+        "team",
+    ]
+
+    frames: list[pd.DataFrame] = []
+
+    offense = (
+        valid_plays.groupby(
+            [
+                "season",
+                "week",
+                "posteam",
+            ],
+            dropna=False,
+        )
+        .agg(
+            off_epa_per_play_count=(
+                "epa",
+                "count",
+            ),
+            off_success_rate_count=(
+                "success",
+                "count",
+            ),
+            yards_per_play_count=(
+                "yards_gained",
+                "count",
+            ),
+        )
+        .reset_index()
+        .rename(
+            columns={
+                "posteam": "team"
+            }
+        )
+    )
+    frames.append(
+        offense
+    )
+
+    defense = (
+        valid_plays.groupby(
+            [
+                "season",
+                "week",
+                "defteam",
+            ],
+            dropna=False,
+        )
+        .agg(
+            def_epa_per_play_count=(
+                "epa",
+                "count",
+            ),
+            def_success_rate_count=(
+                "success",
+                "count",
+            ),
+            yards_per_play_allowed_count=(
+                "yards_gained",
+                "count",
+            ),
+        )
+        .reset_index()
+        .rename(
+            columns={
+                "defteam": "team"
+            }
+        )
+    )
+    frames.append(
+        defense
+    )
+
+    early = valid_plays[
+        valid_plays[
+            "down"
+        ].isin(
+            [1, 2]
+        )
+    ].copy()
+
+    if not early.empty:
+        early_counts = (
+            early.groupby(
+                [
+                    "season",
+                    "week",
+                    "posteam",
+                ],
+                dropna=False,
+            )
+            .agg(
+                early_down_epa_count=(
+                    "epa",
+                    "count",
+                )
+            )
+            .reset_index()
+            .rename(
+                columns={
+                    "posteam": "team"
+                }
+            )
+        )
+        frames.append(
+            early_counts
+        )
+
+    third = valid_plays[
+        valid_plays[
+            "posteam"
+        ].notna()
+        & valid_plays[
+            "down"
+        ].eq(3)
+    ].copy()
+
+    if not third.empty:
+        third_counts = (
+            third.groupby(
+                [
+                    "season",
+                    "week",
+                    "posteam",
+                ],
+                dropna=False,
+            )
+            .size()
+            .reset_index(
+                name=(
+                    "third_down_conversion_rate_count"
+                )
+            )
+            .rename(
+                columns={
+                    "posteam": "team"
+                }
+            )
+        )
+        frames.append(
+            third_counts
+        )
+
+    drives = pbp[
+        pbp[
+            "season"
+        ].notna()
+        & pbp[
+            "week"
+        ].notna()
+        & pbp[
+            "game_id"
+        ].notna()
+        & pbp[
+            "drive"
+        ].notna()
+        & pbp[
+            "posteam"
+        ].notna()
+        & pbp[
+            "defteam"
+        ].notna()
+    ].copy()
+
+    if not drives.empty:
+        drives = drives.sort_values(
+            [
+                "season",
+                "week",
+                "game_id",
+                "drive",
+                "espn_sequence_number",
+            ]
+        )
+
+        drive_keys = [
+            "season",
+            "week",
+            "game_id",
+            "drive",
+            "posteam",
+            "defteam",
+        ]
+
+        drive_scores = (
+            drives.groupby(
+                drive_keys,
+                dropna=False,
+            )
+            .agg(
+                drive_start_score=(
+                    "posteam_score",
+                    "first",
+                ),
+                drive_end_score=(
+                    "posteam_score_post",
+                    "last",
+                ),
+            )
+            .reset_index()
+        )
+
+        drive_scores[
+            "drive_points"
+        ] = (
+            drive_scores[
+                "drive_end_score"
+            ]
+            - drive_scores[
+                "drive_start_score"
+            ]
+        )
+
+        drive_scores.loc[
+            drive_scores[
+                "drive_points"
+            ] < 0,
+            "drive_points",
+        ] = 0
+
+        off_drives = (
+            drive_scores.groupby(
+                [
+                    "season",
+                    "week",
+                    "posteam",
+                ],
+                dropna=False,
+            )
+            .agg(
+                points_per_drive_count=(
+                    "drive_points",
+                    "count",
+                )
+            )
+            .reset_index()
+            .rename(
+                columns={
+                    "posteam": "team"
+                }
+            )
+        )
+
+        def_drives = (
+            drive_scores.groupby(
+                [
+                    "season",
+                    "week",
+                    "defteam",
+                ],
+                dropna=False,
+            )
+            .agg(
+                points_per_drive_allowed_count=(
+                    "drive_points",
+                    "count",
+                )
+            )
+            .reset_index()
+            .rename(
+                columns={
+                    "defteam": "team"
+                }
+            )
+        )
+
+        frames.extend(
+            [
+                off_drives,
+                def_drives,
+            ]
+        )
+
+    rz = pbp[
+        pbp[
+            "season"
+        ].notna()
+        & pbp[
+            "week"
+        ].notna()
+        & pbp[
+            "game_id"
+        ].notna()
+        & pbp[
+            "drive"
+        ].notna()
+        & pbp[
+            "posteam"
+        ].notna()
+        & pbp[
+            "defteam"
+        ].notna()
+    ].copy()
+
+    if not rz.empty:
+        drive_keys = [
+            "season",
+            "week",
+            "game_id",
+            "drive",
+            "posteam",
+            "defteam",
+        ]
+
+        red_zone_trips = (
+            rz[
+                rz[
+                    "yardline_100"
+                ].between(
+                    0,
+                    20,
+                    inclusive="both",
+                )
+            ][
+                drive_keys
+            ]
+            .drop_duplicates()
+        )
+
+        if not red_zone_trips.empty:
+            off_rz = (
+                red_zone_trips.groupby(
+                    [
+                        "season",
+                        "week",
+                        "posteam",
+                    ],
+                    dropna=False,
+                )
+                .size()
+                .reset_index(
+                    name=(
+                        "red_zone_td_rate_count"
+                    )
+                )
+                .rename(
+                    columns={
+                        "posteam": "team"
+                    }
+                )
+            )
+
+            def_rz = (
+                red_zone_trips.groupby(
+                    [
+                        "season",
+                        "week",
+                        "defteam",
+                    ],
+                    dropna=False,
+                )
+                .size()
+                .reset_index(
+                    name=(
+                        "red_zone_td_rate_allowed_count"
+                    )
+                )
+                .rename(
+                    columns={
+                        "defteam": "team"
+                    }
+                )
+            )
+
+            frames.extend(
+                [
+                    off_rz,
+                    def_rz,
+                ]
+            )
+
+    result: pd.DataFrame | None = None
+
+    for frame in frames:
+        if frame.empty:
+            continue
+
+        if result is None:
+            result = frame.copy()
+        else:
+            result = result.merge(
+                frame,
+                on=keys,
+                how="outer",
+            )
+
+    if result is None:
+        return pd.DataFrame(
+            columns=[
+                *keys,
+                *COUNT_COLUMNS,
+            ]
+        )
+
+    for column in COUNT_COLUMNS:
+        if column not in result.columns:
+            result[
+                column
+            ] = np.nan
+
+    return result[
+        [
+            *keys,
+            *COUNT_COLUMNS,
+        ]
+    ]
+
+
 def merge_stat_frames(frames: list[pd.DataFrame]) -> pd.DataFrame:
     result: pd.DataFrame | None = None
 
@@ -936,7 +1367,7 @@ def validate_team_stats_output(
             f"(season, week, team) rows: {examples}"
         )
 
-    metric_columns = OUTPUT_COLUMNS[3:]
+    metric_columns = METRIC_COLUMNS
 
     for column in metric_columns:
         numeric = pd.to_numeric(
@@ -964,6 +1395,58 @@ def validate_team_stats_output(
         ):
             raise ValueError(
                 f"Team-stat output contains non-finite {column}"
+            )
+
+
+    for (
+        metric,
+        count_column,
+    ) in METRIC_COUNT_COLUMNS.items():
+        counts = pd.to_numeric(
+            team_stats[
+                count_column
+            ],
+            errors="coerce",
+        )
+
+        invalid = (
+            counts.notna()
+            & (
+                counts.lt(0)
+                | counts.mod(1).ne(0)
+            )
+        )
+
+        if invalid.any():
+            raise ValueError(
+                "Team-stat output contains invalid "
+                f"{count_column}"
+            )
+
+        metric_values = pd.to_numeric(
+            team_stats[
+                metric
+            ],
+            errors="coerce",
+        )
+
+        metric_present = (
+            metric_values.notna()
+        )
+
+        positive_count = (
+            counts.fillna(
+                0.0
+            ).gt(0)
+        )
+
+        if (
+            metric_present
+            != positive_count
+        ).any():
+            raise ValueError(
+                "Team-stat metric/count contract "
+                f"failed for {metric}"
             )
 
     rate_columns = [
@@ -1022,6 +1505,11 @@ def build_team_stats(native_pbp: pd.DataFrame) -> pd.DataFrame:
     off_points, def_points = build_drive_points_stats(pbp)
     off_rz, def_rz = build_red_zone_stats(pbp)
 
+    metric_counts = build_metric_counts(
+        pbp,
+        valid_plays,
+    )
+
     return merge_stat_frames(
         [
             offense_stats,
@@ -1031,6 +1519,7 @@ def build_team_stats(native_pbp: pd.DataFrame) -> pd.DataFrame:
             off_rz,
             def_rz,
             third_down_stats,
+            metric_counts,
         ]
     )
 
