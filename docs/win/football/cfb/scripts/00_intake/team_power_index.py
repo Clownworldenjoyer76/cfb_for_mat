@@ -310,7 +310,7 @@ def load_authoritative_team_ids(
 
     return sorted(
         team_ids,
-        key=lambda value: int(value),
+        key=int,
     )
 
 
@@ -1409,12 +1409,12 @@ def validate_rows(
 
     missing = sorted(
         authoritative_set - represented,
-        key=lambda value: int(value),
+        key=int,
     )
 
     foreign = sorted(
         represented - authoritative_set,
-        key=lambda value: int(value),
+        key=int,
     )
 
     if missing or foreign:
@@ -1647,12 +1647,12 @@ def update_report_details(
 
     missing = sorted(
         authoritative_set - represented,
-        key=lambda value: int(value),
+        key=int,
     )
 
     foreign = sorted(
         represented - authoritative_set,
-        key=lambda value: int(value),
+        key=int,
     )
 
     fpi_coverage = 0

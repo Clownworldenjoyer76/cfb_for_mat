@@ -395,11 +395,11 @@ def load_and_validate_raw_roster(
 
     missing_teams = sorted(
         authoritative_team_ids - represented_team_ids,
-        key=lambda value: int(value),
+        key=int,
     )
     foreign_teams = sorted(
         represented_team_ids - authoritative_team_ids,
-        key=lambda value: int(value),
+        key=int,
     )
 
     if missing_teams or foreign_teams:
@@ -541,11 +541,11 @@ def validate_staged_csv(
     if represented_team_ids != authoritative_team_ids:
         missing_teams = sorted(
             authoritative_team_ids - represented_team_ids,
-            key=lambda value: int(value),
+            key=int,
         )
         foreign_teams = sorted(
             represented_team_ids - authoritative_team_ids,
-            key=lambda value: int(value),
+            key=int,
         )
 
         raise ValueError(

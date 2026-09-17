@@ -341,7 +341,7 @@ def load_authoritative_team_ids(
 
     return sorted(
         team_ids,
-        key=lambda value: int(value),
+        key=int,
     )
 
 
@@ -442,7 +442,7 @@ def load_canonical_team_names(
     missing_ids = sorted(
         authoritative_set
         - set(canonical_by_id),
-        key=lambda value: int(value),
+        key=int,
     )
 
     if missing_ids:
@@ -1761,7 +1761,7 @@ def update_report_details(
             for name in represented_names
             if name in canonical_to_id
         },
-        key=lambda value: int(value),
+        key=int,
     )
 
     unique_players = {
@@ -1827,7 +1827,7 @@ def update_report_details(
         ),
         "foreign_team_ids": sorted(
             _FOREIGN_TEAM_IDS,
-            key=lambda value: int(value),
+            key=int,
         ),
         "raw_injury_count": _RAW_INJURY_COUNT,
         "fresh_injury_count": _FRESH_INJURY_COUNT,

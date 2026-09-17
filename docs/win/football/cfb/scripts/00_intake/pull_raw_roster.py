@@ -266,9 +266,7 @@ def load_target_team_ids() -> list[str]:
 
     return sorted(
         team_ids,
-        key=lambda value: int(
-            value
-        ),
+        key=int,
     )
 
 
@@ -1065,17 +1063,13 @@ def validate_final_rows(
         missing = sorted(
             expected_teams
             - represented_teams,
-            key=lambda value: int(
-                value
-            ),
+            key=int,
         )
 
         foreign = sorted(
             represented_teams
             - expected_teams,
-            key=lambda value: int(
-                value
-            ),
+            key=int,
         )
 
         raise ValueError(
@@ -1446,9 +1440,7 @@ def validate_staged_csv(
         missing = sorted(
             target_set
             - set(counts),
-            key=lambda value: int(
-                value
-            ),
+            key=int,
         )
 
         raise ValueError(

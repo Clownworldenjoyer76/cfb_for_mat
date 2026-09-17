@@ -851,11 +851,11 @@ def validate_final_rows(
     if seen_team_ids != expected_team_ids:
         missing = sorted(
             expected_team_ids - seen_team_ids,
-            key=lambda value: int(value),
+            key=int,
         )
         foreign = sorted(
             seen_team_ids - expected_team_ids,
-            key=lambda value: int(value),
+            key=int,
         )
         raise ValueError(
             "Coaches output team coverage mismatch. "
@@ -948,7 +948,7 @@ def update_report_diagnostics(
     expected_team_ids = {team_id for team_id, _ in teams}
     missing_team_ids = sorted(
         expected_team_ids - resolved_team_ids,
-        key=lambda value: int(value),
+        key=int,
     )
     unique_coach_ids = {
         str(row.get("id") or "").strip()
