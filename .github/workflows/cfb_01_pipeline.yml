@@ -18,6 +18,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+
       - name: Load CFB season
         shell: bash
         run: |
@@ -109,12 +110,13 @@ jobs:
           fi
 
           if [ "$CFB_WEEK" -le 1 ]; then
-            echo "ERROR: cfb_pipeline.yml is for Week 2+."
+            echo "ERROR: cfb_01_pipeline.yml is for Week 2+."
             exit 1
           fi
 
           echo "CFB_WEEK=$CFB_WEEK" >> "$GITHUB_ENV"
           echo "Configured CFB target week: $CFB_WEEK"
+
       - name: Pull opening odds
         run: python docs/win/football/cfb/scripts/00_intake/pull_opening_odds.py
 
@@ -256,9 +258,15 @@ jobs:
               try:
                   number = float(str(value).strip())
               except (TypeError, ValueError):
-                  raise RuntimeError(f"{path}: invalid {field} at line {line}: {value!r}")
+                  raise RuntimeError(
+                      f"{path}: invalid {field} at line {line}: {value!r}"
+                  )
+
               if not number.is_integer():
-                  raise RuntimeError(f"{path}: invalid {field} at line {line}: {value!r}")
+                  raise RuntimeError(
+                      f"{path}: invalid {field} at line {line}: {value!r}"
+                  )
+
               return int(number)
 
           for path in paths:
@@ -266,37 +274,95 @@ jobs:
                   raise RuntimeError(f"{path}: missing or empty")
 
               try:
-                  with path.open(newline="", encoding="utf-8-sig") as handle:
-                      reader = csv.DictReader(handle, strict=True)
+                  with path.open(
+                      newline="",
+                      encoding="utf-8-sig",
+                  ) as handle:
+                      reader = csv.DictReader(
+                          handle,
+                          strict=True,
+                      )
+
                       fields = set(reader.fieldnames or [])
                       missing = required - fields
+
                       if missing:
-                          raise RuntimeError(f"{path}: missing required columns: {sorted(missing)}")
+                          raise RuntimeError(
+                              f"{path}: missing required columns: "
+                              f"{sorted(missing)}"
+                          )
+
                       rows = list(reader)
+
               except csv.Error as exc:
-                  raise RuntimeError(f"{path}: malformed CSV: {exc}") from exc
+                  raise RuntimeError(
+                      f"{path}: malformed CSV: {exc}"
+                  ) from exc
 
               is_selected_output = (
                   path.parent.name == "selected"
-                  and path.name == f"week_{week}_CFB_select_picks.csv"
+                  and path.name
+                  == f"week_{week}_CFB_select_picks.csv"
               )
 
               if not rows and not is_selected_output:
-                  raise RuntimeError(f"{path}: contains no data rows")
+                  raise RuntimeError(
+                      f"{path}: contains no data rows"
+                  )
 
-              for line, row in enumerate(rows, start=2):
-                  if None in row or any(value is None for value in row.values()):
-                      raise RuntimeError(f"{path}: malformed row at line {line}")
-                  if as_int(row["season"], "season", path, line) != season:
-                      raise RuntimeError(f"{path}: wrong season at line {line}")
-                  if as_int(row["week"], "week", path, line) != week:
-                      raise RuntimeError(f"{path}: wrong week at line {line}")
+              for line, row in enumerate(
+                  rows,
+                  start=2,
+              ):
+                  if (
+                      None in row
+                      or any(
+                          value is None
+                          for value in row.values()
+                      )
+                  ):
+                      raise RuntimeError(
+                          f"{path}: malformed row at line {line}"
+                      )
+
+                  if (
+                      as_int(
+                          row["season"],
+                          "season",
+                          path,
+                          line,
+                      )
+                      != season
+                  ):
+                      raise RuntimeError(
+                          f"{path}: wrong season at line {line}"
+                      )
+
+                  if (
+                      as_int(
+                          row["week"],
+                          "week",
+                          path,
+                          line,
+                      )
+                      != week
+                  ):
+                      raise RuntimeError(
+                          f"{path}: wrong week at line {line}"
+                      )
+
                   if not str(row["game_id"]).strip():
-                      raise RuntimeError(f"{path}: blank game_id at line {line}")
+                      raise RuntimeError(
+                          f"{path}: blank game_id at line {line}"
+                      )
 
-              print(f"Verified {path}: {len(rows)} rows")
+              print(
+                  f"Verified {path}: {len(rows)} rows"
+              )
 
-          print(f"CFB Week {week} pipeline outputs verified.")
+          print(
+              f"CFB Week {week} pipeline outputs verified."
+          )
           PY
 
       # ----------------------------------------------------------------------
@@ -322,54 +388,131 @@ jobs:
           import os
           from pathlib import Path
 
-          season = str(int(os.environ["CFB_SEASON"]))
-          root = Path("docs/win/football/cfb/04_final_results")
+          season = str(
+              int(
+                  os.environ["CFB_SEASON"]
+              )
+          )
 
-          def read_csv(path, required=(), require_rows=False):
-              if not path.is_file() or path.stat().st_size == 0:
-                  raise RuntimeError(f"{path}: missing or empty")
+          root = Path(
+              "docs/win/football/cfb/04_final_results"
+          )
+
+          def read_csv(
+              path,
+              required=(),
+              require_rows=False,
+          ):
+              if (
+                  not path.is_file()
+                  or path.stat().st_size == 0
+              ):
+                  raise RuntimeError(
+                      f"{path}: missing or empty"
+                  )
 
               try:
-                  with path.open(newline="", encoding="utf-8-sig") as handle:
-                      reader = csv.DictReader(handle, strict=True)
-                      fields = set(reader.fieldnames or [])
-                      missing = set(required) - fields
+                  with path.open(
+                      newline="",
+                      encoding="utf-8-sig",
+                  ) as handle:
+                      reader = csv.DictReader(
+                          handle,
+                          strict=True,
+                      )
+
+                      fields = set(
+                          reader.fieldnames or []
+                      )
+
+                      missing = (
+                          set(required)
+                          - fields
+                      )
+
                       if missing:
                           raise RuntimeError(
-                              f"{path}: missing required columns: {sorted(missing)}"
+                              f"{path}: missing required columns: "
+                              f"{sorted(missing)}"
                           )
+
                       rows = list(reader)
+
               except csv.Error as exc:
-                  raise RuntimeError(f"{path}: malformed CSV: {exc}") from exc
+                  raise RuntimeError(
+                      f"{path}: malformed CSV: {exc}"
+                  ) from exc
 
               if not reader.fieldnames:
-                  raise RuntimeError(f"{path}: missing CSV header")
+                  raise RuntimeError(
+                      f"{path}: missing CSV header"
+                  )
 
               if require_rows and not rows:
-                  raise RuntimeError(f"{path}: contains no data rows")
+                  raise RuntimeError(
+                      f"{path}: contains no data rows"
+                  )
 
-              for line, row in enumerate(rows, start=2):
-                  if None in row or any(value is None for value in row.values()):
-                      raise RuntimeError(f"{path}: malformed row at line {line}")
+              for line, row in enumerate(
+                  rows,
+                  start=2,
+              ):
+                  if (
+                      None in row
+                      or any(
+                          value is None
+                          for value in row.values()
+                      )
+                  ):
+                      raise RuntimeError(
+                          f"{path}: malformed row at line {line}"
+                      )
 
               return rows
 
           work = read_csv(
               root / "intermediate/work_cfb.csv",
-              {"season", "week", "game_id", "market_type", "bet_result", "bet_units", "final_status"},
+              {
+                  "season",
+                  "week",
+                  "game_id",
+                  "market_type",
+                  "bet_result",
+                  "bet_units",
+                  "final_status",
+              },
           )
 
           has_bets = bool(work)
 
-          for line, row in enumerate(work, start=2):
+          for line, row in enumerate(
+              work,
+              start=2,
+          ):
               if str(row["season"]).strip() != season:
-                  raise RuntimeError(f"work_cfb.csv: wrong season at line {line}")
+                  raise RuntimeError(
+                      f"work_cfb.csv: wrong season at line {line}"
+                  )
+
               if not str(row["game_id"]).strip():
-                  raise RuntimeError(f"work_cfb.csv: blank game_id at line {line}")
+                  raise RuntimeError(
+                      f"work_cfb.csv: blank game_id at line {line}"
+                  )
 
           summary = read_csv(
               root / "cfb_summary_overall.csv",
-              {"league", "season", "market_type", "Win", "Loss", "Pending", "Total", "Selected", "Win_Pct", "units"},
+              {
+                  "league",
+                  "season",
+                  "market_type",
+                  "Win",
+                  "Loss",
+                  "Pending",
+                  "Total",
+                  "Selected",
+                  "Win_Pct",
+                  "units",
+              },
           )
 
           if has_bets and not summary:
@@ -377,38 +520,78 @@ jobs:
                   "cfb_summary_overall.csv contains no data rows"
               )
 
-          for line, row in enumerate(summary, start=2):
+          for line, row in enumerate(
+              summary,
+              start=2,
+          ):
               if str(row["league"]).strip() != "CFB":
-                  raise RuntimeError(f"cfb_summary_overall.csv: wrong league at line {line}")
-              if str(row["season"]).strip() != season:
-                  raise RuntimeError(f"cfb_summary_overall.csv: wrong season at line {line}")
+                  raise RuntimeError(
+                      "cfb_summary_overall.csv: "
+                      f"wrong league at line {line}"
+                  )
 
-          overview = root / "reports/overview"
+              if str(row["season"]).strip() != season:
+                  raise RuntimeError(
+                      "cfb_summary_overall.csv: "
+                      f"wrong season at line {line}"
+                  )
+
+          overview = (
+              root
+              / "reports"
+              / "overview"
+          )
+
           for name in (
               "cfb_summary_overall.csv",
               "cfb_summary_by_market.csv",
               "cfb_summary_by_week.csv",
               "cfb_bet_log.csv",
           ):
-              rows = read_csv(overview / name)
+              rows = read_csv(
+                  overview / name
+              )
+
               if has_bets and not rows:
                   raise RuntimeError(
-                      f"{overview / name}: contains no data rows"
+                      f"{overview / name}: "
+                      "contains no data rows"
                   )
 
-          for name in ("moneyline", "spread", "totals"):
-              directory = root / "reports" / name
-              if not directory.is_dir():
-                  raise RuntimeError(f"{directory}: missing report directory")
+          for name in (
+              "moneyline",
+              "spread",
+              "totals",
+          ):
+              directory = (
+                  root
+                  / "reports"
+                  / name
+              )
 
-              files = sorted(directory.rglob("*.csv"))
+              if not directory.is_dir():
+                  raise RuntimeError(
+                      f"{directory}: missing report directory"
+                  )
+
+              files = sorted(
+                  directory.rglob("*.csv")
+              )
+
               if not files:
-                  raise RuntimeError(f"{directory}: contains no CSV reports")
+                  raise RuntimeError(
+                      f"{directory}: contains no CSV reports"
+                  )
 
               for path in files:
-                  read_csv(path, require_rows=False)
+                  read_csv(
+                      path,
+                      require_rows=False,
+                  )
 
-          print("CFB grading analysis and reports verified.")
+          print(
+              "CFB grading analysis and reports verified."
+          )
           PY
 
       # ----------------------------------------------------------------------
