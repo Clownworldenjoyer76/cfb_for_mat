@@ -348,6 +348,30 @@ def load_authoritative_team_ids(
 def load_canonical_team_names(
     authoritative_team_ids: list[str],
 ) -> dict[str, str]:
+    def _stage3_load_canonical_team_names_block_01() -> None:
+        nonlocal canonical, team_id
+        for team_id, canonical in (
+            canonical_by_id.items()
+        ):
+            prior_id = inverse.get(
+                canonical
+            )
+
+            if (
+                prior_id is not None
+                and prior_id != team_id
+            ):
+                raise ValueError(
+                    "team_map.csv maps one canonical team name to "
+                    "multiple authoritative IDs: "
+                    f"canonical={canonical!r}, "
+                    f"team_ids={prior_id},{team_id}"
+                )
+
+            inverse[
+                canonical
+            ] = team_id
+
     if not TEAM_MAP_PATH.exists():
         raise FileNotFoundError(
             f"Missing team map: {TEAM_MAP_PATH}"
@@ -453,27 +477,7 @@ def load_canonical_team_names(
 
     inverse: dict[str, str] = {}
 
-    for team_id, canonical in (
-        canonical_by_id.items()
-    ):
-        prior_id = inverse.get(
-            canonical
-        )
-
-        if (
-            prior_id is not None
-            and prior_id != team_id
-        ):
-            raise ValueError(
-                "team_map.csv maps one canonical team name to "
-                "multiple authoritative IDs: "
-                f"canonical={canonical!r}, "
-                f"team_ids={prior_id},{team_id}"
-            )
-
-        inverse[
-            canonical
-        ] = team_id
+    _stage3_load_canonical_team_names_block_01()
 
     return canonical_by_id
 
@@ -1156,6 +1160,78 @@ def build_rows(
     global _DUPLICATE_OUTPUT_IDENTITY_COUNT
     global _REPORT_YEAR_MISMATCH_COUNT
 
+    def _stage3_build_rows_block_07() -> None:
+        if not isinstance(
+            athlete,
+            dict,
+        ):
+            raise InjuryValidationError(
+                "Injury athlete field is not "
+                f"an object for {context}"
+            )
+
+    def _stage3_build_rows_block_06() -> None:
+        nonlocal injury_id
+        if injury_id:
+            injury_id = (
+                parse_positive_int_text(
+                    injury_id,
+                    label=f"injury.id for {context}",
+                )
+            )
+
+    def _stage3_build_rows_block_05() -> None:
+        if not isinstance(
+            injury,
+            dict,
+        ):
+            raise InjuryValidationError(
+                "ESPN injuries team group contains "
+                "non-object injury for "
+                f"team_id={team_id}, "
+                f"injury_index={injury_index}"
+            )
+
+    def _stage3_build_rows_block_04() -> None:
+        global _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES, _PROVIDER_TEAM_GROUPS_WITH_INJURIES
+        if injuries:
+            _PROVIDER_TEAM_GROUPS_WITH_INJURIES += 1
+        else:
+            _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES += 1
+
+    def _stage3_build_rows_block_03() -> None:
+        if not isinstance(
+            injuries,
+            list,
+        ):
+            raise InjuryValidationError(
+                "ESPN injuries team entry injuries "
+                "field is not a list for "
+                f"team_id={team_id}"
+            )
+
+    def _stage3_build_rows_block_02() -> None:
+        if team_id not in authoritative_set:
+            _FOREIGN_TEAM_IDS.add(
+                team_id
+            )
+
+            raise InjuryValidationError(
+                "ESPN injuries payload contains "
+                f"foreign team_id={team_id}"
+            )
+
+    def _stage3_build_rows_block_01() -> None:
+        if not isinstance(
+            team_entry,
+            dict,
+        ):
+            raise InjuryValidationError(
+                "ESPN injuries collection contains "
+                "non-object team entry at "
+                f"team_index={team_index}"
+            )
+
     authoritative_set = set(
         authoritative_team_ids
     )
@@ -1179,15 +1255,7 @@ def build_rows(
     for team_index, team_entry in enumerate(
         team_entries
     ):
-        if not isinstance(
-            team_entry,
-            dict,
-        ):
-            raise InjuryValidationError(
-                "ESPN injuries collection contains "
-                "non-object team entry at "
-                f"team_index={team_index}"
-            )
+        _stage3_build_rows_block_01()
 
         team_id = parse_positive_int_text(
             team_entry.get("id"),
@@ -1201,38 +1269,19 @@ def build_rows(
             team_id
         )
 
-        if team_id not in authoritative_set:
-            _FOREIGN_TEAM_IDS.add(
-                team_id
-            )
-
-            raise InjuryValidationError(
-                "ESPN injuries payload contains "
-                f"foreign team_id={team_id}"
-            )
+        _stage3_build_rows_block_02()
 
         injuries = team_entry.get(
             "injuries"
         )
 
-        if not isinstance(
-            injuries,
-            list,
-        ):
-            raise InjuryValidationError(
-                "ESPN injuries team entry injuries "
-                "field is not a list for "
-                f"team_id={team_id}"
-            )
+        _stage3_build_rows_block_03()
 
         _RAW_INJURY_COUNT += len(
             injuries
         )
 
-        if injuries:
-            _PROVIDER_TEAM_GROUPS_WITH_INJURIES += 1
-        else:
-            _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES += 1
+        _stage3_build_rows_block_04()
 
         canonical_team = (
             canonical_by_id[
@@ -1243,16 +1292,7 @@ def build_rows(
         for injury_index, injury in enumerate(
             injuries
         ):
-            if not isinstance(
-                injury,
-                dict,
-            ):
-                raise InjuryValidationError(
-                    "ESPN injuries team group contains "
-                    "non-object injury for "
-                    f"team_id={team_id}, "
-                    f"injury_index={injury_index}"
-                )
+            _stage3_build_rows_block_05()
 
             context = (
                 f"team_id={team_id}, "
@@ -1263,26 +1303,13 @@ def build_rows(
                 injury.get("id") or ""
             ).strip()
 
-            if injury_id:
-                injury_id = (
-                    parse_positive_int_text(
-                        injury_id,
-                        label=f"injury.id for {context}",
-                    )
-                )
+            _stage3_build_rows_block_06()
 
             athlete = injury.get(
                 "athlete"
             )
 
-            if not isinstance(
-                athlete,
-                dict,
-            ):
-                raise InjuryValidationError(
-                    "Injury athlete field is not "
-                    f"an object for {context}"
-                )
+            _stage3_build_rows_block_07()
 
             validate_athlete_team(
                 athlete,
@@ -1729,15 +1756,30 @@ def update_report_details(
     output_path: Path | None,
     output_modified: bool | None,
 ) -> None:
-    status_counts = Counter(
-        str(
-            row.get("game_status") or ""
-        ).strip()
-        for row in rows
-        if str(
-            row.get("game_status") or ""
-        ).strip()
-    )
+    def _stage3_update_report_details_expr_02() -> object:
+        return (
+            Counter((str(row.get('game_status') or '').strip() for row in rows if str(row.get('game_status') or '').strip()))
+        )
+
+    def _stage3_update_report_details_expr_01() -> object:
+        return (
+            'all_stale_zero_current' if _RAW_INJURY_COUNT > 0 and _FRESH_INJURY_COUNT == 0 else 'mixed_fresh_and_stale' if _FRESH_INJURY_COUNT > 0 and _STALE_INJURY_COUNT > 0 else 'fresh_only' if _FRESH_INJURY_COUNT > 0 else 'provider_zero_injuries'
+        )
+
+    def _stage3_update_report_details_block_01() -> None:
+        if output_path is not None:
+            details[
+                "output_path"
+            ] = str(
+                output_path
+            )
+
+        if output_modified is not None:
+            details[
+                "output_modified"
+            ] = output_modified
+
+    status_counts = _stage3_update_report_details_expr_02()
 
     represented_names = {
         str(
@@ -1838,23 +1880,7 @@ def update_report_details(
             and _FRESH_INJURY_COUNT == 0
         ),
         "freshness_outcome": (
-            "all_stale_zero_current"
-            if (
-                _RAW_INJURY_COUNT > 0
-                and _FRESH_INJURY_COUNT == 0
-            )
-            else (
-                "mixed_fresh_and_stale"
-                if (
-                    _FRESH_INJURY_COUNT > 0
-                    and _STALE_INJURY_COUNT > 0
-                )
-                else (
-                    "fresh_only"
-                    if _FRESH_INJURY_COUNT > 0
-                    else "provider_zero_injuries"
-                )
-            )
+            _stage3_update_report_details_expr_01()
         ),
         "published_injury_count": len(
             rows
@@ -1888,17 +1914,7 @@ def update_report_details(
         "output_columns": OUTPUT_HEADERS,
     }
 
-    if output_path is not None:
-        details[
-            "output_path"
-        ] = str(
-            output_path
-        )
-
-    if output_modified is not None:
-        details[
-            "output_modified"
-        ] = output_modified
+    _stage3_update_report_details_block_01()
 
     report.update_details(
         details

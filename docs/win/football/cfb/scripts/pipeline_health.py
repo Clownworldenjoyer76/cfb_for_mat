@@ -849,6 +849,22 @@ def health_log(payload: dict[str, Any]) -> str:
 def publish_outputs(
     payload: dict[str, Any],
 ) -> bool:
+    def _stage3_publish_outputs_block_01() -> None:
+        nonlocal backup, final, temp
+        try:
+            for final, temp in temps.items():
+                os.replace(temp, final)
+
+        except Exception:
+            for final in contents:
+                final.unlink(missing_ok=True)
+
+            for final, backup in backups.items():
+                if backup.exists():
+                    os.replace(backup, final)
+
+            raise
+
     json_text = (
         json.dumps(
             payload,
@@ -930,19 +946,7 @@ def publish_outputs(
                 os.replace(final, backup)
                 backups[final] = backup
 
-        try:
-            for final, temp in temps.items():
-                os.replace(temp, final)
-
-        except Exception:
-            for final in contents:
-                final.unlink(missing_ok=True)
-
-            for final, backup in backups.items():
-                if backup.exists():
-                    os.replace(backup, final)
-
-            raise
+        _stage3_publish_outputs_block_01()
 
         return True
 

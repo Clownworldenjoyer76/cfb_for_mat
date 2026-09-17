@@ -880,139 +880,8 @@ def parse_completed(
 
 
 def main() -> int:
-    with PipelineReporter(
-        script=__file__,
-        stage="04_final_results",
-        report_root=REPORT_ROOT,
-        pipeline="cfb",
-        league="CFB",
-    ) as report:
-        args = parse_args()
-
-        season = get_season(
-            args.season
-        )
-
-        report.season = season
-        report.week = args.week
-
-        report.update_details(
-            {
-                "script_version": (
-                    SCRIPT_VERSION
-                ),
-                "workers": (
-                    args.workers
-                ),
-            }
-        )
-
-        schedule_path = (
-            CFB_ROOT
-            / "00_intake"
-            / "schedule"
-            / f"{season}_schedule.csv"
-        )
-
-        report.add_input(
-            schedule_path
-        )
-
-        if args.week is None:
-            for path in sorted(
-                PICKS_DIR.glob(
-                    "week_*_CFB_picks.csv"
-                )
-            ):
-                report.add_input(
-                    path
-                )
-
-        print(
-            "pull_final_scores.py "
-            f"version={SCRIPT_VERSION}"
-        )
-
-        print(
-            f"season={season}"
-        )
-
-        if args.week is not None:
-            print(
-                f"week={args.week}"
-            )
-
-        schedule_rows = read_schedule(
-            season,
-            args.week,
-        )
-
-        if not schedule_rows:
-            report.set_rows(
-                rows_in=0,
-                rows_out=0,
-            )
-
-            report.update_details(
-                {
-                    "games_processed": 0,
-                    "completed": 0,
-                    "not_final": 0,
-                    "failed": 0,
-                    "preserved_fetch_failures": 0,
-                    "files_written": 0,
-                }
-            )
-
-            return 0
-
-        existing_by_path: dict[
-            Path,
-            dict[str, dict[str, str]],
-        ] = {}
-
-        for row in schedule_rows:
-            output_path = (
-                result_path_for_row(
-                    row
-                )
-            )
-
-            if (
-                output_path is not None
-                and output_path
-                not in existing_by_path
-            ):
-                existing_by_path[
-                    output_path
-                ] = (
-                    read_existing_result_rows(
-                        output_path,
-                        report,
-                    )
-                )
-
-        checked_utc = datetime.now(
-            timezone.utc
-        ).isoformat()
-
-        score_results = pull_scores(
-            schedule_rows,
-            args.workers,
-        )
-
-        rows_by_week: dict[
-            tuple[str, str, str],
-            list[dict[str, Any]],
-        ] = defaultdict(
-            list
-        )
-
-        completed_count = 0
-        not_final_count = 0
-        failed_count = 0
-        preserved_count = 0
-
+    def _stage3_main_block_01() -> None:
+        nonlocal completed_count, failed_count, not_final_count, output_path, preserved_count, row
         for row in schedule_rows:
             game_id = row[
                 "game_id"
@@ -1226,6 +1095,141 @@ def main() -> int:
             ].append(
                 out_row
             )
+
+    with PipelineReporter(
+        script=__file__,
+        stage="04_final_results",
+        report_root=REPORT_ROOT,
+        pipeline="cfb",
+        league="CFB",
+    ) as report:
+        args = parse_args()
+
+        season = get_season(
+            args.season
+        )
+
+        report.season = season
+        report.week = args.week
+
+        report.update_details(
+            {
+                "script_version": (
+                    SCRIPT_VERSION
+                ),
+                "workers": (
+                    args.workers
+                ),
+            }
+        )
+
+        schedule_path = (
+            CFB_ROOT
+            / "00_intake"
+            / "schedule"
+            / f"{season}_schedule.csv"
+        )
+
+        report.add_input(
+            schedule_path
+        )
+
+        if args.week is None:
+            for path in sorted(
+                PICKS_DIR.glob(
+                    "week_*_CFB_picks.csv"
+                )
+            ):
+                report.add_input(
+                    path
+                )
+
+        print(
+            "pull_final_scores.py "
+            f"version={SCRIPT_VERSION}"
+        )
+
+        print(
+            f"season={season}"
+        )
+
+        if args.week is not None:
+            print(
+                f"week={args.week}"
+            )
+
+        schedule_rows = read_schedule(
+            season,
+            args.week,
+        )
+
+        if not schedule_rows:
+            report.set_rows(
+                rows_in=0,
+                rows_out=0,
+            )
+
+            report.update_details(
+                {
+                    "games_processed": 0,
+                    "completed": 0,
+                    "not_final": 0,
+                    "failed": 0,
+                    "preserved_fetch_failures": 0,
+                    "files_written": 0,
+                }
+            )
+
+            return 0
+
+        existing_by_path: dict[
+            Path,
+            dict[str, dict[str, str]],
+        ] = {}
+
+        for row in schedule_rows:
+            output_path = (
+                result_path_for_row(
+                    row
+                )
+            )
+
+            if (
+                output_path is not None
+                and output_path
+                not in existing_by_path
+            ):
+                existing_by_path[
+                    output_path
+                ] = (
+                    read_existing_result_rows(
+                        output_path,
+                        report,
+                    )
+                )
+
+        checked_utc = datetime.now(
+            timezone.utc
+        ).isoformat()
+
+        score_results = pull_scores(
+            schedule_rows,
+            args.workers,
+        )
+
+        rows_by_week: dict[
+            tuple[str, str, str],
+            list[dict[str, Any]],
+        ] = defaultdict(
+            list
+        )
+
+        completed_count = 0
+        not_final_count = 0
+        failed_count = 0
+        preserved_count = 0
+
+        _stage3_main_block_01()
 
         files_written = 0
         rows_written = 0

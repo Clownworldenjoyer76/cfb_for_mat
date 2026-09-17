@@ -136,26 +136,7 @@ def load_authoritative_teams(
     season: int,
     season_type: int,
 ) -> list[tuple[str, str]]:
-    if not LEAGUE_MASTER_PATH.exists():
-        raise FileNotFoundError(f"Missing league master: {LEAGUE_MASTER_PATH}")
-
-    with LEAGUE_MASTER_PATH.open(
-        "r",
-        newline="",
-        encoding="utf-8-sig",
-    ) as handle:
-        reader = csv.DictReader(handle)
-        fieldnames = reader.fieldnames or []
-        required = {"team_id", "team_abbr", "season", "season_type"}
-        missing = sorted(required - set(fieldnames))
-
-        if missing:
-            raise ValueError(
-                f"league_master.csv missing required columns: {missing}"
-            )
-
-        teams: dict[str, str] = {}
-
+    def _stage3_load_authoritative_teams_block_03() -> None:
         for row_number, row in enumerate(reader, start=2):
             if None in row:
                 raise ValueError(
@@ -209,8 +190,36 @@ def load_authoritative_teams(
 
             teams[team_id] = team_abbr
 
-    if not teams:
-        raise ValueError("league_master.csv contains no authoritative teams")
+    def _stage3_load_authoritative_teams_block_02() -> None:
+        if not teams:
+            raise ValueError("league_master.csv contains no authoritative teams")
+
+    def _stage3_load_authoritative_teams_block_01() -> None:
+        if not LEAGUE_MASTER_PATH.exists():
+            raise FileNotFoundError(f"Missing league master: {LEAGUE_MASTER_PATH}")
+
+    _stage3_load_authoritative_teams_block_01()
+
+    with LEAGUE_MASTER_PATH.open(
+        "r",
+        newline="",
+        encoding="utf-8-sig",
+    ) as handle:
+        reader = csv.DictReader(handle)
+        fieldnames = reader.fieldnames or []
+        required = {"team_id", "team_abbr", "season", "season_type"}
+        missing = sorted(required - set(fieldnames))
+
+        if missing:
+            raise ValueError(
+                f"league_master.csv missing required columns: {missing}"
+            )
+
+        teams: dict[str, str] = {}
+
+        _stage3_load_authoritative_teams_block_03()
+
+    _stage3_load_authoritative_teams_block_02()
 
     return sorted(teams.items(), key=lambda item: int(item[0]))
 
@@ -583,6 +592,37 @@ def get_career_records(
     team_id: str,
     coach_id: str,
 ) -> tuple[str, str, dict[str, int]]:
+    def _stage3_get_career_records_block_01() -> None:
+        nonlocal record_type
+        for record_index, record_ref_obj in enumerate(career_records):
+            if not isinstance(record_ref_obj, dict):
+                raise CoachValidationError(
+                    "careerRecords contains non-object entry for "
+                    f"team_id={team_id}, coach_id={coach_id}, "
+                    f"record_index={record_index}"
+                )
+
+            record_ref = validate_espn_ref(
+                record_ref_obj.get("$ref", ""),
+                label=(
+                    f"career record $ref team_id={team_id} "
+                    f"coach_id={coach_id} record_index={record_index}"
+                ),
+            )
+            record = fetch_json(
+                record_ref,
+                request_kind="career_record",
+                label=(
+                    f"career record team_id={team_id} "
+                    f"coach_id={coach_id} record_index={record_index}"
+                ),
+            )
+
+            record_type = str(record.get("type") or "").strip()
+            summary = str(record.get("summary") or "").strip()
+            if record_type in record_values and summary:
+                record_values[record_type].add(summary)
+
     diagnostics = {
         "missing_person_ref": 0,
         "missing_career_records_collection": 0,
@@ -630,34 +670,7 @@ def get_career_records(
         "Post Season": set(),
     }
 
-    for record_index, record_ref_obj in enumerate(career_records):
-        if not isinstance(record_ref_obj, dict):
-            raise CoachValidationError(
-                "careerRecords contains non-object entry for "
-                f"team_id={team_id}, coach_id={coach_id}, "
-                f"record_index={record_index}"
-            )
-
-        record_ref = validate_espn_ref(
-            record_ref_obj.get("$ref", ""),
-            label=(
-                f"career record $ref team_id={team_id} "
-                f"coach_id={coach_id} record_index={record_index}"
-            ),
-        )
-        record = fetch_json(
-            record_ref,
-            request_kind="career_record",
-            label=(
-                f"career record team_id={team_id} "
-                f"coach_id={coach_id} record_index={record_index}"
-            ),
-        )
-
-        record_type = str(record.get("type") or "").strip()
-        summary = str(record.get("summary") or "").strip()
-        if record_type in record_values and summary:
-            record_values[record_type].add(summary)
+    _stage3_get_career_records_block_01()
 
     for record_type, summaries in record_values.items():
         if len(summaries) > 1:

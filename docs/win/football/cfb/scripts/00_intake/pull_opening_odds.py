@@ -2992,6 +2992,26 @@ def write_csv_atomic(
 
 
 def main() -> int:
+    def _stage3_main_expr_01() -> object:
+        return (
+            sum((1 for row in final_rows if row_has_required_opening(row) and (not str(row.get('opening_timestamp', '')).strip())))
+        )
+
+    def _stage3_main_block_02() -> None:
+        if hard_failures:
+            raise RuntimeError(
+                "One or more ESPN "
+                "opening-odds requests failed; "
+                "refusing to modify opener history. "
+                f"failures={len(hard_failures)}"
+            )
+
+    def _stage3_main_block_01() -> None:
+        if output_path.exists():
+            report.add_input(
+                output_path
+            )
+
     with PipelineReporter(
         script=__file__,
         stage="00_intake",
@@ -3060,10 +3080,7 @@ def main() -> int:
             / f"{season}_CFB_openers.csv"
         )
 
-        if output_path.exists():
-            report.add_input(
-                output_path
-            )
+        _stage3_main_block_01()
 
         report.add_output(
             output_path
@@ -3125,13 +3142,7 @@ def main() -> int:
             }
         )
 
-        if hard_failures:
-            raise RuntimeError(
-                "One or more ESPN "
-                "opening-odds requests failed; "
-                "refusing to modify opener history. "
-                f"failures={len(hard_failures)}"
-            )
+        _stage3_main_block_02()
 
         validate_new_coverage(
             weekly_rows,
@@ -3176,19 +3187,7 @@ def main() -> int:
             ] == "error"
         )
 
-        blank_provider_timestamps = sum(
-            1
-            for row in final_rows
-            if row_has_required_opening(
-                row
-            )
-            and not str(
-                row.get(
-                    "opening_timestamp",
-                    "",
-                )
-            ).strip()
-        )
+        blank_provider_timestamps = _stage3_main_expr_01()
 
         blank_capture_provenance = sum(
             1

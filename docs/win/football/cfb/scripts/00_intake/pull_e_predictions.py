@@ -386,38 +386,7 @@ def load_target_games(
     season_type: int,
     week: int,
 ) -> dict[str, dict[str, str]]:
-    if not path.exists():
-        raise FileNotFoundError(
-            f"Target weekly schedule not found: {path}"
-        )
-
-    with path.open(
-        "r",
-        newline="",
-        encoding="utf-8-sig",
-    ) as handle:
-        reader = csv.DictReader(
-            handle
-        )
-
-        fieldnames = reader.fieldnames or []
-
-        missing_columns = sorted(
-            REQUIRED_SCHEDULE_COLUMNS
-            - set(fieldnames)
-        )
-
-        if missing_columns:
-            raise PredictorValidationError(
-                "Target weekly schedule missing required columns: "
-                f"{missing_columns}"
-            )
-
-        games: dict[
-            str,
-            dict[str, str],
-        ] = {}
-
+    def _stage3_load_target_games_block_03() -> None:
         for line_number, row in enumerate(
             reader,
             start=2,
@@ -535,10 +504,50 @@ def load_target_games(
                 "home_team": home_team,
             }
 
-    if not games:
-        raise PredictorValidationError(
-            "Target weekly schedule contains no games"
+    def _stage3_load_target_games_block_02() -> None:
+        if not games:
+            raise PredictorValidationError(
+                "Target weekly schedule contains no games"
+            )
+
+    def _stage3_load_target_games_block_01() -> None:
+        if not path.exists():
+            raise FileNotFoundError(
+                f"Target weekly schedule not found: {path}"
+            )
+
+    _stage3_load_target_games_block_01()
+
+    with path.open(
+        "r",
+        newline="",
+        encoding="utf-8-sig",
+    ) as handle:
+        reader = csv.DictReader(
+            handle
         )
+
+        fieldnames = reader.fieldnames or []
+
+        missing_columns = sorted(
+            REQUIRED_SCHEDULE_COLUMNS
+            - set(fieldnames)
+        )
+
+        if missing_columns:
+            raise PredictorValidationError(
+                "Target weekly schedule missing required columns: "
+                f"{missing_columns}"
+            )
+
+        games: dict[
+            str,
+            dict[str, str],
+        ] = {}
+
+        _stage3_load_target_games_block_03()
+
+    _stage3_load_target_games_block_02()
 
     return games
 

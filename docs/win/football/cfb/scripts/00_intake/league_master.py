@@ -276,14 +276,124 @@ def fetch_json(
     global _RECOVERED_TRANSIENT_REQUESTS
     global _EXHAUSTED_TRANSIENT_FAILURES
 
+    def _stage3_fetch_json_block_07() -> None:
+        nonlocal failure
+        if not isinstance(
+            payload,
+            dict,
+        ):
+            failure = {
+                "label": label,
+                "url": url,
+                "status": str(
+                    status
+                ),
+                "attempt": str(
+                    attempt_number
+                ),
+                "transient": "false",
+                "error": (
+                    "response JSON is not an object"
+                ),
+            }
+
+            _REQUEST_FAILURES.append(
+                failure
+            )
+
+            raise RuntimeError(
+                f"{label} returned non-object JSON: "
+                f"url={url}"
+            )
+
+    payload: object
+
+    def _stage3_fetch_json_block_06() -> None:
+        nonlocal failure, payload
+        try:
+            payload = json.loads(
+                body
+            )
+        except Exception as exc:
+            failure = {
+                "label": label,
+                "url": url,
+                "status": str(
+                    status
+                ),
+                "attempt": str(
+                    attempt_number
+                ),
+                "transient": "false",
+                "error": (
+                    "JSON parse failed: "
+                    f"{exc}"
+                ),
+            }
+
+            _REQUEST_FAILURES.append(
+                failure
+            )
+
+            raise RuntimeError(
+                f"{label} returned malformed JSON: "
+                f"url={url}"
+            ) from exc
+
+    def _stage3_fetch_json_block_05() -> None:
+        global _EXHAUSTED_TRANSIENT_FAILURES
+        if is_transient:
+            _EXHAUSTED_TRANSIENT_FAILURES += 1
+
+    def _stage3_fetch_json_block_04() -> None:
+        global _EXHAUSTED_TRANSIENT_FAILURES
+        if is_transient:
+            _EXHAUSTED_TRANSIENT_FAILURES += 1
+
+    def _stage3_fetch_json_block_03() -> None:
+        nonlocal error_body
+        try:
+            error_body = (
+                exc.read()
+                .decode(
+                    "utf-8",
+                    errors="replace",
+                )
+            )
+        except Exception:
+            pass
+
+    body: object
+    status: object
+
+    def _stage3_fetch_json_block_02() -> None:
+        nonlocal body, status
+        with urlopen(
+            request,
+            timeout=timeout,
+        ) as response:
+            status = int(
+                response.status
+            )
+
+            body = (
+                response.read()
+                .decode(
+                    "utf-8"
+                )
+            )
+
+    def _stage3_fetch_json_block_01() -> None:
+        if not url:
+            raise ValueError(
+                f"{label} URL is blank"
+            )
+
     url = normalize_ref_url(
         url
     )
 
-    if not url:
-        raise ValueError(
-            f"{label} URL is blank"
-        )
+    _stage3_fetch_json_block_01()
 
     # Count the requested resource once regardless
     # of how many network attempts are required.
@@ -306,34 +416,12 @@ def fetch_json(
         )
 
         try:
-            with urlopen(
-                request,
-                timeout=timeout,
-            ) as response:
-                status = int(
-                    response.status
-                )
-
-                body = (
-                    response.read()
-                    .decode(
-                        "utf-8"
-                    )
-                )
+            _stage3_fetch_json_block_02()
 
         except HTTPError as exc:
             error_body = ""
 
-            try:
-                error_body = (
-                    exc.read()
-                    .decode(
-                        "utf-8",
-                        errors="replace",
-                    )
-                )
-            except Exception:
-                pass
+            _stage3_fetch_json_block_03()
 
             is_transient = (
                 exc.code
@@ -379,8 +467,7 @@ def fetch_json(
 
                 continue
 
-            if is_transient:
-                _EXHAUSTED_TRANSIENT_FAILURES += 1
+            _stage3_fetch_json_block_04()
 
             failure = {
                 "label": label,
@@ -545,8 +632,7 @@ def fetch_json(
 
                 continue
 
-            if is_transient:
-                _EXHAUSTED_TRANSIENT_FAILURES += 1
+            _stage3_fetch_json_block_05()
 
             failure = {
                 "label": label,
@@ -575,63 +661,9 @@ def fetch_json(
                 f"url={url}"
             )
 
-        try:
-            payload = json.loads(
-                body
-            )
-        except Exception as exc:
-            failure = {
-                "label": label,
-                "url": url,
-                "status": str(
-                    status
-                ),
-                "attempt": str(
-                    attempt_number
-                ),
-                "transient": "false",
-                "error": (
-                    "JSON parse failed: "
-                    f"{exc}"
-                ),
-            }
+        _stage3_fetch_json_block_06()
 
-            _REQUEST_FAILURES.append(
-                failure
-            )
-
-            raise RuntimeError(
-                f"{label} returned malformed JSON: "
-                f"url={url}"
-            ) from exc
-
-        if not isinstance(
-            payload,
-            dict,
-        ):
-            failure = {
-                "label": label,
-                "url": url,
-                "status": str(
-                    status
-                ),
-                "attempt": str(
-                    attempt_number
-                ),
-                "transient": "false",
-                "error": (
-                    "response JSON is not an object"
-                ),
-            }
-
-            _REQUEST_FAILURES.append(
-                failure
-            )
-
-            raise RuntimeError(
-                f"{label} returned non-object JSON: "
-                f"url={url}"
-            )
+        _stage3_fetch_json_block_07()
 
         if attempt_number > 1:
             _RECOVERED_TRANSIENT_REQUESTS += 1
@@ -733,10 +765,46 @@ def read_team_master() -> dict[
     str,
     dict[str, str],
 ]:
-    if not TEAM_MASTER_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing team master: {TEAM_MASTER_PATH}"
-        )
+    def _stage3_read_team_master_block_04() -> None:
+        if (
+            canonical_team
+            and existing_name
+            and canonical_team != existing_name
+        ):
+            raise ValueError(
+                "team_master.csv contains "
+                "conflicting canonical_team values "
+                f"for team_id={team_id}: "
+                f"{existing_name!r} vs "
+                f"{canonical_team!r}"
+            )
+
+    def _stage3_read_team_master_block_03() -> None:
+        if (
+            team_abbr
+            and existing_abbr
+            and team_abbr != existing_abbr
+        ):
+            raise ValueError(
+                "team_master.csv contains "
+                "conflicting abbreviations "
+                f"for team_id={team_id}: "
+                f"{existing_abbr!r} vs {team_abbr!r}"
+            )
+
+    def _stage3_read_team_master_block_02() -> None:
+        if not teams:
+            raise ValueError(
+                "team_master.csv contains no teams"
+            )
+
+    def _stage3_read_team_master_block_01() -> None:
+        if not TEAM_MASTER_PATH.exists():
+            raise FileNotFoundError(
+                f"Missing team master: {TEAM_MASTER_PATH}"
+            )
+
+    _stage3_read_team_master_block_01()
 
     with TEAM_MASTER_PATH.open(
         "r",
@@ -822,17 +890,7 @@ def read_team_master() -> dict[
                 )
             ).strip()
 
-            if (
-                team_abbr
-                and existing_abbr
-                and team_abbr != existing_abbr
-            ):
-                raise ValueError(
-                    "team_master.csv contains "
-                    "conflicting abbreviations "
-                    f"for team_id={team_id}: "
-                    f"{existing_abbr!r} vs {team_abbr!r}"
-                )
+            _stage3_read_team_master_block_03()
 
             if team_abbr and not existing_abbr:
                 existing["team_abbr"] = team_abbr
@@ -844,28 +902,14 @@ def read_team_master() -> dict[
                 )
             ).strip()
 
-            if (
-                canonical_team
-                and existing_name
-                and canonical_team != existing_name
-            ):
-                raise ValueError(
-                    "team_master.csv contains "
-                    "conflicting canonical_team values "
-                    f"for team_id={team_id}: "
-                    f"{existing_name!r} vs "
-                    f"{canonical_team!r}"
-                )
+            _stage3_read_team_master_block_04()
 
             if canonical_team and not existing_name:
                 existing[
                     "canonical_team"
                 ] = canonical_team
 
-    if not teams:
-        raise ValueError(
-            "team_master.csv contains no teams"
-        )
+    _stage3_read_team_master_block_02()
 
     return teams
 
@@ -1462,60 +1506,7 @@ def get_standings_rows(
     season: int,
     season_type: int,
 ) -> list[dict[str, object]]:
-    (
-        conf_name,
-        conf_abbr,
-        div_name,
-        div_abbr,
-        has_conference,
-    ) = hierarchy_labels(
-        group,
-        ref_url,
-    )
-
-    if not has_conference:
-        return []
-
-    rows: list[
-        dict[str, object]
-    ] = []
-
-    for standings_payload in standings_payloads(
-        group
-    ):
-        type_name = str(
-            standings_payload.get("name")
-            or standings_payload.get(
-                "displayName"
-            )
-            or standings_payload.get("type")
-            or ""
-        ).strip()
-
-        if not type_name:
-            raise RuntimeError(
-                "ESPN standings payload has "
-                "blank standings type for "
-                f"conference={conf_name}"
-            )
-
-        team_standings = (
-            standings_payload.get(
-                "standings",
-                [],
-            )
-        )
-
-        if not isinstance(
-            team_standings,
-            list,
-        ):
-            raise RuntimeError(
-                "ESPN standings payload "
-                "standings field is not "
-                f"a list for type={type_name}"
-            )
-
+    def _stage3_get_standings_rows_block_01() -> None:
         for team_standing in team_standings:
             if not isinstance(
                 team_standing,
@@ -1679,6 +1670,62 @@ def get_standings_rows(
                         }
                     )
 
+    (
+        conf_name,
+        conf_abbr,
+        div_name,
+        div_abbr,
+        has_conference,
+    ) = hierarchy_labels(
+        group,
+        ref_url,
+    )
+
+    if not has_conference:
+        return []
+
+    rows: list[
+        dict[str, object]
+    ] = []
+
+    for standings_payload in standings_payloads(
+        group
+    ):
+        type_name = str(
+            standings_payload.get("name")
+            or standings_payload.get(
+                "displayName"
+            )
+            or standings_payload.get("type")
+            or ""
+        ).strip()
+
+        if not type_name:
+            raise RuntimeError(
+                "ESPN standings payload has "
+                "blank standings type for "
+                f"conference={conf_name}"
+            )
+
+        team_standings = (
+            standings_payload.get(
+                "standings",
+                [],
+            )
+        )
+
+        if not isinstance(
+            team_standings,
+            list,
+        ):
+            raise RuntimeError(
+                "ESPN standings payload "
+                "standings field is not "
+                f"a list for type={type_name}"
+            )
+
+        _stage3_get_standings_rows_block_01()
+
     return rows
 
 
@@ -1838,6 +1885,103 @@ def build_memberships(
     dict[str, str],
     int,
 ]:
+    def _stage3_build_memberships_block_01() -> None:
+        nonlocal abbreviations_resolved
+        for (
+            team_id,
+            team_ref,
+            inline_item,
+        ) in team_refs:
+            if team_id not in accepted_ids:
+                continue
+
+            current_abbr = str(
+                team_abbr_lookup.get(
+                    team_id,
+                    "",
+                )
+            ).strip()
+
+            if not current_abbr:
+                current_abbr = (
+                    resolve_team_abbreviation(
+                        team_id,
+                        team_ref,
+                        inline_item,
+                    )
+                )
+
+                team_abbr_lookup[
+                    team_id
+                ] = current_abbr
+
+                abbreviations_resolved += 1
+
+            row = {
+                "team_id": team_id,
+                "team_abbr": current_abbr,
+                "conference": conf_name,
+                "conference_abbr": conf_abbr,
+                "division": div_name,
+                "division_abbr": div_abbr,
+                "season": season,
+                "season_type": season_type,
+            }
+
+            existing = memberships.get(
+                team_id
+            )
+
+            if existing is None:
+                memberships[
+                    team_id
+                ] = (
+                    membership_priority,
+                    row,
+                )
+                continue
+
+            (
+                existing_priority,
+                existing_row,
+            ) = existing
+
+            if (
+                existing_priority
+                > membership_priority
+            ):
+                continue
+
+            if (
+                existing_priority
+                == membership_priority
+            ):
+                if (
+                    membership_signature(
+                        existing_row
+                    )
+                    != membership_signature(
+                        row
+                    )
+                ):
+                    raise RuntimeError(
+                        "Conflicting equal-priority "
+                        "conference memberships for "
+                        f"team_id={team_id}: "
+                        f"{membership_signature(existing_row)} "
+                        "vs "
+                        f"{membership_signature(row)}"
+                    )
+
+                continue
+
+            memberships[
+                team_id
+            ] = (
+                membership_priority,
+                row,
+            )
+
     accepted_ids = set(
         team_index
     )
@@ -1939,100 +2083,7 @@ def build_memberships(
         else:
             membership_priority = 1
 
-        for (
-            team_id,
-            team_ref,
-            inline_item,
-        ) in team_refs:
-            if team_id not in accepted_ids:
-                continue
-
-            current_abbr = str(
-                team_abbr_lookup.get(
-                    team_id,
-                    "",
-                )
-            ).strip()
-
-            if not current_abbr:
-                current_abbr = (
-                    resolve_team_abbreviation(
-                        team_id,
-                        team_ref,
-                        inline_item,
-                    )
-                )
-
-                team_abbr_lookup[
-                    team_id
-                ] = current_abbr
-
-                abbreviations_resolved += 1
-
-            row = {
-                "team_id": team_id,
-                "team_abbr": current_abbr,
-                "conference": conf_name,
-                "conference_abbr": conf_abbr,
-                "division": div_name,
-                "division_abbr": div_abbr,
-                "season": season,
-                "season_type": season_type,
-            }
-
-            existing = memberships.get(
-                team_id
-            )
-
-            if existing is None:
-                memberships[
-                    team_id
-                ] = (
-                    membership_priority,
-                    row,
-                )
-                continue
-
-            (
-                existing_priority,
-                existing_row,
-            ) = existing
-
-            if (
-                existing_priority
-                > membership_priority
-            ):
-                continue
-
-            if (
-                existing_priority
-                == membership_priority
-            ):
-                if (
-                    membership_signature(
-                        existing_row
-                    )
-                    != membership_signature(
-                        row
-                    )
-                ):
-                    raise RuntimeError(
-                        "Conflicting equal-priority "
-                        "conference memberships for "
-                        f"team_id={team_id}: "
-                        f"{membership_signature(existing_row)} "
-                        "vs "
-                        f"{membership_signature(row)}"
-                    )
-
-                continue
-
-            memberships[
-                team_id
-            ] = (
-                membership_priority,
-                row,
-            )
+        _stage3_build_memberships_block_01()
 
     return (
         memberships,
@@ -2623,6 +2674,42 @@ def publish_bundle(
         dict[str, object]
     ],
 ) -> None:
+    def _stage3_publish_bundle_block_02() -> None:
+        if standings_backup.exists():
+            try:
+                os.replace(
+                    standings_backup,
+                    LEAGUE_STANDINGS_PATH,
+                )
+            except Exception:
+                pass
+
+        elif not standings_existed:
+            try:
+                LEAGUE_STANDINGS_PATH.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+    def _stage3_publish_bundle_block_01() -> None:
+        if master_backup.exists():
+            try:
+                os.replace(
+                    master_backup,
+                    LEAGUE_MASTER_PATH,
+                )
+            except Exception:
+                pass
+
+        elif not master_existed:
+            try:
+                LEAGUE_MASTER_PATH.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
     LEAGUE_MASTER_PATH.parent.mkdir(
         parents=True,
         exist_ok=True,
@@ -2718,39 +2805,9 @@ def publish_bundle(
             except Exception:
                 pass
 
-        if master_backup.exists():
-            try:
-                os.replace(
-                    master_backup,
-                    LEAGUE_MASTER_PATH,
-                )
-            except Exception:
-                pass
+        _stage3_publish_bundle_block_01()
 
-        elif not master_existed:
-            try:
-                LEAGUE_MASTER_PATH.unlink(
-                    missing_ok=True
-                )
-            except Exception:
-                pass
-
-        if standings_backup.exists():
-            try:
-                os.replace(
-                    standings_backup,
-                    LEAGUE_STANDINGS_PATH,
-                )
-            except Exception:
-                pass
-
-        elif not standings_existed:
-            try:
-                LEAGUE_STANDINGS_PATH.unlink(
-                    missing_ok=True
-                )
-            except Exception:
-                pass
+        _stage3_publish_bundle_block_02()
 
         raise
 

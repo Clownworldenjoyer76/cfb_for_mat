@@ -872,6 +872,100 @@ def bool_value(
 def extract_market_values(
     odds_item: dict,
 ) -> dict[str, str]:
+    def _stage3_extract_market_values_block_01() -> None:
+        nonlocal away_spread, home_spread
+        if (
+            home_spread == ""
+            and away_spread != ""
+        ):
+            away_num = to_float(
+                away_spread
+            )
+
+            if away_num is not None:
+                home_spread = clean_number(
+                    -away_num
+                )
+
+        if (
+            away_spread == ""
+            and home_spread != ""
+        ):
+            home_num = to_float(
+                home_spread
+            )
+
+            if home_num is not None:
+                away_spread = clean_number(
+                    -home_num
+                )
+
+        if (
+            home_spread == ""
+            and away_spread == ""
+        ):
+            detail_line = parse_details_line(
+                odds_item.get(
+                    "details",
+                    "",
+                )
+            )
+
+            generic_spread = to_float(
+                odds_item.get(
+                    "spread"
+                )
+            )
+
+            line = (
+                detail_line
+                if detail_line is not None
+                else generic_spread
+            )
+
+            home_favorite = bool_value(
+                home_team_odds.get(
+                    "favorite"
+                )
+            )
+
+            away_favorite = bool_value(
+                away_team_odds.get(
+                    "favorite"
+                )
+            )
+
+            if line is not None:
+                if (
+                    home_favorite
+                    and not away_favorite
+                ):
+                    home_spread = clean_number(
+                        line
+                    )
+                    away_spread = clean_number(
+                        -line
+                    )
+
+                elif (
+                    away_favorite
+                    and not home_favorite
+                ):
+                    away_spread = clean_number(
+                        line
+                    )
+                    home_spread = clean_number(
+                        -line
+                    )
+
+                else:
+                    home_spread = clean_number(
+                        line
+                    )
+                    away_spread = clean_number(
+                        -line
+                    )
+
     home_team_odds = (
         odds_item.get(
             "homeTeamOdds"
@@ -1020,97 +1114,7 @@ def extract_market_values(
         direct_away_spread
     )
 
-    if (
-        home_spread == ""
-        and away_spread != ""
-    ):
-        away_num = to_float(
-            away_spread
-        )
-
-        if away_num is not None:
-            home_spread = clean_number(
-                -away_num
-            )
-
-    if (
-        away_spread == ""
-        and home_spread != ""
-    ):
-        home_num = to_float(
-            home_spread
-        )
-
-        if home_num is not None:
-            away_spread = clean_number(
-                -home_num
-            )
-
-    if (
-        home_spread == ""
-        and away_spread == ""
-    ):
-        detail_line = parse_details_line(
-            odds_item.get(
-                "details",
-                "",
-            )
-        )
-
-        generic_spread = to_float(
-            odds_item.get(
-                "spread"
-            )
-        )
-
-        line = (
-            detail_line
-            if detail_line is not None
-            else generic_spread
-        )
-
-        home_favorite = bool_value(
-            home_team_odds.get(
-                "favorite"
-            )
-        )
-
-        away_favorite = bool_value(
-            away_team_odds.get(
-                "favorite"
-            )
-        )
-
-        if line is not None:
-            if (
-                home_favorite
-                and not away_favorite
-            ):
-                home_spread = clean_number(
-                    line
-                )
-                away_spread = clean_number(
-                    -line
-                )
-
-            elif (
-                away_favorite
-                and not home_favorite
-            ):
-                away_spread = clean_number(
-                    line
-                )
-                home_spread = clean_number(
-                    -line
-                )
-
-            else:
-                home_spread = clean_number(
-                    line
-                )
-                away_spread = clean_number(
-                    -line
-                )
+    _stage3_extract_market_values_block_01()
 
     last_update = str(
         first_value(
@@ -1862,6 +1866,61 @@ def publish_output_bundle(
     raw_payload: dict,
     rows: list[dict[str, str]],
 ) -> None:
+    def _stage3_publish_output_bundle_block_04() -> None:
+        if csv_backup.exists():
+            try:
+                os.replace(
+                    csv_backup,
+                    csv_path,
+                )
+            except Exception:
+                pass
+
+        elif not csv_had_existing:
+            try:
+                csv_path.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+    def _stage3_publish_output_bundle_block_03() -> None:
+        if raw_backup.exists():
+            try:
+                os.replace(
+                    raw_backup,
+                    raw_path,
+                )
+            except Exception:
+                pass
+
+        elif not raw_had_existing:
+            try:
+                raw_path.unlink(
+                    missing_ok=True
+                )
+            except Exception:
+                pass
+
+    def _stage3_publish_output_bundle_block_02() -> None:
+        nonlocal path
+        for path in finals:
+            path.parent.mkdir(
+                parents=True,
+                exist_ok=True,
+            )
+
+    def _stage3_publish_output_bundle_block_01() -> None:
+        for snapshot_path in (
+            raw_snapshot_path,
+            csv_snapshot_path,
+        ):
+            if snapshot_path.exists():
+                raise FileExistsError(
+                    "Refusing to overwrite immutable odds snapshot: "
+                    f"{snapshot_path}"
+                )
+
     finals = [
         raw_path,
         csv_path,
@@ -1869,21 +1928,9 @@ def publish_output_bundle(
         csv_snapshot_path,
     ]
 
-    for path in finals:
-        path.parent.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
+    _stage3_publish_output_bundle_block_02()
 
-    for snapshot_path in (
-        raw_snapshot_path,
-        csv_snapshot_path,
-    ):
-        if snapshot_path.exists():
-            raise FileExistsError(
-                "Refusing to overwrite immutable odds snapshot: "
-                f"{snapshot_path}"
-            )
+    _stage3_publish_output_bundle_block_01()
 
     temp_raw = temporary_path(
         raw_path
@@ -2014,39 +2061,9 @@ def publish_output_bundle(
             except Exception:
                 pass
 
-        if raw_backup.exists():
-            try:
-                os.replace(
-                    raw_backup,
-                    raw_path,
-                )
-            except Exception:
-                pass
+        _stage3_publish_output_bundle_block_03()
 
-        elif not raw_had_existing:
-            try:
-                raw_path.unlink(
-                    missing_ok=True
-                )
-            except Exception:
-                pass
-
-        if csv_backup.exists():
-            try:
-                os.replace(
-                    csv_backup,
-                    csv_path,
-                )
-            except Exception:
-                pass
-
-        elif not csv_had_existing:
-            try:
-                csv_path.unlink(
-                    missing_ok=True
-                )
-            except Exception:
-                pass
+        _stage3_publish_output_bundle_block_04()
 
         for path in snapshot_published:
             try:

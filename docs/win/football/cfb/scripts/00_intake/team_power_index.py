@@ -988,6 +988,117 @@ def parse_powerindex_item(
 ]:
     global _DUPLICATE_PREDICTIVE_NAME_COUNT
 
+    def _stage3_parse_powerindex_item_block_01() -> None:
+        global _DUPLICATE_PREDICTIVE_NAME_COUNT
+        nonlocal fpi_occurrences
+        for predictive_index, stat in enumerate(
+            predictives
+        ):
+            if not isinstance(stat, dict):
+                raise PowerIndexValidationError(
+                    "Power-index predictive entry is not an object at "
+                    f"item_index={item_index}, "
+                    f"team_id={team_id}, "
+                    f"predictive_index={predictive_index}"
+                )
+
+            raw_name = str(
+                stat.get("name") or ""
+            ).strip()
+
+            if not raw_name:
+                raise PowerIndexValidationError(
+                    "Power-index predictive entry has blank name at "
+                    f"item_index={item_index}, "
+                    f"team_id={team_id}, "
+                    f"predictive_index={predictive_index}"
+                )
+
+            name_key = raw_name.casefold()
+
+            canonical_name = (
+                "fpi"
+                if name_key == "fpi"
+                else raw_name
+            )
+
+            if (
+                name_key
+                in {
+                    "season",
+                    "team_id",
+                    "lastupdated",
+                }
+            ):
+                raise PowerIndexValidationError(
+                    "Power-index predictive name collides with "
+                    f"base output column: {raw_name!r}"
+                )
+
+            value_text = scalar_to_text(
+                stat.get("value"),
+                label=(
+                    "power-index predictive value "
+                    f"{raw_name!r} for team_id={team_id}"
+                ),
+            )
+
+            if name_key in seen_predictives:
+                _DUPLICATE_PREDICTIVE_NAME_COUNT += 1
+
+                prior_name, prior_value = (
+                    seen_predictives[name_key]
+                )
+
+                if name_key == "fpi":
+                    raise PowerIndexValidationError(
+                        "Power-index item contains duplicate fpi "
+                        f"statistics for team_id={team_id}"
+                    )
+
+                if prior_value != value_text:
+                    raise PowerIndexValidationError(
+                        "Power-index item contains conflicting "
+                        "duplicate predictive statistic for "
+                        f"team_id={team_id}: "
+                        f"name={raw_name!r}, "
+                        f"first_name={prior_name!r}, "
+                        f"first_value={prior_value!r}, "
+                        f"second_value={value_text!r}"
+                    )
+
+                continue
+
+            seen_predictives[
+                name_key
+            ] = (
+                canonical_name,
+                value_text,
+            )
+
+            if name_key == "fpi":
+                fpi_occurrences += 1
+
+                parse_finite_number(
+                    value_text,
+                    label=(
+                        "FPI value for "
+                        f"team_id={team_id}"
+                    ),
+                )
+
+            row[canonical_name] = (
+                value_text
+            )
+
+            if (
+                canonical_name
+                not in BASE_FIELDNAMES
+            ):
+                item_fieldnames.append(
+                    canonical_name
+                )
+
     explicit_season = item_season_year(
         item
     )
@@ -1048,113 +1159,7 @@ def parse_powerindex_item(
 
     fpi_occurrences = 0
 
-    for predictive_index, stat in enumerate(
-        predictives
-    ):
-        if not isinstance(stat, dict):
-            raise PowerIndexValidationError(
-                "Power-index predictive entry is not an object at "
-                f"item_index={item_index}, "
-                f"team_id={team_id}, "
-                f"predictive_index={predictive_index}"
-            )
-
-        raw_name = str(
-            stat.get("name") or ""
-        ).strip()
-
-        if not raw_name:
-            raise PowerIndexValidationError(
-                "Power-index predictive entry has blank name at "
-                f"item_index={item_index}, "
-                f"team_id={team_id}, "
-                f"predictive_index={predictive_index}"
-            )
-
-        name_key = raw_name.casefold()
-
-        canonical_name = (
-            "fpi"
-            if name_key == "fpi"
-            else raw_name
-        )
-
-        if (
-            name_key
-            in {
-                "season",
-                "team_id",
-                "lastupdated",
-            }
-        ):
-            raise PowerIndexValidationError(
-                "Power-index predictive name collides with "
-                f"base output column: {raw_name!r}"
-            )
-
-        value_text = scalar_to_text(
-            stat.get("value"),
-            label=(
-                "power-index predictive value "
-                f"{raw_name!r} for team_id={team_id}"
-            ),
-        )
-
-        if name_key in seen_predictives:
-            _DUPLICATE_PREDICTIVE_NAME_COUNT += 1
-
-            prior_name, prior_value = (
-                seen_predictives[name_key]
-            )
-
-            if name_key == "fpi":
-                raise PowerIndexValidationError(
-                    "Power-index item contains duplicate fpi "
-                    f"statistics for team_id={team_id}"
-                )
-
-            if prior_value != value_text:
-                raise PowerIndexValidationError(
-                    "Power-index item contains conflicting "
-                    "duplicate predictive statistic for "
-                    f"team_id={team_id}: "
-                    f"name={raw_name!r}, "
-                    f"first_name={prior_name!r}, "
-                    f"first_value={prior_value!r}, "
-                    f"second_value={value_text!r}"
-                )
-
-            continue
-
-        seen_predictives[
-            name_key
-        ] = (
-            canonical_name,
-            value_text,
-        )
-
-        if name_key == "fpi":
-            fpi_occurrences += 1
-
-            parse_finite_number(
-                value_text,
-                label=(
-                    "FPI value for "
-                    f"team_id={team_id}"
-                ),
-            )
-
-        row[canonical_name] = (
-            value_text
-        )
-
-        if (
-            canonical_name
-            not in BASE_FIELDNAMES
-        ):
-            item_fieldnames.append(
-                canonical_name
-            )
+    _stage3_parse_powerindex_item_block_01()
 
     if fpi_occurrences != 1:
         raise PowerIndexValidationError(

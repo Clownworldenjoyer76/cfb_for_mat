@@ -1196,6 +1196,213 @@ def read_existing_weekly(
     season_type: int,
     week: int,
 ) -> dict[str, dict[str, str]]:
+    def _stage3_read_existing_weekly_block_01() -> None:
+        for index, row in enumerate(
+            rows
+        ):
+            game_id = str(
+                row.get(
+                    "game_id",
+                    "",
+                )
+            ).strip()
+
+            if not game_id:
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "contains blank game_id at "
+                    f"row {index}"
+                )
+
+            if game_id in existing:
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "contains duplicate game_id="
+                    f"{game_id}"
+                )
+
+            if game_id not in target_by_id:
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "contains out-of-scope game_id="
+                    f"{game_id}"
+                )
+
+            if str(
+                row.get(
+                    "season",
+                    "",
+                )
+            ).strip() != str(
+                season
+            ):
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "season mismatch for game_id="
+                    f"{game_id}"
+                )
+
+            if str(
+                row.get(
+                    "season_type",
+                    "",
+                )
+            ).strip() != str(
+                season_type
+            ):
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "season_type mismatch for "
+                    f"game_id={game_id}"
+                )
+
+            if str(
+                row.get(
+                    "week",
+                    "",
+                )
+            ).strip() != str(
+                week
+            ):
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "week mismatch for game_id="
+                    f"{game_id}"
+                )
+
+            target = (
+                target_by_id[
+                    game_id
+                ]
+            )
+
+            if str(
+                row.get(
+                    "home_team",
+                    "",
+                )
+            ).strip() != str(
+                target.get(
+                    "home_team",
+                    "",
+                )
+            ).strip():
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "home_team mismatch for "
+                    f"game_id={game_id}"
+                )
+
+            if str(
+                row.get(
+                    "away_team",
+                    "",
+                )
+            ).strip() != str(
+                target.get(
+                    "away_team",
+                    "",
+                )
+            ).strip():
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "away_team mismatch for "
+                    f"game_id={game_id}"
+                )
+
+            if str(
+                row.get(
+                    "game_date",
+                    "",
+                )
+            ).strip() != str(
+                target.get(
+                    "game_date",
+                    "",
+                )
+            ).strip():
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "game_date mismatch for "
+                    f"game_id={game_id}"
+                )
+
+            if str(
+                row.get(
+                    "game_time",
+                    "",
+                )
+            ).strip() != str(
+                target.get(
+                    "game_time",
+                    "",
+                )
+            ).strip():
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "game_time mismatch for "
+                    f"game_id={game_id}"
+                )
+
+            expected_kickoff = (
+                kickoff_iso(
+                    target
+                )
+            )
+
+            if str(
+                row.get(
+                    "kickoff_utc",
+                    "",
+                )
+            ).strip() != expected_kickoff:
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "kickoff_utc mismatch for "
+                    f"game_id={game_id}"
+                )
+
+            locked = str(
+                row.get(
+                    "game_locked",
+                    "",
+                )
+            ).strip()
+
+            if locked not in {
+                "0",
+                "1",
+            }:
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "contains invalid game_locked "
+                    f"for game_id={game_id}: "
+                    f"{locked!r}"
+                )
+
+            odds_available = str(
+                row.get(
+                    "odds_available",
+                    "",
+                )
+            ).strip()
+
+            if odds_available not in {
+                "0",
+                "1",
+            }:
+                raise ValueError(
+                    "Existing weekly schedule "
+                    "contains invalid "
+                    "odds_available for game_id="
+                    f"{game_id}: "
+                    f"{odds_available!r}"
+                )
+
+            existing[
+                game_id
+            ] = row
+
     if not path.exists():
         return {}
 
@@ -1219,211 +1426,7 @@ def read_existing_weekly(
         dict[str, str],
     ] = {}
 
-    for index, row in enumerate(
-        rows
-    ):
-        game_id = str(
-            row.get(
-                "game_id",
-                "",
-            )
-        ).strip()
-
-        if not game_id:
-            raise ValueError(
-                "Existing weekly schedule "
-                "contains blank game_id at "
-                f"row {index}"
-            )
-
-        if game_id in existing:
-            raise ValueError(
-                "Existing weekly schedule "
-                "contains duplicate game_id="
-                f"{game_id}"
-            )
-
-        if game_id not in target_by_id:
-            raise ValueError(
-                "Existing weekly schedule "
-                "contains out-of-scope game_id="
-                f"{game_id}"
-            )
-
-        if str(
-            row.get(
-                "season",
-                "",
-            )
-        ).strip() != str(
-            season
-        ):
-            raise ValueError(
-                "Existing weekly schedule "
-                "season mismatch for game_id="
-                f"{game_id}"
-            )
-
-        if str(
-            row.get(
-                "season_type",
-                "",
-            )
-        ).strip() != str(
-            season_type
-        ):
-            raise ValueError(
-                "Existing weekly schedule "
-                "season_type mismatch for "
-                f"game_id={game_id}"
-            )
-
-        if str(
-            row.get(
-                "week",
-                "",
-            )
-        ).strip() != str(
-            week
-        ):
-            raise ValueError(
-                "Existing weekly schedule "
-                "week mismatch for game_id="
-                f"{game_id}"
-            )
-
-        target = (
-            target_by_id[
-                game_id
-            ]
-        )
-
-        if str(
-            row.get(
-                "home_team",
-                "",
-            )
-        ).strip() != str(
-            target.get(
-                "home_team",
-                "",
-            )
-        ).strip():
-            raise ValueError(
-                "Existing weekly schedule "
-                "home_team mismatch for "
-                f"game_id={game_id}"
-            )
-
-        if str(
-            row.get(
-                "away_team",
-                "",
-            )
-        ).strip() != str(
-            target.get(
-                "away_team",
-                "",
-            )
-        ).strip():
-            raise ValueError(
-                "Existing weekly schedule "
-                "away_team mismatch for "
-                f"game_id={game_id}"
-            )
-
-        if str(
-            row.get(
-                "game_date",
-                "",
-            )
-        ).strip() != str(
-            target.get(
-                "game_date",
-                "",
-            )
-        ).strip():
-            raise ValueError(
-                "Existing weekly schedule "
-                "game_date mismatch for "
-                f"game_id={game_id}"
-            )
-
-        if str(
-            row.get(
-                "game_time",
-                "",
-            )
-        ).strip() != str(
-            target.get(
-                "game_time",
-                "",
-            )
-        ).strip():
-            raise ValueError(
-                "Existing weekly schedule "
-                "game_time mismatch for "
-                f"game_id={game_id}"
-            )
-
-        expected_kickoff = (
-            kickoff_iso(
-                target
-            )
-        )
-
-        if str(
-            row.get(
-                "kickoff_utc",
-                "",
-            )
-        ).strip() != expected_kickoff:
-            raise ValueError(
-                "Existing weekly schedule "
-                "kickoff_utc mismatch for "
-                f"game_id={game_id}"
-            )
-
-        locked = str(
-            row.get(
-                "game_locked",
-                "",
-            )
-        ).strip()
-
-        if locked not in {
-            "0",
-            "1",
-        }:
-            raise ValueError(
-                "Existing weekly schedule "
-                "contains invalid game_locked "
-                f"for game_id={game_id}: "
-                f"{locked!r}"
-            )
-
-        odds_available = str(
-            row.get(
-                "odds_available",
-                "",
-            )
-        ).strip()
-
-        if odds_available not in {
-            "0",
-            "1",
-        }:
-            raise ValueError(
-                "Existing weekly schedule "
-                "contains invalid "
-                "odds_available for game_id="
-                f"{game_id}: "
-                f"{odds_available!r}"
-            )
-
-        existing[
-            game_id
-        ] = row
+    _stage3_read_existing_weekly_block_01()
 
     return existing
 

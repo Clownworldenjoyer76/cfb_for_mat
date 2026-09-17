@@ -724,6 +724,38 @@ def event_to_row(
     season_type: int,
     report: PipelineReporter,
 ) -> dict[str, str] | None:
+    def _stage3_event_to_row_block_01() -> None:
+        nonlocal stadium_row
+        if neutral_site == "1":
+            stadium_row = (
+                stadium_by_stadium.get(
+                    lookup_key(
+                        espn_stadium
+                    ),
+                    {},
+                )
+            )
+
+        if not stadium_row:
+            stadium_row = (
+                stadium_by_team.get(
+                    lookup_key(
+                        home_team
+                    ),
+                    {},
+                )
+            )
+
+        if not stadium_row:
+            stadium_row = (
+                stadium_by_stadium.get(
+                    lookup_key(
+                        espn_stadium
+                    ),
+                    {},
+                )
+            )
+
     game_id = clean(
         event.get("id")
     )
@@ -805,35 +837,7 @@ def event_to_row(
         str,
     ] = {}
 
-    if neutral_site == "1":
-        stadium_row = (
-            stadium_by_stadium.get(
-                lookup_key(
-                    espn_stadium
-                ),
-                {},
-            )
-        )
-
-    if not stadium_row:
-        stadium_row = (
-            stadium_by_team.get(
-                lookup_key(
-                    home_team
-                ),
-                {},
-            )
-        )
-
-    if not stadium_row:
-        stadium_row = (
-            stadium_by_stadium.get(
-                lookup_key(
-                    espn_stadium
-                ),
-                {},
-            )
-        )
+    _stage3_event_to_row_block_01()
 
     stadium = (
         clean(
