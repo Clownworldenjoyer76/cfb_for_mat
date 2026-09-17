@@ -713,6 +713,202 @@ def load_raw_odds_payload(
     return payload
 
 
+def _stage1_snapshot_header(
+    *,
+    raw_payload: dict,
+    target_rows: list[dict[str, str]],
+    season: int,
+    season_type: int,
+    week: int,
+) -> tuple[str, str, dict[str, dict[str, str]], set[str]]:
+    snapshot_id = str(raw_payload.get("snapshot_id", "")).strip()
+    snapshot_fetched_at = str(raw_payload.get("fetched_at", "")).strip()
+    if not snapshot_id:
+        raise ValueError("Raw odds snapshot_id is blank")
+    parse_aware_iso(snapshot_fetched_at, "raw odds fetched_at")
+
+    selected_group = raw_payload["selected_schedule_group"]
+    expected_group = {
+        "season": str(season),
+        "season_type": str(season_type),
+        "week": str(week),
+    }
+    actual_group = {
+        key: str(selected_group.get(key, "")).strip()
+        for key in ("season", "season_type", "week")
+    }
+    if actual_group != expected_group:
+        raise ValueError(
+            "Raw odds snapshot targets the wrong configured schedule group. "
+            f"expected={expected_group}, actual={actual_group}"
+        )
+
+    target_by_id = {
+        str(row["game_id"]).strip(): row for row in target_rows
+    }
+    return snapshot_id, snapshot_fetched_at, target_by_id, set(target_by_id)
+
+
+def _stage1_validate_snapshot_csv_rows(
+    odds_rows: list[dict[str, str]],
+    *,
+    snapshot_id: str,
+    snapshot_fetched_at: str,
+    target_by_id: dict[str, dict[str, str]],
+    target_ids: set[str],
+) -> set[str]:
+    normalized_ids: set[str] = set()
+    for index, row in enumerate(odds_rows):
+        row_snapshot_id = str(row.get("snapshot_id", "")).strip()
+        row_fetched_at = str(row.get("snapshot_fetched_at", "")).strip()
+        if row_snapshot_id != snapshot_id:
+            raise ValueError(
+                "Normalized odds CSV snapshot_id does not match raw odds JSON at "
+                f"row {index}: {row_snapshot_id!r} != {snapshot_id!r}"
+            )
+        if row_fetched_at != snapshot_fetched_at:
+            raise ValueError(
+                "Normalized odds CSV snapshot_fetched_at does not match raw odds JSON "
+                f"at row {index}"
+            )
+        parse_aware_iso(row_fetched_at, "normalized odds snapshot_fetched_at")
+
+        game_id = str(row.get("game_id", "")).strip()
+        if not game_id:
+            raise ValueError(
+                f"Normalized odds CSV contains blank game_id at row {index}"
+            )
+        if game_id not in target_ids:
+            raise ValueError(
+                f"Normalized odds CSV contains out-of-scope game_id={game_id}"
+            )
+        normalized_ids.add(game_id)
+
+        target_row = target_by_id[game_id]
+        expected_home = str(target_row["home_team"]).strip()
+        expected_away = str(target_row["away_team"]).strip()
+        expected_kickoff = kickoff_iso(target_row)
+        if str(row.get("home_team", "")).strip() != expected_home:
+            raise ValueError(
+                "Normalized odds home_team does not match schedule for "
+                f"game_id={game_id}"
+            )
+        if str(row.get("away_team", "")).strip() != expected_away:
+            raise ValueError(
+                "Normalized odds away_team does not match schedule for "
+                f"game_id={game_id}"
+            )
+        if str(row.get("commence_time", "")).strip() != expected_kickoff:
+            raise ValueError(
+                "Normalized odds commence_time does not match schedule for "
+                f"game_id={game_id}"
+            )
+    return normalized_ids
+
+
+def _stage1_request_records(
+    raw_payload: dict,
+    *,
+    target_ids: set[str],
+) -> dict[str, dict[str, object]]:
+    request_by_id: dict[str, dict[str, object]] = {}
+    for index, request in enumerate(raw_payload["request_urls"]):
+        if not isinstance(request, dict):
+            raise ValueError(
+                "Raw odds request_urls contains a non-object at "
+                f"index {index}"
+            )
+        game_id = str(request.get("game_id", "")).strip()
+        if not game_id:
+            raise ValueError(
+                f"Raw odds request_urls contains blank game_id at index {index}"
+            )
+        if game_id in request_by_id:
+            raise ValueError(
+                f"Raw odds request_urls contains duplicate game_id={game_id}"
+            )
+        if game_id not in target_ids:
+            raise ValueError(
+                f"Raw odds request_urls contains out-of-scope game_id={game_id}"
+            )
+        result = str(request.get("result", "")).strip()
+        if result not in VALID_REQUEST_RESULTS:
+            raise ValueError(
+                "Raw odds request result is invalid for game_id="
+                f"{game_id}: {result!r}"
+            )
+        request_by_id[game_id] = request
+
+    missing_request_ids = sorted(target_ids - set(request_by_id))
+    if missing_request_ids:
+        raise ValueError(
+            "Raw odds snapshot is missing target game request records: "
+            + ", ".join(missing_request_ids[:20])
+        )
+    return request_by_id
+
+
+def _stage1_raw_snapshot_ids(
+    values: list,
+    *,
+    id_field: str,
+    object_label: str,
+    target_ids: set[str],
+) -> list[str]:
+    ids: list[str] = []
+    for index, item in enumerate(values):
+        if not isinstance(item, dict):
+            raise ValueError(
+                f"Raw odds {object_label} contains a non-object at index {index}"
+            )
+        game_id = str(item.get(id_field, "")).strip()
+        if not game_id:
+            noun = "event" if object_label == "events" else "object"
+            raise ValueError(
+                f"Raw odds {noun} contains blank {id_field} at index {index}"
+            )
+        if game_id not in target_ids:
+            field_label = "id" if object_label == "events" else "game_id"
+            noun = "event" if object_label == "events" else "object"
+            raise ValueError(
+                f"Raw odds {noun} contains out-of-scope {field_label}={game_id}"
+            )
+        ids.append(game_id)
+    if len(ids) != len(set(ids)):
+        suffix = "events" if object_label == "events" else "objects"
+        raise ValueError(f"Raw odds {suffix} contains duplicate game IDs")
+    return ids
+
+
+def _stage1_validate_available_snapshot_coverage(
+    *,
+    normalized_ids: set[str],
+    raw_event_ids: list[str],
+    raw_odds_ids: list[str],
+    request_by_id: dict[str, dict[str, object]],
+) -> None:
+    available_ids = {
+        game_id
+        for game_id, request in request_by_id.items()
+        if str(request.get("result", "")).strip() == "AVAILABLE"
+    }
+    if set(raw_event_ids) != available_ids:
+        raise ValueError(
+            "Raw odds events do not exactly match AVAILABLE request results. "
+            f"events={sorted(raw_event_ids)}, available={sorted(available_ids)}"
+        )
+    if set(raw_odds_ids) != available_ids:
+        raise ValueError(
+            "Raw odds objects do not exactly match AVAILABLE request results. "
+            f"odds={sorted(raw_odds_ids)}, available={sorted(available_ids)}"
+        )
+    if normalized_ids != available_ids:
+        raise ValueError(
+            "Normalized odds game IDs do not exactly match AVAILABLE request results. "
+            f"normalized={sorted(normalized_ids)}, available={sorted(available_ids)}"
+        )
+
+
 def validate_snapshot_provenance(
     *,
     odds_rows: list[dict[str, str]],
@@ -721,473 +917,50 @@ def validate_snapshot_provenance(
     season: int,
     season_type: int,
     week: int,
-) -> tuple[
-    str,
-    str,
-    dict[str, dict[str, object]],
-]:
+) -> tuple[str, str, dict[str, dict[str, object]]]:
     if not odds_rows:
-        raise ValueError(
-            "Normalized current odds CSV is empty"
-        )
+        raise ValueError("Normalized current odds CSV is empty")
 
-    snapshot_id = str(
-        raw_payload.get(
-            "snapshot_id",
-            "",
-        )
-    ).strip()
-
-    snapshot_fetched_at = str(
-        raw_payload.get(
-            "fetched_at",
-            "",
-        )
-    ).strip()
-
-    if not snapshot_id:
-        raise ValueError(
-            "Raw odds snapshot_id is blank"
-        )
-
-    parse_aware_iso(
-        snapshot_fetched_at,
-        "raw odds fetched_at",
-    )
-
-    selected_group = (
-        raw_payload[
-            "selected_schedule_group"
-        ]
-    )
-
-    expected_group = {
-        "season": str(
-            season
-        ),
-        "season_type": str(
-            season_type
-        ),
-        "week": str(
-            week
-        ),
-    }
-
-    actual_group = {
-        key: str(
-            selected_group.get(
-                key,
-                "",
-            )
-        ).strip()
-        for key
-        in (
-            "season",
-            "season_type",
-            "week",
-        )
-    }
-
-    if (
-        actual_group
-        != expected_group
-    ):
-        raise ValueError(
-            "Raw odds snapshot targets the "
-            "wrong configured schedule group. "
-            f"expected={expected_group}, "
-            f"actual={actual_group}"
-        )
-
-    target_by_id = {
-        str(
-            row[
-                "game_id"
-            ]
-        ).strip(): row
-        for row in target_rows
-    }
-
-    target_ids = set(
-        target_by_id
-    )
-
-    normalized_ids: set[str] = set()
-
-    for index, row in enumerate(
-        odds_rows
-    ):
-        row_snapshot_id = str(
-            row.get(
-                "snapshot_id",
-                "",
-            )
-        ).strip()
-
-        row_fetched_at = str(
-            row.get(
-                "snapshot_fetched_at",
-                "",
-            )
-        ).strip()
-
-        if (
-            row_snapshot_id
-            != snapshot_id
-        ):
-            raise ValueError(
-                "Normalized odds CSV snapshot_id "
-                "does not match raw odds JSON at "
-                f"row {index}: "
-                f"{row_snapshot_id!r} != "
-                f"{snapshot_id!r}"
-            )
-
-        if (
-            row_fetched_at
-            != snapshot_fetched_at
-        ):
-            raise ValueError(
-                "Normalized odds CSV "
-                "snapshot_fetched_at does not "
-                "match raw odds JSON at row "
-                f"{index}"
-            )
-
-        parse_aware_iso(
-            row_fetched_at,
-            "normalized odds "
-            "snapshot_fetched_at",
-        )
-
-        game_id = str(
-            row.get(
-                "game_id",
-                "",
-            )
-        ).strip()
-
-        if not game_id:
-            raise ValueError(
-                "Normalized odds CSV contains "
-                f"blank game_id at row {index}"
-            )
-
-        if (
-            game_id
-            not in target_ids
-        ):
-            raise ValueError(
-                "Normalized odds CSV contains "
-                "out-of-scope game_id="
-                f"{game_id}"
-            )
-
-        normalized_ids.add(
-            game_id
-        )
-
-        target_row = (
-            target_by_id[
-                game_id
-            ]
-        )
-
-        expected_home = str(
-            target_row[
-                "home_team"
-            ]
-        ).strip()
-
-        expected_away = str(
-            target_row[
-                "away_team"
-            ]
-        ).strip()
-
-        expected_kickoff = (
-            kickoff_iso(
-                target_row
-            )
-        )
-
-        if str(
-            row.get(
-                "home_team",
-                "",
-            )
-        ).strip() != expected_home:
-            raise ValueError(
-                "Normalized odds home_team "
-                "does not match schedule for "
-                f"game_id={game_id}"
-            )
-
-        if str(
-            row.get(
-                "away_team",
-                "",
-            )
-        ).strip() != expected_away:
-            raise ValueError(
-                "Normalized odds away_team "
-                "does not match schedule for "
-                f"game_id={game_id}"
-            )
-
-        if str(
-            row.get(
-                "commence_time",
-                "",
-            )
-        ).strip() != expected_kickoff:
-            raise ValueError(
-                "Normalized odds commence_time "
-                "does not match schedule for "
-                f"game_id={game_id}"
-            )
-
-    request_by_id: dict[
-        str,
-        dict[str, object],
-    ] = {}
-
-    for index, request in enumerate(
-        raw_payload[
-            "request_urls"
-        ]
-    ):
-        if not isinstance(
-            request,
-            dict,
-        ):
-            raise ValueError(
-                "Raw odds request_urls "
-                "contains a non-object at "
-                f"index {index}"
-            )
-
-        game_id = str(
-            request.get(
-                "game_id",
-                "",
-            )
-        ).strip()
-
-        if not game_id:
-            raise ValueError(
-                "Raw odds request_urls contains "
-                f"blank game_id at index {index}"
-            )
-
-        if game_id in request_by_id:
-            raise ValueError(
-                "Raw odds request_urls contains "
-                "duplicate game_id="
-                f"{game_id}"
-            )
-
-        if game_id not in target_ids:
-            raise ValueError(
-                "Raw odds request_urls contains "
-                "out-of-scope game_id="
-                f"{game_id}"
-            )
-
-        result = str(
-            request.get(
-                "result",
-                "",
-            )
-        ).strip()
-
-        if (
-            result
-            not in VALID_REQUEST_RESULTS
-        ):
-            raise ValueError(
-                "Raw odds request result is "
-                "invalid for game_id="
-                f"{game_id}: {result!r}"
-            )
-
-        request_by_id[
-            game_id
-        ] = request
-
-    missing_request_ids = sorted(
-        target_ids
-        - set(
-            request_by_id
+    snapshot_id, snapshot_fetched_at, target_by_id, target_ids = (
+        _stage1_snapshot_header(
+            raw_payload=raw_payload,
+            target_rows=target_rows,
+            season=season,
+            season_type=season_type,
+            week=week,
         )
     )
-
-    if missing_request_ids:
-        raise ValueError(
-            "Raw odds snapshot is missing "
-            "target game request records: "
-            + ", ".join(
-                missing_request_ids[:20]
-            )
-        )
-
-    raw_event_ids: list[str] = []
-
-    for index, event in enumerate(
-        raw_payload[
-            "events"
-        ]
-    ):
-        if not isinstance(
-            event,
-            dict,
-        ):
-            raise ValueError(
-                "Raw odds events contains "
-                "a non-object at index "
-                f"{index}"
-            )
-
-        game_id = str(
-            event.get(
-                "id",
-                "",
-            )
-        ).strip()
-
-        if not game_id:
-            raise ValueError(
-                "Raw odds event contains "
-                f"blank id at index {index}"
-            )
-
-        if game_id not in target_ids:
-            raise ValueError(
-                "Raw odds event contains "
-                "out-of-scope id="
-                f"{game_id}"
-            )
-
-        raw_event_ids.append(
-            game_id
-        )
-
-    if (
-        len(raw_event_ids)
-        != len(
-            set(
-                raw_event_ids
-            )
-        )
-    ):
-        raise ValueError(
-            "Raw odds events contains "
-            "duplicate game IDs"
-        )
-
-    raw_odds_ids: list[str] = []
-
-    for index, item in enumerate(
-        raw_payload[
-            "odds"
-        ]
-    ):
-        if not isinstance(
-            item,
-            dict,
-        ):
-            raise ValueError(
-                "Raw odds objects contains "
-                "a non-object at index "
-                f"{index}"
-            )
-
-        game_id = str(
-            item.get(
-                "game_id",
-                "",
-            )
-        ).strip()
-
-        if not game_id:
-            raise ValueError(
-                "Raw odds object contains "
-                f"blank game_id at index {index}"
-            )
-
-        if game_id not in target_ids:
-            raise ValueError(
-                "Raw odds object contains "
-                "out-of-scope game_id="
-                f"{game_id}"
-            )
-
-        raw_odds_ids.append(
-            game_id
-        )
-
-    if (
-        len(raw_odds_ids)
-        != len(
-            set(
-                raw_odds_ids
-            )
-        )
-    ):
-        raise ValueError(
-            "Raw odds objects contains "
-            "duplicate game IDs"
-        )
-
-    available_ids = {
-        game_id
-        for game_id, request
-        in request_by_id.items()
-        if str(
-            request.get(
-                "result",
-                "",
-            )
-        ).strip() == "AVAILABLE"
-    }
-
-    if set(
-        raw_event_ids
-    ) != available_ids:
-        raise ValueError(
-            "Raw odds events do not exactly "
-            "match AVAILABLE request results. "
-            f"events={sorted(raw_event_ids)}, "
-            f"available={sorted(available_ids)}"
-        )
-
-    if set(
-        raw_odds_ids
-    ) != available_ids:
-        raise ValueError(
-            "Raw odds objects do not exactly "
-            "match AVAILABLE request results. "
-            f"odds={sorted(raw_odds_ids)}, "
-            f"available={sorted(available_ids)}"
-        )
-
-    if (
-        normalized_ids
-        != available_ids
-    ):
-        raise ValueError(
-            "Normalized odds game IDs do not "
-            "exactly match AVAILABLE request "
-            "results. "
-            f"normalized={sorted(normalized_ids)}, "
-            f"available={sorted(available_ids)}"
-        )
-
-    return (
-        snapshot_id,
-        snapshot_fetched_at,
-        request_by_id,
+    normalized_ids = _stage1_validate_snapshot_csv_rows(
+        odds_rows,
+        snapshot_id=snapshot_id,
+        snapshot_fetched_at=snapshot_fetched_at,
+        target_by_id=target_by_id,
+        target_ids=target_ids,
     )
+    request_by_id = _stage1_request_records(
+        raw_payload,
+        target_ids=target_ids,
+    )
+    raw_event_ids = _stage1_raw_snapshot_ids(
+        raw_payload["events"],
+        id_field="id",
+        object_label="events",
+        target_ids=target_ids,
+    )
+    raw_odds_ids = _stage1_raw_snapshot_ids(
+        raw_payload["odds"],
+        id_field="game_id",
+        object_label="objects",
+        target_ids=target_ids,
+    )
+    _stage1_validate_available_snapshot_coverage(
+        normalized_ids=normalized_ids,
+        raw_event_ids=raw_event_ids,
+        raw_odds_ids=raw_odds_ids,
+        request_by_id=request_by_id,
+    )
+    return snapshot_id, snapshot_fetched_at, request_by_id
+
 
 
 def latest_last_update(
@@ -2128,6 +1901,121 @@ def build_output_rows(
     )
 
 
+def _stage1_validate_weekly_target_fields(
+    row: dict[str, str],
+    *,
+    game_id: str,
+    target: dict[str, str],
+    season: int,
+    season_type: int,
+    week: int,
+    now_utc: datetime,
+) -> str:
+    if str(row.get("season", "")).strip() != str(season):
+        raise ValueError(
+            f"Weekly schedule output season mismatch for game_id={game_id}"
+        )
+    if str(row.get("season_type", "")).strip() != str(season_type):
+        raise ValueError(
+            f"Weekly schedule output season_type mismatch for game_id={game_id}"
+        )
+    if str(row.get("week", "")).strip() != str(week):
+        raise ValueError(
+            f"Weekly schedule output week mismatch for game_id={game_id}"
+        )
+
+    for field in ("game_date", "game_time", "away_team", "home_team"):
+        if str(row.get(field, "")).strip() != str(target.get(field, "")).strip():
+            raise ValueError(
+                f"Weekly schedule output {field} mismatch for game_id={game_id}"
+            )
+
+    expected_kickoff = kickoff_iso(target)
+    if str(row.get("kickoff_utc", "")).strip() != expected_kickoff:
+        raise ValueError(
+            f"Weekly schedule output kickoff_utc mismatch for game_id={game_id}"
+        )
+    expected_locked = "1" if game_is_locked(target, now_utc) else "0"
+    if str(row.get("game_locked", "")).strip() != expected_locked:
+        raise ValueError(
+            f"Weekly schedule output game_locked mismatch for game_id={game_id}"
+        )
+    provider_game_id = str(row.get("odds_provider_game_id", "")).strip()
+    if provider_game_id != game_id:
+        raise ValueError(
+            "Weekly schedule output odds_provider_game_id must equal exact game_id "
+            f"for game_id={game_id}"
+        )
+    return expected_kickoff
+
+
+def _stage1_validate_weekly_odds_fields(
+    row: dict[str, str],
+    *,
+    game_id: str,
+    target: dict[str, str],
+    expected_kickoff: str,
+) -> None:
+    odds_available = str(row.get("odds_available", "")).strip()
+    if odds_available not in {"0", "1"}:
+        raise ValueError(
+            "Weekly schedule output has invalid odds_available for "
+            f"game_id={game_id}: {odds_available!r}"
+        )
+    missing_reason = str(row.get("odds_missing_reason", "")).strip()
+    if missing_reason not in VALID_MISSING_REASONS:
+        raise ValueError(
+            "Weekly schedule output has invalid odds_missing_reason for "
+            f"game_id={game_id}: {missing_reason!r}"
+        )
+
+    bookmaker = str(row.get("bookmaker", "")).strip()
+    if odds_available == "1":
+        if missing_reason:
+            raise ValueError(
+                "Weekly schedule row with odds_available=1 has a missing reason "
+                f"for game_id={game_id}"
+            )
+        if not bookmaker:
+            raise ValueError(
+                "Weekly schedule row with odds_available=1 has blank bookmaker "
+                f"for game_id={game_id}"
+            )
+        if not any(
+            str(row.get(field, "")).strip()
+            for field in (
+                "home_moneyline_american",
+                "away_moneyline_american",
+                "home_spread",
+                "away_spread",
+                "total",
+            )
+        ):
+            raise ValueError(
+                "Weekly schedule row marked odds_available=1 has no market values "
+                f"for game_id={game_id}"
+            )
+        expected_home = str(target["home_team"]).strip()
+        expected_away = str(target["away_team"]).strip()
+        if str(row.get("odds_home_team", "")).strip() != expected_home:
+            raise ValueError(
+                f"Weekly schedule odds_home_team mismatch for game_id={game_id}"
+            )
+        if str(row.get("odds_away_team", "")).strip() != expected_away:
+            raise ValueError(
+                f"Weekly schedule odds_away_team mismatch for game_id={game_id}"
+            )
+        if str(row.get("commence_time", "")).strip() != expected_kickoff:
+            raise ValueError(
+                f"Weekly schedule commence_time mismatch for game_id={game_id}"
+            )
+    elif not missing_reason:
+        raise ValueError(
+            "Weekly schedule row with odds_available=0 has blank "
+            f"odds_missing_reason for game_id={game_id}"
+        )
+
+
 def validate_output_rows(
     *,
     output_rows: list[dict[str, str]],
@@ -2137,354 +2025,61 @@ def validate_output_rows(
     week: int,
     now_utc: datetime,
 ) -> None:
-    if (
-        len(output_rows)
-        != len(target_rows)
-    ):
+    if len(output_rows) != len(target_rows):
         raise ValueError(
-            "Weekly schedule output row count "
-            "does not match target schedule. "
-            f"output={len(output_rows)}, "
-            f"target={len(target_rows)}"
+            "Weekly schedule output row count does not match target schedule. "
+            f"output={len(output_rows)}, target={len(target_rows)}"
         )
 
     target_by_id = {
-        str(
-            row[
-                "game_id"
-            ]
-        ).strip(): row
-        for row in target_rows
+        str(row["game_id"]).strip(): row for row in target_rows
     }
-
     output_ids: set[str] = set()
-
-    for index, row in enumerate(
-        output_rows
-    ):
+    for index, row in enumerate(output_rows):
         missing_columns = [
-            column
-            for column
-            in OUTPUT_COLUMNS
-            if column not in row
+            column for column in OUTPUT_COLUMNS if column not in row
         ]
-
         if missing_columns:
             raise ValueError(
-                "Weekly schedule output row "
-                f"{index} missing columns: "
-                f"{missing_columns}"
+                f"Weekly schedule output row {index} missing columns: {missing_columns}"
             )
-
-        game_id = str(
-            row.get(
-                "game_id",
-                "",
-            )
-        ).strip()
-
+        game_id = str(row.get("game_id", "")).strip()
         if not game_id:
             raise ValueError(
-                "Weekly schedule output "
-                f"row {index} has blank game_id"
+                f"Weekly schedule output row {index} has blank game_id"
             )
-
         if game_id in output_ids:
             raise ValueError(
-                "Weekly schedule output "
-                "contains duplicate game_id="
-                f"{game_id}"
+                f"Weekly schedule output contains duplicate game_id={game_id}"
             )
-
-        output_ids.add(
-            game_id
-        )
-
+        output_ids.add(game_id)
         if game_id not in target_by_id:
             raise ValueError(
-                "Weekly schedule output "
-                "contains foreign game_id="
-                f"{game_id}"
+                f"Weekly schedule output contains foreign game_id={game_id}"
             )
-
-        target = (
-            target_by_id[
-                game_id
-            ]
+        target = target_by_id[game_id]
+        expected_kickoff = _stage1_validate_weekly_target_fields(
+            row,
+            game_id=game_id,
+            target=target,
+            season=season,
+            season_type=season_type,
+            week=week,
+            now_utc=now_utc,
+        )
+        _stage1_validate_weekly_odds_fields(
+            row,
+            game_id=game_id,
+            target=target,
+            expected_kickoff=expected_kickoff,
         )
 
-        if str(
-            row.get(
-                "season",
-                "",
-            )
-        ).strip() != str(
-            season
-        ):
-            raise ValueError(
-                "Weekly schedule output "
-                "season mismatch for "
-                f"game_id={game_id}"
-            )
-
-        if str(
-            row.get(
-                "season_type",
-                "",
-            )
-        ).strip() != str(
-            season_type
-        ):
-            raise ValueError(
-                "Weekly schedule output "
-                "season_type mismatch for "
-                f"game_id={game_id}"
-            )
-
-        if str(
-            row.get(
-                "week",
-                "",
-            )
-        ).strip() != str(
-            week
-        ):
-            raise ValueError(
-                "Weekly schedule output "
-                "week mismatch for "
-                f"game_id={game_id}"
-            )
-
-        for field in (
-            "game_date",
-            "game_time",
-            "away_team",
-            "home_team",
-        ):
-            if str(
-                row.get(
-                    field,
-                    "",
-                )
-            ).strip() != str(
-                target.get(
-                    field,
-                    "",
-                )
-            ).strip():
-                raise ValueError(
-                    "Weekly schedule output "
-                    f"{field} mismatch for "
-                    f"game_id={game_id}"
-                )
-
-        expected_kickoff = (
-            kickoff_iso(
-                target
-            )
-        )
-
-        if str(
-            row.get(
-                "kickoff_utc",
-                "",
-            )
-        ).strip() != expected_kickoff:
-            raise ValueError(
-                "Weekly schedule output "
-                "kickoff_utc mismatch for "
-                f"game_id={game_id}"
-            )
-
-        expected_locked = (
-            "1"
-            if game_is_locked(
-                target,
-                now_utc,
-            )
-            else "0"
-        )
-
-        if str(
-            row.get(
-                "game_locked",
-                "",
-            )
-        ).strip() != expected_locked:
-            raise ValueError(
-                "Weekly schedule output "
-                "game_locked mismatch for "
-                f"game_id={game_id}"
-            )
-
-        provider_game_id = str(
-            row.get(
-                "odds_provider_game_id",
-                "",
-            )
-        ).strip()
-
-        if (
-            provider_game_id
-            != game_id
-        ):
-            raise ValueError(
-                "Weekly schedule output "
-                "odds_provider_game_id must "
-                "equal exact game_id for "
-                f"game_id={game_id}"
-            )
-
-        odds_available = str(
-            row.get(
-                "odds_available",
-                "",
-            )
-        ).strip()
-
-        if odds_available not in {
-            "0",
-            "1",
-        }:
-            raise ValueError(
-                "Weekly schedule output "
-                "has invalid odds_available "
-                f"for game_id={game_id}: "
-                f"{odds_available!r}"
-            )
-
-        missing_reason = str(
-            row.get(
-                "odds_missing_reason",
-                "",
-            )
-        ).strip()
-
-        if (
-            missing_reason
-            not in VALID_MISSING_REASONS
-        ):
-            raise ValueError(
-                "Weekly schedule output "
-                "has invalid odds_missing_reason "
-                f"for game_id={game_id}: "
-                f"{missing_reason!r}"
-            )
-
-        bookmaker = str(
-            row.get(
-                "bookmaker",
-                "",
-            )
-        ).strip()
-
-        if odds_available == "1":
-            if missing_reason:
-                raise ValueError(
-                    "Weekly schedule row with "
-                    "odds_available=1 has a "
-                    "missing reason for game_id="
-                    f"{game_id}"
-                )
-
-            if not bookmaker:
-                raise ValueError(
-                    "Weekly schedule row with "
-                    "odds_available=1 has blank "
-                    "bookmaker for game_id="
-                    f"{game_id}"
-                )
-
-            if not any(
-                str(
-                    row.get(
-                        field,
-                        "",
-                    )
-                ).strip()
-                for field in (
-                    "home_moneyline_american",
-                    "away_moneyline_american",
-                    "home_spread",
-                    "away_spread",
-                    "total",
-                )
-            ):
-                raise ValueError(
-                    "Weekly schedule row marked "
-                    "odds_available=1 has no "
-                    "market values for game_id="
-                    f"{game_id}"
-                )
-
-            expected_home = str(
-                target[
-                    "home_team"
-                ]
-            ).strip()
-
-            expected_away = str(
-                target[
-                    "away_team"
-                ]
-            ).strip()
-
-            if str(
-                row.get(
-                    "odds_home_team",
-                    "",
-                )
-            ).strip() != expected_home:
-                raise ValueError(
-                    "Weekly schedule odds_home_team "
-                    "mismatch for game_id="
-                    f"{game_id}"
-                )
-
-            if str(
-                row.get(
-                    "odds_away_team",
-                    "",
-                )
-            ).strip() != expected_away:
-                raise ValueError(
-                    "Weekly schedule odds_away_team "
-                    "mismatch for game_id="
-                    f"{game_id}"
-                )
-
-            if str(
-                row.get(
-                    "commence_time",
-                    "",
-                )
-            ).strip() != expected_kickoff:
-                raise ValueError(
-                    "Weekly schedule commence_time "
-                    "mismatch for game_id="
-                    f"{game_id}"
-                )
-
-        else:
-            if not missing_reason:
-                raise ValueError(
-                    "Weekly schedule row with "
-                    "odds_available=0 has blank "
-                    "odds_missing_reason for "
-                    f"game_id={game_id}"
-                )
-
-    if (
-        output_ids
-        != set(
-            target_by_id
-        )
-    ):
+    if output_ids != set(target_by_id):
         raise ValueError(
-            "Weekly schedule output game IDs "
-            "do not exactly match configured "
+            "Weekly schedule output game IDs do not exactly match configured "
             "target schedule"
         )
+
 
 
 def write_csv_atomic(

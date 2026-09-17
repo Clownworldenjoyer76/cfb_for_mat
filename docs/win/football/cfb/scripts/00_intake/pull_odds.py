@@ -1444,6 +1444,299 @@ def parse_aware_iso(
     )
 
 
+def _stage1_validate_odds_row_identity(
+    row: dict[str, str],
+    *,
+    index: int,
+    schedule_by_id: dict[str, dict[str, str]],
+    snapshot_id: str,
+    snapshot_fetched_at: str,
+) -> tuple[str, str, str]:
+    missing_columns = [
+        column for column in OUTPUT_COLUMNS if column not in row
+    ]
+    if missing_columns:
+        raise ValueError(
+            f"Normalized odds row {index} missing columns: {missing_columns}"
+        )
+    if row["snapshot_id"] != snapshot_id:
+        raise ValueError(
+            f"Normalized odds row {index} has inconsistent snapshot_id"
+        )
+    if row["snapshot_fetched_at"] != snapshot_fetched_at:
+        raise ValueError(
+            f"Normalized odds row {index} has inconsistent snapshot_fetched_at"
+        )
+
+    game_id = str(row["game_id"]).strip()
+    if game_id not in schedule_by_id:
+        raise ValueError(
+            f"Normalized odds row {index} contains out-of-scope game_id={game_id!r}"
+        )
+
+    schedule_row = schedule_by_id[game_id]
+    expected_home = str(schedule_row["home_team"]).strip()
+    expected_away = str(schedule_row["away_team"]).strip()
+    if (
+        str(row["home_team"]).strip() != expected_home
+        or str(row["away_team"]).strip() != expected_away
+    ):
+        raise ValueError(
+            f"Normalized odds row {index} has team identity mismatch for game_id={game_id}"
+        )
+
+    expected_commence = schedule_kickoff_iso(schedule_row)
+    if str(row["commence_time"]).strip() != expected_commence:
+        raise ValueError(
+            f"Normalized odds row {index} has kickoff mismatch for game_id={game_id}"
+        )
+
+    bookmaker = str(row["bookmaker"]).strip()
+    if not bookmaker:
+        raise ValueError(f"Normalized odds row {index} has blank bookmaker")
+
+    market_type = str(row["market_type"]).strip()
+    bet_side = str(row["bet_side"]).strip()
+    if market_type not in VALID_MARKET_SIDES:
+        raise ValueError(
+            f"Normalized odds row {index} has invalid market_type={market_type!r}"
+        )
+    if bet_side not in VALID_MARKET_SIDES[market_type]:
+        raise ValueError(
+            f"Normalized odds row {index} has invalid bet_side={bet_side!r} "
+            f"for market_type={market_type!r}"
+        )
+    return game_id, market_type, bet_side
+
+
+def _stage1_validate_american_decimal(
+    *,
+    odds_text: str,
+    decimal_text: str,
+    game_id: str,
+    market_type: str,
+    bet_side: str,
+) -> None:
+    if odds_text:
+        american = to_float(odds_text)
+        expected_decimal = to_float(american_to_decimal(odds_text))
+        actual_decimal = to_float(decimal_text)
+        if (
+            american is None
+            or american == 0
+            or expected_decimal is None
+            or actual_decimal is None
+            or abs(expected_decimal - actual_decimal) > 0.000001
+        ):
+            raise ValueError(
+                "American/decimal odds mismatch for "
+                f"game_id={game_id}, market={market_type}, side={bet_side}"
+            )
+    elif decimal_text:
+        raise ValueError(
+            "Decimal odds present without American odds for "
+            f"game_id={game_id}, market={market_type}, side={bet_side}"
+        )
+
+
+def _stage1_validate_spread_pair(
+    row: dict[str, str],
+    *,
+    game_id: str,
+) -> tuple[float | None, float | None]:
+    home_spread = to_float(row["home_spread"])
+    away_spread = to_float(row["away_spread"])
+    if (
+        home_spread is not None
+        and away_spread is not None
+        and abs(home_spread + away_spread) > 0.000001
+    ):
+        raise ValueError(
+            f"Home/away spread mismatch for game_id={game_id}: "
+            f"home={home_spread}, away={away_spread}"
+        )
+    return home_spread, away_spread
+
+
+def _stage1_validate_market_line(
+    *,
+    row: dict[str, str],
+    line_text: str,
+    game_id: str,
+    market_type: str,
+    bet_side: str,
+    home_spread: float | None,
+    away_spread: float | None,
+) -> None:
+    if market_type == "h2h":
+        if line_text:
+            raise ValueError(f"H2H row has nonblank line for game_id={game_id}")
+        return
+    if to_float(line_text) is None:
+        raise ValueError(
+            f"{market_type} row has invalid line for game_id={game_id}"
+        )
+    if market_type == "spreads":
+        expected_line = home_spread if bet_side == "home" else away_spread
+        actual_line = to_float(line_text)
+        if (
+            expected_line is None
+            or actual_line is None
+            or abs(expected_line - actual_line) > 0.000001
+        ):
+            raise ValueError(
+                f"Spread row line mismatch for game_id={game_id}, side={bet_side}"
+            )
+    if market_type == "totals":
+        total = to_float(row["total"])
+        actual_line = to_float(line_text)
+        if (
+            total is None
+            or actual_line is None
+            or abs(total - actual_line) > 0.000001
+        ):
+            raise ValueError(
+                f"Total row line mismatch for game_id={game_id}, side={bet_side}"
+            )
+
+
+def _stage1_validate_basic_market_line(
+    *,
+    line_text: str,
+    game_id: str,
+    market_type: str,
+) -> None:
+    if market_type == "h2h":
+        if line_text:
+            raise ValueError(f"H2H row has nonblank line for game_id={game_id}")
+    elif to_float(line_text) is None:
+        raise ValueError(
+            f"{market_type} row has invalid line for game_id={game_id}"
+        )
+
+
+def _stage1_validate_american_decimal(
+    *,
+    odds_text: str,
+    decimal_text: str,
+    game_id: str,
+    market_type: str,
+    bet_side: str,
+) -> None:
+    if odds_text:
+        american = to_float(odds_text)
+        expected_decimal = to_float(american_to_decimal(odds_text))
+        actual_decimal = to_float(decimal_text)
+        if (
+            american is None
+            or american == 0
+            or expected_decimal is None
+            or actual_decimal is None
+            or abs(expected_decimal - actual_decimal) > 0.000001
+        ):
+            raise ValueError(
+                "American/decimal odds mismatch for "
+                f"game_id={game_id}, market={market_type}, side={bet_side}"
+            )
+    elif decimal_text:
+        raise ValueError(
+            "Decimal odds present without American odds for "
+            f"game_id={game_id}, market={market_type}, side={bet_side}"
+        )
+
+
+def _stage1_validate_spread_pair(
+    row: dict[str, str],
+    *,
+    game_id: str,
+) -> tuple[float | None, float | None]:
+    home_spread = to_float(row["home_spread"])
+    away_spread = to_float(row["away_spread"])
+    if (
+        home_spread is not None
+        and away_spread is not None
+        and abs(home_spread + away_spread) > 0.000001
+    ):
+        raise ValueError(
+            f"Home/away spread mismatch for game_id={game_id}: "
+            f"home={home_spread}, away={away_spread}"
+        )
+    return home_spread, away_spread
+
+
+def _stage1_validate_specific_market_line(
+    *,
+    row: dict[str, str],
+    line_text: str,
+    game_id: str,
+    market_type: str,
+    bet_side: str,
+    home_spread: float | None,
+    away_spread: float | None,
+) -> None:
+    if market_type == "spreads":
+        expected_line = home_spread if bet_side == "home" else away_spread
+        actual_line = to_float(line_text)
+        if (
+            expected_line is None
+            or actual_line is None
+            or abs(expected_line - actual_line) > 0.000001
+        ):
+            raise ValueError(
+                f"Spread row line mismatch for game_id={game_id}, side={bet_side}"
+            )
+    if market_type == "totals":
+        total = to_float(row["total"])
+        actual_line = to_float(line_text)
+        if (
+            total is None
+            or actual_line is None
+            or abs(total - actual_line) > 0.000001
+        ):
+            raise ValueError(
+                f"Total row line mismatch for game_id={game_id}, side={bet_side}"
+            )
+
+
+def _stage1_validate_odds_row_prices(
+    row: dict[str, str],
+    *,
+    game_id: str,
+    market_type: str,
+    bet_side: str,
+) -> None:
+    line_text = str(row["line"]).strip()
+    odds_text = str(row["odds_american"]).strip()
+    decimal_text = str(row["odds_decimal"]).strip()
+    _stage1_validate_basic_market_line(
+        line_text=line_text,
+        game_id=game_id,
+        market_type=market_type,
+    )
+    _stage1_validate_american_decimal(
+        odds_text=odds_text,
+        decimal_text=decimal_text,
+        game_id=game_id,
+        market_type=market_type,
+        bet_side=bet_side,
+    )
+    home_spread, away_spread = _stage1_validate_spread_pair(
+        row,
+        game_id=game_id,
+    )
+    _stage1_validate_specific_market_line(
+        row=row,
+        line_text=line_text,
+        game_id=game_id,
+        market_type=market_type,
+        bet_side=bet_side,
+        home_spread=home_spread,
+        away_spread=away_spread,
+    )
+
+
+
+
 def validate_normalized_rows(
     rows: list[dict[str, str]],
     target_rows: list[dict[str, str]],
@@ -1451,319 +1744,33 @@ def validate_normalized_rows(
     snapshot_fetched_at: str,
 ) -> None:
     if not rows:
-        raise ValueError(
-            "Normalized odds output is empty"
-        )
+        raise ValueError("Normalized odds output is empty")
 
-    parse_aware_iso(
-        snapshot_fetched_at,
-        "snapshot_fetched_at",
-    )
-
+    parse_aware_iso(snapshot_fetched_at, "snapshot_fetched_at")
     schedule_by_id = {
-        str(
-            row["game_id"]
-        ).strip(): row
-        for row in target_rows
+        str(row["game_id"]).strip(): row for row in target_rows
     }
+    seen_keys: set[tuple[str, str, str]] = set()
 
-    seen_keys: set[
-        tuple[
-            str,
-            str,
-            str,
-        ]
-    ] = set()
-
-    for index, row in enumerate(
-        rows
-    ):
-        missing_columns = [
-            column
-            for column in OUTPUT_COLUMNS
-            if column not in row
-        ]
-
-        if missing_columns:
-            raise ValueError(
-                f"Normalized odds row {index} missing columns: "
-                f"{missing_columns}"
-            )
-
-        if (
-            row["snapshot_id"]
-            != snapshot_id
-        ):
-            raise ValueError(
-                f"Normalized odds row {index} has "
-                "inconsistent snapshot_id"
-            )
-
-        if (
-            row["snapshot_fetched_at"]
-            != snapshot_fetched_at
-        ):
-            raise ValueError(
-                f"Normalized odds row {index} has "
-                "inconsistent snapshot_fetched_at"
-            )
-
-        game_id = str(
-            row["game_id"]
-        ).strip()
-
-        if (
-            game_id
-            not in schedule_by_id
-        ):
-            raise ValueError(
-                f"Normalized odds row {index} contains "
-                f"out-of-scope game_id={game_id!r}"
-            )
-
-        schedule_row = (
-            schedule_by_id[
-                game_id
-            ]
+    for index, row in enumerate(rows):
+        game_id, market_type, bet_side = _stage1_validate_odds_row_identity(
+            row,
+            index=index,
+            schedule_by_id=schedule_by_id,
+            snapshot_id=snapshot_id,
+            snapshot_fetched_at=snapshot_fetched_at,
         )
-
-        expected_home = str(
-            schedule_row[
-                "home_team"
-            ]
-        ).strip()
-
-        expected_away = str(
-            schedule_row[
-                "away_team"
-            ]
-        ).strip()
-
-        if (
-            str(
-                row["home_team"]
-            ).strip() != expected_home
-            or str(
-                row["away_team"]
-            ).strip() != expected_away
-        ):
-            raise ValueError(
-                f"Normalized odds row {index} has "
-                f"team identity mismatch for game_id={game_id}"
-            )
-
-        expected_commence = (
-            schedule_kickoff_iso(
-                schedule_row
-            )
-        )
-
-        if (
-            str(
-                row["commence_time"]
-            ).strip()
-            != expected_commence
-        ):
-            raise ValueError(
-                f"Normalized odds row {index} has "
-                f"kickoff mismatch for game_id={game_id}"
-            )
-
-        bookmaker = str(
-            row["bookmaker"]
-        ).strip()
-
-        if not bookmaker:
-            raise ValueError(
-                f"Normalized odds row {index} "
-                "has blank bookmaker"
-            )
-
-        market_type = str(
-            row["market_type"]
-        ).strip()
-
-        bet_side = str(
-            row["bet_side"]
-        ).strip()
-
-        if (
-            market_type
-            not in VALID_MARKET_SIDES
-        ):
-            raise ValueError(
-                f"Normalized odds row {index} has invalid "
-                f"market_type={market_type!r}"
-            )
-
-        if (
-            bet_side
-            not in VALID_MARKET_SIDES[
-                market_type
-            ]
-        ):
-            raise ValueError(
-                f"Normalized odds row {index} has invalid "
-                f"bet_side={bet_side!r} for "
-                f"market_type={market_type!r}"
-            )
-
-        key = (
-            game_id,
-            market_type,
-            bet_side,
-        )
-
+        key = (game_id, market_type, bet_side)
         if key in seen_keys:
-            raise ValueError(
-                "Duplicate normalized odds row key: "
-                f"{key}"
-            )
-
-        seen_keys.add(
-            key
+            raise ValueError(f"Duplicate normalized odds row key: {key}")
+        seen_keys.add(key)
+        _stage1_validate_odds_row_prices(
+            row,
+            game_id=game_id,
+            market_type=market_type,
+            bet_side=bet_side,
         )
 
-        line_text = str(
-            row["line"]
-        ).strip()
-
-        odds_text = str(
-            row["odds_american"]
-        ).strip()
-
-        decimal_text = str(
-            row["odds_decimal"]
-        ).strip()
-
-        if market_type == "h2h":
-            if line_text:
-                raise ValueError(
-                    "H2H row has nonblank line "
-                    f"for game_id={game_id}"
-                )
-
-        elif (
-            to_float(
-                line_text
-            )
-            is None
-        ):
-            raise ValueError(
-                f"{market_type} row has invalid line "
-                f"for game_id={game_id}"
-            )
-
-        if odds_text:
-            american = to_float(
-                odds_text
-            )
-
-            expected_decimal = to_float(
-                american_to_decimal(
-                    odds_text
-                )
-            )
-
-            actual_decimal = to_float(
-                decimal_text
-            )
-
-            if (
-                american is None
-                or american == 0
-                or expected_decimal is None
-                or actual_decimal is None
-                or abs(
-                    expected_decimal
-                    - actual_decimal
-                )
-                > 0.000001
-            ):
-                raise ValueError(
-                    "American/decimal odds mismatch for "
-                    f"game_id={game_id}, "
-                    f"market={market_type}, "
-                    f"side={bet_side}"
-                )
-
-        elif decimal_text:
-            raise ValueError(
-                "Decimal odds present without American odds for "
-                f"game_id={game_id}, "
-                f"market={market_type}, "
-                f"side={bet_side}"
-            )
-
-        home_spread = to_float(
-            row["home_spread"]
-        )
-
-        away_spread = to_float(
-            row["away_spread"]
-        )
-
-        if (
-            home_spread is not None
-            and away_spread is not None
-            and abs(
-                home_spread
-                + away_spread
-            )
-            > 0.000001
-        ):
-            raise ValueError(
-                f"Home/away spread mismatch for game_id={game_id}: "
-                f"home={home_spread}, away={away_spread}"
-            )
-
-        if market_type == "spreads":
-            expected_line = (
-                home_spread
-                if bet_side == "home"
-                else away_spread
-            )
-
-            actual_line = to_float(
-                line_text
-            )
-
-            if (
-                expected_line is None
-                or actual_line is None
-                or abs(
-                    expected_line
-                    - actual_line
-                )
-                > 0.000001
-            ):
-                raise ValueError(
-                    f"Spread row line mismatch for game_id={game_id}, "
-                    f"side={bet_side}"
-                )
-
-        if market_type == "totals":
-            total = to_float(
-                row["total"]
-            )
-
-            actual_line = to_float(
-                line_text
-            )
-
-            if (
-                total is None
-                or actual_line is None
-                or abs(
-                    total
-                    - actual_line
-                )
-                > 0.000001
-            ):
-                raise ValueError(
-                    f"Total row line mismatch for game_id={game_id}, "
-                    f"side={bet_side}"
-                )
 
 
 def write_csv_file(

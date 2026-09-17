@@ -1046,6 +1046,125 @@ def sort_rows(
     )
 
 
+def _stage1_pull_schedule_games(
+    team_ids: list[str],
+    *,
+    team_lookup: dict[str, str],
+    stadium_by_team: dict,
+    stadium_by_stadium: dict,
+    season: int,
+    season_type: int,
+    report: PipelineReporter,
+) -> tuple[dict[str, dict[str, str]], dict[str, int]]:
+    pulled: dict[str, dict[str, str]] = {}
+    stats = {
+        "successful_team_pulls": 0,
+        "failed_team_pulls": 0,
+        "invalid_team_payloads": 0,
+        "empty_team_pulls": 0,
+        "total_events_seen": 0,
+        "skipped_events": 0,
+    }
+
+    for team_id in team_ids:
+        data = fetch_schedule(
+            team_id,
+            season=season,
+            season_type=season_type,
+            report=report,
+        )
+        if data is None:
+            stats["failed_team_pulls"] += 1
+            continue
+
+        events = data.get("events")
+        if not isinstance(events, list):
+            stats["invalid_team_payloads"] += 1
+            report.warning(
+                "ESPN schedule response contained invalid events data",
+                team_id=team_id,
+            )
+            continue
+        if not events:
+            stats["empty_team_pulls"] += 1
+            continue
+
+        stats["successful_team_pulls"] += 1
+        stats["total_events_seen"] += len(events)
+        for event in events:
+            if not isinstance(event, dict):
+                stats["skipped_events"] += 1
+                continue
+            row = event_to_row(
+                event,
+                team_lookup,
+                stadium_by_team,
+                stadium_by_stadium,
+                season=season,
+                season_type=season_type,
+                report=report,
+            )
+            if row is None:
+                stats["skipped_events"] += 1
+                continue
+            pulled[row["game_id"]] = row
+    return pulled, stats
+
+
+def _stage1_merge_schedule_rows(
+    existing_rows: list[dict[str, str]],
+    pulled: dict[str, dict[str, str]],
+) -> tuple[list[dict[str, str]], dict[str, int]]:
+    merged: dict[str, dict[str, str]] = {}
+    existing_by_id: dict[str, dict[str, str]] = {}
+    for row in existing_rows:
+        game_id = clean(row.get("game_id"))
+        if game_id:
+            existing_by_id[game_id] = row
+            merged[game_id] = row
+
+    added_games = 0
+    updated_games = 0
+    unchanged_games = 0
+    for game_id, row in pulled.items():
+        existing_row = existing_by_id.get(game_id)
+        if existing_row is None:
+            added_games += 1
+        elif all(
+            clean(existing_row.get(column)) == clean(row.get(column))
+            for column in OUTPUT_COLUMNS
+        ):
+            unchanged_games += 1
+        else:
+            updated_games += 1
+        merged[game_id] = row
+
+    preserved_games = len(set(existing_by_id) - set(pulled))
+    return sort_rows(list(merged.values())), {
+        "schedule_games_added": added_games,
+        "schedule_games_updated": updated_games,
+        "schedule_games_unchanged": unchanged_games,
+        "schedule_games_preserved": preserved_games,
+    }
+
+
+def _stage1_schedule_missing_metadata(
+    output_rows: list[dict[str, str]],
+) -> dict[str, int]:
+    fields = {
+        "missing_stadium": "stadium",
+        "missing_surface": "surface",
+        "missing_roof": "roof",
+        "missing_home_timezone": "home_timezone",
+        "missing_away_timezone": "away_timezone",
+        "missing_game_timezone": "game_timezone",
+    }
+    return {
+        label: sum(1 for row in output_rows if not clean(row.get(column)))
+        for label, column in fields.items()
+    }
+
+
 def main() -> None:
     with PipelineReporter(
         script=__file__,
@@ -1054,437 +1173,87 @@ def main() -> None:
         pipeline="cfb",
         league="CFB",
     ) as report:
-        report.add_input(
-            CONFIG_FILE
-        )
+        report.add_input(CONFIG_FILE)
+        report.add_input(TEAM_MAP_FILE)
+        report.add_input(STADIUM_MAP_FILE)
 
-        report.add_input(
-            TEAM_MAP_FILE
-        )
-
-        report.add_input(
-            STADIUM_MAP_FILE
-        )
-
-        (
-            season,
-            season_type,
-            week,
-        ) = load_pipeline_config(
-            CONFIG_FILE
-        )
-
+        season, season_type, week = load_pipeline_config(CONFIG_FILE)
         report.season = season
         report.week = week
+        report.set_detail("season_type", season_type)
 
-        report.set_detail(
-            "season_type",
-            season_type,
-        )
-
-        output_file = (
-            OUTPUT_DIR
-            / f"{season}_schedule.csv"
-        )
-
+        output_file = OUTPUT_DIR / f"{season}_schedule.csv"
         team_rows = read_csv(
             TEAM_MAP_FILE,
-            required_columns=(
-                TEAM_MAP_REQUIRED_COLUMNS
-            ),
+            required_columns=TEAM_MAP_REQUIRED_COLUMNS,
         )
-
         stadium_rows = read_csv(
             STADIUM_MAP_FILE,
-            required_columns=(
-                STADIUM_MAP_REQUIRED_COLUMNS
-            ),
+            required_columns=STADIUM_MAP_REQUIRED_COLUMNS,
         )
+        team_ids, team_lookup = build_team_maps(team_rows)
+        stadium_by_team, stadium_by_stadium = build_stadium_maps(stadium_rows)
 
-        (
+        pulled, pull_stats = _stage1_pull_schedule_games(
             team_ids,
-            team_lookup,
-        ) = build_team_maps(
-            team_rows
+            team_lookup=team_lookup,
+            stadium_by_team=stadium_by_team,
+            stadium_by_stadium=stadium_by_stadium,
+            season=season,
+            season_type=season_type,
+            report=report,
         )
-
-        (
-            stadium_by_team,
-            stadium_by_stadium,
-        ) = build_stadium_maps(
-            stadium_rows
-        )
-
-        pulled: dict[
-            str,
-            dict[str, str],
-        ] = {}
-
-        successful_team_pulls = 0
-        failed_team_pulls = 0
-        invalid_team_payloads = 0
-        empty_team_pulls = 0
-        total_events_seen = 0
-        skipped_events = 0
-
-        for team_id in team_ids:
-            data = fetch_schedule(
-                team_id,
-                season=season,
-                season_type=(
-                    season_type
-                ),
-                report=report,
-            )
-
-            if data is None:
-                failed_team_pulls += 1
-                continue
-
-            events = data.get(
-                "events"
-            )
-
-            if not isinstance(
-                events,
-                list,
-            ):
-                (
-                    invalid_team_payloads
-                ) += 1
-
-                report.warning(
-                    "ESPN schedule response "
-                    "contained invalid "
-                    "events data",
-                    team_id=team_id,
-                )
-
-                continue
-
-            if not events:
-                empty_team_pulls += 1
-                continue
-
-            (
-                successful_team_pulls
-            ) += 1
-
-            total_events_seen += len(
-                events
-            )
-
-            for event in events:
-                if not isinstance(
-                    event,
-                    dict,
-                ):
-                    skipped_events += 1
-                    continue
-
-                row = event_to_row(
-                    event,
-                    team_lookup,
-                    stadium_by_team,
-                    stadium_by_stadium,
-                    season=season,
-                    season_type=(
-                        season_type
-                    ),
-                    report=report,
-                )
-
-                if row is None:
-                    skipped_events += 1
-                    continue
-
-                pulled[
-                    row["game_id"]
-                ] = row
-
         report.update_details(
             {
-                "team_map_rows": (
-                    len(team_rows)
-                ),
-                "stadium_map_rows": (
-                    len(stadium_rows)
-                ),
-                "team_ids": (
-                    len(team_ids)
-                ),
-                "successful_team_pulls": (
-                    successful_team_pulls
-                ),
-                "failed_team_pulls": (
-                    failed_team_pulls
-                ),
-                "invalid_team_payloads": (
-                    invalid_team_payloads
-                ),
-                "empty_team_pulls": (
-                    empty_team_pulls
-                ),
-                "events_seen": (
-                    total_events_seen
-                ),
-                "skipped_events": (
-                    skipped_events
-                ),
-                "unique_games_pulled": (
-                    len(pulled)
-                ),
+                "team_map_rows": len(team_rows),
+                "stadium_map_rows": len(stadium_rows),
+                "team_ids": len(team_ids),
+                "successful_team_pulls": pull_stats["successful_team_pulls"],
+                "failed_team_pulls": pull_stats["failed_team_pulls"],
+                "invalid_team_payloads": pull_stats["invalid_team_payloads"],
+                "empty_team_pulls": pull_stats["empty_team_pulls"],
+                "events_seen": pull_stats["total_events_seen"],
+                "skipped_events": pull_stats["skipped_events"],
+                "unique_games_pulled": len(pulled),
             }
         )
-
         if not pulled:
             raise RuntimeError(
-                "ESPN returned zero usable "
-                "schedule rows. Existing "
-                "schedule was NOT overwritten."
+                "ESPN returned zero usable schedule rows. Existing schedule was NOT overwritten."
             )
 
-        pulled_rows = sort_rows(
-            list(
-                pulled.values()
-            )
+        pulled_rows = sort_rows(list(pulled.values()))
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        update_file = UPDATES_DIR / f"{season}_schedule_{timestamp}.csv"
+        write_csv_atomic(update_file, pulled_rows)
+        report.add_output(update_file)
+
+        existing_rows = read_existing_schedule(output_file)
+        output_rows, merge_stats = _stage1_merge_schedule_rows(
+            existing_rows,
+            pulled,
         )
-
-        timestamp = datetime.now(
-            timezone.utc
-        ).strftime(
-            "%Y%m%d_%H%M%S"
-        )
-
-        update_file = (
-            UPDATES_DIR
-            / (
-                f"{season}_schedule_"
-                f"{timestamp}.csv"
-            )
-        )
-
-        write_csv_atomic(
-            update_file,
-            pulled_rows,
-        )
-
-        report.add_output(
-            update_file
-        )
-
-        existing_rows = (
-            read_existing_schedule(
-                output_file
-            )
-        )
-
-        merged: dict[
-            str,
-            dict[str, str],
-        ] = {}
-
-        existing_by_id: dict[
-            str,
-            dict[str, str],
-        ] = {}
-
-        for row in existing_rows:
-            game_id = clean(
-                row.get(
-                    "game_id"
-                )
-            )
-
-            if game_id:
-                existing_by_id[
-                    game_id
-                ] = row
-
-                merged[
-                    game_id
-                ] = row
-
-        added_games = 0
-        updated_games = 0
-        unchanged_games = 0
-
-        for (
-            game_id,
-            row,
-        ) in pulled.items():
-            existing_row = (
-                existing_by_id.get(
-                    game_id
-                )
-            )
-
-            if existing_row is None:
-                added_games += 1
-
-            elif all(
-                clean(
-                    existing_row.get(
-                        column
-                    )
-                )
-                == clean(
-                    row.get(
-                        column
-                    )
-                )
-                for column
-                in OUTPUT_COLUMNS
-            ):
-                unchanged_games += 1
-
-            else:
-                updated_games += 1
-
-            merged[
-                game_id
-            ] = row
-
-        preserved_games = len(
-            set(existing_by_id)
-            - set(pulled)
-        )
-
-        output_rows = sort_rows(
-            list(
-                merged.values()
-            )
-        )
-
         if not output_rows:
-            raise RuntimeError(
-                "No schedule rows "
-                "available to write."
-            )
+            raise RuntimeError("No schedule rows available to write.")
 
-        missing_stadium = sum(
-            1
-            for row in output_rows
-            if not clean(
-                row.get("stadium")
-            )
-        )
-
-        missing_surface = sum(
-            1
-            for row in output_rows
-            if not clean(
-                row.get("surface")
-            )
-        )
-
-        missing_roof = sum(
-            1
-            for row in output_rows
-            if not clean(
-                row.get("roof")
-            )
-        )
-
-        missing_home_timezone = sum(
-            1
-            for row in output_rows
-            if not clean(
-                row.get(
-                    "home_timezone"
-                )
-            )
-        )
-
-        missing_away_timezone = sum(
-            1
-            for row in output_rows
-            if not clean(
-                row.get(
-                    "away_timezone"
-                )
-            )
-        )
-
-        missing_game_timezone = sum(
-            1
-            for row in output_rows
-            if not clean(
-                row.get(
-                    "game_timezone"
-                )
-            )
-        )
-
-        write_csv_atomic(
-            output_file,
-            output_rows,
-        )
-
-        report.add_output(
-            output_file
-        )
-
+        missing = _stage1_schedule_missing_metadata(output_rows)
+        write_csv_atomic(output_file, output_rows)
+        report.add_output(output_file)
         report.set_rows(
-            rows_in=(
-                total_events_seen
-            ),
-            rows_out=(
-                len(output_rows)
-            ),
+            rows_in=pull_stats["total_events_seen"],
+            rows_out=len(output_rows),
         )
-
         report.update_details(
             {
-                "existing_schedule_rows": (
-                    len(existing_rows)
-                ),
-                "schedule_rows_written": (
-                    len(output_rows)
-                ),
-                "schedule_games_added": (
-                    added_games
-                ),
-                "schedule_games_updated": (
-                    updated_games
-                ),
-                "schedule_games_unchanged": (
-                    unchanged_games
-                ),
-                "schedule_games_preserved": (
-                    preserved_games
-                ),
-                "missing_stadium": (
-                    missing_stadium
-                ),
-                "missing_surface": (
-                    missing_surface
-                ),
-                "missing_roof": (
-                    missing_roof
-                ),
-                "missing_home_timezone": (
-                    missing_home_timezone
-                ),
-                "missing_away_timezone": (
-                    missing_away_timezone
-                ),
-                "missing_game_timezone": (
-                    missing_game_timezone
-                ),
+                "existing_schedule_rows": len(existing_rows),
+                "schedule_rows_written": len(output_rows),
+                **merge_stats,
+                **missing,
             }
         )
+        print(f"Wrote {len(output_rows)} schedule rows to {output_file}")
+        print(f"Pulled {len(pulled_rows)} unique ESPN games")
 
-        print(
-            f"Wrote {len(output_rows)} "
-            f"schedule rows to "
-            f"{output_file}"
-        )
-
-        print(
-            f"Pulled {len(pulled_rows)} "
-            f"unique ESPN games"
-        )
 
 
 if __name__ == "__main__":
