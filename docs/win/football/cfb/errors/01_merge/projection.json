@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35140165010-attempt-1",
+  "run_id": "github-35225973997-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,33 +9,34 @@
   "script": "projection.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/01_merge/projection.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/01_merge/projection.json",
-  "started_at_utc": "2026-09-16T19:29:27.267789+00:00",
-  "finished_at_utc": "2026-09-16T19:29:27.771730+00:00",
-  "duration_seconds": 0.504,
+  "started_at_utc": "2026-09-17T13:24:53.279531+00:00",
+  "finished_at_utc": "2026-09-17T13:24:54.061279+00:00",
+  "duration_seconds": 0.782,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2546,
+    "process_id": 2581,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35140165010",
+    "github_run_id": "35225973997",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "7d71e973dc32f823ab7855efa8c4a9dbb72c659f",
+    "github_sha": "16cb9fd4babbd2a9b53ce6e22626fbddde9c4206",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
   "context": {
     "season": 2026,
     "week": 3,
-    "script_version": "cfb-inseason-v5-hardened-math-2026-09-16",
+    "script_version": "cfb-inseason-v6-history-coverage-2026-09-16",
     "projection_scope": "week_2_plus"
   },
   "inputs": [
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/pbp/2026_pbp.parquet",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/team_stats/2026_team_stats.csv",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/team_map.csv",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/stadium_map.csv",
@@ -44,7 +45,9 @@
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/injuries/2026_injuries.csv",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/travel/2026_week_3_travel.csv",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/weather/week_3_CFB_weekly_weather.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/travel_weather_coefficients.csv"
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/travel_weather_coefficients.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_1.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_2.csv"
   ],
   "outputs": [
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/01_merge/week_3_CFB_enriched.csv"
@@ -61,6 +64,18 @@
     "min_current_team_weeks": 1,
     "output_modified": true,
     "schedule_game_count": 75,
+    "season_type": 2,
+    "completed_history_coverage": {
+      "completed_result_games": 185,
+      "pbp_prior_games": 185,
+      "expected_team_week_rows": 358,
+      "team_stats_team_week_rows": 358,
+      "result_files": [
+        "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_1.csv",
+        "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/results/2026_2_2.csv"
+      ],
+      "pbp_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/pbp/2026_pbp.parquet"
+    },
     "projection_game_count": 75,
     "locked_games_preserved": 0,
     "team_stats_source_rows": 358,
@@ -91,8 +106,8 @@
     "home_team_stats_fallbacks": 0,
     "away_team_stats_fallbacks": 18,
     "team_stats_margin_disabled": 18,
-    "probability_margin_sd": 14.0,
-    "probability_total_sd": 14.0,
+    "probability_margin_sd": 16.36,
+    "probability_total_sd": 15.22,
     "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/01_merge/week_3_CFB_enriched.csv"
   }
 }
