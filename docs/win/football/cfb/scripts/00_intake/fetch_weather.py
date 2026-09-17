@@ -1887,6 +1887,27 @@ def validate_weather_values(
     kickoff_utc: datetime,
     strict_blank_timestamp: bool,
 ) -> float | None:
+    def _stage2_validate_weather_values_block_01() -> None:
+        for field in (
+            "rain_flag",
+            "snow_flag",
+        ):
+            value = clean(
+                row.get(field)
+            )
+
+            if (
+                value
+                and value not in {
+                    "0",
+                    "1",
+                }
+            ):
+                raise WeatherValidationError(
+                    f"{field} must be 0/1/blank "
+                    f"for game_id={game_id}: {value!r}"
+                )
+
     any_weather = weather_fields_present(
         row
     )
@@ -2007,25 +2028,7 @@ def validate_weather_values(
                 f"humidity outside [0,100] for game_id={game_id}"
             )
 
-    for field in (
-        "rain_flag",
-        "snow_flag",
-    ):
-        value = clean(
-            row.get(field)
-        )
-
-        if (
-            value
-            and value not in {
-                "0",
-                "1",
-            }
-        ):
-            raise WeatherValidationError(
-                f"{field} must be 0/1/blank "
-                f"for game_id={game_id}: {value!r}"
-            )
+    _stage2_validate_weather_values_block_01()
 
     if not fetched_at:
         raise WeatherValidationError(
@@ -2060,14 +2063,47 @@ def validate_output_rows(
     ],
     strict_blank_timestamp: bool,
 ) -> list[float]:
-    if len(rows) != len(
-        schedule_lookup
-    ):
-        raise WeatherValidationError(
-            "Weather row-count mismatch: "
-            f"expected={len(schedule_lookup)}, "
-            f"actual={len(rows)}"
-        )
+    def _stage2_validate_output_rows_block_03() -> None:
+        for field in (
+            "dome_flag",
+            "retractable_roof_flag",
+            "open_air_flag",
+        ):
+            value = clean(
+                row.get(field)
+            )
+
+            if (
+                value
+                and value not in {
+                    "0",
+                    "1",
+                }
+            ):
+                raise WeatherValidationError(
+                    f"{field} must be 0/1/blank "
+                    f"for game_id={game_id}"
+                )
+
+    def _stage2_validate_output_rows_block_02() -> None:
+        if seen != set(
+            schedule_lookup
+        ):
+            raise WeatherValidationError(
+                "Weather game coverage does not match target schedule"
+            )
+
+    def _stage2_validate_output_rows_block_01() -> None:
+        if len(rows) != len(
+            schedule_lookup
+        ):
+            raise WeatherValidationError(
+                "Weather row-count mismatch: "
+                f"expected={len(schedule_lookup)}, "
+                f"actual={len(rows)}"
+            )
+
+    _stage2_validate_output_rows_block_01()
 
     seen: set[str] = set()
     offsets: list[float] = []
@@ -2237,26 +2273,7 @@ def validate_output_rows(
                 f"Weather roof mismatch for game_id={game_id}"
             )
 
-        for field in (
-            "dome_flag",
-            "retractable_roof_flag",
-            "open_air_flag",
-        ):
-            value = clean(
-                row.get(field)
-            )
-
-            if (
-                value
-                and value not in {
-                    "0",
-                    "1",
-                }
-            ):
-                raise WeatherValidationError(
-                    f"{field} must be 0/1/blank "
-                    f"for game_id={game_id}"
-                )
+        _stage2_validate_output_rows_block_03()
 
         offset = validate_weather_values(
             row,
@@ -2272,12 +2289,7 @@ def validate_output_rows(
                 offset
             )
 
-    if seen != set(
-        schedule_lookup
-    ):
-        raise WeatherValidationError(
-            "Weather game coverage does not match target schedule"
-        )
+    _stage2_validate_output_rows_block_02()
 
     return offsets
 

@@ -1069,16 +1069,41 @@ def validate_output_rows(
 ) -> None:
     global _DUPLICATE_GAME_SIDE_COUNT
 
+    def _stage2_validate_output_rows_block_03() -> None:
+        if (
+            row_season != season
+            or row_type != season_type
+            or row_week != week
+        ):
+            raise PredictorValidationError(
+                "Predictor output target metadata mismatch at "
+                f"row_index={row_index}"
+            )
+
+    def _stage2_validate_output_rows_block_02() -> None:
+        if len(rows) != expected_rows:
+            raise PredictorValidationError(
+                "Predictor output row-count mismatch: "
+                f"expected={expected_rows}, actual={len(rows)}"
+            )
+
+    def _stage2_validate_output_rows_block_01() -> None:
+        if (
+            missing_ids
+            or foreign_ids
+        ):
+            raise PredictorValidationError(
+                "Predictor output game coverage mismatch: "
+                f"missing={missing_ids[:50]}, "
+                f"foreign={foreign_ids[:50]}"
+            )
+
     expected_rows = (
         len(targets)
         * 2
     )
 
-    if len(rows) != expected_rows:
-        raise PredictorValidationError(
-            "Predictor output row-count mismatch: "
-            f"expected={expected_rows}, actual={len(rows)}"
-        )
+    _stage2_validate_output_rows_block_02()
 
     grouped: dict[
         str,
@@ -1120,15 +1145,7 @@ def validate_output_rows(
             ),
         )
 
-        if (
-            row_season != season
-            or row_type != season_type
-            or row_week != week
-        ):
-            raise PredictorValidationError(
-                "Predictor output target metadata mismatch at "
-                f"row_index={row_index}"
-            )
+        _stage2_validate_output_rows_block_03()
 
         game_id = parse_positive_int_text(
             row.get("game_id"),
@@ -1293,15 +1310,7 @@ def validate_output_rows(
         key=int,
     )
 
-    if (
-        missing_ids
-        or foreign_ids
-    ):
-        raise PredictorValidationError(
-            "Predictor output game coverage mismatch: "
-            f"missing={missing_ids[:50]}, "
-            f"foreign={foreign_ids[:50]}"
-        )
+    _stage2_validate_output_rows_block_01()
 
     for game_id, sides in (
         grouped.items()

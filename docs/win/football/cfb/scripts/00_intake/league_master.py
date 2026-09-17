@@ -2398,10 +2398,13 @@ def validate_standings_rows(
     season: int,
     season_type: int,
 ) -> None:
-    if not rows:
-        raise ValueError(
-            "League standings output is empty"
-        )
+    def _stage2_validate_standings_rows_block_01() -> None:
+        if not rows:
+            raise ValueError(
+                "League standings output is empty"
+            )
+
+    _stage2_validate_standings_rows_block_01()
 
     master_by_id = {
         str(

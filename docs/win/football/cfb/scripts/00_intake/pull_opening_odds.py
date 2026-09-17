@@ -2108,6 +2108,81 @@ def validate_opener_row(
     index: int,
     label: str,
 ) -> None:
+    def _stage2_validate_opener_row_block_02() -> None:
+        if not game_id:
+            raise ValueError(
+                f"{label} row {index} "
+                "has blank game_id"
+            )
+
+        if provider_game_id != game_id:
+            raise ValueError(
+                f"{label} row {index} "
+                "provider game ID mismatch: "
+                f"game_id={game_id}, "
+                "odds_provider_game_id="
+                f"{provider_game_id!r}"
+            )
+
+        if (
+            market_type
+            not in VALID_MARKET_SIDES
+        ):
+            raise ValueError(
+                f"{label} row {index} "
+                "has invalid market_type="
+                f"{market_type!r}"
+            )
+
+        if (
+            bet_side
+            not in VALID_MARKET_SIDES[
+                market_type
+            ]
+        ):
+            raise ValueError(
+                f"{label} row {index} "
+                "has invalid bet_side="
+                f"{bet_side!r} for "
+                f"{market_type}"
+            )
+
+        if status not in VALID_STATUSES:
+            raise ValueError(
+                f"{label} row {index} "
+                "has invalid opener_status="
+                f"{status!r}"
+            )
+
+    def _stage2_validate_opener_row_block_01() -> None:
+        if (
+            status == "ok"
+            and not has_opening
+        ):
+            raise ValueError(
+                f"{label} row {index} "
+                "status=ok without opening value"
+            )
+
+        if (
+            has_opening
+            and status != "ok"
+        ):
+            raise ValueError(
+                f"{label} row {index} "
+                "has opening value but "
+                f"status={status!r}"
+            )
+
+        if (
+            status == "ok"
+            and not bookmaker
+        ):
+            raise ValueError(
+                f"{label} row {index} "
+                "status=ok with blank bookmaker"
+            )
+
     game_id = str(
         row.get(
             "game_id",
@@ -2143,50 +2218,7 @@ def validate_opener_row(
         )
     ).strip()
 
-    if not game_id:
-        raise ValueError(
-            f"{label} row {index} "
-            "has blank game_id"
-        )
-
-    if provider_game_id != game_id:
-        raise ValueError(
-            f"{label} row {index} "
-            "provider game ID mismatch: "
-            f"game_id={game_id}, "
-            "odds_provider_game_id="
-            f"{provider_game_id!r}"
-        )
-
-    if (
-        market_type
-        not in VALID_MARKET_SIDES
-    ):
-        raise ValueError(
-            f"{label} row {index} "
-            "has invalid market_type="
-            f"{market_type!r}"
-        )
-
-    if (
-        bet_side
-        not in VALID_MARKET_SIDES[
-            market_type
-        ]
-    ):
-        raise ValueError(
-            f"{label} row {index} "
-            "has invalid bet_side="
-            f"{bet_side!r} for "
-            f"{market_type}"
-        )
-
-    if status not in VALID_STATUSES:
-        raise ValueError(
-            f"{label} row {index} "
-            "has invalid opener_status="
-            f"{status!r}"
-        )
+    _stage2_validate_opener_row_block_02()
 
     bookmaker = canonical_bookmaker(
         row.get(
@@ -2282,33 +2314,7 @@ def validate_opener_row(
         )
     )
 
-    if (
-        status == "ok"
-        and not has_opening
-    ):
-        raise ValueError(
-            f"{label} row {index} "
-            "status=ok without opening value"
-        )
-
-    if (
-        has_opening
-        and status != "ok"
-    ):
-        raise ValueError(
-            f"{label} row {index} "
-            "has opening value but "
-            f"status={status!r}"
-        )
-
-    if (
-        status == "ok"
-        and not bookmaker
-    ):
-        raise ValueError(
-            f"{label} row {index} "
-            "status=ok with blank bookmaker"
-        )
+    _stage2_validate_opener_row_block_01()
 
     expected = expected_movement(
         row

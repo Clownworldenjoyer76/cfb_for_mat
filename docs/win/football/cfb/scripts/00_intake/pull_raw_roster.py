@@ -1032,10 +1032,43 @@ def validate_final_rows(
     season: int,
     season_type: int,
 ) -> None:
-    if not rows:
-        raise ValueError(
-            "Raw roster output would be empty"
-        )
+    def _stage2_validate_final_rows_block_03() -> None:
+        if represented_teams != expected_teams:
+            missing = sorted(
+                expected_teams
+                - represented_teams,
+                key=int,
+            )
+
+            foreign = sorted(
+                represented_teams
+                - expected_teams,
+                key=int,
+            )
+
+            raise ValueError(
+                "Raw roster team coverage "
+                "does not match authoritative "
+                "team set. "
+                f"missing={missing[:50]}, "
+                f"foreign={foreign[:50]}"
+            )
+
+    def _stage2_validate_final_rows_block_02() -> None:
+        if missing_required_columns:
+            raise ValueError(
+                "Raw roster output missing "
+                "required columns: "
+                f"{missing_required_columns}"
+            )
+
+    def _stage2_validate_final_rows_block_01() -> None:
+        if not rows:
+            raise ValueError(
+                "Raw roster output would be empty"
+            )
+
+    _stage2_validate_final_rows_block_01()
 
     missing_required_columns = [
         column
@@ -1044,12 +1077,7 @@ def validate_final_rows(
         if column not in columns
     ]
 
-    if missing_required_columns:
-        raise ValueError(
-            "Raw roster output missing "
-            "required columns: "
-            f"{missing_required_columns}"
-        )
+    _stage2_validate_final_rows_block_02()
 
     expected_teams = set(
         target_team_ids
@@ -1059,26 +1087,7 @@ def validate_final_rows(
         team_row_counts
     )
 
-    if represented_teams != expected_teams:
-        missing = sorted(
-            expected_teams
-            - represented_teams,
-            key=int,
-        )
-
-        foreign = sorted(
-            represented_teams
-            - expected_teams,
-            key=int,
-        )
-
-        raise ValueError(
-            "Raw roster team coverage "
-            "does not match authoritative "
-            "team set. "
-            f"missing={missing[:50]}, "
-            f"foreign={foreign[:50]}"
-        )
+    _stage2_validate_final_rows_block_03()
 
     zero_row_teams = sorted(
         team_id

@@ -388,6 +388,173 @@ def validate_clean_rows(
     week: int,
     schedule: dict[str, dict[str, str]],
 ) -> dict[str, Decimal]:
+    def _stage2_validate_clean_rows_block_01() -> None:
+        for row_number, row in enumerate(
+            rows,
+            start=2,
+        ):
+            if list(row.keys()) != OUT_HEADERS:
+                raise FinalizePredictionValidationError(
+                    f"Clean prediction schema mismatch at row {row_number}"
+                )
+
+            row_target = (
+                positive_int(
+                    row.get("season"),
+                    label=f"clean season row {row_number}",
+                ),
+                positive_int(
+                    row.get("season_type"),
+                    label=f"clean season_type row {row_number}",
+                ),
+                positive_int(
+                    row.get("week"),
+                    label=f"clean week row {row_number}",
+                ),
+            )
+
+            if row_target != (
+                season,
+                season_type,
+                week,
+            ):
+                raise FinalizePredictionValidationError(
+                    f"Clean prediction target mismatch at row {row_number}"
+                )
+
+            game_id = str(
+                positive_int(
+                    row.get("game_id"),
+                    label=f"clean game_id row {row_number}",
+                )
+            )
+
+            if game_id in seen:
+                raise FinalizePredictionValidationError(
+                    f"Duplicate clean prediction game_id={game_id}"
+                )
+
+            target = schedule.get(game_id)
+
+            if target is None:
+                raise FinalizePredictionValidationError(
+                    f"Clean prediction contains foreign game_id={game_id}"
+                )
+
+            seen.add(game_id)
+
+            for field in (
+                "home_team",
+                "away_team",
+                "game_name",
+            ):
+                if text(row.get(field)) != target[field]:
+                    raise FinalizePredictionValidationError(
+                        f"Clean prediction {field} mismatch for "
+                        f"game_id={game_id}: expected={target[field]!r}, "
+                        f"actual={text(row.get(field))!r}"
+                    )
+
+            if text(row.get("sport")) != "football":
+                raise FinalizePredictionValidationError(
+                    f"Unexpected sport for game_id={game_id}: "
+                    f"{row.get('sport')!r}"
+                )
+
+            if text(row.get("league")) != "college-football":
+                raise FinalizePredictionValidationError(
+                    f"Unexpected league for game_id={game_id}: "
+                    f"{row.get('league')!r}"
+                )
+
+            for field in (
+                "game_date",
+                "game_time",
+                "away_projected_pts",
+                "home_projected_pts",
+                "total_projected_pts",
+            ):
+                if text(row.get(field)):
+                    raise FinalizePredictionValidationError(
+                        f"Clean-stage {field} must be blank "
+                        f"for game_id={game_id}"
+                    )
+
+            percentage(
+                row.get("matchupQuality"),
+                label=f"matchupQuality for game_id={game_id}",
+            )
+
+            home_prob = probability(
+                row.get("home_prob"),
+                label=f"home_prob for game_id={game_id}",
+            )
+
+            away_prob = probability(
+                row.get("away_prob"),
+                label=f"away_prob for game_id={game_id}",
+            )
+
+            if (
+                home_prob
+                + away_prob
+                != Decimal("1.0000")
+            ):
+                raise FinalizePredictionValidationError(
+                    "home_prob + away_prob must equal 1.0000 for "
+                    f"game_id={game_id}: home={home_prob}, "
+                    f"away={away_prob}"
+                )
+
+            tie_text = text(
+                row.get("tie_prob")
+            )
+
+            if tie_text:
+                probability(
+                    tie_text,
+                    label=f"tie_prob for game_id={game_id}",
+                )
+
+            home_ptdiff = finite_decimal(
+                row.get("home_PtDiff"),
+                label=f"home_PtDiff for game_id={game_id}",
+            )
+
+            away_ptdiff = finite_decimal(
+                row.get("away_PtDiff"),
+                label=f"away_PtDiff for game_id={game_id}",
+            )
+
+            mismatch = abs(
+                home_ptdiff
+                + away_ptdiff
+            )
+
+            if (
+                mismatch
+                > ESPN_MARGIN_SYMMETRY_TOLERANCE
+            ):
+                raise FinalizePredictionValidationError(
+                    "ESPN point-differential asymmetry exceeds "
+                    f"tolerance for game_id={game_id}: "
+                    f"home={home_ptdiff}, away={away_ptdiff}, "
+                    f"mismatch={mismatch}, "
+                    f"tolerance={ESPN_MARGIN_SYMMETRY_TOLERANCE}"
+                )
+
+            finite_decimal(
+                row.get("home_rating"),
+                label=f"home_rating for game_id={game_id}",
+            )
+
+            finite_decimal(
+                row.get("away_rating"),
+                label=f"away_rating for game_id={game_id}",
+            )
+
+            margins[game_id] = mismatch
+
     if len(rows) != len(schedule):
         raise FinalizePredictionValidationError(
             "Clean prediction row-count mismatch: "
@@ -397,171 +564,7 @@ def validate_clean_rows(
     seen: set[str] = set()
     margins: dict[str, Decimal] = {}
 
-    for row_number, row in enumerate(
-        rows,
-        start=2,
-    ):
-        if list(row.keys()) != OUT_HEADERS:
-            raise FinalizePredictionValidationError(
-                f"Clean prediction schema mismatch at row {row_number}"
-            )
-
-        row_target = (
-            positive_int(
-                row.get("season"),
-                label=f"clean season row {row_number}",
-            ),
-            positive_int(
-                row.get("season_type"),
-                label=f"clean season_type row {row_number}",
-            ),
-            positive_int(
-                row.get("week"),
-                label=f"clean week row {row_number}",
-            ),
-        )
-
-        if row_target != (
-            season,
-            season_type,
-            week,
-        ):
-            raise FinalizePredictionValidationError(
-                f"Clean prediction target mismatch at row {row_number}"
-            )
-
-        game_id = str(
-            positive_int(
-                row.get("game_id"),
-                label=f"clean game_id row {row_number}",
-            )
-        )
-
-        if game_id in seen:
-            raise FinalizePredictionValidationError(
-                f"Duplicate clean prediction game_id={game_id}"
-            )
-
-        target = schedule.get(game_id)
-
-        if target is None:
-            raise FinalizePredictionValidationError(
-                f"Clean prediction contains foreign game_id={game_id}"
-            )
-
-        seen.add(game_id)
-
-        for field in (
-            "home_team",
-            "away_team",
-            "game_name",
-        ):
-            if text(row.get(field)) != target[field]:
-                raise FinalizePredictionValidationError(
-                    f"Clean prediction {field} mismatch for "
-                    f"game_id={game_id}: expected={target[field]!r}, "
-                    f"actual={text(row.get(field))!r}"
-                )
-
-        if text(row.get("sport")) != "football":
-            raise FinalizePredictionValidationError(
-                f"Unexpected sport for game_id={game_id}: "
-                f"{row.get('sport')!r}"
-            )
-
-        if text(row.get("league")) != "college-football":
-            raise FinalizePredictionValidationError(
-                f"Unexpected league for game_id={game_id}: "
-                f"{row.get('league')!r}"
-            )
-
-        for field in (
-            "game_date",
-            "game_time",
-            "away_projected_pts",
-            "home_projected_pts",
-            "total_projected_pts",
-        ):
-            if text(row.get(field)):
-                raise FinalizePredictionValidationError(
-                    f"Clean-stage {field} must be blank "
-                    f"for game_id={game_id}"
-                )
-
-        percentage(
-            row.get("matchupQuality"),
-            label=f"matchupQuality for game_id={game_id}",
-        )
-
-        home_prob = probability(
-            row.get("home_prob"),
-            label=f"home_prob for game_id={game_id}",
-        )
-
-        away_prob = probability(
-            row.get("away_prob"),
-            label=f"away_prob for game_id={game_id}",
-        )
-
-        if (
-            home_prob
-            + away_prob
-            != Decimal("1.0000")
-        ):
-            raise FinalizePredictionValidationError(
-                "home_prob + away_prob must equal 1.0000 for "
-                f"game_id={game_id}: home={home_prob}, "
-                f"away={away_prob}"
-            )
-
-        tie_text = text(
-            row.get("tie_prob")
-        )
-
-        if tie_text:
-            probability(
-                tie_text,
-                label=f"tie_prob for game_id={game_id}",
-            )
-
-        home_ptdiff = finite_decimal(
-            row.get("home_PtDiff"),
-            label=f"home_PtDiff for game_id={game_id}",
-        )
-
-        away_ptdiff = finite_decimal(
-            row.get("away_PtDiff"),
-            label=f"away_PtDiff for game_id={game_id}",
-        )
-
-        mismatch = abs(
-            home_ptdiff
-            + away_ptdiff
-        )
-
-        if (
-            mismatch
-            > ESPN_MARGIN_SYMMETRY_TOLERANCE
-        ):
-            raise FinalizePredictionValidationError(
-                "ESPN point-differential asymmetry exceeds "
-                f"tolerance for game_id={game_id}: "
-                f"home={home_ptdiff}, away={away_ptdiff}, "
-                f"mismatch={mismatch}, "
-                f"tolerance={ESPN_MARGIN_SYMMETRY_TOLERANCE}"
-            )
-
-        finite_decimal(
-            row.get("home_rating"),
-            label=f"home_rating for game_id={game_id}",
-        )
-
-        finite_decimal(
-            row.get("away_rating"),
-            label=f"away_rating for game_id={game_id}",
-        )
-
-        margins[game_id] = mismatch
+    _stage2_validate_clean_rows_block_01()
 
     if seen != set(schedule):
         raise FinalizePredictionValidationError(
@@ -729,11 +732,39 @@ def validate_final_rows(
     week: int,
     schedule: dict[str, dict[str, str]],
 ) -> None:
-    if len(rows) != len(schedule):
-        raise FinalizePredictionValidationError(
-            "Final prediction row-count mismatch: "
-            f"expected={len(schedule)}, actual={len(rows)}"
-        )
+    def _stage2_validate_final_rows_block_04() -> None:
+        if list(row.keys()) != OUT_HEADERS:
+            raise FinalizePredictionValidationError(
+                f"Final prediction schema mismatch at row {row_number}"
+            )
+
+    def _stage2_validate_final_rows_block_03() -> None:
+        if (
+            text(row.get("sport"))
+            != "football"
+            or text(row.get("league"))
+            != "college-football"
+        ):
+            raise FinalizePredictionValidationError(
+                "Final sport/league mismatch "
+                f"for game_id={game_id}"
+            )
+
+    def _stage2_validate_final_rows_block_02() -> None:
+        if seen != set(schedule):
+            raise FinalizePredictionValidationError(
+                "Final prediction game coverage does not "
+                "match target schedule"
+            )
+
+    def _stage2_validate_final_rows_block_01() -> None:
+        if len(rows) != len(schedule):
+            raise FinalizePredictionValidationError(
+                "Final prediction row-count mismatch: "
+                f"expected={len(schedule)}, actual={len(rows)}"
+            )
+
+    _stage2_validate_final_rows_block_01()
 
     seen: set[str] = set()
 
@@ -741,10 +772,7 @@ def validate_final_rows(
         rows,
         start=2,
     ):
-        if list(row.keys()) != OUT_HEADERS:
-            raise FinalizePredictionValidationError(
-                f"Final prediction schema mismatch at row {row_number}"
-            )
+        _stage2_validate_final_rows_block_04()
 
         game_id = str(
             positive_int(
@@ -962,22 +990,9 @@ def validate_final_rows(
                         f"actual={text(row.get(field))!r}"
                     )
 
-        if (
-            text(row.get("sport"))
-            != "football"
-            or text(row.get("league"))
-            != "college-football"
-        ):
-            raise FinalizePredictionValidationError(
-                "Final sport/league mismatch "
-                f"for game_id={game_id}"
-            )
+        _stage2_validate_final_rows_block_03()
 
-    if seen != set(schedule):
-        raise FinalizePredictionValidationError(
-            "Final prediction game coverage does not "
-            "match target schedule"
-        )
+    _stage2_validate_final_rows_block_02()
 
 
 def read_staged_rows(

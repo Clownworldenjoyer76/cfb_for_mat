@@ -906,6 +906,200 @@ def validate_graded_file(
     season: int,
     season_type: int,
 ) -> dict[str, float | int]:
+    def _stage2_validate_graded_file_block_01() -> None:
+        for row_number, (_, row) in enumerate(
+            df.iterrows(),
+            start=2,
+        ):
+            game_id = row[
+                "game_id"
+            ]
+
+            row_label = (
+                f"{path}: line {row_number} "
+                f"game_id={game_id}"
+            )
+
+            row_season = required_int(
+                row.get("season"),
+                f"{row_label}: season",
+            )
+
+            row_season_type = required_int(
+                row.get("season_type"),
+                f"{row_label}: season_type",
+            )
+
+            row_week = required_int(
+                row.get("week"),
+                f"{row_label}: week",
+            )
+
+            if row_season != season:
+                fail(
+                    f"{row_label}: expected "
+                    f"season={season}; found "
+                    f"{row_season}"
+                )
+
+            if row_season_type != season_type:
+                fail(
+                    f"{row_label}: expected "
+                    f"season_type={season_type}; "
+                    f"found {row_season_type}"
+                )
+
+            if row_week != filename_week:
+                fail(
+                    f"{row_label}: filename "
+                    f"week={filename_week} does not "
+                    f"match row week={row_week}"
+                )
+
+            if (
+                not clean(
+                    row.get("away_team")
+                )
+                or not clean(
+                    row.get("home_team")
+                )
+            ):
+                fail(
+                    f"{row_label}: away_team and "
+                    "home_team are required"
+                )
+
+            strict_flag(
+                row.get("final_completed"),
+                f"{row_label}: final_completed",
+            )
+
+            grades: list[str] = []
+            selected_count = 0
+            selected_units = 0.0
+
+            for market_type in MARKETS:
+                (
+                    selected,
+                    grade,
+                    _,
+                ) = validate_market(
+                    row,
+                    market_type,
+                    game_id,
+                )
+
+                grades.append(
+                    grade
+                )
+
+                if selected:
+                    selected_count += 1
+
+                    prefix = MARKETS[
+                        market_type
+                    ][
+                        "prefix"
+                    ]
+
+                    units = optional_float(
+                        row.get(
+                            f"{prefix}_profit_units",
+                            "",
+                        )
+                    )
+
+                    if units is not None:
+                        selected_units += units
+
+            derived = {
+                "selected_bets":
+                    selected_count,
+                "graded_bets":
+                    sum(
+                        grade in SETTLED_GRADES
+                        for grade in grades
+                    ),
+                "wins":
+                    grades.count("Win"),
+                "losses":
+                    grades.count("Loss"),
+                "pushes":
+                    grades.count("Push"),
+                "voids":
+                    grades.count("Void"),
+                "pending_bets":
+                    sum(
+                        grade in PENDING_GRADES
+                        for grade in grades
+                    ),
+            }
+
+            for column, expected in derived.items():
+                actual = validate_nonnegative_int(
+                    row.get(column),
+                    f"{row_label}: {column}",
+                )
+
+                if actual != expected:
+                    fail(
+                        f"{row_label}: grader "
+                        f"{column}={actual} does not "
+                        "match market grades="
+                        f"{expected}"
+                    )
+
+                totals[
+                    column
+                ] = (
+                    int(
+                        totals[
+                            column
+                        ]
+                    )
+                    + actual
+                )
+
+            grader_units = required_float(
+                row.get("net_units"),
+                f"{row_label}: net_units",
+            )
+
+            # grade_picks.py publishes each game's net_units
+            # rounded to six decimal places. Validate against
+            # that published precision, while retaining the
+            # unrounded market-level units for season totals.
+            expected_game_units = round(
+                selected_units,
+                6,
+            )
+
+            if not math.isclose(
+                grader_units,
+                expected_game_units,
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            ):
+                fail(
+                    f"{row_label}: grader "
+                    f"net_units={grader_units} "
+                    "does not match selected market units "
+                    "rounded to 6 decimals="
+                    f"{expected_game_units} "
+                    f"(raw={selected_units})"
+                )
+
+            totals[
+                "net_units"
+            ] = (
+                float(
+                    totals[
+                        "net_units"
+                    ]
+                )
+                + selected_units
+            )
+
     df["game_id"] = df[
         "game_id"
     ].map(
@@ -957,198 +1151,7 @@ def validate_graded_file(
         "net_units": 0.0,
     }
 
-    for row_number, (_, row) in enumerate(
-        df.iterrows(),
-        start=2,
-    ):
-        game_id = row[
-            "game_id"
-        ]
-
-        row_label = (
-            f"{path}: line {row_number} "
-            f"game_id={game_id}"
-        )
-
-        row_season = required_int(
-            row.get("season"),
-            f"{row_label}: season",
-        )
-
-        row_season_type = required_int(
-            row.get("season_type"),
-            f"{row_label}: season_type",
-        )
-
-        row_week = required_int(
-            row.get("week"),
-            f"{row_label}: week",
-        )
-
-        if row_season != season:
-            fail(
-                f"{row_label}: expected "
-                f"season={season}; found "
-                f"{row_season}"
-            )
-
-        if row_season_type != season_type:
-            fail(
-                f"{row_label}: expected "
-                f"season_type={season_type}; "
-                f"found {row_season_type}"
-            )
-
-        if row_week != filename_week:
-            fail(
-                f"{row_label}: filename "
-                f"week={filename_week} does not "
-                f"match row week={row_week}"
-            )
-
-        if (
-            not clean(
-                row.get("away_team")
-            )
-            or not clean(
-                row.get("home_team")
-            )
-        ):
-            fail(
-                f"{row_label}: away_team and "
-                "home_team are required"
-            )
-
-        strict_flag(
-            row.get("final_completed"),
-            f"{row_label}: final_completed",
-        )
-
-        grades: list[str] = []
-        selected_count = 0
-        selected_units = 0.0
-
-        for market_type in MARKETS:
-            (
-                selected,
-                grade,
-                _,
-            ) = validate_market(
-                row,
-                market_type,
-                game_id,
-            )
-
-            grades.append(
-                grade
-            )
-
-            if selected:
-                selected_count += 1
-
-                prefix = MARKETS[
-                    market_type
-                ][
-                    "prefix"
-                ]
-
-                units = optional_float(
-                    row.get(
-                        f"{prefix}_profit_units",
-                        "",
-                    )
-                )
-
-                if units is not None:
-                    selected_units += units
-
-        derived = {
-            "selected_bets":
-                selected_count,
-            "graded_bets":
-                sum(
-                    grade in SETTLED_GRADES
-                    for grade in grades
-                ),
-            "wins":
-                grades.count("Win"),
-            "losses":
-                grades.count("Loss"),
-            "pushes":
-                grades.count("Push"),
-            "voids":
-                grades.count("Void"),
-            "pending_bets":
-                sum(
-                    grade in PENDING_GRADES
-                    for grade in grades
-                ),
-        }
-
-        for column, expected in derived.items():
-            actual = validate_nonnegative_int(
-                row.get(column),
-                f"{row_label}: {column}",
-            )
-
-            if actual != expected:
-                fail(
-                    f"{row_label}: grader "
-                    f"{column}={actual} does not "
-                    "match market grades="
-                    f"{expected}"
-                )
-
-            totals[
-                column
-            ] = (
-                int(
-                    totals[
-                        column
-                    ]
-                )
-                + actual
-            )
-
-        grader_units = required_float(
-            row.get("net_units"),
-            f"{row_label}: net_units",
-        )
-
-        # grade_picks.py publishes each game's net_units
-        # rounded to six decimal places. Validate against
-        # that published precision, while retaining the
-        # unrounded market-level units for season totals.
-        expected_game_units = round(
-            selected_units,
-            6,
-        )
-
-        if not math.isclose(
-            grader_units,
-            expected_game_units,
-            rel_tol=0.0,
-            abs_tol=1e-12,
-        ):
-            fail(
-                f"{row_label}: grader "
-                f"net_units={grader_units} "
-                "does not match selected market units "
-                "rounded to 6 decimals="
-                f"{expected_game_units} "
-                f"(raw={selected_units})"
-            )
-
-        totals[
-            "net_units"
-        ] = (
-            float(
-                totals[
-                    "net_units"
-                ]
-            )
-            + selected_units
-        )
+    _stage2_validate_graded_file_block_01()
 
     return totals
 

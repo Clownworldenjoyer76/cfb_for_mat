@@ -381,6 +381,77 @@ def resolve_target(
 def validate_args(
     args: argparse.Namespace,
 ) -> None:
+    def _stage2_validate_args_block_01() -> None:
+        if any(
+            not math.isfinite(
+                float(
+                    weight
+                )
+            )
+            or weight < 0
+            for weight in margin_weights
+        ):
+            raise ValueError(
+                "Margin component weights must be "
+                "finite and non-negative"
+            )
+
+        if sum(
+            margin_weights
+        ) <= 0:
+            raise ValueError(
+                "At least one margin component "
+                "weight must be positive"
+            )
+
+        if (
+            not math.isfinite(
+                float(
+                    args.market_total_weight
+                )
+            )
+            or not (
+                0.0
+                <= args.market_total_weight
+                <= 1.0
+            )
+        ):
+            raise ValueError(
+                "--market-total-weight must be "
+                "between 0 and 1"
+            )
+
+        if (
+            not math.isfinite(
+                float(
+                    args.margin_sd
+                )
+            )
+            or args.margin_sd <= 0
+        ):
+            raise ValueError(
+                "--margin-sd must be a finite "
+                "value greater than 0"
+            )
+
+        if (
+            not math.isfinite(
+                float(
+                    args.total_sd
+                )
+            )
+            or args.total_sd <= 0
+        ):
+            raise ValueError(
+                "--total-sd must be a finite "
+                "value greater than 0"
+            )
+
+        if args.fresh_injury_days < 0:
+            raise ValueError(
+                "--fresh-injury-days must be non-negative"
+            )
+
     if (
         args.week is not None
         and args.week <= 1
@@ -426,75 +497,7 @@ def validate_args(
         args.prior_margin_weight,
     ]
 
-    if any(
-        not math.isfinite(
-            float(
-                weight
-            )
-        )
-        or weight < 0
-        for weight in margin_weights
-    ):
-        raise ValueError(
-            "Margin component weights must be "
-            "finite and non-negative"
-        )
-
-    if sum(
-        margin_weights
-    ) <= 0:
-        raise ValueError(
-            "At least one margin component "
-            "weight must be positive"
-        )
-
-    if (
-        not math.isfinite(
-            float(
-                args.market_total_weight
-            )
-        )
-        or not (
-            0.0
-            <= args.market_total_weight
-            <= 1.0
-        )
-    ):
-        raise ValueError(
-            "--market-total-weight must be "
-            "between 0 and 1"
-        )
-
-    if (
-        not math.isfinite(
-            float(
-                args.margin_sd
-            )
-        )
-        or args.margin_sd <= 0
-    ):
-        raise ValueError(
-            "--margin-sd must be a finite "
-            "value greater than 0"
-        )
-
-    if (
-        not math.isfinite(
-            float(
-                args.total_sd
-            )
-        )
-        or args.total_sd <= 0
-    ):
-        raise ValueError(
-            "--total-sd must be a finite "
-            "value greater than 0"
-        )
-
-    if args.fresh_injury_days < 0:
-        raise ValueError(
-            "--fresh-injury-days must be non-negative"
-        )
+    _stage2_validate_args_block_01()
 
 
 def normalized_game_ids(

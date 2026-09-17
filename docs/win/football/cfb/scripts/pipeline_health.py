@@ -271,64 +271,7 @@ def validate_stage(
     season_type: int,
     week: int,
 ) -> tuple[dict[str, Any], list[dict]]:
-    state = read_csv_state(path)
-
-    stage = {
-        "name": STAGE_NAMES[key],
-        "path": str(path),
-        "exists": state["exists"],
-        "status": "STATUS: MISSING",
-    }
-
-    if not state["exists"]:
-        return stage, []
-
-    if state["error"]:
-        stage["status"] = "STATUS: INVALID"
-        stage["error"] = state["error"]
-        return stage, []
-
-    fields = set(state["fields"])
-    rows = state["rows"]
-
-    required = {"season", "game_id"}
-
-    if key != "all_games":
-        required.add("season_type")
-
-    if key != "season_schedule":
-        required.add("week")
-
-    if key == "weekly_schedule":
-        required.update(
-            {"away_team", "home_team", "odds_available"}
-        )
-
-    if key in {"selected", "locked"}:
-        required.update(
-            {"ml_selected", "spread_selected", "total_selected"}
-        )
-
-    missing = required - fields
-
-    if missing:
-        stage["status"] = "STATUS: INVALID"
-        stage["error"] = (
-            "missing required columns: "
-            + ", ".join(sorted(missing))
-        )
-        return stage, []
-
-    allow_header_only = key in {"selected", "locked"}
-
-    if not rows and not allow_header_only:
-        stage["status"] = "STATUS: INVALID"
-        stage["error"] = "contains no data rows"
-        return stage, []
-
-    seen: set[str] = set()
-
-    try:
+    def _stage2_validate_stage_block_02() -> None:
         for line, row in enumerate(rows, start=2):
             row_season = parse_int(
                 row.get("season"),
@@ -398,6 +341,69 @@ def validate_stage(
                         row.get(flag),
                         f"{path} line {line}: {flag}",
                     )
+
+    def _stage2_validate_stage_block_01() -> None:
+        if key != "all_games":
+            required.add("season_type")
+
+        if key != "season_schedule":
+            required.add("week")
+
+        if key == "weekly_schedule":
+            required.update(
+                {"away_team", "home_team", "odds_available"}
+            )
+
+        if key in {"selected", "locked"}:
+            required.update(
+                {"ml_selected", "spread_selected", "total_selected"}
+            )
+
+    state = read_csv_state(path)
+
+    stage = {
+        "name": STAGE_NAMES[key],
+        "path": str(path),
+        "exists": state["exists"],
+        "status": "STATUS: MISSING",
+    }
+
+    if not state["exists"]:
+        return stage, []
+
+    if state["error"]:
+        stage["status"] = "STATUS: INVALID"
+        stage["error"] = state["error"]
+        return stage, []
+
+    fields = set(state["fields"])
+    rows = state["rows"]
+
+    required = {"season", "game_id"}
+
+    _stage2_validate_stage_block_01()
+
+    missing = required - fields
+
+    if missing:
+        stage["status"] = "STATUS: INVALID"
+        stage["error"] = (
+            "missing required columns: "
+            + ", ".join(sorted(missing))
+        )
+        return stage, []
+
+    allow_header_only = key in {"selected", "locked"}
+
+    if not rows and not allow_header_only:
+        stage["status"] = "STATUS: INVALID"
+        stage["error"] = "contains no data rows"
+        return stage, []
+
+    seen: set[str] = set()
+
+    try:
+        _stage2_validate_stage_block_02()
 
     except Exception as exc:
         stage["status"] = "STATUS: INVALID"

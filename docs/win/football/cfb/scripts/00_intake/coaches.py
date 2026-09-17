@@ -787,17 +787,45 @@ def validate_final_rows(
     *,
     teams: list[tuple[str, str]],
 ) -> None:
-    if not rows:
-        raise ValueError("Coaches output would be empty")
+    def _stage2_validate_final_rows_block_04() -> None:
+        if not coach_id.isdigit() or int(coach_id) <= 0:
+            raise ValueError(
+                "Coaches output contains invalid coach id for "
+                f"team_id={team_id}: {coach_id!r}"
+            )
+
+    def _stage2_validate_final_rows_block_03() -> None:
+        if seen_team_ids != expected_team_ids:
+            missing = sorted(
+                expected_team_ids - seen_team_ids,
+                key=int,
+            )
+            foreign = sorted(
+                seen_team_ids - expected_team_ids,
+                key=int,
+            )
+            raise ValueError(
+                "Coaches output team coverage mismatch. "
+                f"missing={missing[:50]}, foreign={foreign[:50]}"
+            )
+
+    def _stage2_validate_final_rows_block_02() -> None:
+        if len(rows) != len(expected_team_ids):
+            raise ValueError(
+                "Coaches row count does not match authoritative team count: "
+                f"rows={len(rows)}, teams={len(expected_team_ids)}"
+            )
+
+    def _stage2_validate_final_rows_block_01() -> None:
+        if not rows:
+            raise ValueError("Coaches output would be empty")
+
+    _stage2_validate_final_rows_block_01()
 
     expected_by_team = dict(teams)
     expected_team_ids = set(expected_by_team)
 
-    if len(rows) != len(expected_team_ids):
-        raise ValueError(
-            "Coaches row count does not match authoritative team count: "
-            f"rows={len(rows)}, teams={len(expected_team_ids)}"
-        )
+    _stage2_validate_final_rows_block_02()
 
     seen_team_ids: set[str] = set()
     coach_team_assignments: dict[str, str] = {}
@@ -826,11 +854,7 @@ def validate_final_rows(
             raise ValueError(
                 f"Coaches output contains blank coach id for team_id={team_id}"
             )
-        if not coach_id.isdigit() or int(coach_id) <= 0:
-            raise ValueError(
-                "Coaches output contains invalid coach id for "
-                f"team_id={team_id}: {coach_id!r}"
-            )
+        _stage2_validate_final_rows_block_04()
         if not name:
             raise ValueError(
                 f"Coaches output contains blank coach name for team_id={team_id}"
@@ -848,19 +872,7 @@ def validate_final_rows(
         seen_team_ids.add(team_id)
         coach_team_assignments[coach_id] = team_id
 
-    if seen_team_ids != expected_team_ids:
-        missing = sorted(
-            expected_team_ids - seen_team_ids,
-            key=int,
-        )
-        foreign = sorted(
-            seen_team_ids - expected_team_ids,
-            key=int,
-        )
-        raise ValueError(
-            "Coaches output team coverage mismatch. "
-            f"missing={missing[:50]}, foreign={foreign[:50]}"
-        )
+    _stage2_validate_final_rows_block_03()
 
 
 def temporary_path(final_path: Path) -> Path:

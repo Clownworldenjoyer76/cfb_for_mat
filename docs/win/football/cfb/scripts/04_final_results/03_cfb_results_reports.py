@@ -248,6 +248,18 @@ def validate_input(
     season: int,
     season_type: int,
 ) -> None:
+    def _stage2_validate_input_block_01() -> None:
+        if result in SETTLED_RESULTS:
+            required_float(
+                units,
+                f"work_cfb.csv line {line}: bet_units",
+            )
+        elif units:
+            required_float(
+                units,
+                f"work_cfb.csv line {line}: bet_units",
+            )
+
     required = [
         "season",
         "season_type",
@@ -389,16 +401,7 @@ def validate_input(
 
         units = clean(row["bet_units"])
 
-        if result in SETTLED_RESULTS:
-            required_float(
-                units,
-                f"work_cfb.csv line {line}: bet_units",
-            )
-        elif units:
-            required_float(
-                units,
-                f"work_cfb.csv line {line}: bet_units",
-            )
+        _stage2_validate_input_block_01()
 
         key = (
             row_season,
