@@ -2184,8 +2184,9 @@ def qualification_failures(
             "model_probability_range"
         )
 
-    if market_name == "spread":
-        if (
+    if (
+        market_name == "spread"
+        and (
             abs(
                 item[
                     "line"
@@ -2194,13 +2195,15 @@ def qualification_failures(
             > market_cfg[
                 "max_spread_abs"
             ]
-        ):
-            failures.append(
-                "max_spread_abs"
-            )
+        )
+    ):
+        failures.append(
+            "max_spread_abs"
+        )
 
-    if market_name == "total":
-        if not (
+    if (
+        market_name == "total"
+        and not (
             market_cfg[
                 "min_total"
             ]
@@ -2210,10 +2213,11 @@ def qualification_failures(
             <= market_cfg[
                 "max_total"
             ]
-        ):
-            failures.append(
-                "total_range"
-            )
+        )
+    ):
+        failures.append(
+            "total_range"
+        )
 
     for (
         band_name,

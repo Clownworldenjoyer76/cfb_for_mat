@@ -1679,12 +1679,12 @@ def publish_atomic(
             canonical_by_id=canonical_by_id,
         )
 
-        if output_path.exists():
-            if (
-                output_path.read_bytes()
-                == temp_path.read_bytes()
-            ):
-                return False
+        if (
+            output_path.exists()
+            and output_path.read_bytes()
+            == temp_path.read_bytes()
+        ):
+            return False
 
         os.replace(
             temp_path,

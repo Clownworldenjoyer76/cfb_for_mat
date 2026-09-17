@@ -353,12 +353,14 @@ def _coerce_boolean_series(
         ):
             return bool(value)
 
-        if isinstance(
-            value,
-            (int, np.integer),
+        if (
+            isinstance(
+                value,
+                (int, np.integer),
+            )
+            and int(value) in {0, 1}
         ):
-            if int(value) in {0, 1}:
-                return bool(int(value))
+            return bool(int(value))
 
         if isinstance(
             value,

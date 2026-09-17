@@ -575,9 +575,12 @@ def publish_atomic(
             authoritative_team_ids=authoritative_team_ids,
         )
 
-        if OUTPUT_PATH.exists():
-            if OUTPUT_PATH.read_bytes() == temp_path.read_bytes():
-                return False
+        if (
+            OUTPUT_PATH.exists()
+            and OUTPUT_PATH.read_bytes()
+            == temp_path.read_bytes()
+        ):
+            return False
 
         os.replace(temp_path, OUTPUT_PATH)
         return True

@@ -1450,12 +1450,12 @@ def publish_atomic(
             week=week,
         )
 
-        if final_path.exists():
-            if (
-                final_path.read_bytes()
-                == temp_path.read_bytes()
-            ):
-                return False
+        if (
+            final_path.exists()
+            and final_path.read_bytes()
+            == temp_path.read_bytes()
+        ):
+            return False
 
         os.replace(
             temp_path,

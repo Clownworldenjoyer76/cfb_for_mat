@@ -1412,24 +1412,26 @@ def select_kickoff_timestep(
     ][0]
 
     if (
-        kickoff_utc < first_time
-        or kickoff_utc > last_time
-    ):
-        if (
+        (
+            kickoff_utc < first_time
+            or kickoff_utc > last_time
+        )
+        and (
             offset_seconds
             > tolerance_seconds
-        ):
-            return TimestepResult(
-                status=(
-                    "outside_forecast_range"
-                ),
-                offset_seconds=(
-                    offset_seconds
-                ),
-                cadence_seconds=(
-                    cadence_seconds
-                ),
-            )
+        )
+    ):
+        return TimestepResult(
+            status=(
+                "outside_forecast_range"
+            ),
+            offset_seconds=(
+                offset_seconds
+            ),
+            cadence_seconds=(
+                cadence_seconds
+            ),
+        )
 
     if (
         offset_seconds
