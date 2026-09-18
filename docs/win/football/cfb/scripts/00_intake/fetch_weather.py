@@ -36,6 +36,7 @@ CFB_ROOT = SCRIPT_PATH.parents[2]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from http_security import open_https
 from pipeline_reporter import PipelineReporter
 
 CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -51,6 +52,7 @@ METNO_URL = (
     "https://api.met.no/weatherapi/"
     "locationforecast/2.0/complete"
 )
+METNO_HOST = "api.met.no"
 
 METNO_USER_AGENT = os.environ.get(
     "METNO_USER_AGENT",
@@ -1162,8 +1164,9 @@ def fetch_weather_json(
     )
 
     try:
-        with urllib.request.urlopen(
+        with open_https(
             request,
+            allowed_hosts={METNO_HOST},
             timeout=REQUEST_TIMEOUT,
         ) as response:
             http_status = int(

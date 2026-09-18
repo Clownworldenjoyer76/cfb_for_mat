@@ -61,6 +61,7 @@ if str(SCRIPTS_DIR) not in sys.path:
         str(SCRIPTS_DIR),
     )
 
+from http_security import open_https
 from pipeline_reporter import PipelineReporter
 
 
@@ -73,6 +74,7 @@ SUMMARY_URL_TEMPLATE = (
     "sports/football/college-football/"
     "summary?event={game_id}"
 )
+ESPN_SITE_HOST = "site.api.espn.com"
 
 DEFAULT_WORKERS = 6
 
@@ -191,8 +193,9 @@ def fetch_json(
         },
     )
 
-    with urllib.request.urlopen(
+    with open_https(
         request,
+        allowed_hosts={ESPN_SITE_HOST},
         timeout=timeout,
     ) as response:
         return json.loads(

@@ -28,7 +28,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.request import Request
 
 import yaml
 
@@ -40,6 +40,7 @@ CFB_ROOT = SCRIPT_PATH.parents[2]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from http_security import open_https
 from pipeline_reporter import PipelineReporter
 
 
@@ -336,6 +337,12 @@ def validate_espn_core_url(
             f"{label} has unexpected host: {text!r}"
         )
 
+    if parsed.scheme == "http":
+        parsed = parsed._replace(
+            scheme="https"
+        )
+        return parsed.geturl()
+
     return text
 
 
@@ -363,8 +370,9 @@ def fetch_json(
     )
 
     try:
-        with urlopen(
+        with open_https(
             request,
+            allowed_hosts={ESPN_CORE_HOST},
             timeout=timeout,
         ) as response:
             status = response.status

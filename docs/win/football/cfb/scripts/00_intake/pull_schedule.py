@@ -24,6 +24,7 @@ CFB_DIR = SCRIPT_PATH.parents[2]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from http_security import open_https
 from pipeline_reporter import PipelineReporter
 
 
@@ -58,6 +59,8 @@ REPORT_ROOT = (
     CFB_DIR
     / "errors"
 )
+
+ESPN_SITE_HOST = "site.api.espn.com"
 
 TEAM_MAP_REQUIRED_COLUMNS = {
     "team_id",
@@ -495,8 +498,9 @@ def fetch_schedule(
     )
 
     try:
-        with urllib.request.urlopen(
+        with open_https(
             request,
+            allowed_hosts={ESPN_SITE_HOST},
             timeout=30,
         ) as response:
             payload = json.loads(

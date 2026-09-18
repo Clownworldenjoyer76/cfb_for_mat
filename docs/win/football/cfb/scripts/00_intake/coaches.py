@@ -24,7 +24,7 @@ import uuid
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import Request
 
 import yaml
 
@@ -36,6 +36,7 @@ CFB_ROOT = SCRIPT_PATH.parents[2]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from http_security import open_https
 from pipeline_reporter import PipelineReporter
 
 
@@ -279,7 +280,11 @@ def fetch_json(
     )
 
     try:
-        with urlopen(request, timeout=timeout) as response:
+        with open_https(
+            request,
+            allowed_hosts={ESPN_CORE_HOST},
+            timeout=timeout,
+        ) as response:
             status = response.status
             body = response.read().decode("utf-8")
     except HTTPError as exc:

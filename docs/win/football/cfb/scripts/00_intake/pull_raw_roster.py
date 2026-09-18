@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.request import Request
 
 import yaml
 
@@ -37,6 +37,7 @@ CFB_ROOT = SCRIPT_PATH.parents[2]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from http_security import open_https
 from pipeline_reporter import PipelineReporter
 
 
@@ -71,6 +72,7 @@ ROSTER_URL_TEMPLATE = (
     "sports/football/college-football/"
     "teams/{team_id}/roster"
 )
+ESPN_SITE_HOST = "site.api.espn.com"
 
 REQUIRED_OUTPUT_COLUMNS = [
     "season",
@@ -306,8 +308,9 @@ def fetch_json(
     )
 
     try:
-        with urlopen(
+        with open_https(
             request,
+            allowed_hosts={ESPN_SITE_HOST},
             timeout=timeout,
         ) as response:
             status = response.status
