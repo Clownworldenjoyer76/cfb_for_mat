@@ -1079,7 +1079,10 @@ def validate_staged_output(
                 row.get("tie_prob")
             )
 
-            _stage2_validate_staged_output_block_03()
+            _stage2_validate_staged_output_block_03(
+                tie_value,
+                game_id,
+            )
 
             for field in (
                 "matchupQuality",
@@ -1109,7 +1112,10 @@ def validate_staged_output(
                         f"for game_id={game_id}"
                     )
 
-    def _stage2_validate_staged_output_block_03() -> None:
+    def _stage2_validate_staged_output_block_03(
+        tie_value: str,
+        game_id: str,
+    ) -> None:
         if tie_value:
             tie_prob = finite_decimal(
                 tie_value,
