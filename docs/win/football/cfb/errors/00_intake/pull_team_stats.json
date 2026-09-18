@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35230860400-attempt-1",
+  "run_id": "github-35339376414-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "pull_team_stats.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_team_stats.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_team_stats.json",
-  "started_at_utc": "2026-09-17T14:03:00.166689+00:00",
-  "finished_at_utc": "2026-09-17T14:03:00.779536+00:00",
-  "duration_seconds": 0.613,
+  "started_at_utc": "2026-09-18T11:24:39.638543+00:00",
+  "finished_at_utc": "2026-09-18T11:24:40.137601+00:00",
+  "duration_seconds": 0.499,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2411,
+    "process_id": 2199,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35230860400",
+    "github_run_id": "35339376414",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "c40365f09a2a9d7366274174e96af1b3ece2c5f4",
+    "github_sha": "f10080101d10091ee09f699f324d74ea05b8f2c7",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -40,8 +40,8 @@
   "outputs": [
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/team_stats/2026_team_stats.csv"
   ],
-  "rows_in": 31534,
-  "rows_out": 358,
+  "rows_in": 31705,
+  "rows_out": 360,
   "warning_count": 0,
   "error_count": 0,
   "warnings": [],
@@ -50,17 +50,19 @@
     "explicit_pbp_path": false,
     "output_modified": true,
     "pbp_columns": 476,
-    "games_in_input": 185,
+    "games_in_input": 186,
     "weeks_in_input": [
       1,
-      2
+      2,
+      3
     ],
     "output_columns": 27,
-    "team_week_rows": 358,
+    "team_week_rows": 360,
     "teams_in_output": 218,
     "weeks_in_output": [
       1,
-      2
+      2,
+      3
     ]
   }
 }
