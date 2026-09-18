@@ -32,6 +32,7 @@ import re
 import sys
 import urllib.parse
 import uuid
+from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -124,16 +125,20 @@ UNRESOLVED_TEAM_NAMES = {
     "to be determined",
 }
 
-_REQUEST_COUNT = 0
-_REQUEST_SUCCESS_COUNT = 0
-_REQUEST_FAILURES: list[dict[str, object]] = []
-
-_PREDICTOR_RESPONSE_COUNT = 0
-_COMPLETE_GAME_COUNT = 0
-_INCOMPLETE_DETAILS: list[dict[str, object]] = []
-
-_DUPLICATE_GAME_SIDE_COUNT = 0
-_DUPLICATE_STAT_NAME_COUNT = 0
+@dataclass
+class RuntimeState:
+    request_count: int = 0
+    request_success_count: int = 0
+    request_failures: list[dict[str, object]] = field(
+        default_factory=list
+    )
+    predictor_response_count: int = 0
+    complete_game_count: int = 0
+    incomplete_details: list[dict[str, object]] = field(
+        default_factory=list
+    )
+    duplicate_game_side_count: int = 0
+    duplicate_stat_name_count: int = 0
 
 
 class PredictorValidationError(RuntimeError):
@@ -142,25 +147,6 @@ class PredictorValidationError(RuntimeError):
 
 class PredictorRequestError(RuntimeError):
     pass
-
-
-def reset_runtime_state() -> None:
-    global _REQUEST_COUNT
-    global _REQUEST_SUCCESS_COUNT
-    global _PREDICTOR_RESPONSE_COUNT
-    global _COMPLETE_GAME_COUNT
-    global _DUPLICATE_GAME_SIDE_COUNT
-    global _DUPLICATE_STAT_NAME_COUNT
-
-    _REQUEST_COUNT = 0
-    _REQUEST_SUCCESS_COUNT = 0
-    _PREDICTOR_RESPONSE_COUNT = 0
-    _COMPLETE_GAME_COUNT = 0
-    _DUPLICATE_GAME_SIDE_COUNT = 0
-    _DUPLICATE_STAT_NAME_COUNT = 0
-
-    _REQUEST_FAILURES.clear()
-    _INCOMPLETE_DETAILS.clear()
 
 
 def parse_positive_int(
@@ -562,6 +548,7 @@ def predictor_url(
 
 def request_failure(
     *,
+    state: RuntimeState,
     game_id: str,
     url: str,
     error: str,
@@ -578,7 +565,7 @@ def request_failure(
             "http_status"
         ] = http_status
 
-    _REQUEST_FAILURES.append(
+    state.request_failures.append(
         detail
     )
 
@@ -590,11 +577,9 @@ def request_failure(
 def fetch_predictor(
     game_id: str,
     *,
+    state: RuntimeState,
     timeout: int = 20,
 ) -> dict:
-    global _REQUEST_COUNT
-    global _REQUEST_SUCCESS_COUNT
-    global _PREDICTOR_RESPONSE_COUNT
 
     url = predictor_url(
         game_id
@@ -612,7 +597,7 @@ def fetch_predictor(
             f"Unexpected predictor URL: {url!r}"
         )
 
-    _REQUEST_COUNT += 1
+    state.request_count += 1
 
     request = Request(
         url,
@@ -651,6 +636,7 @@ def fetch_predictor(
             pass
 
         raise request_failure(
+            state=state,
             game_id=game_id,
             url=url,
             http_status=exc.code,
@@ -662,6 +648,7 @@ def fetch_predictor(
 
     except URLError as exc:
         raise request_failure(
+            state=state,
             game_id=game_id,
             url=url,
             error=str(exc),
@@ -669,6 +656,7 @@ def fetch_predictor(
 
     except Exception as exc:
         raise request_failure(
+            state=state,
             game_id=game_id,
             url=url,
             error=str(exc),
@@ -679,6 +667,7 @@ def fetch_predictor(
         or status >= 300
     ):
         raise request_failure(
+            state=state,
             game_id=game_id,
             url=url,
             http_status=status,
@@ -693,6 +682,7 @@ def fetch_predictor(
         )
     except Exception as exc:
         raise request_failure(
+            state=state,
             game_id=game_id,
             url=url,
             http_status=status,
@@ -706,6 +696,7 @@ def fetch_predictor(
         dict,
     ):
         raise request_failure(
+            state=state,
             game_id=game_id,
             url=url,
             http_status=status,
@@ -714,8 +705,8 @@ def fetch_predictor(
             ),
         )
 
-    _REQUEST_SUCCESS_COUNT += 1
-    _PREDICTOR_RESPONSE_COUNT += 1
+    state.request_success_count += 1
+    state.predictor_response_count += 1
 
     return payload
 
@@ -788,8 +779,8 @@ def parse_statistics(
     *,
     game_id: str,
     side: str,
+    state: RuntimeState,
 ) -> dict[str, str]:
-    global _DUPLICATE_STAT_NAME_COUNT
 
     statistics = side_data.get(
         "statistics"
@@ -838,7 +829,7 @@ def parse_statistics(
         )
 
         if name in stats:
-            _DUPLICATE_STAT_NAME_COUNT += 1
+            state.duplicate_stat_name_count += 1
 
             if stats[name] != value:
                 raise PredictorValidationError(
@@ -945,8 +936,8 @@ def validate_predictor_response(
     predictor: dict,
     *,
     target: dict[str, str],
+    state: RuntimeState,
 ) -> list[dict[str, str]]:
-    global _COMPLETE_GAME_COUNT
 
     game_id = target[
         "game_id"
@@ -1024,6 +1015,7 @@ def validate_predictor_response(
             side_data,
             game_id=game_id,
             side=side,
+            state=state,
         )
 
         row = {
@@ -1063,7 +1055,7 @@ def validate_predictor_response(
             f"for game_id={game_id}"
         )
 
-    _COMPLETE_GAME_COUNT += 1
+    state.complete_game_count += 1
 
     return rows
 
@@ -1075,8 +1067,8 @@ def validate_output_rows(
     season: int,
     season_type: int,
     week: int,
+    state: RuntimeState,
 ) -> None:
-    global _DUPLICATE_GAME_SIDE_COUNT
 
     def _stage2_validate_output_rows_block_03() -> None:
         if (
@@ -1286,7 +1278,7 @@ def validate_output_rows(
         )
 
         if side in game_sides:
-            _DUPLICATE_GAME_SIDE_COUNT += 1
+            state.duplicate_game_side_count += 1
 
             raise PredictorValidationError(
                 "Duplicate predictor game/side row: "
@@ -1493,6 +1485,7 @@ def publish_atomic(
 
 def update_report(
     report: PipelineReporter,
+    state: RuntimeState,
     *,
     schedule_path: Path | None,
     final_path: Path | None,
@@ -1511,37 +1504,37 @@ def update_report(
             else ""
         ),
         "target_game_count": target_count,
-        "espn_request_count": _REQUEST_COUNT,
+        "espn_request_count": state.request_count,
         "espn_request_success_count": (
-            _REQUEST_SUCCESS_COUNT
+            state.request_success_count
         ),
         "espn_request_failure_count": len(
-            _REQUEST_FAILURES
+            state.request_failures
         ),
         "espn_request_failures": (
-            _REQUEST_FAILURES
+            state.request_failures
         ),
         "predictor_response_count": (
-            _PREDICTOR_RESPONSE_COUNT
+            state.predictor_response_count
         ),
         "complete_game_count": (
-            _COMPLETE_GAME_COUNT
+            state.complete_game_count
         ),
         "incomplete_predictor_count": len(
-            _INCOMPLETE_DETAILS
+            state.incomplete_details
         ),
         "incomplete_predictor_details": (
-            _INCOMPLETE_DETAILS
+            state.incomplete_details
         ),
         "raw_rows_expected": expected_rows,
         "raw_rows_produced": len(
             rows
         ),
         "duplicate_game_side_count": (
-            _DUPLICATE_GAME_SIDE_COUNT
+            state.duplicate_game_side_count
         ),
         "duplicate_stat_name_count": (
-            _DUPLICATE_STAT_NAME_COUNT
+            state.duplicate_stat_name_count
         ),
         "output_columns": OUTPUT_HEADER,
         "output_path": (
@@ -1564,7 +1557,7 @@ def update_report(
 def run(
     report: PipelineReporter,
 ) -> int:
-    reset_runtime_state()
+    state = RuntimeState()
 
     season: int | None = None
     season_type: int | None = None
@@ -1636,11 +1629,12 @@ def run(
 
             try:
                 predictor = fetch_predictor(
-                    game_id
+                    game_id,
+                    state=state,
                 )
 
             except PredictorRequestError as exc:
-                _INCOMPLETE_DETAILS.append(
+                state.incomplete_details.append(
                     {
                         "game_id": game_id,
                         "kind": "request_failure",
@@ -1654,11 +1648,12 @@ def run(
                     validate_predictor_response(
                         predictor,
                         target=target,
+                        state=state,
                     )
                 )
 
             except PredictorValidationError as exc:
-                _INCOMPLETE_DETAILS.append(
+                state.incomplete_details.append(
                     {
                         "game_id": game_id,
                         "kind": "validation_failure",
@@ -1689,7 +1684,7 @@ def run(
             rows_out=len(rows),
         )
 
-        if _INCOMPLETE_DETAILS:
+        if state.incomplete_details:
             failed_game_ids = [
                 str(
                     detail[
@@ -1697,15 +1692,15 @@ def run(
                     ]
                 )
                 for detail
-                in _INCOMPLETE_DETAILS
+                in state.incomplete_details
             ]
 
             raise RuntimeError(
                 "Target ESPN predictor collection is incomplete; "
                 "refusing partial publication. "
                 f"target_games={len(targets)}, "
-                f"complete_games={_COMPLETE_GAME_COUNT}, "
-                f"failed_games={len(_INCOMPLETE_DETAILS)}, "
+                f"complete_games={state.complete_game_count}, "
+                f"failed_games={len(state.incomplete_details)}, "
                 f"game_ids={failed_game_ids[:50]}"
             )
 
@@ -1715,6 +1710,7 @@ def run(
             season=season,
             season_type=season_type,
             week=week,
+            state=state,
         )
 
         output_modified = (
@@ -1730,6 +1726,7 @@ def run(
 
         update_report(
             report,
+            state,
             schedule_path=schedule_path,
             final_path=final_path,
             target_count=len(
@@ -1763,6 +1760,7 @@ def run(
 
         update_report(
             report,
+            state,
             schedule_path=schedule_path,
             final_path=final_path,
             target_count=len(
