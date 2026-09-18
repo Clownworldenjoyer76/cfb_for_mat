@@ -24,6 +24,7 @@ import re
 import sys
 import urllib.parse
 import uuid
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -71,46 +72,34 @@ BASE_FIELDNAMES = [
     "fpi",
 ]
 
-_REQUEST_COUNT = 0
-_REQUEST_FAILURES: list[dict[str, str]] = []
-_PAGE_DIAGNOSTICS: list[dict[str, object]] = []
-_PROVIDER_PAGE_COUNT: int | None = None
-_PROVIDER_COUNT: int | None = None
-_RAW_ITEM_COUNT = 0
-_DUPLICATE_TEAM_RECORD_COUNT = 0
-_DUPLICATE_PREDICTIVE_NAME_COUNT = 0
-_MALFORMED_ITEM_COUNT = 0
-_PARSED_TEAM_IDS: set[str] = set()
-_PREDICTIVE_FIELDNAMES: set[str] = set()
-_LAST_UPDATED_VALUES: list[datetime] = []
+@dataclass
+class RuntimeState:
+    request_count: int = 0
+    request_failures: list[dict[str, str]] = field(
+        default_factory=list
+    )
+    page_diagnostics: list[dict[str, object]] = field(
+        default_factory=list
+    )
+    provider_page_count: int | None = None
+    provider_count: int | None = None
+    raw_item_count: int = 0
+    duplicate_team_record_count: int = 0
+    duplicate_predictive_name_count: int = 0
+    malformed_item_count: int = 0
+    parsed_team_ids: set[str] = field(
+        default_factory=set
+    )
+    predictive_fieldnames: set[str] = field(
+        default_factory=set
+    )
+    last_updated_values: list[datetime] = field(
+        default_factory=list
+    )
 
 
 class PowerIndexValidationError(RuntimeError):
     pass
-
-
-def reset_runtime_state() -> None:
-    global _REQUEST_COUNT
-    global _PROVIDER_PAGE_COUNT
-    global _PROVIDER_COUNT
-    global _RAW_ITEM_COUNT
-    global _DUPLICATE_TEAM_RECORD_COUNT
-    global _DUPLICATE_PREDICTIVE_NAME_COUNT
-    global _MALFORMED_ITEM_COUNT
-
-    _REQUEST_COUNT = 0
-    _PROVIDER_PAGE_COUNT = None
-    _PROVIDER_COUNT = None
-    _RAW_ITEM_COUNT = 0
-    _DUPLICATE_TEAM_RECORD_COUNT = 0
-    _DUPLICATE_PREDICTIVE_NAME_COUNT = 0
-    _MALFORMED_ITEM_COUNT = 0
-
-    _REQUEST_FAILURES.clear()
-    _PAGE_DIAGNOSTICS.clear()
-    _PARSED_TEAM_IDS.clear()
-    _PREDICTIVE_FIELDNAMES.clear()
-    _LAST_UPDATED_VALUES.clear()
 
 
 def parse_integer(
@@ -354,16 +343,16 @@ def fetch_json(
     url: str,
     *,
     label: str,
+    state: RuntimeState,
     timeout: int = 30,
 ) -> dict:
-    global _REQUEST_COUNT
 
     url = validate_espn_core_url(
         url,
         label=f"{label} URL",
     )
 
-    _REQUEST_COUNT += 1
+    state.request_count += 1
 
     request = Request(
         url,
@@ -402,7 +391,7 @@ def fetch_json(
             "error": error_body or str(exc),
         }
 
-        _REQUEST_FAILURES.append(failure)
+        state.request_failures.append(failure)
 
         raise RuntimeError(
             f"{label} request failed: "
@@ -418,7 +407,7 @@ def fetch_json(
             "error": str(exc),
         }
 
-        _REQUEST_FAILURES.append(failure)
+        state.request_failures.append(failure)
 
         raise RuntimeError(
             f"{label} request failed: {exc}"
@@ -432,7 +421,7 @@ def fetch_json(
             "error": str(exc),
         }
 
-        _REQUEST_FAILURES.append(failure)
+        state.request_failures.append(failure)
 
         raise RuntimeError(
             f"{label} request failed: {exc}"
@@ -446,7 +435,7 @@ def fetch_json(
             "error": body,
         }
 
-        _REQUEST_FAILURES.append(failure)
+        state.request_failures.append(failure)
 
         raise RuntimeError(
             f"{label} request failed: status={status}"
@@ -463,7 +452,7 @@ def fetch_json(
             "error": f"JSON parse failed: {exc}",
         }
 
-        _REQUEST_FAILURES.append(failure)
+        state.request_failures.append(failure)
 
         raise RuntimeError(
             f"{label} returned malformed JSON"
@@ -477,7 +466,7 @@ def fetch_json(
             "error": "JSON root is not an object",
         }
 
-        _REQUEST_FAILURES.append(failure)
+        state.request_failures.append(failure)
 
         raise RuntimeError(
             f"{label} returned non-object JSON"
@@ -527,6 +516,7 @@ def validate_collection_page(
     expected_page: int,
     expected_page_count: int | None,
     expected_count: int | None,
+    state: RuntimeState,
 ) -> tuple[
     list[dict],
     int,
@@ -635,7 +625,7 @@ def validate_collection_page(
             f"rows={len(items)}, pageSize={page_size}"
         )
 
-    _PAGE_DIAGNOSTICS.append(
+    state.page_diagnostics.append(
         {
             "page": expected_page,
             "rows": len(items),
@@ -652,10 +642,8 @@ def validate_collection_page(
 def fetch_all_items(
     *,
     season: int,
+    state: RuntimeState,
 ) -> list[dict]:
-    global _PROVIDER_PAGE_COUNT
-    global _PROVIDER_COUNT
-    global _RAW_ITEM_COUNT
 
     base_url = POWERINDEX_URL_TEMPLATE.format(
         season=season
@@ -669,6 +657,7 @@ def fetch_all_items(
     first_payload = fetch_json(
         first_url,
         label="team power index page 1",
+        state=state,
     )
 
     (
@@ -680,10 +669,11 @@ def fetch_all_items(
         expected_page=1,
         expected_page_count=None,
         expected_count=None,
+        state=state,
     )
 
-    _PROVIDER_PAGE_COUNT = page_count
-    _PROVIDER_COUNT = provider_count
+    state.provider_page_count = page_count
+    state.provider_count = provider_count
 
     all_items = list(first_items)
 
@@ -699,6 +689,7 @@ def fetch_all_items(
         page_payload = fetch_json(
             page_url,
             label=f"team power index page {page}",
+            state=state,
         )
 
         (
@@ -710,6 +701,7 @@ def fetch_all_items(
             expected_page=page,
             expected_page_count=page_count,
             expected_count=provider_count,
+            state=state,
         )
 
         if returned_page_count != page_count:
@@ -727,7 +719,7 @@ def fetch_all_items(
 
         all_items.extend(page_items)
 
-    _RAW_ITEM_COUNT = len(all_items)
+    state.raw_item_count = len(all_items)
 
     if not all_items:
         raise PowerIndexValidationError(
@@ -982,14 +974,12 @@ def parse_powerindex_item(
     *,
     item_index: int,
     season: int,
+    state: RuntimeState,
 ) -> tuple[
     dict[str, str],
     list[str],
 ]:
-    global _DUPLICATE_PREDICTIVE_NAME_COUNT
-
     def _stage3_parse_powerindex_item_block_01() -> None:
-        global _DUPLICATE_PREDICTIVE_NAME_COUNT
         nonlocal fpi_occurrences
         for predictive_index, stat in enumerate(
             predictives
@@ -1044,7 +1034,7 @@ def parse_powerindex_item(
             )
 
             if name_key in seen_predictives:
-                _DUPLICATE_PREDICTIVE_NAME_COUNT += 1
+                state.duplicate_predictive_name_count += 1
 
                 prior_name, prior_value = (
                     seen_predictives[name_key]
@@ -1173,7 +1163,7 @@ def parse_powerindex_item(
             f"Power-index item has no fpi value for team_id={team_id}"
         )
 
-    _LAST_UPDATED_VALUES.append(
+    state.last_updated_values.append(
         last_updated_dt
     )
 
@@ -1184,12 +1174,11 @@ def build_rows(
     items: list[dict],
     *,
     season: int,
+    state: RuntimeState,
 ) -> tuple[
     list[dict[str, str]],
     list[str],
 ]:
-    global _DUPLICATE_TEAM_RECORD_COUNT
-    global _MALFORMED_ITEM_COUNT
 
     rows_by_team_id: dict[
         str,
@@ -1208,7 +1197,7 @@ def build_rows(
         items
     ):
         if not isinstance(item, dict):
-            _MALFORMED_ITEM_COUNT += 1
+            state.malformed_item_count += 1
 
             raise PowerIndexValidationError(
                 "Power-index collection contains non-object "
@@ -1223,10 +1212,11 @@ def build_rows(
                 item,
                 item_index=item_index,
                 season=season,
+                state=state,
             )
 
         except Exception:
-            _MALFORMED_ITEM_COUNT += 1
+            state.malformed_item_count += 1
             raise
 
         team_id = row["team_id"]
@@ -1236,7 +1226,7 @@ def build_rows(
         )
 
         if prior_row is not None:
-            _DUPLICATE_TEAM_RECORD_COUNT += 1
+            state.duplicate_team_record_count += 1
 
             if prior_row != row:
                 raise PowerIndexValidationError(
@@ -1251,7 +1241,7 @@ def build_rows(
             team_id
         ] = row
 
-        _PARSED_TEAM_IDS.add(
+        state.parsed_team_ids.add(
             team_id
         )
 
@@ -1263,11 +1253,11 @@ def build_rows(
                 seen_fieldnames.add(
                     fieldname
                 )
-                _PREDICTIVE_FIELDNAMES.add(
+                state.predictive_fieldnames.add(
                     fieldname
                 )
 
-        _PREDICTIVE_FIELDNAMES.add(
+        state.predictive_fieldnames.add(
             "fpi"
         )
 
@@ -1596,21 +1586,23 @@ def publish_atomic(
             pass
 
 
-def provider_last_updated_range() -> tuple[
+def provider_last_updated_range(
+    state: RuntimeState,
+) -> tuple[
     str,
     str,
 ]:
-    if not _LAST_UPDATED_VALUES:
+    if not state.last_updated_values:
         return "", ""
 
     earliest = min(
-        _LAST_UPDATED_VALUES
+        state.last_updated_values
     ).astimezone(
         timezone.utc
     )
 
     latest = max(
-        _LAST_UPDATED_VALUES
+        state.last_updated_values
     ).astimezone(
         timezone.utc
     )
@@ -1623,6 +1615,7 @@ def provider_last_updated_range() -> tuple[
 
 def update_report_details(
     report: PipelineReporter,
+    state: RuntimeState,
     *,
     authoritative_team_ids: list[str],
     output_path: Path,
@@ -1675,34 +1668,36 @@ def update_report_details(
     (
         last_updated_min,
         last_updated_max,
-    ) = provider_last_updated_range()
+    ) = provider_last_updated_range(
+        state
+    )
 
     details: dict[str, object] = {
         "authoritative_team_count": len(
             authoritative_team_ids
         ),
-        "espn_page_count": _PROVIDER_PAGE_COUNT,
+        "espn_page_count": state.provider_page_count,
         "pages_validated": len(
-            _PAGE_DIAGNOSTICS
+            state.page_diagnostics
         ),
-        "page_diagnostics": _PAGE_DIAGNOSTICS,
-        "provider_reported_count": _PROVIDER_COUNT,
-        "espn_request_count": _REQUEST_COUNT,
+        "page_diagnostics": state.page_diagnostics,
+        "provider_reported_count": state.provider_count,
+        "espn_request_count": state.request_count,
         "espn_request_failure_count": len(
-            _REQUEST_FAILURES
+            state.request_failures
         ),
         "espn_request_failure_details": (
-            _REQUEST_FAILURES
+            state.request_failures
         ),
-        "raw_item_count": _RAW_ITEM_COUNT,
+        "raw_item_count": state.raw_item_count,
         "duplicate_team_record_count": (
-            _DUPLICATE_TEAM_RECORD_COUNT
+            state.duplicate_team_record_count
         ),
         "duplicate_predictive_name_count": (
-            _DUPLICATE_PREDICTIVE_NAME_COUNT
+            state.duplicate_predictive_name_count
         ),
         "malformed_item_count": (
-            _MALFORMED_ITEM_COUNT
+            state.malformed_item_count
         ),
         "skipped_item_count": 0,
         "represented_team_count": len(
@@ -1718,7 +1713,7 @@ def update_report_details(
         "foreign_team_ids": foreign,
         "fpi_coverage_count": fpi_coverage,
         "predictive_stat_column_count": len(
-            _PREDICTIVE_FIELDNAMES
+            state.predictive_fieldnames
         ),
         "output_column_count": len(
             fieldnames
@@ -1751,7 +1746,7 @@ def update_report_details(
 def run(
     report: PipelineReporter,
 ) -> int:
-    reset_runtime_state()
+    state = RuntimeState()
 
     (
         season,
@@ -1793,7 +1788,8 @@ def run(
 
     try:
         items = fetch_all_items(
-            season=season
+            season=season,
+            state=state,
         )
 
         (
@@ -1802,6 +1798,7 @@ def run(
         ) = build_rows(
             items,
             season=season,
+            state=state,
         )
 
         validate_rows(
@@ -1824,12 +1821,13 @@ def run(
         )
 
         report.set_rows(
-            rows_in=_RAW_ITEM_COUNT,
+            rows_in=state.raw_item_count,
             rows_out=len(rows),
         )
 
         update_report_details(
             report,
+            state,
             authoritative_team_ids=(
                 authoritative_team_ids
             ),
@@ -1843,12 +1841,13 @@ def run(
 
     except Exception:
         report.set_rows(
-            rows_in=_RAW_ITEM_COUNT,
+            rows_in=state.raw_item_count,
             rows_out=len(rows),
         )
 
         update_report_details(
             report,
+            state,
             authoritative_team_ids=(
                 authoritative_team_ids
             ),
