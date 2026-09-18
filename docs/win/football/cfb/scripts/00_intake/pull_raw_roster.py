@@ -21,6 +21,7 @@ import os
 import re
 import sys
 import uuid
+from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -87,23 +88,18 @@ ATHLETE_TEAM_REF_KEY_PATTERN = re.compile(
     r"^teams\.\d+\.\$ref$"
 )
 
-_REQUEST_COUNT = 0
-_REQUEST_FAILURES: list[
-    dict[str, str]
-] = []
+@dataclass
+class RuntimeState:
+    request_count: int = 0
+    request_failures: list[dict[str, str]] = field(
+        default_factory=list
+    )
 
 
 class RosterValidationError(
     RuntimeError
 ):
     pass
-
-
-def reset_runtime_state() -> None:
-    global _REQUEST_COUNT
-
-    _REQUEST_COUNT = 0
-    _REQUEST_FAILURES.clear()
 
 
 def load_current_week() -> tuple[
@@ -294,11 +290,10 @@ def fetch_json(
     url: str,
     *,
     label: str,
+    state: RuntimeState,
     timeout: int = 30,
 ) -> dict:
-    global _REQUEST_COUNT
-
-    _REQUEST_COUNT += 1
+    state.request_count += 1
 
     request = Request(
         url,
@@ -345,7 +340,7 @@ def fetch_json(
             ),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -363,7 +358,7 @@ def fetch_json(
             "error": str(exc),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -380,7 +375,7 @@ def fetch_json(
             "error": str(exc),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -402,7 +397,7 @@ def fetch_json(
             "error": body,
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -427,7 +422,7 @@ def fetch_json(
             ),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -450,7 +445,7 @@ def fetch_json(
             ),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -754,6 +749,7 @@ def build_raw_rows(
     target_team_ids: list[str],
     season: int,
     season_type: int,
+    state: RuntimeState,
 ) -> tuple[
     list[dict[str, object]],
     set[str],
@@ -808,6 +804,7 @@ def build_raw_rows(
                 label=(
                     f"roster team_id={team_id}"
                 ),
+                state=state,
             )
 
             (
@@ -1522,6 +1519,7 @@ def publish_atomic(
 
 def run(
     report: PipelineReporter,
+    state: RuntimeState,
 ) -> int:
     (
         season,
@@ -1560,6 +1558,7 @@ def run(
         target_team_ids,
         season,
         season_type,
+        state,
     )
 
     requested_teams = len(
@@ -1769,7 +1768,7 @@ def run(
 
 
 def main() -> int:
-    reset_runtime_state()
+    state = RuntimeState()
 
     with PipelineReporter(
         script=__file__,
@@ -1805,23 +1804,24 @@ def main() -> int:
 
         try:
             return run(
-                report
+                report,
+                state,
             )
 
         finally:
             report.update_details(
                 {
                     "espn_request_count": (
-                        _REQUEST_COUNT
+                        state.request_count
                     ),
                     "espn_request_failure_count": (
                         len(
-                            _REQUEST_FAILURES
+                            state.request_failures
                         )
                     ),
                     "espn_request_failure_details": (
                         list(
-                            _REQUEST_FAILURES
+                            state.request_failures
                         )
                     ),
                 }
