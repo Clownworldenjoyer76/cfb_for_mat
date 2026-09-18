@@ -26,6 +26,7 @@ import sys
 import urllib.parse
 import uuid
 from collections import Counter
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -82,77 +83,40 @@ OUTPUT_HEADERS = [
     "report_date",
 ]
 
-_REQUEST_COUNT = 0
-_REQUEST_FAILURES: list[dict[str, str]] = []
-
-_PROVIDER_STATUS = ""
-_PROVIDER_TIMESTAMP = ""
-_PROVIDER_TIMESTAMP_UTC: datetime | None = None
-_PROVIDER_SEASON: int | None = None
-_PROVIDER_SEASON_TYPE: int | None = None
-
-_PROVIDER_TEAM_GROUP_COUNT = 0
-_PROVIDER_TEAM_GROUPS_WITH_INJURIES = 0
-_PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES = 0
-
-_RAW_INJURY_COUNT = 0
-_FRESH_INJURY_COUNT = 0
-_STALE_INJURY_COUNT = 0
-_DUPLICATE_INJURY_ID_COUNT = 0
-_DUPLICATE_OUTPUT_IDENTITY_COUNT = 0
-_MISSING_PLAYER_ID_COUNT = 0
-_REPORT_YEAR_MISMATCH_COUNT = 0
-
-_FOREIGN_TEAM_IDS: set[str] = set()
-_PROVIDER_TEAM_IDS: set[str] = set()
-_REPORT_DATES_UTC: list[datetime] = []
+@dataclass
+class RuntimeState:
+    request_count: int = 0
+    request_failures: list[dict[str, str]] = field(
+        default_factory=list
+    )
+    provider_status: str = ""
+    provider_timestamp: str = ""
+    provider_timestamp_utc: datetime | None = None
+    provider_season: int | None = None
+    provider_season_type: int | None = None
+    provider_team_group_count: int = 0
+    provider_team_groups_with_injuries: int = 0
+    provider_team_groups_without_injuries: int = 0
+    raw_injury_count: int = 0
+    fresh_injury_count: int = 0
+    stale_injury_count: int = 0
+    duplicate_injury_id_count: int = 0
+    duplicate_output_identity_count: int = 0
+    missing_player_id_count: int = 0
+    report_year_mismatch_count: int = 0
+    foreign_team_ids: set[str] = field(
+        default_factory=set
+    )
+    provider_team_ids: set[str] = field(
+        default_factory=set
+    )
+    report_dates_utc: list[datetime] = field(
+        default_factory=list
+    )
 
 
 class InjuryValidationError(RuntimeError):
     pass
-
-
-def reset_runtime_state() -> None:
-    global _REQUEST_COUNT
-    global _PROVIDER_STATUS
-    global _PROVIDER_TIMESTAMP
-    global _PROVIDER_TIMESTAMP_UTC
-    global _PROVIDER_SEASON
-    global _PROVIDER_SEASON_TYPE
-    global _PROVIDER_TEAM_GROUP_COUNT
-    global _PROVIDER_TEAM_GROUPS_WITH_INJURIES
-    global _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES
-    global _RAW_INJURY_COUNT
-    global _FRESH_INJURY_COUNT
-    global _STALE_INJURY_COUNT
-    global _DUPLICATE_INJURY_ID_COUNT
-    global _DUPLICATE_OUTPUT_IDENTITY_COUNT
-    global _MISSING_PLAYER_ID_COUNT
-    global _REPORT_YEAR_MISMATCH_COUNT
-
-    _REQUEST_COUNT = 0
-    _PROVIDER_STATUS = ""
-    _PROVIDER_TIMESTAMP = ""
-    _PROVIDER_TIMESTAMP_UTC = None
-    _PROVIDER_SEASON = None
-    _PROVIDER_SEASON_TYPE = None
-
-    _PROVIDER_TEAM_GROUP_COUNT = 0
-    _PROVIDER_TEAM_GROUPS_WITH_INJURIES = 0
-    _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES = 0
-
-    _RAW_INJURY_COUNT = 0
-    _FRESH_INJURY_COUNT = 0
-    _STALE_INJURY_COUNT = 0
-    _DUPLICATE_INJURY_ID_COUNT = 0
-    _DUPLICATE_OUTPUT_IDENTITY_COUNT = 0
-    _MISSING_PLAYER_ID_COUNT = 0
-    _REPORT_YEAR_MISMATCH_COUNT = 0
-
-    _REQUEST_FAILURES.clear()
-    _FOREIGN_TEAM_IDS.clear()
-    _PROVIDER_TEAM_IDS.clear()
-    _REPORT_DATES_UTC.clear()
 
 
 def parse_positive_int_text(
@@ -537,15 +501,15 @@ def validate_injuries_url(
 def fetch_json(
     url: str,
     *,
+    state: RuntimeState,
     timeout: int = 30,
 ) -> dict:
-    global _REQUEST_COUNT
 
     url = validate_injuries_url(
         url
     )
 
-    _REQUEST_COUNT += 1
+    state.request_count += 1
 
     request = Request(
         url,
@@ -588,7 +552,7 @@ def fetch_json(
             ),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -605,7 +569,7 @@ def fetch_json(
             "error": str(exc),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -620,7 +584,7 @@ def fetch_json(
             "error": str(exc),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -640,7 +604,7 @@ def fetch_json(
             "error": body,
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -665,7 +629,7 @@ def fetch_json(
             ),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -687,7 +651,7 @@ def fetch_json(
             ),
         }
 
-        _REQUEST_FAILURES.append(
+        state.request_failures.append(
             failure
         )
 
@@ -745,15 +709,17 @@ def parse_timestamp(
 
 def report_age_days(
     report_date_utc: datetime,
+    *,
+    state: RuntimeState,
 ) -> float:
-    if _PROVIDER_TIMESTAMP_UTC is None:
+    if state.provider_timestamp_utc is None:
         raise InjuryValidationError(
             "Provider timestamp is unavailable for "
             "injury freshness validation"
         )
 
     age_seconds = (
-        _PROVIDER_TIMESTAMP_UTC
+        state.provider_timestamp_utc
         - report_date_utc
     ).total_seconds()
 
@@ -772,18 +738,14 @@ def validate_provider_envelope(
     *,
     season: int,
     season_type: int,
+    state: RuntimeState,
 ) -> list[dict]:
-    global _PROVIDER_STATUS
-    global _PROVIDER_TIMESTAMP
-    global _PROVIDER_TIMESTAMP_UTC
-    global _PROVIDER_SEASON
-    global _PROVIDER_SEASON_TYPE
 
     status = str(
         data.get("status") or ""
     ).strip()
 
-    _PROVIDER_STATUS = status
+    state.provider_status = status
 
     if (
         status
@@ -814,10 +776,10 @@ def validate_provider_envelope(
         ),
     )
 
-    _PROVIDER_TIMESTAMP = (
+    state.provider_timestamp = (
         provider_timestamp
     )
-    _PROVIDER_TIMESTAMP_UTC = (
+    state.provider_timestamp_utc = (
         provider_timestamp_utc
     )
 
@@ -843,7 +805,7 @@ def validate_provider_envelope(
         )
     )
 
-    _PROVIDER_SEASON = provider_season
+    state.provider_season = provider_season
 
     if provider_season != season:
         raise InjuryValidationError(
@@ -869,7 +831,7 @@ def validate_provider_envelope(
             )
         )
 
-        _PROVIDER_SEASON_TYPE = (
+        state.provider_season_type = (
             provider_type
         )
 
@@ -1003,8 +965,8 @@ def extract_player_id(
     athlete: dict,
     *,
     context: str,
+    state: RuntimeState,
 ) -> str:
-    global _MISSING_PLAYER_ID_COUNT
 
     direct_id = str(
         athlete.get("id") or ""
@@ -1056,7 +1018,7 @@ def extract_player_id(
     )
 
     if not player_id:
-        _MISSING_PLAYER_ID_COUNT += 1
+        state.missing_player_id_count += 1
 
         raise InjuryValidationError(
             f"Athlete has no usable player ID for {context}"
@@ -1149,16 +1111,8 @@ def build_rows(
     season: int,
     authoritative_team_ids: list[str],
     canonical_by_id: dict[str, str],
+    state: RuntimeState,
 ) -> list[dict[str, str]]:
-    global _PROVIDER_TEAM_GROUP_COUNT
-    global _PROVIDER_TEAM_GROUPS_WITH_INJURIES
-    global _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES
-    global _RAW_INJURY_COUNT
-    global _FRESH_INJURY_COUNT
-    global _STALE_INJURY_COUNT
-    global _DUPLICATE_INJURY_ID_COUNT
-    global _DUPLICATE_OUTPUT_IDENTITY_COUNT
-    global _REPORT_YEAR_MISMATCH_COUNT
 
     def _stage3_build_rows_block_07() -> None:
         if not isinstance(
@@ -1193,11 +1147,10 @@ def build_rows(
             )
 
     def _stage3_build_rows_block_04() -> None:
-        global _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES, _PROVIDER_TEAM_GROUPS_WITH_INJURIES
         if injuries:
-            _PROVIDER_TEAM_GROUPS_WITH_INJURIES += 1
+            state.provider_team_groups_with_injuries += 1
         else:
-            _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES += 1
+            state.provider_team_groups_without_injuries += 1
 
     def _stage3_build_rows_block_03() -> None:
         if not isinstance(
@@ -1212,7 +1165,7 @@ def build_rows(
 
     def _stage3_build_rows_block_02() -> None:
         if team_id not in authoritative_set:
-            _FOREIGN_TEAM_IDS.add(
+            state.foreign_team_ids.add(
                 team_id
             )
 
@@ -1248,7 +1201,7 @@ def build_rows(
         dict[str, str],
     ] = {}
 
-    _PROVIDER_TEAM_GROUP_COUNT = len(
+    state.provider_team_group_count = len(
         team_entries
     )
 
@@ -1265,7 +1218,7 @@ def build_rows(
             ),
         )
 
-        _PROVIDER_TEAM_IDS.add(
+        state.provider_team_ids.add(
             team_id
         )
 
@@ -1277,7 +1230,7 @@ def build_rows(
 
         _stage3_build_rows_block_03()
 
-        _RAW_INJURY_COUNT += len(
+        state.raw_injury_count += len(
             injuries
         )
 
@@ -1320,6 +1273,7 @@ def build_rows(
             player_id = extract_player_id(
                 athlete,
                 context=context,
+                state=state,
             )
 
             player_name = str(
@@ -1357,7 +1311,7 @@ def build_rows(
                 ),
             )
 
-            _REPORT_DATES_UTC.append(
+            state.report_dates_utc.append(
                 report_date_utc
             )
 
@@ -1365,17 +1319,18 @@ def build_rows(
                 report_date_utc.year
                 != season
             ):
-                _REPORT_YEAR_MISMATCH_COUNT += 1
+                state.report_year_mismatch_count += 1
 
             age_days = report_age_days(
-                report_date_utc
+                report_date_utc,
+                state=state,
             )
 
             if age_days > MAX_REPORT_AGE_DAYS:
-                _STALE_INJURY_COUNT += 1
+                state.stale_injury_count += 1
                 continue
 
-            _FRESH_INJURY_COUNT += 1
+            state.fresh_injury_count += 1
 
             provider_identity = (
                 team_id,
@@ -1405,7 +1360,7 @@ def build_rows(
                     prior_provider_row
                     is not None
                 ):
-                    _DUPLICATE_INJURY_ID_COUNT += 1
+                    state.duplicate_injury_id_count += 1
 
                     if (
                         prior_provider_row
@@ -1436,7 +1391,7 @@ def build_rows(
             )
 
             if prior_row is not None:
-                _DUPLICATE_OUTPUT_IDENTITY_COUNT += 1
+                state.duplicate_output_identity_count += 1
 
                 if prior_row != row:
                     raise InjuryValidationError(
@@ -1729,16 +1684,18 @@ def publish_atomic(
             pass
 
 
-def report_date_range() -> tuple[str, str]:
-    if not _REPORT_DATES_UTC:
+def report_date_range(
+    state: RuntimeState,
+) -> tuple[str, str]:
+    if not state.report_dates_utc:
         return "", ""
 
     minimum = min(
-        _REPORT_DATES_UTC
+        state.report_dates_utc
     )
 
     maximum = max(
-        _REPORT_DATES_UTC
+        state.report_dates_utc
     )
 
     return (
@@ -1749,6 +1706,7 @@ def report_date_range() -> tuple[str, str]:
 
 def update_report_details(
     report: PipelineReporter,
+    state: RuntimeState,
     *,
     authoritative_team_ids: list[str],
     canonical_by_id: dict[str, str],
@@ -1763,7 +1721,7 @@ def update_report_details(
 
     def _stage3_update_report_details_expr_01() -> object:
         return (
-            'all_stale_zero_current' if _RAW_INJURY_COUNT > 0 and _FRESH_INJURY_COUNT == 0 else 'mixed_fresh_and_stale' if _FRESH_INJURY_COUNT > 0 and _STALE_INJURY_COUNT > 0 else 'fresh_only' if _FRESH_INJURY_COUNT > 0 else 'provider_zero_injuries'
+            'all_stale_zero_current' if state.raw_injury_count > 0 and state.fresh_injury_count == 0 else 'mixed_fresh_and_stale' if state.fresh_injury_count > 0 and state.stale_injury_count > 0 else 'fresh_only' if state.fresh_injury_count > 0 else 'provider_zero_injuries'
         )
 
     def _stage3_update_report_details_block_01() -> None:
@@ -1819,26 +1777,28 @@ def update_report_details(
     (
         report_date_min,
         report_date_max,
-    ) = report_date_range()
+    ) = report_date_range(
+        state
+    )
 
     details: dict[str, object] = {
-        "provider_status": _PROVIDER_STATUS,
-        "provider_timestamp": _PROVIDER_TIMESTAMP,
+        "provider_status": state.provider_status,
+        "provider_timestamp": state.provider_timestamp,
         "freshness_reference": "espn_payload_timestamp",
         "freshness_reference_utc": (
-            _PROVIDER_TIMESTAMP_UTC.isoformat()
-            if _PROVIDER_TIMESTAMP_UTC is not None
+            state.provider_timestamp_utc.isoformat()
+            if state.provider_timestamp_utc is not None
             else ""
         ),
         "max_report_age_days": MAX_REPORT_AGE_DAYS,
-        "provider_season": _PROVIDER_SEASON,
-        "provider_season_type": _PROVIDER_SEASON_TYPE,
-        "espn_request_count": _REQUEST_COUNT,
+        "provider_season": state.provider_season,
+        "provider_season_type": state.provider_season_type,
+        "espn_request_count": state.request_count,
         "espn_request_failure_count": len(
-            _REQUEST_FAILURES
+            state.request_failures
         ),
         "espn_request_failure_details": (
-            _REQUEST_FAILURES
+            state.request_failures
         ),
         "authoritative_team_count": len(
             authoritative_team_ids
@@ -1847,16 +1807,16 @@ def update_report_details(
             canonical_by_id
         ),
         "provider_team_group_count": (
-            _PROVIDER_TEAM_GROUP_COUNT
+            state.provider_team_group_count
         ),
         "provider_unique_team_count": len(
-            _PROVIDER_TEAM_IDS
+            state.provider_team_ids
         ),
         "provider_team_groups_with_injuries": (
-            _PROVIDER_TEAM_GROUPS_WITH_INJURIES
+            state.provider_team_groups_with_injuries
         ),
         "provider_team_groups_without_injuries": (
-            _PROVIDER_TEAM_GROUPS_WITHOUT_INJURIES
+            state.provider_team_groups_without_injuries
         ),
         "represented_authoritative_team_count": len(
             represented_ids
@@ -1865,19 +1825,19 @@ def update_report_details(
             represented_ids
         ),
         "foreign_team_count": len(
-            _FOREIGN_TEAM_IDS
+            state.foreign_team_ids
         ),
         "foreign_team_ids": sorted(
-            _FOREIGN_TEAM_IDS,
+            state.foreign_team_ids,
             key=int,
         ),
-        "raw_injury_count": _RAW_INJURY_COUNT,
-        "fresh_injury_count": _FRESH_INJURY_COUNT,
-        "stale_injury_count": _STALE_INJURY_COUNT,
+        "raw_injury_count": state.raw_injury_count,
+        "fresh_injury_count": state.fresh_injury_count,
+        "stale_injury_count": state.stale_injury_count,
         "stale_injury_disposition": "excluded_from_output",
         "all_provider_injuries_stale": (
-            _RAW_INJURY_COUNT > 0
-            and _FRESH_INJURY_COUNT == 0
+            state.raw_injury_count > 0
+            and state.fresh_injury_count == 0
         ),
         "freshness_outcome": (
             _stage3_update_report_details_expr_01()
@@ -1889,13 +1849,13 @@ def update_report_details(
             unique_players
         ),
         "duplicate_provider_injury_id_count": (
-            _DUPLICATE_INJURY_ID_COUNT
+            state.duplicate_injury_id_count
         ),
         "duplicate_output_identity_count": (
-            _DUPLICATE_OUTPUT_IDENTITY_COUNT
+            state.duplicate_output_identity_count
         ),
         "missing_player_id_count": (
-            _MISSING_PLAYER_ID_COUNT
+            state.missing_player_id_count
         ),
         "status_counts": dict(
             sorted(
@@ -1909,7 +1869,7 @@ def update_report_details(
             report_date_max
         ),
         "report_year_mismatch_count": (
-            _REPORT_YEAR_MISMATCH_COUNT
+            state.report_year_mismatch_count
         ),
         "output_columns": OUTPUT_HEADERS,
     }
@@ -1924,7 +1884,7 @@ def update_report_details(
 def run(
     report: PipelineReporter,
 ) -> int:
-    reset_runtime_state()
+    state = RuntimeState()
 
     (
         season,
@@ -1985,7 +1945,8 @@ def run(
         )
 
         data = fetch_json(
-            url
+            url,
+            state=state,
         )
 
         team_entries = (
@@ -1993,6 +1954,7 @@ def run(
                 data,
                 season=season,
                 season_type=season_type,
+                state=state,
             )
         )
 
@@ -2003,27 +1965,28 @@ def run(
                 authoritative_team_ids
             ),
             canonical_by_id=canonical_by_id,
+            state=state,
         )
 
         if (
-            _RAW_INJURY_COUNT > 0
-            and _FRESH_INJURY_COUNT == 0
+            state.raw_injury_count > 0
+            and state.fresh_injury_count == 0
         ):
             report.warning(
                 "ESPN returned only stale injury records; "
                 "all stale records were excluded and zero "
                 "current injuries will be published: "
-                f"raw={_RAW_INJURY_COUNT}, "
-                f"stale={_STALE_INJURY_COUNT}, "
-                f"fresh={_FRESH_INJURY_COUNT}, "
+                f"raw={state.raw_injury_count}, "
+                f"stale={state.stale_injury_count}, "
+                f"fresh={state.fresh_injury_count}, "
                 f"max_age_days={MAX_REPORT_AGE_DAYS:.1f}"
             )
 
-        elif _STALE_INJURY_COUNT:
+        elif state.stale_injury_count:
             report.warning(
                 "Excluded stale ESPN injury records: "
-                f"stale={_STALE_INJURY_COUNT}, "
-                f"fresh={_FRESH_INJURY_COUNT}, "
+                f"stale={state.stale_injury_count}, "
+                f"fresh={state.fresh_injury_count}, "
                 f"max_age_days={MAX_REPORT_AGE_DAYS:.1f}"
             )
 
@@ -2041,12 +2004,13 @@ def run(
         )
 
         report.set_rows(
-            rows_in=_RAW_INJURY_COUNT,
+            rows_in=state.raw_injury_count,
             rows_out=len(rows),
         )
 
         update_report_details(
             report,
+            state,
             authoritative_team_ids=(
                 authoritative_team_ids
             ),
@@ -2060,12 +2024,13 @@ def run(
 
     except Exception:
         report.set_rows(
-            rows_in=_RAW_INJURY_COUNT,
+            rows_in=state.raw_injury_count,
             rows_out=len(rows),
         )
 
         update_report_details(
             report,
+            state,
             authoritative_team_ids=(
                 authoritative_team_ids
             ),
