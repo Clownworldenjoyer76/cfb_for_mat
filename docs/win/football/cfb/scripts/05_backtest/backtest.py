@@ -452,7 +452,12 @@ def summarize(frame: pd.DataFrame, groups: list[str]) -> pd.DataFrame:
     for keys, group in frame.groupby(groups, dropna=False, sort=False):
         if not isinstance(keys, tuple):
             keys = (keys,)
-        row = {name: value for name, value in zip(groups, keys)}
+        row = dict(
+            zip(
+                groups,
+                keys,
+            )
+        )
         row.update(one(group))
         rows.append(row)
 
