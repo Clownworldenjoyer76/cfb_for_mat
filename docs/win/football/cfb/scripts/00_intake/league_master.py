@@ -21,7 +21,7 @@ from urllib.parse import (
     urlsplit,
     urlunsplit,
 )
-from urllib.request import Request, urlopen
+from urllib.request import Request
 
 import yaml
 
@@ -33,6 +33,7 @@ CFB_ROOT = SCRIPT_PATH.parents[2]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from http_security import open_https, validate_https_url
 from pipeline_reporter import PipelineReporter
 
 
@@ -73,6 +74,7 @@ ESPN_BASE = (
     "https://sports.core.api.espn.com/v2/"
     "sports/football/leagues/college-football"
 )
+ESPN_CORE_HOST = "sports.core.api.espn.com"
 
 TEAM_ID_PATTERN = re.compile(
     r"/teams/(\d+)(?:[/?]|$)"
@@ -251,6 +253,13 @@ def normalize_ref_url(
             + url[len("http://sports.core.api.espn.com/"):]
         )
 
+    if url:
+        validate_https_url(
+            url,
+            allowed_hosts={ESPN_CORE_HOST},
+            label="ESPN Core reference",
+        )
+
     return url
 
 
@@ -352,8 +361,9 @@ def fetch_json(
 
     def _stage3_fetch_json_block_02() -> None:
         nonlocal body, status
-        with urlopen(
+        with open_https(
             request,
+            allowed_hosts={ESPN_CORE_HOST},
             timeout=timeout,
         ) as response:
             status = int(

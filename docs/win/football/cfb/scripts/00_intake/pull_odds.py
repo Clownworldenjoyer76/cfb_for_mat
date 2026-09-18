@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.request import Request
 from zoneinfo import ZoneInfo
 
 import yaml
@@ -27,6 +27,7 @@ CFB_ROOT = SCRIPT_PATH.parents[2]
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from http_security import open_https
 from pipeline_reporter import PipelineReporter
 
 CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -41,6 +42,7 @@ ESPN_BASE = (
     "https://sports.core.api.espn.com/v2/sports/football/"
     "leagues/college-football"
 )
+ESPN_CORE_HOST = "sports.core.api.espn.com"
 
 SCRIPT_VERSION = "cfb-odds-v2-2026-09-15"
 
@@ -403,8 +405,9 @@ def http_get_json(
     )
 
     try:
-        with urlopen(
+        with open_https(
             request,
+            allowed_hosts={ESPN_CORE_HOST},
             timeout=45,
         ) as response:
             status = response.status
@@ -474,6 +477,16 @@ def fetch_ref(
     ref: str,
     label: str,
 ) -> dict:
+    if ref.startswith(
+        "http://sports.core.api.espn.com/"
+    ):
+        ref = (
+            "https://sports.core.api.espn.com/"
+            + ref[
+                len("http://sports.core.api.espn.com/"):
+            ]
+        )
+
     status, payload, error = (
         http_get_json(ref)
     )
