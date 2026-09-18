@@ -1195,14 +1195,12 @@ def infer_opening_favorite(
         and away_ml is not None
     ):
         if (
-            home_ml < 0
-            and away_ml > 0
+            home_ml < 0 < away_ml
         ):
             return "home"
 
         if (
-            away_ml < 0
-            and home_ml > 0
+            away_ml < 0 < home_ml
         ):
             return "away"
 
