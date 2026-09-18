@@ -12,6 +12,7 @@ import re
 import sys
 import time
 import uuid
+from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import (
@@ -110,10 +111,6 @@ STANDINGS_COLUMNS = [
 ]
 
 
-_GROUP_CACHE: dict[str, dict] = {}
-_COLLECTION_CACHE: dict[str, dict] = {}
-_TEAM_CACHE: dict[str, dict] = {}
-
 TRANSIENT_HTTP_STATUSES = frozenset(
     {
         429,
@@ -133,35 +130,28 @@ RETRY_BACKOFF_SECONDS = (
 )
 
 
-_REQUEST_COUNT = 0
-_REQUEST_ATTEMPT_COUNT = 0
-_REQUEST_RETRY_COUNT = 0
-_RECOVERED_TRANSIENT_REQUESTS = 0
-_EXHAUSTED_TRANSIENT_FAILURES = 0
-
-_REQUEST_FAILURES: list[dict[str, str]] = []
-_RETRY_DETAILS: list[dict[str, str]] = []
-
-
-def reset_runtime_state() -> None:
-    global _REQUEST_COUNT
-    global _REQUEST_ATTEMPT_COUNT
-    global _REQUEST_RETRY_COUNT
-    global _RECOVERED_TRANSIENT_REQUESTS
-    global _EXHAUSTED_TRANSIENT_FAILURES
-
-    _GROUP_CACHE.clear()
-    _COLLECTION_CACHE.clear()
-    _TEAM_CACHE.clear()
-
-    _REQUEST_FAILURES.clear()
-    _RETRY_DETAILS.clear()
-
-    _REQUEST_COUNT = 0
-    _REQUEST_ATTEMPT_COUNT = 0
-    _REQUEST_RETRY_COUNT = 0
-    _RECOVERED_TRANSIENT_REQUESTS = 0
-    _EXHAUSTED_TRANSIENT_FAILURES = 0
+@dataclass
+class RuntimeState:
+    group_cache: dict[str, dict] = field(
+        default_factory=dict
+    )
+    collection_cache: dict[str, dict] = field(
+        default_factory=dict
+    )
+    team_cache: dict[str, dict] = field(
+        default_factory=dict
+    )
+    request_count: int = 0
+    request_attempt_count: int = 0
+    request_retry_count: int = 0
+    recovered_transient_requests: int = 0
+    exhausted_transient_failures: int = 0
+    request_failures: list[dict[str, str]] = field(
+        default_factory=list
+    )
+    retry_details: list[dict[str, str]] = field(
+        default_factory=list
+    )
 
 
 def load_current_week() -> tuple[int, int, int]:
@@ -268,13 +258,9 @@ def fetch_json(
     url: str,
     *,
     label: str,
+    state: RuntimeState,
     timeout: int = 20,
 ) -> dict:
-    global _REQUEST_COUNT
-    global _REQUEST_ATTEMPT_COUNT
-    global _REQUEST_RETRY_COUNT
-    global _RECOVERED_TRANSIENT_REQUESTS
-    global _EXHAUSTED_TRANSIENT_FAILURES
 
     def _stage3_fetch_json_block_07() -> None:
         nonlocal failure
@@ -297,7 +283,7 @@ def fetch_json(
                 ),
             }
 
-            _REQUEST_FAILURES.append(
+            state.request_failures.append(
                 failure
             )
 
@@ -331,7 +317,7 @@ def fetch_json(
                 ),
             }
 
-            _REQUEST_FAILURES.append(
+            state.request_failures.append(
                 failure
             )
 
@@ -341,14 +327,12 @@ def fetch_json(
             ) from exc
 
     def _stage3_fetch_json_block_05() -> None:
-        global _EXHAUSTED_TRANSIENT_FAILURES
         if is_transient:
-            _EXHAUSTED_TRANSIENT_FAILURES += 1
+            state.exhausted_transient_failures += 1
 
     def _stage3_fetch_json_block_04() -> None:
-        global _EXHAUSTED_TRANSIENT_FAILURES
         if is_transient:
-            _EXHAUSTED_TRANSIENT_FAILURES += 1
+            state.exhausted_transient_failures += 1
 
     def _stage3_fetch_json_block_03() -> None:
         nonlocal error_body
@@ -397,13 +381,13 @@ def fetch_json(
 
     # Count the requested resource once regardless
     # of how many network attempts are required.
-    _REQUEST_COUNT += 1
+    state.request_count += 1
 
     for attempt_number in range(
         1,
         MAX_REQUEST_ATTEMPTS + 1,
     ):
-        _REQUEST_ATTEMPT_COUNT += 1
+        state.request_attempt_count += 1
 
         request = Request(
             url,
@@ -439,9 +423,9 @@ def fetch_json(
                     ]
                 )
 
-                _REQUEST_RETRY_COUNT += 1
+                state.request_retry_count += 1
 
-                _RETRY_DETAILS.append(
+                state.retry_details.append(
                     {
                         "label": label,
                         "url": url,
@@ -487,7 +471,7 @@ def fetch_json(
                 ),
             }
 
-            _REQUEST_FAILURES.append(
+            state.request_failures.append(
                 failure
             )
 
@@ -514,9 +498,9 @@ def fetch_json(
                     ]
                 )
 
-                _REQUEST_RETRY_COUNT += 1
+                state.request_retry_count += 1
 
-                _RETRY_DETAILS.append(
+                state.retry_details.append(
                     {
                         "label": label,
                         "url": url,
@@ -539,7 +523,7 @@ def fetch_json(
 
                 continue
 
-            _EXHAUSTED_TRANSIENT_FAILURES += 1
+            state.exhausted_transient_failures += 1
 
             failure = {
                 "label": label,
@@ -554,7 +538,7 @@ def fetch_json(
                 )[:2000],
             }
 
-            _REQUEST_FAILURES.append(
+            state.request_failures.append(
                 failure
             )
 
@@ -578,7 +562,7 @@ def fetch_json(
                 )[:2000],
             }
 
-            _REQUEST_FAILURES.append(
+            state.request_failures.append(
                 failure
             )
 
@@ -607,9 +591,9 @@ def fetch_json(
                     ]
                 )
 
-                _REQUEST_RETRY_COUNT += 1
+                state.request_retry_count += 1
 
-                _RETRY_DETAILS.append(
+                state.retry_details.append(
                     {
                         "label": label,
                         "url": url,
@@ -649,7 +633,7 @@ def fetch_json(
                 "error": body[:2000],
             }
 
-            _REQUEST_FAILURES.append(
+            state.request_failures.append(
                 failure
             )
 
@@ -666,7 +650,7 @@ def fetch_json(
         _stage3_fetch_json_block_07()
 
         if attempt_number > 1:
-            _RECOVERED_TRANSIENT_REQUESTS += 1
+            state.recovered_transient_requests += 1
 
         return payload
 
@@ -680,16 +664,18 @@ def fetch_cached(
     url: str,
     *,
     label: str,
+    state: RuntimeState,
 ) -> dict:
     url = normalize_ref_url(url)
 
-    if url not in _COLLECTION_CACHE:
-        _COLLECTION_CACHE[url] = fetch_json(
+    if url not in state.collection_cache:
+        state.collection_cache[url] = fetch_json(
             url,
             label=label,
+            state=state,
         )
 
-    return _COLLECTION_CACHE[url]
+    return state.collection_cache[url]
 
 
 def with_limit(
@@ -916,6 +902,7 @@ def read_team_master() -> dict[
 
 def resolve_group(
     ref_url: str,
+    state: RuntimeState,
 ) -> dict:
     ref_url = normalize_ref_url(ref_url)
 
@@ -927,19 +914,21 @@ def resolve_group(
     group_id = extract_group_id(ref_url)
     cache_key = group_id or ref_url
 
-    if cache_key not in _GROUP_CACHE:
-        _GROUP_CACHE[
+    if cache_key not in state.group_cache:
+        state.group_cache[
             cache_key
         ] = fetch_json(
             ref_url,
             label=f"group {cache_key}",
+            state=state,
         )
 
-    return _GROUP_CACHE[cache_key]
+    return state.group_cache[cache_key]
 
 
 def resolve_team(
     ref_url: str,
+    state: RuntimeState,
 ) -> dict:
     ref_url = normalize_ref_url(ref_url)
 
@@ -951,21 +940,23 @@ def resolve_team(
     team_id = extract_team_id(ref_url)
     cache_key = team_id or ref_url
 
-    if cache_key not in _TEAM_CACHE:
-        _TEAM_CACHE[
+    if cache_key not in state.team_cache:
+        state.team_cache[
             cache_key
         ] = fetch_json(
             ref_url,
             label=f"team {cache_key}",
+            state=state,
         )
 
-    return _TEAM_CACHE[cache_key]
+    return state.team_cache[cache_key]
 
 
 def collection_items(
     ref_obj: object,
     *,
     label: str,
+    state: RuntimeState,
 ) -> list[dict]:
     if not isinstance(ref_obj, dict):
         return []
@@ -983,6 +974,7 @@ def collection_items(
     payload = fetch_cached(
         with_limit(ref_url),
         label=label,
+        state=state,
     )
 
     items = payload.get(
@@ -1011,6 +1003,7 @@ def collection_items(
 
 def get_child_groups(
     group: dict,
+    state: RuntimeState,
 ) -> list[
     tuple[str, dict]
 ]:
@@ -1026,6 +1019,7 @@ def get_child_groups(
             {},
         ),
         label=f"group {group_id} children",
+        state=state,
     ):
         child_ref = normalize_ref_url(
             item.get(
@@ -1041,7 +1035,7 @@ def get_child_groups(
                 f"for group={group_id}"
             )
 
-        child = resolve_group(child_ref)
+        child = resolve_group(child_ref, state)
 
         children.append(
             (
@@ -1055,6 +1049,7 @@ def get_child_groups(
 
 def get_group_team_refs(
     group: dict,
+    state: RuntimeState,
 ) -> list[
     tuple[
         str,
@@ -1080,6 +1075,7 @@ def get_group_team_refs(
             {},
         ),
         label=f"group {group_id} teams",
+        state=state,
     ):
         team_ref = normalize_ref_url(
             item.get(
@@ -1125,6 +1121,7 @@ def resolve_team_abbreviation(
     team_id: str,
     team_ref: str,
     inline_item: dict,
+    state: RuntimeState,
 ) -> str:
     inline_abbr = str(
         inline_item.get(
@@ -1143,7 +1140,7 @@ def resolve_team_abbreviation(
             "no ESPN team reference"
         )
 
-    payload = resolve_team(team_ref)
+    payload = resolve_team(team_ref, state)
 
     abbreviation = str(
         payload.get(
@@ -1199,6 +1196,8 @@ def parent_ref(
 def nearest_conference(
     group: dict,
     ref_url: str = "",
+    *,
+    state: RuntimeState,
 ) -> tuple[
     str,
     dict | None,
@@ -1242,7 +1241,8 @@ def nearest_conference(
             break
 
         current = resolve_group(
-            next_ref
+            next_ref,
+            state,
         )
 
         current_ref = next_ref
@@ -1256,6 +1256,8 @@ def nearest_conference(
 def hierarchy_labels(
     group: dict,
     ref_url: str = "",
+    *,
+    state: RuntimeState,
 ) -> tuple[
     str,
     str,
@@ -1269,6 +1271,7 @@ def hierarchy_labels(
     ) = nearest_conference(
         group,
         ref_url,
+        state=state,
     )
 
     if conference:
@@ -1343,6 +1346,7 @@ def hierarchy_labels(
 
 def standings_payloads(
     group: dict,
+    state: RuntimeState,
 ) -> list[dict]:
     standings = group.get(
         "standings",
@@ -1370,6 +1374,7 @@ def standings_payloads(
     root = fetch_cached(
         standings_ref,
         label=f"group {group_id} standings",
+        state=state,
     )
 
     payloads: list[dict] = []
@@ -1436,6 +1441,7 @@ def standings_payloads(
                 "standings type "
                 f"{group_id}:{index}"
             ),
+            state=state,
         )
 
         payloads.append(payload)
@@ -1505,6 +1511,7 @@ def get_standings_rows(
     accepted_team_ids: set[str],
     season: int,
     season_type: int,
+    state: RuntimeState,
 ) -> list[dict[str, object]]:
     def _stage3_get_standings_rows_block_01() -> None:
         for team_standing in team_standings:
@@ -1679,6 +1686,7 @@ def get_standings_rows(
     ) = hierarchy_labels(
         group,
         ref_url,
+        state=state,
     )
 
     if not has_conference:
@@ -1689,7 +1697,8 @@ def get_standings_rows(
     ] = []
 
     for standings_payload in standings_payloads(
-        group
+        group,
+        state,
     ):
         type_name = str(
             standings_payload.get("name")
@@ -1731,6 +1740,7 @@ def get_standings_rows(
 
 def discover_groups(
     top_groups: dict,
+    state: RuntimeState,
 ) -> list[
     tuple[str, dict]
 ]:
@@ -1758,7 +1768,8 @@ def discover_groups(
         )
 
         group = resolve_group(
-            ref_url
+            ref_url,
+            state,
         )
 
         identity = group_identity(
@@ -1794,7 +1805,7 @@ def discover_groups(
         for (
             child_ref,
             _child,
-        ) in get_child_groups(group):
+        ) in get_child_groups(group, state):
             visit(
                 child_ref
             )
@@ -1874,6 +1885,7 @@ def build_memberships(
     ],
     season: int,
     season_type: int,
+    state: RuntimeState,
 ) -> tuple[
     dict[
         str,
@@ -1908,6 +1920,7 @@ def build_memberships(
                         team_id,
                         team_ref,
                         inline_item,
+                        state,
                     )
                 )
 
@@ -2016,11 +2029,13 @@ def build_memberships(
         ).strip()
 
         child_groups = get_child_groups(
-            group
+            group,
+            state,
         )
 
         team_refs = get_group_team_refs(
-            group
+            group,
+            state,
         )
 
         (
@@ -2032,6 +2047,7 @@ def build_memberships(
         ) = hierarchy_labels(
             group,
             ref_url,
+            state=state,
         )
 
         use_fallback = (
@@ -2182,6 +2198,7 @@ def build_standings(
     accepted_team_ids: set[str],
     season: int,
     season_type: int,
+    state: RuntimeState,
 ) -> tuple[
     list[dict[str, object]],
     int,
@@ -2223,6 +2240,7 @@ def build_standings(
             accepted_team_ids,
             season,
             season_type,
+            state,
         ):
             key = standings_key(
                 row
@@ -2838,6 +2856,7 @@ def publish_bundle(
 
 def run(
     report: PipelineReporter,
+    state: RuntimeState,
 ) -> int:
     (
         season,
@@ -2891,10 +2910,12 @@ def run(
             season_type,
         ),
         label="top-level CFB groups",
+        state=state,
     )
 
     groups = discover_groups(
-        top_groups
+        top_groups,
+        state,
     )
 
     report.set_detail(
@@ -2911,6 +2932,7 @@ def run(
         team_index,
         season,
         season_type,
+        state,
     )
 
     missing_membership = sorted(
@@ -3023,6 +3045,7 @@ def run(
         set(team_index),
         season,
         season_type,
+        state,
     )
 
     validate_standings_rows(
@@ -3159,7 +3182,7 @@ def run(
 
 
 def main() -> int:
-    reset_runtime_state()
+    state = RuntimeState()
 
     with PipelineReporter(
         script=__file__,
@@ -3196,39 +3219,39 @@ def main() -> int:
         )
 
         try:
-            return run(report)
+            return run(report, state)
 
         finally:
             report.update_details(
                 {
                     "espn_request_count": (
-                        _REQUEST_COUNT
+                        state.request_count
                     ),
                     "espn_request_attempt_count": (
-                        _REQUEST_ATTEMPT_COUNT
+                        state.request_attempt_count
                     ),
                     "espn_request_retry_count": (
-                        _REQUEST_RETRY_COUNT
+                        state.request_retry_count
                     ),
                     "espn_recovered_transient_requests": (
-                        _RECOVERED_TRANSIENT_REQUESTS
+                        state.recovered_transient_requests
                     ),
                     "espn_exhausted_transient_failures": (
-                        _EXHAUSTED_TRANSIENT_FAILURES
+                        state.exhausted_transient_failures
                     ),
                     "espn_retry_details": (
                         list(
-                            _RETRY_DETAILS
+                            state.retry_details
                         )
                     ),
                     "espn_request_failures": (
                         len(
-                            _REQUEST_FAILURES
+                            state.request_failures
                         )
                     ),
                     "espn_request_failure_details": (
                         list(
-                            _REQUEST_FAILURES
+                            state.request_failures
                         )
                     ),
                 }
