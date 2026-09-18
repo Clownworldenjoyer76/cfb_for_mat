@@ -893,7 +893,7 @@ def build_probability_validation(
     df: pd.DataFrame,
     paths: OutputPaths,
 ) -> None:
-    metric_columns = [
+    probability_metric_columns = [
         "league",
         "season",
         "market_type",
@@ -1013,7 +1013,10 @@ def build_probability_validation(
         )
 
     write_csv(
-        pd.DataFrame(metric_rows, columns=metric_columns),
+        pd.DataFrame(
+            metric_rows,
+            columns=probability_metric_columns,
+        ),
         paths.overview_dir / "cfb_probability_metrics.csv",
     )
     write_csv(
