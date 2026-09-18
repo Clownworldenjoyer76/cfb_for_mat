@@ -1079,10 +1079,24 @@ def validate_staged_output(
                 row.get("tie_prob")
             )
 
-            _stage2_validate_staged_output_block_03(
-                tie_value,
-                game_id,
-            )
+            if tie_value:
+                tie_prob = finite_decimal(
+                    tie_value,
+                    label=(
+                        "staged tie_prob for "
+                        f"game_id={game_id}"
+                    ),
+                )
+
+                if not (
+                    Decimal("0")
+                    <= tie_prob
+                    <= Decimal("1")
+                ):
+                    raise CleanPredictionValidationError(
+                        "Staged tie_prob outside [0,1] "
+                        f"for game_id={game_id}"
+                    )
 
             for field in (
                 "matchupQuality",
@@ -1111,29 +1125,6 @@ def validate_staged_output(
                         f"Staged {field} must be blank "
                         f"for game_id={game_id}"
                     )
-
-    def _stage2_validate_staged_output_block_03(
-        tie_value: str,
-        game_id: str,
-    ) -> None:
-        if tie_value:
-            tie_prob = finite_decimal(
-                tie_value,
-                label=(
-                    "staged tie_prob for "
-                    f"game_id={game_id}"
-                ),
-            )
-
-            if not (
-                Decimal("0")
-                <= tie_prob
-                <= Decimal("1")
-            ):
-                raise CleanPredictionValidationError(
-                    "Staged tie_prob outside [0,1] "
-                    f"for game_id={game_id}"
-                )
 
     def _stage2_validate_staged_output_block_02() -> None:
         if seen != set(schedule):
