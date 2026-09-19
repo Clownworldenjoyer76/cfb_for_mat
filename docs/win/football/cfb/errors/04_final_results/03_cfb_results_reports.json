@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35339376414-attempt-1",
+  "run_id": "github-35448882205-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "03_cfb_results_reports.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/04_final_results/03_cfb_results_reports.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/04_final_results/03_cfb_results_reports.json",
-  "started_at_utc": "2026-09-18T11:31:32.339446+00:00",
-  "finished_at_utc": "2026-09-18T11:31:32.756528+00:00",
-  "duration_seconds": 0.417,
+  "started_at_utc": "2026-09-19T14:36:55.956478+00:00",
+  "finished_at_utc": "2026-09-19T14:36:56.621601+00:00",
+  "duration_seconds": 0.665,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2393,
+    "process_id": 2612,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35339376414",
+    "github_run_id": "35448882205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "f10080101d10091ee09f699f324d74ea05b8f2c7",
+    "github_sha": "de71d5a7c2e604899f3589fecb72020fb4fe623a",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -83,8 +83,8 @@
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/reports/totals/cfb_total_by_win_prob.csv",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/reports/totals/cfb_total_by_win_prob_over_under_summary.csv"
   ],
-  "rows_in": 35,
-  "rows_out": 35,
+  "rows_in": 34,
+  "rows_out": 34,
   "warning_count": 0,
   "error_count": 0,
   "warnings": [],
@@ -92,21 +92,21 @@
   "details": {
     "script_version": "cfb-results-reports-v2-hardened-2026-09-16",
     "season_type": 2,
-    "selected_bets": 35,
+    "selected_bets": 34,
     "settled_bets": 25,
     "probability_settled_bets": 25,
     "units": 2.2183578528992998,
     "market_counts": {
-      "total": 20,
-      "moneyline": 9,
-      "spread": 6
+      "total": 17,
+      "spread": 9,
+      "moneyline": 8
     },
     "result_counts": {
       "Win": 16,
-      "Pending": 10,
-      "Loss": 9
+      "Loss": 9,
+      "Pending": 9
     },
     "report_files": 43,
-    "output_modified": false
+    "output_modified": true
   }
 }

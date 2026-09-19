@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35339376414-attempt-1",
-  "status": "WARNING",
+  "run_id": "github-35448882205-attempt-1",
+  "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
@@ -9,22 +9,22 @@
   "script": "finalize_pred.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/finalize_pred.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/finalize_pred.json",
-  "started_at_utc": "2026-09-18T11:28:59.378964+00:00",
-  "finished_at_utc": "2026-09-18T11:28:59.389493+00:00",
-  "duration_seconds": 0.011,
+  "started_at_utc": "2026-09-19T14:34:15.348630+00:00",
+  "finished_at_utc": "2026-09-19T14:34:15.363334+00:00",
+  "duration_seconds": 0.015,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2312,
+    "process_id": 2509,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35339376414",
+    "github_run_id": "35448882205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "f10080101d10091ee09f699f324d74ea05b8f2c7",
+    "github_sha": "de71d5a7c2e604899f3589fecb72020fb4fe623a",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -44,20 +44,9 @@
   ],
   "rows_in": 75,
   "rows_out": 75,
-  "warning_count": 1,
+  "warning_count": 0,
   "error_count": 0,
-  "warnings": [
-    {
-      "timestamp_utc": "2026-09-18T11:28:59.389475+00:00",
-      "message": "Market total unavailable for one or more target games; projected score fields left blank",
-      "details": {
-        "count": 1,
-        "game_ids": [
-          "401858233"
-        ]
-      }
-    }
-  ],
+  "warnings": [],
   "errors": [],
   "details": {
     "season_type": 2,
@@ -95,19 +84,11 @@
     "final_rows_expected": 75,
     "final_rows_produced": 75,
     "staged_rows_validated": 75,
-    "games_with_projected_scores": 74,
-    "missing_total_count": 1,
-    "missing_total_game_ids": [
-      "401858233"
-    ],
-    "missing_total_details": [
-      {
-        "game_id": "401858233",
-        "odds_available": "0",
-        "odds_missing_reason": "no_odds_returned"
-      }
-    ],
+    "games_with_projected_scores": 75,
+    "missing_total_count": 0,
+    "missing_total_game_ids": [],
+    "missing_total_details": [],
     "margin_consistency_failure_count": 0,
-    "maximum_margin_asymmetry": "0.000"
+    "maximum_margin_asymmetry": "0.00"
   }
 }

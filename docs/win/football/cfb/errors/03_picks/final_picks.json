@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35339376414-attempt-1",
+  "run_id": "github-35448882205-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "final_picks.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/03_picks/final_picks.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/03_picks/final_picks.json",
-  "started_at_utc": "2026-09-18T11:31:31.352290+00:00",
-  "finished_at_utc": "2026-09-18T11:31:31.442392+00:00",
-  "duration_seconds": 0.09,
+  "started_at_utc": "2026-09-19T14:36:54.622735+00:00",
+  "finished_at_utc": "2026-09-19T14:36:54.753564+00:00",
+  "duration_seconds": 0.131,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2379,
+    "process_id": 2598,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35339376414",
+    "github_run_id": "35448882205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "f10080101d10091ee09f699f324d74ea05b8f2c7",
+    "github_sha": "de71d5a7c2e604899f3589fecb72020fb4fe623a",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -62,8 +62,8 @@
     "schedule_games": 75,
     "selected_games": 9,
     "selected_bets": 9,
-    "ml_selected_bets": 0,
-    "spread_selected_bets": 6,
-    "total_selected_bets": 3
+    "ml_selected_bets": 1,
+    "spread_selected_bets": 3,
+    "total_selected_bets": 5
   }
 }

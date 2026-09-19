@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35339376414-attempt-1",
+  "run_id": "github-35448882205-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "pull_odds.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_odds.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_odds.json",
-  "started_at_utc": "2026-09-18T11:24:40.269917+00:00",
-  "finished_at_utc": "2026-09-18T11:24:51.588717+00:00",
-  "duration_seconds": 11.319,
+  "started_at_utc": "2026-09-19T14:30:47.254205+00:00",
+  "finished_at_utc": "2026-09-19T14:30:56.630639+00:00",
+  "duration_seconds": 9.376,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2210,
+    "process_id": 2422,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35339376414",
+    "github_run_id": "35448882205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "f10080101d10091ee09f699f324d74ea05b8f2c7",
+    "github_sha": "de71d5a7c2e604899f3589fecb72020fb4fe623a",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -39,13 +39,13 @@
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_18_cfb_odds.json",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/2026_09_18_CFB_odds.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_09_18_112440_276799_cfb_odds.json",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/snapshots/2026_09_18_112440_276799_CFB_odds.csv"
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_19_cfb_odds.json",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/2026_09_19_CFB_odds.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_09_19_143047_263826_cfb_odds.json",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/snapshots/2026_09_19_143047_263826_CFB_odds.csv"
   ],
   "rows_in": 75,
-  "rows_out": 404,
+  "rows_out": 392,
   "warning_count": 0,
   "error_count": 0,
   "warnings": [],
@@ -53,28 +53,29 @@
   "details": {
     "output_modified": true,
     "season_type": 2,
-    "snapshot_id": "2026_09_18_112440_276799",
-    "snapshot_fetched_at": "2026-09-18T11:24:40.276799+00:00",
+    "snapshot_id": "2026_09_19_143047_263826",
+    "snapshot_fetched_at": "2026-09-19T14:30:47.263826+00:00",
     "target_games": 75,
-    "locked_games": 1,
+    "locked_games": 4,
     "locked_game_ids": [
-      "401858225"
+      "401858225",
+      "401858226",
+      "401856811",
+      "401858455"
     ],
-    "games_requested": 74,
-    "games_with_odds": 73,
-    "games_without_posted_odds": 1,
-    "games_without_posted_odds_ids": [
-      "401858233"
-    ],
+    "games_requested": 71,
+    "games_with_odds": 71,
+    "games_without_posted_odds": 0,
+    "games_without_posted_odds_ids": [],
     "hard_fetch_failures": 0,
     "hard_fetch_failure_details": [],
     "provider_event_counts": {
-      "DraftKings": 73
+      "Draft Kings": 71
     },
-    "normalized_rows": 404,
-    "current_raw_json": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_18_cfb_odds.json",
-    "current_normalized_csv": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/2026_09_18_CFB_odds.csv",
-    "snapshot_raw_json": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_09_18_112440_276799_cfb_odds.json",
-    "snapshot_normalized_csv": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/snapshots/2026_09_18_112440_276799_CFB_odds.csv"
+    "normalized_rows": 392,
+    "current_raw_json": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_19_cfb_odds.json",
+    "current_normalized_csv": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/2026_09_19_CFB_odds.csv",
+    "snapshot_raw_json": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_09_19_143047_263826_cfb_odds.json",
+    "snapshot_normalized_csv": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/snapshots/2026_09_19_143047_263826_CFB_odds.csv"
   }
 }

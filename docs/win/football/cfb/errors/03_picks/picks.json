@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35339376414-attempt-1",
+  "run_id": "github-35448882205-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "picks.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/03_picks/picks.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/03_picks/picks.json",
-  "started_at_utc": "2026-09-18T11:31:29.408066+00:00",
-  "finished_at_utc": "2026-09-18T11:31:29.905022+00:00",
-  "duration_seconds": 0.497,
+  "started_at_utc": "2026-09-19T14:36:51.717930+00:00",
+  "finished_at_utc": "2026-09-19T14:36:52.542999+00:00",
+  "duration_seconds": 0.825,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2361,
+    "process_id": 2580,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35339376414",
+    "github_run_id": "35448882205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "f10080101d10091ee09f699f324d74ea05b8f2c7",
+    "github_sha": "de71d5a7c2e604899f3589fecb72020fb4fe623a",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -62,63 +62,59 @@
     ],
     "files_processed": 1,
     "games": 75,
-    "ml_picks": 0,
-    "spread_picks": 6,
-    "total_picks": 3,
-    "cross_market_exclusions": 0,
+    "ml_picks": 1,
+    "spread_picks": 3,
+    "total_picks": 5,
+    "cross_market_exclusions": 1,
     "candidate_available_counts": {
-      "ml_home": 56,
-      "ml_away": 56,
-      "spread_home": 74,
-      "spread_away": 74,
-      "total_over": 74,
-      "total_under": 74
+      "ml_home": 57,
+      "ml_away": 57,
+      "spread_home": 75,
+      "spread_away": 75,
+      "total_over": 75,
+      "total_under": 75
     },
     "qualifying_side_counts": {
-      "ml_home": 0,
+      "ml_home": 1,
       "ml_away": 0,
-      "spread_home": 6,
+      "spread_home": 4,
       "spread_away": 0,
-      "total_over": 3,
-      "total_under": 0
+      "total_over": 4,
+      "total_under": 1
     },
     "rejection_counts": {
       "ml_home": {
-        "min_ev": 26,
-        "band:odds_bands": 29,
-        "model_probability_range": 29,
-        "candidate_unavailable": 19
+        "min_ev": 29,
+        "band:odds_bands": 30,
+        "model_probability_range": 28,
+        "candidate_unavailable": 18
       },
       "ml_away": {
-        "model_probability_range": 51,
+        "model_probability_range": 52,
         "min_ev": 29,
-        "candidate_unavailable": 19
+        "candidate_unavailable": 18
       },
       "spread_home": {
-        "band:prob_bands": 62,
-        "band:line_bands": 49,
-        "max_spread_abs": 14,
-        "candidate_unavailable": 1
+        "band:prob_bands": 68,
+        "band:line_bands": 50,
+        "max_spread_abs": 15
       },
       "spread_away": {
-        "band:prob_bands": 48,
-        "band:line_bands": 72,
-        "max_spread_abs": 14,
-        "candidate_unavailable": 1
+        "band:prob_bands": 49,
+        "band:line_bands": 73,
+        "max_spread_abs": 15
       },
       "total_over": {
         "band:kelly_bands": 71,
-        "band:line_bands": 23,
-        "min_ev": 29,
-        "model_probability_range": 33,
-        "candidate_unavailable": 1
+        "band:line_bands": 27,
+        "min_ev": 33,
+        "model_probability_range": 36,
+        "band:odds_bands": 1
       },
       "total_under": {
-        "band:line_bands": 51,
-        "min_ev": 18,
-        "band:kelly_bands": 56,
-        "band:odds_bands": 1,
-        "candidate_unavailable": 1
+        "band:line_bands": 48,
+        "min_ev": 20,
+        "band:kelly_bands": 60
       }
     },
     "modified_files": 1,
