@@ -366,6 +366,151 @@ def unresolved_team_name(
     ) in UNRESOLVED_TEAM_NAMES
 
 
+
+def _require_target_games_path(
+    path: Path,
+) -> None:
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Target weekly schedule not found: {path}"
+        )
+
+
+def _load_target_game_rows(
+    reader: csv.DictReader,
+    games: dict[str, dict[str, str]],
+    *,
+    season: int,
+    season_type: int,
+    week: int,
+) -> None:
+    for line_number, row in enumerate(
+        reader,
+        start=2,
+    ):
+        if None in row:
+            raise PredictorValidationError(
+                "Malformed weekly-schedule row at "
+                f"CSV line {line_number}"
+            )
+
+        row_season = parse_positive_int(
+            row.get("season"),
+            label=(
+                "weekly schedule season at "
+                f"CSV line {line_number}"
+            ),
+        )
+
+        row_season_type = parse_positive_int(
+            row.get("season_type"),
+            label=(
+                "weekly schedule season_type at "
+                f"CSV line {line_number}"
+            ),
+        )
+
+        row_week = parse_positive_int(
+            row.get("week"),
+            label=(
+                "weekly schedule week at "
+                f"CSV line {line_number}"
+            ),
+        )
+
+        if (
+            row_season != season
+            or row_season_type != season_type
+            or row_week != week
+        ):
+            raise PredictorValidationError(
+                "Weekly schedule target mismatch at "
+                f"CSV line {line_number}: "
+                f"expected={season}/{season_type}/{week}, "
+                f"actual={row_season}/"
+                f"{row_season_type}/{row_week}"
+            )
+
+        game_id = parse_positive_int_text(
+            row.get("game_id"),
+            label=(
+                "weekly schedule game_id at "
+                f"CSV line {line_number}"
+            ),
+        )
+
+        if game_id in games:
+            raise PredictorValidationError(
+                "Duplicate target game_id in weekly schedule: "
+                f"{game_id}"
+            )
+
+        away_team = str(
+            row.get("away_team") or ""
+        ).strip()
+
+        home_team = str(
+            row.get("home_team") or ""
+        ).strip()
+
+        if not away_team:
+            raise PredictorValidationError(
+                "Blank away_team for "
+                f"game_id={game_id}"
+            )
+
+        if not home_team:
+            raise PredictorValidationError(
+                "Blank home_team for "
+                f"game_id={game_id}"
+            )
+
+        if unresolved_team_name(
+            away_team
+        ):
+            raise PredictorValidationError(
+                "Unresolved away_team for "
+                f"game_id={game_id}: {away_team!r}"
+            )
+
+        if unresolved_team_name(
+            home_team
+        ):
+            raise PredictorValidationError(
+                "Unresolved home_team for "
+                f"game_id={game_id}: {home_team!r}"
+            )
+
+        if (
+            normalize_name(away_team)
+            == normalize_name(home_team)
+        ):
+            raise PredictorValidationError(
+                "Weekly schedule has identical home/away "
+                f"team for game_id={game_id}"
+            )
+
+        games[game_id] = {
+            "season": str(season),
+            "season_type": str(
+                season_type
+            ),
+            "week": str(week),
+            "game_id": game_id,
+            "away_team": away_team,
+            "home_team": home_team,
+        }
+
+
+def _require_target_games(
+    games: dict[str, dict[str, str]],
+) -> None:
+    if not games:
+        raise PredictorValidationError(
+            "Target weekly schedule contains no games"
+        )
+
+
 def load_target_games(
     path: Path,
     *,
@@ -373,137 +518,7 @@ def load_target_games(
     season_type: int,
     week: int,
 ) -> dict[str, dict[str, str]]:
-    def _stage3_load_target_games_block_03() -> None:
-        for line_number, row in enumerate(
-            reader,
-            start=2,
-        ):
-            if None in row:
-                raise PredictorValidationError(
-                    "Malformed weekly-schedule row at "
-                    f"CSV line {line_number}"
-                )
-
-            row_season = parse_positive_int(
-                row.get("season"),
-                label=(
-                    "weekly schedule season at "
-                    f"CSV line {line_number}"
-                ),
-            )
-
-            row_season_type = parse_positive_int(
-                row.get("season_type"),
-                label=(
-                    "weekly schedule season_type at "
-                    f"CSV line {line_number}"
-                ),
-            )
-
-            row_week = parse_positive_int(
-                row.get("week"),
-                label=(
-                    "weekly schedule week at "
-                    f"CSV line {line_number}"
-                ),
-            )
-
-            if (
-                row_season != season
-                or row_season_type != season_type
-                or row_week != week
-            ):
-                raise PredictorValidationError(
-                    "Weekly schedule target mismatch at "
-                    f"CSV line {line_number}: "
-                    f"expected={season}/{season_type}/{week}, "
-                    f"actual={row_season}/"
-                    f"{row_season_type}/{row_week}"
-                )
-
-            game_id = parse_positive_int_text(
-                row.get("game_id"),
-                label=(
-                    "weekly schedule game_id at "
-                    f"CSV line {line_number}"
-                ),
-            )
-
-            if game_id in games:
-                raise PredictorValidationError(
-                    "Duplicate target game_id in weekly schedule: "
-                    f"{game_id}"
-                )
-
-            away_team = str(
-                row.get("away_team") or ""
-            ).strip()
-
-            home_team = str(
-                row.get("home_team") or ""
-            ).strip()
-
-            if not away_team:
-                raise PredictorValidationError(
-                    "Blank away_team for "
-                    f"game_id={game_id}"
-                )
-
-            if not home_team:
-                raise PredictorValidationError(
-                    "Blank home_team for "
-                    f"game_id={game_id}"
-                )
-
-            if unresolved_team_name(
-                away_team
-            ):
-                raise PredictorValidationError(
-                    "Unresolved away_team for "
-                    f"game_id={game_id}: {away_team!r}"
-                )
-
-            if unresolved_team_name(
-                home_team
-            ):
-                raise PredictorValidationError(
-                    "Unresolved home_team for "
-                    f"game_id={game_id}: {home_team!r}"
-                )
-
-            if (
-                normalize_name(away_team)
-                == normalize_name(home_team)
-            ):
-                raise PredictorValidationError(
-                    "Weekly schedule has identical home/away "
-                    f"team for game_id={game_id}"
-                )
-
-            games[game_id] = {
-                "season": str(season),
-                "season_type": str(
-                    season_type
-                ),
-                "week": str(week),
-                "game_id": game_id,
-                "away_team": away_team,
-                "home_team": home_team,
-            }
-
-    def _stage3_load_target_games_block_02() -> None:
-        if not games:
-            raise PredictorValidationError(
-                "Target weekly schedule contains no games"
-            )
-
-    def _stage3_load_target_games_block_01() -> None:
-        if not path.exists():
-            raise FileNotFoundError(
-                f"Target weekly schedule not found: {path}"
-            )
-
-    _stage3_load_target_games_block_01()
+    _require_target_games_path(path)
 
     with path.open(
         "r",
@@ -532,9 +547,15 @@ def load_target_games(
             dict[str, str],
         ] = {}
 
-        _stage3_load_target_games_block_03()
+        _load_target_game_rows(
+            reader,
+            games,
+            season=season,
+            season_type=season_type,
+            week=week,
+        )
 
-    _stage3_load_target_games_block_02()
+    _require_target_games(games)
 
     return games
 
@@ -1062,6 +1083,51 @@ def validate_predictor_response(
     return rows
 
 
+
+def _validate_output_row_count(
+    rows: list[dict[str, str]],
+    expected_rows: int,
+) -> None:
+    if len(rows) != expected_rows:
+        raise PredictorValidationError(
+            "Predictor output row-count mismatch: "
+            f"expected={expected_rows}, actual={len(rows)}"
+        )
+
+
+def _validate_output_target_metadata(
+    *,
+    row_season: int,
+    row_type: int,
+    row_week: int,
+    season: int,
+    season_type: int,
+    week: int,
+    row_index: int,
+) -> None:
+    if (
+        row_season != season
+        or row_type != season_type
+        or row_week != week
+    ):
+        raise PredictorValidationError(
+            "Predictor output target metadata mismatch at "
+            f"row_index={row_index}"
+        )
+
+
+def _validate_output_game_coverage(
+    missing_ids: list[str],
+    foreign_ids: list[str],
+) -> None:
+    if missing_ids or foreign_ids:
+        raise PredictorValidationError(
+            "Predictor output game coverage mismatch: "
+            f"missing={missing_ids[:50]}, "
+            f"foreign={foreign_ids[:50]}"
+        )
+
+
 def validate_output_rows(
     rows: list[dict[str, str]],
     *,
@@ -1072,41 +1138,15 @@ def validate_output_rows(
     state: RuntimeState,
 ) -> None:
 
-    def _stage2_validate_output_rows_block_03() -> None:
-        if (
-            row_season != season
-            or row_type != season_type
-            or row_week != week
-        ):
-            raise PredictorValidationError(
-                "Predictor output target metadata mismatch at "
-                f"row_index={row_index}"
-            )
-
-    def _stage2_validate_output_rows_block_02() -> None:
-        if len(rows) != expected_rows:
-            raise PredictorValidationError(
-                "Predictor output row-count mismatch: "
-                f"expected={expected_rows}, actual={len(rows)}"
-            )
-
-    def _stage2_validate_output_rows_block_01() -> None:
-        if (
-            missing_ids
-            or foreign_ids
-        ):
-            raise PredictorValidationError(
-                "Predictor output game coverage mismatch: "
-                f"missing={missing_ids[:50]}, "
-                f"foreign={foreign_ids[:50]}"
-            )
-
     expected_rows = (
         len(targets)
         * 2
     )
 
-    _stage2_validate_output_rows_block_02()
+    _validate_output_row_count(
+        rows,
+        expected_rows,
+    )
 
     grouped: dict[
         str,
@@ -1148,7 +1188,15 @@ def validate_output_rows(
             ),
         )
 
-        _stage2_validate_output_rows_block_03()
+        _validate_output_target_metadata(
+            row_season=row_season,
+            row_type=row_type,
+            row_week=row_week,
+            season=season,
+            season_type=season_type,
+            week=week,
+            row_index=row_index,
+        )
 
         game_id = parse_positive_int_text(
             row.get("game_id"),
@@ -1313,7 +1361,10 @@ def validate_output_rows(
         key=int,
     )
 
-    _stage2_validate_output_rows_block_01()
+    _validate_output_game_coverage(
+        missing_ids,
+        foreign_ids,
+    )
 
     for game_id, sides in (
         grouped.items()

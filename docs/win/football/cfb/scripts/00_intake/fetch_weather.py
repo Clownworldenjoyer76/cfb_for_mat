@@ -1883,6 +1883,30 @@ def copy_prior_weather(
     )
 
 
+
+def _validate_weather_flags(
+    row: dict[str, str],
+    *,
+    game_id: str,
+) -> None:
+    for field in (
+        "rain_flag",
+        "snow_flag",
+    ):
+        value = clean(
+            row.get(field)
+        )
+
+        if value and value not in {
+            "0",
+            "1",
+        }:
+            raise WeatherValidationError(
+                f"{field} must be 0/1/blank "
+                f"for game_id={game_id}: {value!r}"
+            )
+
+
 def validate_weather_values(
     row: dict[str, str],
     *,
@@ -1890,27 +1914,6 @@ def validate_weather_values(
     kickoff_utc: datetime,
     strict_blank_timestamp: bool,
 ) -> float | None:
-    def _stage2_validate_weather_values_block_01() -> None:
-        for field in (
-            "rain_flag",
-            "snow_flag",
-        ):
-            value = clean(
-                row.get(field)
-            )
-
-            if (
-                value
-                and value not in {
-                    "0",
-                    "1",
-                }
-            ):
-                raise WeatherValidationError(
-                    f"{field} must be 0/1/blank "
-                    f"for game_id={game_id}: {value!r}"
-                )
-
     any_weather = weather_fields_present(
         row
     )
@@ -2031,7 +2034,10 @@ def validate_weather_values(
                 f"humidity outside [0,100] for game_id={game_id}"
             )
 
-    _stage2_validate_weather_values_block_01()
+    _validate_weather_flags(
+        row,
+        game_id=game_id,
+    )
 
     if not fetched_at:
         raise WeatherValidationError(

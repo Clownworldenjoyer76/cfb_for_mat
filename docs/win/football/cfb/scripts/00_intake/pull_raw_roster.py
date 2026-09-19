@@ -1019,6 +1019,53 @@ def build_raw_rows(
     )
 
 
+
+def _require_raw_roster_rows(
+    rows: list[dict[str, object]],
+) -> None:
+    if not rows:
+        raise ValueError(
+            "Raw roster output would be empty"
+        )
+
+
+def _require_raw_roster_columns(
+    missing_required_columns: list[str],
+) -> None:
+    if missing_required_columns:
+        raise ValueError(
+            "Raw roster output missing "
+            "required columns: "
+            f"{missing_required_columns}"
+        )
+
+
+def _validate_raw_roster_team_coverage(
+    expected_teams: set[str],
+    represented_teams: set[str],
+) -> None:
+    if represented_teams != expected_teams:
+        missing = sorted(
+            expected_teams
+            - represented_teams,
+            key=int,
+        )
+
+        foreign = sorted(
+            represented_teams
+            - expected_teams,
+            key=int,
+        )
+
+        raise ValueError(
+            "Raw roster team coverage "
+            "does not match authoritative "
+            "team set. "
+            f"missing={missing[:50]}, "
+            f"foreign={foreign[:50]}"
+        )
+
+
 def validate_final_rows(
     rows: list[
         dict[str, object]
@@ -1032,43 +1079,7 @@ def validate_final_rows(
     season: int,
     season_type: int,
 ) -> None:
-    def _stage2_validate_final_rows_block_03() -> None:
-        if represented_teams != expected_teams:
-            missing = sorted(
-                expected_teams
-                - represented_teams,
-                key=int,
-            )
-
-            foreign = sorted(
-                represented_teams
-                - expected_teams,
-                key=int,
-            )
-
-            raise ValueError(
-                "Raw roster team coverage "
-                "does not match authoritative "
-                "team set. "
-                f"missing={missing[:50]}, "
-                f"foreign={foreign[:50]}"
-            )
-
-    def _stage2_validate_final_rows_block_02() -> None:
-        if missing_required_columns:
-            raise ValueError(
-                "Raw roster output missing "
-                "required columns: "
-                f"{missing_required_columns}"
-            )
-
-    def _stage2_validate_final_rows_block_01() -> None:
-        if not rows:
-            raise ValueError(
-                "Raw roster output would be empty"
-            )
-
-    _stage2_validate_final_rows_block_01()
+    _require_raw_roster_rows(rows)
 
     missing_required_columns = [
         column
@@ -1077,7 +1088,9 @@ def validate_final_rows(
         if column not in columns
     ]
 
-    _stage2_validate_final_rows_block_02()
+    _require_raw_roster_columns(
+        missing_required_columns
+    )
 
     expected_teams = set(
         target_team_ids
@@ -1087,7 +1100,10 @@ def validate_final_rows(
         team_row_counts
     )
 
-    _stage2_validate_final_rows_block_03()
+    _validate_raw_roster_team_coverage(
+        expected_teams,
+        represented_teams,
+    )
 
     zero_row_teams = sorted(
         team_id

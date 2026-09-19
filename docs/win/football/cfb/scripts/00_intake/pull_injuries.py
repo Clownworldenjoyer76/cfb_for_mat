@@ -310,33 +310,33 @@ def load_authoritative_team_ids(
     )
 
 
+
+def _validate_canonical_team_name_uniqueness(
+    canonical_by_id: dict[str, str],
+) -> None:
+    inverse: dict[str, str] = {}
+
+    for team_id, canonical in canonical_by_id.items():
+        prior_id = inverse.get(
+            canonical
+        )
+
+        if prior_id is not None and prior_id != team_id:
+            raise ValueError(
+                "team_map.csv maps one canonical team name to "
+                "multiple authoritative IDs: "
+                f"canonical={canonical!r}, "
+                f"team_ids={prior_id},{team_id}"
+            )
+
+        inverse[
+            canonical
+        ] = team_id
+
+
 def load_canonical_team_names(
     authoritative_team_ids: list[str],
 ) -> dict[str, str]:
-    def _stage3_load_canonical_team_names_block_01() -> None:
-        nonlocal canonical, team_id
-        for team_id, canonical in (
-            canonical_by_id.items()
-        ):
-            prior_id = inverse.get(
-                canonical
-            )
-
-            if (
-                prior_id is not None
-                and prior_id != team_id
-            ):
-                raise ValueError(
-                    "team_map.csv maps one canonical team name to "
-                    "multiple authoritative IDs: "
-                    f"canonical={canonical!r}, "
-                    f"team_ids={prior_id},{team_id}"
-                )
-
-            inverse[
-                canonical
-            ] = team_id
-
     if not TEAM_MAP_PATH.exists():
         raise FileNotFoundError(
             f"Missing team map: {TEAM_MAP_PATH}"
@@ -440,9 +440,9 @@ def load_canonical_team_names(
             f"authoritative team IDs: {missing_ids[:50]}"
         )
 
-    inverse: dict[str, str] = {}
-
-    _stage3_load_canonical_team_names_block_01()
+    _validate_canonical_team_name_uniqueness(
+        canonical_by_id
+    )
 
     return canonical_by_id
 
