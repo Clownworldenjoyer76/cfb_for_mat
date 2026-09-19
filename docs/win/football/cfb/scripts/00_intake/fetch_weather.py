@@ -2059,6 +2059,59 @@ def validate_weather_values(
     )
 
 
+def _validate_weather_output_flags(
+    row: dict[str, str],
+    *,
+    game_id: str,
+) -> None:
+    for field in (
+        "dome_flag",
+        "retractable_roof_flag",
+        "open_air_flag",
+    ):
+        value = clean(
+            row.get(field)
+        )
+
+        if (
+            value
+            and value not in {
+                "0",
+                "1",
+            }
+        ):
+            raise WeatherValidationError(
+                f"{field} must be 0/1/blank "
+                f"for game_id={game_id}"
+            )
+
+
+def _validate_weather_output_coverage(
+    seen: set[str],
+    schedule_lookup: dict[str, dict[str, str]],
+) -> None:
+    if seen != set(
+        schedule_lookup
+    ):
+        raise WeatherValidationError(
+            "Weather game coverage does not match target schedule"
+        )
+
+
+def _validate_weather_output_row_count(
+    rows: list[dict[str, str]],
+    schedule_lookup: dict[str, dict[str, str]],
+) -> None:
+    if len(rows) != len(
+        schedule_lookup
+    ):
+        raise WeatherValidationError(
+            "Weather row-count mismatch: "
+            f"expected={len(schedule_lookup)}, "
+            f"actual={len(rows)}"
+        )
+
+
 def validate_output_rows(
     rows: list[dict[str, str]],
     *,
@@ -2072,47 +2125,10 @@ def validate_output_rows(
     ],
     strict_blank_timestamp: bool,
 ) -> list[float]:
-    def _stage2_validate_output_rows_block_03() -> None:
-        for field in (
-            "dome_flag",
-            "retractable_roof_flag",
-            "open_air_flag",
-        ):
-            value = clean(
-                row.get(field)
-            )
-
-            if (
-                value
-                and value not in {
-                    "0",
-                    "1",
-                }
-            ):
-                raise WeatherValidationError(
-                    f"{field} must be 0/1/blank "
-                    f"for game_id={game_id}"
-                )
-
-    def _stage2_validate_output_rows_block_02() -> None:
-        if seen != set(
-            schedule_lookup
-        ):
-            raise WeatherValidationError(
-                "Weather game coverage does not match target schedule"
-            )
-
-    def _stage2_validate_output_rows_block_01() -> None:
-        if len(rows) != len(
-            schedule_lookup
-        ):
-            raise WeatherValidationError(
-                "Weather row-count mismatch: "
-                f"expected={len(schedule_lookup)}, "
-                f"actual={len(rows)}"
-            )
-
-    _stage2_validate_output_rows_block_01()
+    _validate_weather_output_row_count(
+        rows,
+        schedule_lookup,
+    )
 
     seen: set[str] = set()
     offsets: list[float] = []
@@ -2282,7 +2298,10 @@ def validate_output_rows(
                 f"Weather roof mismatch for game_id={game_id}"
             )
 
-        _stage2_validate_output_rows_block_03()
+        _validate_weather_output_flags(
+            row,
+            game_id=game_id,
+        )
 
         offset = validate_weather_values(
             row,
@@ -2298,7 +2317,10 @@ def validate_output_rows(
                 offset
             )
 
-    _stage2_validate_output_rows_block_02()
+    _validate_weather_output_coverage(
+        seen,
+        schedule_lookup,
+    )
 
     return offsets
 

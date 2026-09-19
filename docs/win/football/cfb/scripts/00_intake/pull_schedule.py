@@ -712,6 +712,52 @@ def parse_game_datetime(
     )
 
 
+def _resolve_event_stadium_row(
+    *,
+    neutral_site: str,
+    stadium_by_stadium: dict[str, dict[str, str]],
+    espn_stadium: str,
+    stadium_by_team: dict[str, dict[str, str]],
+    home_team: str,
+) -> dict[str, str]:
+    stadium_row: dict[
+        str,
+        str,
+    ] = {}
+
+    if neutral_site == "1":
+        stadium_row = (
+            stadium_by_stadium.get(
+                lookup_key(
+                    espn_stadium
+                ),
+                {},
+            )
+        )
+
+    if not stadium_row:
+        stadium_row = (
+            stadium_by_team.get(
+                lookup_key(
+                    home_team
+                ),
+                {},
+            )
+        )
+
+    if not stadium_row:
+        stadium_row = (
+            stadium_by_stadium.get(
+                lookup_key(
+                    espn_stadium
+                ),
+                {},
+            )
+        )
+
+    return stadium_row
+
+
 def event_to_row(
     event: dict[str, Any],
     team_lookup: dict[str, str],
@@ -728,38 +774,6 @@ def event_to_row(
     season_type: int,
     report: PipelineReporter,
 ) -> dict[str, str] | None:
-    def _stage3_event_to_row_block_01() -> None:
-        nonlocal stadium_row
-        if neutral_site == "1":
-            stadium_row = (
-                stadium_by_stadium.get(
-                    lookup_key(
-                        espn_stadium
-                    ),
-                    {},
-                )
-            )
-
-        if not stadium_row:
-            stadium_row = (
-                stadium_by_team.get(
-                    lookup_key(
-                        home_team
-                    ),
-                    {},
-                )
-            )
-
-        if not stadium_row:
-            stadium_row = (
-                stadium_by_stadium.get(
-                    lookup_key(
-                        espn_stadium
-                    ),
-                    {},
-                )
-            )
-
     game_id = clean(
         event.get("id")
     )
@@ -836,12 +850,13 @@ def event_to_row(
         else ""
     )
 
-    stadium_row: dict[
-        str,
-        str,
-    ] = {}
-
-    _stage3_event_to_row_block_01()
+    stadium_row = _resolve_event_stadium_row(
+        neutral_site=neutral_site,
+        stadium_by_stadium=stadium_by_stadium,
+        espn_stadium=espn_stadium,
+        stadium_by_team=stadium_by_team,
+        home_team=home_team,
+    )
 
     stadium = (
         clean(

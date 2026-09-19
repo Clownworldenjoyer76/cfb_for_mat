@@ -631,43 +631,49 @@ def resolve_team_head_coach(
     return select_head_coach(candidates, team_id=team_id)
 
 
+def _populate_career_record_values(
+    career_records: list,
+    *,
+    team_id: str,
+    coach_id: str,
+    record_values: dict[str, set[str]],
+) -> None:
+    for record_index, record_ref_obj in enumerate(career_records):
+        if not isinstance(record_ref_obj, dict):
+            raise CoachValidationError(
+                "careerRecords contains non-object entry for "
+                f"team_id={team_id}, coach_id={coach_id}, "
+                f"record_index={record_index}"
+            )
+
+        record_ref = validate_espn_ref(
+            record_ref_obj.get("$ref", ""),
+            label=(
+                f"career record $ref team_id={team_id} "
+                f"coach_id={coach_id} record_index={record_index}"
+            ),
+        )
+        record = fetch_json(
+            record_ref,
+            request_kind="career_record",
+            label=(
+                f"career record team_id={team_id} "
+                f"coach_id={coach_id} record_index={record_index}"
+            ),
+        )
+
+        record_type = str(record.get("type") or "").strip()
+        summary = str(record.get("summary") or "").strip()
+        if record_type in record_values and summary:
+            record_values[record_type].add(summary)
+
+
 def get_career_records(
     coach: dict,
     *,
     team_id: str,
     coach_id: str,
 ) -> tuple[str, str, dict[str, int]]:
-    def _stage3_get_career_records_block_01() -> None:
-        nonlocal record_type
-        for record_index, record_ref_obj in enumerate(career_records):
-            if not isinstance(record_ref_obj, dict):
-                raise CoachValidationError(
-                    "careerRecords contains non-object entry for "
-                    f"team_id={team_id}, coach_id={coach_id}, "
-                    f"record_index={record_index}"
-                )
-
-            record_ref = validate_espn_ref(
-                record_ref_obj.get("$ref", ""),
-                label=(
-                    f"career record $ref team_id={team_id} "
-                    f"coach_id={coach_id} record_index={record_index}"
-                ),
-            )
-            record = fetch_json(
-                record_ref,
-                request_kind="career_record",
-                label=(
-                    f"career record team_id={team_id} "
-                    f"coach_id={coach_id} record_index={record_index}"
-                ),
-            )
-
-            record_type = str(record.get("type") or "").strip()
-            summary = str(record.get("summary") or "").strip()
-            if record_type in record_values and summary:
-                record_values[record_type].add(summary)
-
     diagnostics = {
         "missing_person_ref": 0,
         "missing_career_records_collection": 0,
@@ -715,7 +721,12 @@ def get_career_records(
         "Post Season": set(),
     }
 
-    _stage3_get_career_records_block_01()
+    _populate_career_record_values(
+        career_records,
+        team_id=team_id,
+        coach_id=coach_id,
+        record_values=record_values,
+    )
 
     for record_type, summaries in record_values.items():
         if len(summaries) > 1:

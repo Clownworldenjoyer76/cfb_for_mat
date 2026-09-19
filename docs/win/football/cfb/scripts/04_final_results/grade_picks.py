@@ -1360,130 +1360,135 @@ def grade_week(
     return output_path
 
 
+def _append_season_summary_total(
+    summary_rows: list[dict[str, Any]],
+    *,
+    season: int,
+) -> None:
+    if summary_rows:
+        total_selected = sum(
+            row[
+                "selected_bets"
+            ]
+            for row
+            in summary_rows
+        )
+
+        total_graded = sum(
+            row[
+                "graded_bets"
+            ]
+            for row
+            in summary_rows
+        )
+
+        total_wins = sum(
+            row[
+                "wins"
+            ]
+            for row
+            in summary_rows
+        )
+
+        total_losses = sum(
+            row[
+                "losses"
+            ]
+            for row
+            in summary_rows
+        )
+
+        total_pushes = sum(
+            row[
+                "pushes"
+            ]
+            for row
+            in summary_rows
+        )
+
+        total_voids = sum(
+            row[
+                "voids"
+            ]
+            for row
+            in summary_rows
+        )
+
+        total_pending = sum(
+            row[
+                "pending_bets"
+            ]
+            for row
+            in summary_rows
+        )
+
+        total_units = sum(
+            float(
+                row[
+                    "net_units"
+                ]
+            )
+            for row
+            in summary_rows
+        )
+
+        total_games = sum(
+            int(
+                row[
+                    "games"
+                ]
+            )
+            for row
+            in summary_rows
+        )
+
+        total_roi = (
+            total_units
+            / total_graded
+            if total_graded > 0
+            else np.nan
+        )
+
+        summary_rows.append(
+            {
+                "season": season,
+                "week": "TOTAL",
+                "games": total_games,
+                "selected_bets": (
+                    total_selected
+                ),
+                "graded_bets": (
+                    total_graded
+                ),
+                "wins": total_wins,
+                "losses": total_losses,
+                "pushes": total_pushes,
+                "voids": total_voids,
+                "pending_bets": (
+                    total_pending
+                ),
+                "net_units": round(
+                    total_units,
+                    6,
+                ),
+                "roi_per_graded_bet": (
+                    round(
+                        total_roi,
+                        6,
+                    )
+                    if math.isfinite(
+                        total_roi
+                    )
+                    else ""
+                ),
+            }
+        )
+
+
 def build_season_summary(
     output_dir: Path,
     season: int,
 ) -> Path:
-    def _stage3_build_season_summary_block_01() -> None:
-        if summary_rows:
-            total_selected = sum(
-                row[
-                    "selected_bets"
-                ]
-                for row
-                in summary_rows
-            )
-
-            total_graded = sum(
-                row[
-                    "graded_bets"
-                ]
-                for row
-                in summary_rows
-            )
-
-            total_wins = sum(
-                row[
-                    "wins"
-                ]
-                for row
-                in summary_rows
-            )
-
-            total_losses = sum(
-                row[
-                    "losses"
-                ]
-                for row
-                in summary_rows
-            )
-
-            total_pushes = sum(
-                row[
-                    "pushes"
-                ]
-                for row
-                in summary_rows
-            )
-
-            total_voids = sum(
-                row[
-                    "voids"
-                ]
-                for row
-                in summary_rows
-            )
-
-            total_pending = sum(
-                row[
-                    "pending_bets"
-                ]
-                for row
-                in summary_rows
-            )
-
-            total_units = sum(
-                float(
-                    row[
-                        "net_units"
-                    ]
-                )
-                for row
-                in summary_rows
-            )
-
-            total_games = sum(
-                int(
-                    row[
-                        "games"
-                    ]
-                )
-                for row
-                in summary_rows
-            )
-
-            total_roi = (
-                total_units
-                / total_graded
-                if total_graded > 0
-                else np.nan
-            )
-
-            summary_rows.append(
-                {
-                    "season": season,
-                    "week": "TOTAL",
-                    "games": total_games,
-                    "selected_bets": (
-                        total_selected
-                    ),
-                    "graded_bets": (
-                        total_graded
-                    ),
-                    "wins": total_wins,
-                    "losses": total_losses,
-                    "pushes": total_pushes,
-                    "voids": total_voids,
-                    "pending_bets": (
-                        total_pending
-                    ),
-                    "net_units": round(
-                        total_units,
-                        6,
-                    ),
-                    "roi_per_graded_bet": (
-                        round(
-                            total_roi,
-                            6,
-                        )
-                        if math.isfinite(
-                            total_roi
-                        )
-                        else ""
-                    ),
-                }
-            )
-
     summary_rows: list[
         dict[str, Any]
     ] = []
@@ -1674,7 +1679,10 @@ def build_season_summary(
             }
         )
 
-    _stage3_build_season_summary_block_01()
+    _append_season_summary_total(
+        summary_rows,
+        season=season,
+    )
 
     summary = pd.DataFrame(
         summary_rows,

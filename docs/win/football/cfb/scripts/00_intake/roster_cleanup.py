@@ -495,70 +495,78 @@ def write_staged_csv(
         os.fsync(handle.fileno())
 
 
+def _validate_serialized_roster_rows(
+    rows: list[dict[str, str]],
+    *,
+    authoritative_team_ids: set[str],
+    represented_team_ids: set[str],
+    seen_keys: set[tuple[str, str]],
+    athlete_team_assignments: dict[str, str],
+) -> None:
+    for row_number, row in enumerate(rows, start=2):
+        if None in row:
+            raise ValueError(
+                "Serialized roster_master.csv contains a malformed row "
+                f"at CSV line {row_number}"
+            )
+
+        athlete_id = str(row.get("id") or "").strip()
+        display_name = str(row.get("displayName") or "").strip()
+        team_id = str(row.get("team_id") or "").strip()
+
+        if not athlete_id:
+            raise ValueError(
+                "Serialized roster_master.csv has blank athlete id at "
+                f"CSV line {row_number}"
+            )
+
+        if not display_name:
+            raise ValueError(
+                "Serialized roster_master.csv has blank displayName at "
+                f"CSV line {row_number}"
+            )
+
+        if not team_id:
+            raise ValueError(
+                "Serialized roster_master.csv has blank team_id at "
+                f"CSV line {row_number}"
+            )
+
+        if team_id not in authoritative_team_ids:
+            raise ValueError(
+                "Serialized roster_master.csv references a "
+                f"non-authoritative team_id={team_id!r}"
+            )
+
+        key = (team_id, athlete_id)
+
+        if key in seen_keys:
+            raise ValueError(
+                "Serialized roster_master.csv contains duplicate "
+                f"athlete key: {key}"
+            )
+
+        prior_team = athlete_team_assignments.get(athlete_id)
+
+        if prior_team is not None and prior_team != team_id:
+            raise ValueError(
+                "Serialized roster_master.csv assigns one athlete to "
+                "multiple teams: "
+                f"athlete_id={athlete_id}, "
+                f"teams={prior_team},{team_id}"
+            )
+
+        seen_keys.add(key)
+        athlete_team_assignments[athlete_id] = team_id
+        represented_team_ids.add(team_id)
+
+
 def validate_staged_csv(
     path: Path,
     *,
     expected_rows: list[dict[str, str]],
     authoritative_team_ids: set[str],
 ) -> None:
-    def _stage2_validate_staged_csv_block_01() -> None:
-        for row_number, row in enumerate(rows, start=2):
-            if None in row:
-                raise ValueError(
-                    "Serialized roster_master.csv contains a malformed row "
-                    f"at CSV line {row_number}"
-                )
-
-            athlete_id = str(row.get("id") or "").strip()
-            display_name = str(row.get("displayName") or "").strip()
-            team_id = str(row.get("team_id") or "").strip()
-
-            if not athlete_id:
-                raise ValueError(
-                    "Serialized roster_master.csv has blank athlete id at "
-                    f"CSV line {row_number}"
-                )
-
-            if not display_name:
-                raise ValueError(
-                    "Serialized roster_master.csv has blank displayName at "
-                    f"CSV line {row_number}"
-                )
-
-            if not team_id:
-                raise ValueError(
-                    "Serialized roster_master.csv has blank team_id at "
-                    f"CSV line {row_number}"
-                )
-
-            if team_id not in authoritative_team_ids:
-                raise ValueError(
-                    "Serialized roster_master.csv references a "
-                    f"non-authoritative team_id={team_id!r}"
-                )
-
-            key = (team_id, athlete_id)
-
-            if key in seen_keys:
-                raise ValueError(
-                    "Serialized roster_master.csv contains duplicate "
-                    f"athlete key: {key}"
-                )
-
-            prior_team = athlete_team_assignments.get(athlete_id)
-
-            if prior_team is not None and prior_team != team_id:
-                raise ValueError(
-                    "Serialized roster_master.csv assigns one athlete to "
-                    "multiple teams: "
-                    f"athlete_id={athlete_id}, "
-                    f"teams={prior_team},{team_id}"
-                )
-
-            seen_keys.add(key)
-            athlete_team_assignments[athlete_id] = team_id
-            represented_team_ids.add(team_id)
-
     with path.open(
         "r",
         newline="",
@@ -590,7 +598,13 @@ def validate_staged_csv(
     seen_keys: set[tuple[str, str]] = set()
     athlete_team_assignments: dict[str, str] = {}
 
-    _stage2_validate_staged_csv_block_01()
+    _validate_serialized_roster_rows(
+        rows,
+        authoritative_team_ids=authoritative_team_ids,
+        represented_team_ids=represented_team_ids,
+        seen_keys=seen_keys,
+        athlete_team_assignments=athlete_team_assignments,
+    )
 
     if represented_team_ids != authoritative_team_ids:
         missing_teams = sorted(

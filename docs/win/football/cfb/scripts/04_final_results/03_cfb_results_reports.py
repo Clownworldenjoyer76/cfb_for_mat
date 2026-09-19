@@ -253,23 +253,29 @@ def resolve_target(
     return season, season_type
 
 
+def _validate_selected_bet_units(
+    *,
+    result: str,
+    units: str,
+    line: int,
+) -> None:
+    if result in SETTLED_RESULTS:
+        required_float(
+            units,
+            f"work_cfb.csv line {line}: bet_units",
+        )
+    elif units:
+        required_float(
+            units,
+            f"work_cfb.csv line {line}: bet_units",
+        )
+
+
 def validate_input(
     df: pd.DataFrame,
     season: int,
     season_type: int,
 ) -> None:
-    def _stage2_validate_input_block_01() -> None:
-        if result in SETTLED_RESULTS:
-            required_float(
-                units,
-                f"work_cfb.csv line {line}: bet_units",
-            )
-        elif units:
-            required_float(
-                units,
-                f"work_cfb.csv line {line}: bet_units",
-            )
-
     required = [
         "season",
         "season_type",
@@ -411,7 +417,11 @@ def validate_input(
 
         units = clean(row["bet_units"])
 
-        _stage2_validate_input_block_01()
+        _validate_selected_bet_units(
+            result=result,
+            units=units,
+            line=line,
+        )
 
         key = (
             row_season,
