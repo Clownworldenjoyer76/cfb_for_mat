@@ -1870,6 +1870,56 @@ def backup_path(
     )
 
 
+
+def _ensure_output_parent_dirs(
+    paths: list[Path],
+) -> None:
+    for path in paths:
+        path.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+
+def _ensure_snapshot_paths_absent(
+    raw_snapshot_path: Path,
+    csv_snapshot_path: Path,
+) -> None:
+    for snapshot_path in (
+        raw_snapshot_path,
+        csv_snapshot_path,
+    ):
+        if snapshot_path.exists():
+            raise FileExistsError(
+                "Refusing to overwrite immutable odds snapshot: "
+                f"{snapshot_path}"
+            )
+
+
+def _restore_current_output(
+    *,
+    backup: Path,
+    final_path: Path,
+    had_existing: bool,
+) -> None:
+    if backup.exists():
+        try:
+            os.replace(
+                backup,
+                final_path,
+            )
+        except Exception:
+            pass
+
+    elif not had_existing:
+        try:
+            final_path.unlink(
+                missing_ok=True
+            )
+        except Exception:
+            pass
+
+
 def publish_output_bundle(
     *,
     raw_path: Path,
@@ -1879,61 +1929,6 @@ def publish_output_bundle(
     raw_payload: dict,
     rows: list[dict[str, str]],
 ) -> None:
-    def _stage3_publish_output_bundle_block_04() -> None:
-        if csv_backup.exists():
-            try:
-                os.replace(
-                    csv_backup,
-                    csv_path,
-                )
-            except Exception:
-                pass
-
-        elif not csv_had_existing:
-            try:
-                csv_path.unlink(
-                    missing_ok=True
-                )
-            except Exception:
-                pass
-
-    def _stage3_publish_output_bundle_block_03() -> None:
-        if raw_backup.exists():
-            try:
-                os.replace(
-                    raw_backup,
-                    raw_path,
-                )
-            except Exception:
-                pass
-
-        elif not raw_had_existing:
-            try:
-                raw_path.unlink(
-                    missing_ok=True
-                )
-            except Exception:
-                pass
-
-    def _stage3_publish_output_bundle_block_02() -> None:
-        nonlocal path
-        for path in finals:
-            path.parent.mkdir(
-                parents=True,
-                exist_ok=True,
-            )
-
-    def _stage3_publish_output_bundle_block_01() -> None:
-        for snapshot_path in (
-            raw_snapshot_path,
-            csv_snapshot_path,
-        ):
-            if snapshot_path.exists():
-                raise FileExistsError(
-                    "Refusing to overwrite immutable odds snapshot: "
-                    f"{snapshot_path}"
-                )
-
     finals = [
         raw_path,
         csv_path,
@@ -1941,9 +1936,12 @@ def publish_output_bundle(
         csv_snapshot_path,
     ]
 
-    _stage3_publish_output_bundle_block_02()
+    _ensure_output_parent_dirs(finals)
 
-    _stage3_publish_output_bundle_block_01()
+    _ensure_snapshot_paths_absent(
+        raw_snapshot_path,
+        csv_snapshot_path,
+    )
 
     temp_raw = temporary_path(
         raw_path
@@ -2074,9 +2072,17 @@ def publish_output_bundle(
             except Exception:
                 pass
 
-        _stage3_publish_output_bundle_block_03()
+        _restore_current_output(
+            backup=raw_backup,
+            final_path=raw_path,
+            had_existing=raw_had_existing,
+        )
 
-        _stage3_publish_output_bundle_block_04()
+        _restore_current_output(
+            backup=csv_backup,
+            final_path=csv_path,
+            had_existing=csv_had_existing,
+        )
 
         for path in snapshot_published:
             try:

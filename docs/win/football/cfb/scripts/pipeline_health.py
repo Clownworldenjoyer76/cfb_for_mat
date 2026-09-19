@@ -264,6 +264,128 @@ def read_csv_state(path: Path) -> dict[str, Any]:
     return result
 
 
+
+def _required_stage_columns(
+    key: str,
+) -> set[str]:
+    required = {
+        "season",
+        "game_id",
+    }
+
+    if key != "all_games":
+        required.add("season_type")
+
+    if key != "season_schedule":
+        required.add("week")
+
+    if key == "weekly_schedule":
+        required.update(
+            {
+                "away_team",
+                "home_team",
+                "odds_available",
+            }
+        )
+
+    if key in {"selected", "locked"}:
+        required.update(
+            {
+                "ml_selected",
+                "spread_selected",
+                "total_selected",
+            }
+        )
+
+    return required
+
+
+def _validate_stage_rows(
+    *,
+    key: str,
+    path: Path,
+    rows: list[dict],
+    season: str,
+    season_type: int,
+    week: int,
+) -> None:
+    seen: set[str] = set()
+
+    for line, row in enumerate(
+        rows,
+        start=2,
+    ):
+        row_season = parse_int(
+            row.get("season"),
+            f"{path} line {line}: season",
+        )
+        if row_season != int(season):
+            raise RuntimeError(
+                f"wrong season at line {line}"
+            )
+
+        if key != "all_games":
+            row_type = parse_int(
+                row.get("season_type"),
+                f"{path} line {line}: season_type",
+            )
+            if row_type != season_type:
+                raise RuntimeError(
+                    f"wrong season_type at line {line}"
+                )
+
+        if key != "season_schedule":
+            row_week = parse_int(
+                row.get("week"),
+                f"{path} line {line}: week",
+            )
+            if row_week != week:
+                raise RuntimeError(
+                    f"wrong week at line {line}"
+                )
+
+        game_id = clean_id(
+            row.get("game_id")
+        )
+
+        if not game_id:
+            raise RuntimeError(
+                f"blank game_id at line {line}"
+            )
+
+        if game_id in seen:
+            raise RuntimeError(
+                f"duplicate game_id {game_id}"
+            )
+
+        seen.add(game_id)
+
+        if key == "weekly_schedule":
+            if (
+                not clean(row.get("away_team"))
+                or not clean(row.get("home_team"))
+            ):
+                raise RuntimeError(
+                    f"blank team identity at line {line}"
+                )
+
+            strict_flag(
+                row.get("odds_available"),
+                f"{path} line {line}: odds_available",
+            )
+
+        if key in {"selected", "locked"}:
+            for flag in (
+                "ml_selected",
+                "spread_selected",
+                "total_selected",
+            ):
+                strict_flag(
+                    row.get(flag),
+                    f"{path} line {line}: {flag}",
+                )
+
+
 def validate_stage(
     key: str,
     path: Path,
@@ -271,94 +393,6 @@ def validate_stage(
     season_type: int,
     week: int,
 ) -> tuple[dict[str, Any], list[dict]]:
-    def _stage2_validate_stage_block_02() -> None:
-        for line, row in enumerate(rows, start=2):
-            row_season = parse_int(
-                row.get("season"),
-                f"{path} line {line}: season",
-            )
-            if row_season != int(season):
-                raise RuntimeError(
-                    f"wrong season at line {line}"
-                )
-
-            if key != "all_games":
-                row_type = parse_int(
-                    row.get("season_type"),
-                    f"{path} line {line}: season_type",
-                )
-
-                if row_type != season_type:
-                    raise RuntimeError(
-                        f"wrong season_type at line {line}"
-                    )
-
-            if key != "season_schedule":
-                row_week = parse_int(
-                    row.get("week"),
-                    f"{path} line {line}: week",
-                )
-                if row_week != week:
-                    raise RuntimeError(
-                        f"wrong week at line {line}"
-                    )
-
-            game_id = clean_id(row.get("game_id"))
-
-            if not game_id:
-                raise RuntimeError(
-                    f"blank game_id at line {line}"
-                )
-
-            if game_id in seen:
-                raise RuntimeError(
-                    f"duplicate game_id {game_id}"
-                )
-
-            seen.add(game_id)
-
-            if key == "weekly_schedule":
-                if (
-                    not clean(row.get("away_team"))
-                    or not clean(row.get("home_team"))
-                ):
-                    raise RuntimeError(
-                        f"blank team identity at line {line}"
-                    )
-
-                strict_flag(
-                    row.get("odds_available"),
-                    f"{path} line {line}: odds_available",
-                )
-
-            if key in {"selected", "locked"}:
-                for flag in (
-                    "ml_selected",
-                    "spread_selected",
-                    "total_selected",
-                ):
-                    strict_flag(
-                        row.get(flag),
-                        f"{path} line {line}: {flag}",
-                    )
-
-    def _stage2_validate_stage_block_01() -> None:
-        if key != "all_games":
-            required.add("season_type")
-
-        if key != "season_schedule":
-            required.add("week")
-
-        if key == "weekly_schedule":
-            required.update(
-                {"away_team", "home_team", "odds_available"}
-            )
-
-        if key in {"selected", "locked"}:
-            required.update(
-                {"ml_selected", "spread_selected", "total_selected"}
-            )
-
     state = read_csv_state(path)
 
     stage = {
@@ -379,9 +413,9 @@ def validate_stage(
     fields = set(state["fields"])
     rows = state["rows"]
 
-    required = {"season", "game_id"}
-
-    _stage2_validate_stage_block_01()
+    required = _required_stage_columns(
+        key
+    )
 
     missing = required - fields
 
@@ -400,10 +434,15 @@ def validate_stage(
         stage["error"] = "contains no data rows"
         return stage, []
 
-    seen: set[str] = set()
-
     try:
-        _stage2_validate_stage_block_02()
+        _validate_stage_rows(
+            key=key,
+            path=path,
+            rows=rows,
+            season=season,
+            season_type=season_type,
+            week=week,
+        )
 
     except Exception as exc:
         stage["status"] = "STATUS: INVALID"
@@ -846,25 +885,39 @@ def health_log(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+
+def _replace_health_outputs(
+    *,
+    temps: dict[Path, Path],
+    contents: dict[Path, bytes],
+    backups: dict[Path, Path],
+) -> None:
+    try:
+        for final, temp in temps.items():
+            os.replace(
+                temp,
+                final,
+            )
+
+    except Exception:
+        for final in contents:
+            final.unlink(
+                missing_ok=True
+            )
+
+        for final, backup in backups.items():
+            if backup.exists():
+                os.replace(
+                    backup,
+                    final,
+                )
+
+        raise
+
+
 def publish_outputs(
     payload: dict[str, Any],
 ) -> bool:
-    def _stage3_publish_outputs_block_01() -> None:
-        nonlocal backup, final, temp
-        try:
-            for final, temp in temps.items():
-                os.replace(temp, final)
-
-        except Exception:
-            for final in contents:
-                final.unlink(missing_ok=True)
-
-            for final, backup in backups.items():
-                if backup.exists():
-                    os.replace(backup, final)
-
-            raise
-
     json_text = (
         json.dumps(
             payload,
@@ -946,7 +999,11 @@ def publish_outputs(
                 os.replace(final, backup)
                 backups[final] = backup
 
-        _stage3_publish_outputs_block_01()
+        _replace_health_outputs(
+            temps=temps,
+            contents=contents,
+            backups=backups,
+        )
 
         return True
 
