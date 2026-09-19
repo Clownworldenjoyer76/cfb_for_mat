@@ -1420,6 +1420,7 @@ def publish_atomic(
     season: int,
     season_type: int,
     week: int,
+    state: RuntimeState,
 ) -> bool:
     final_path.parent.mkdir(
         parents=True,
@@ -1460,6 +1461,7 @@ def publish_atomic(
             season=season,
             season_type=season_type,
             week=week,
+            state=state,
         )
 
         if (
@@ -1723,6 +1725,7 @@ def run(
                 season=season,
                 season_type=season_type,
                 week=week,
+                state=state,
             )
         )
 
