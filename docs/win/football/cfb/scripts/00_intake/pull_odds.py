@@ -1548,55 +1548,6 @@ def _stage1_validate_odds_row_identity(
     return game_id, market_type, bet_side
 
 
-def _stage1_validate_american_decimal(
-    *,
-    odds_text: str,
-    decimal_text: str,
-    game_id: str,
-    market_type: str,
-    bet_side: str,
-) -> None:
-    if odds_text:
-        american = to_float(odds_text)
-        expected_decimal = to_float(american_to_decimal(odds_text))
-        actual_decimal = to_float(decimal_text)
-        if (
-            american is None
-            or american == 0
-            or expected_decimal is None
-            or actual_decimal is None
-            or abs(expected_decimal - actual_decimal) > 0.000001
-        ):
-            raise ValueError(
-                "American/decimal odds mismatch for "
-                f"game_id={game_id}, market={market_type}, side={bet_side}"
-            )
-    elif decimal_text:
-        raise ValueError(
-            "Decimal odds present without American odds for "
-            f"game_id={game_id}, market={market_type}, side={bet_side}"
-        )
-
-
-def _stage1_validate_spread_pair(
-    row: dict[str, str],
-    *,
-    game_id: str,
-) -> tuple[float | None, float | None]:
-    home_spread = to_float(row["home_spread"])
-    away_spread = to_float(row["away_spread"])
-    if (
-        home_spread is not None
-        and away_spread is not None
-        and abs(home_spread + away_spread) > 0.000001
-    ):
-        raise ValueError(
-            f"Home/away spread mismatch for game_id={game_id}: "
-            f"home={home_spread}, away={away_spread}"
-        )
-    return home_spread, away_spread
-
-
 def _stage1_validate_market_line(
     *,
     row: dict[str, str],
