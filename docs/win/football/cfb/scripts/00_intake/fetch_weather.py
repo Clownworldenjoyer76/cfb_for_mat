@@ -1892,6 +1892,36 @@ def has_usable_weather(
     )
 
 
+
+def prior_weather_usable_for_kickoff(
+    row: dict[str, object] | None,
+    kickoff_utc: datetime,
+) -> bool:
+    if not has_usable_weather(
+        row
+    ):
+        return False
+
+    timestep = parse_iso_utc(
+        row.get(
+            "weather_timestep_utc"
+        )
+    )
+
+    if timestep is None:
+        return False
+
+    return (
+        abs(
+            (
+                timestep
+                - kickoff_utc
+            ).total_seconds()
+        )
+        <= MAX_FORECAST_OFFSET_SECONDS
+    )
+
+
 def copy_prior_weather(
     target_row: dict[str, object],
     prior_row: dict[str, str],
@@ -2203,6 +2233,9 @@ def validate_weather_schedule_time(
             "Weather kickoff mismatch "
             f"for game_id={game_id}"
         )
+
+    if allow_locked_existing_drift:
+        return actual_kickoff
 
     return expected_kickoff
 
@@ -2607,7 +2640,12 @@ def _stage1_build_weather_game(
         state["exposed_game_count"] += 1
 
     prior = existing_rows.get(game_id)
-    prior_usable = has_usable_weather(prior)
+    prior_usable = (
+        prior_weather_usable_for_kickoff(
+            prior,
+            kickoff_utc,
+        )
+    )
     if kickoff_utc <= now_utc:
         return _stage1_completed_weather(
             row,
