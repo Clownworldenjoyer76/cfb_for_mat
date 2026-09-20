@@ -587,9 +587,7 @@ def latest_odds_pair() -> tuple[
         ODDS_DIR.glob(
             "*_CFB_odds.csv"
         ),
-        key=lambda path: (
-            path.stat().st_mtime
-        ),
+        key=lambda path: path.name,
         reverse=True,
     )
 

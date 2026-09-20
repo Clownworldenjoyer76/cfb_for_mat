@@ -2138,6 +2138,46 @@ def publish_output_bundle(
                     pass
 
 
+
+def latest_existing_odds_pair() -> tuple[
+    Path,
+    Path,
+]:
+    files = sorted(
+        ODDS_DIR.glob(
+            "*_CFB_odds.csv"
+        ),
+        key=lambda path: path.name,
+        reverse=True,
+    )
+
+    for odds_csv_path in files:
+        match = re.fullmatch(
+            r"(\d{4}_\d{2}_\d{2})_CFB_odds\.csv",
+            odds_csv_path.name,
+        )
+
+        if match is None:
+            continue
+
+        raw_path = (
+            RAW_ODDS_DIR
+            / f"{match.group(1)}_cfb_odds.json"
+        )
+
+        if raw_path.exists():
+            return (
+                odds_csv_path,
+                raw_path,
+            )
+
+    raise FileNotFoundError(
+        "All target-week games are locked and no "
+        "prior normalized/raw CFB odds pair is available "
+        "to preserve."
+    )
+
+
 def main() -> int:
     with PipelineReporter(
         script=__file__,
@@ -2474,10 +2514,60 @@ def main() -> int:
             )
 
         if attempted_count == 0:
-            raise RuntimeError(
-                "All configured target-week games are locked. "
-                "No odds outputs were modified."
+            (
+                preserved_csv_path,
+                preserved_raw_path,
+            ) = latest_existing_odds_pair()
+
+            report.warning(
+                "All configured target-week games are locked; "
+                "preserving the latest existing odds pair."
             )
+
+            report.add_input(
+                preserved_csv_path
+            )
+
+            report.add_input(
+                preserved_raw_path
+            )
+
+            report.set_rows(
+                rows_out=0,
+            )
+
+            report.update_details(
+                {
+                    "output_modified": False,
+                    "no_op_reason": (
+                        "all_target_games_locked"
+                    ),
+                    "preserved_normalized_csv": str(
+                        preserved_csv_path
+                    ),
+                    "preserved_raw_json": str(
+                        preserved_raw_path
+                    ),
+                }
+            )
+
+            print(
+                "pull_odds.py completed "
+                "with no-op: all target-week "
+                "games are locked"
+            )
+
+            print(
+                "preserved_csv="
+                f"{preserved_csv_path}"
+            )
+
+            print(
+                "preserved_raw="
+                f"{preserved_raw_path}"
+            )
+
+            return 0
 
         if not rows:
             raise RuntimeError(
