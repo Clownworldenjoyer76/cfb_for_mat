@@ -1480,6 +1480,7 @@ def validate_output_rows(
     *,
     season: int,
     canonical_by_id: dict[str, str],
+    state: RuntimeState,
 ) -> None:
     canonical_to_id = {
         canonical: team_id
@@ -1576,7 +1577,8 @@ def validate_output_rows(
         )
 
         age_days = report_age_days(
-            report_date_utc
+            report_date_utc,
+            state=state,
         )
 
         if age_days > MAX_REPORT_AGE_DAYS:
@@ -1644,6 +1646,7 @@ def validate_staged_csv(
     expected_rows: list[dict[str, str]],
     season: int,
     canonical_by_id: dict[str, str],
+    state: RuntimeState,
 ) -> None:
     with path.open(
         "r",
@@ -1679,6 +1682,7 @@ def validate_staged_csv(
         rows,
         season=season,
         canonical_by_id=canonical_by_id,
+        state=state,
     )
 
 
@@ -1688,6 +1692,7 @@ def publish_atomic(
     rows: list[dict[str, str]],
     season: int,
     canonical_by_id: dict[str, str],
+    state: RuntimeState,
 ) -> bool:
     output_path.parent.mkdir(
         parents=True,
@@ -1709,6 +1714,7 @@ def publish_atomic(
             expected_rows=rows,
             season=season,
             canonical_by_id=canonical_by_id,
+            state=state,
         )
 
         if (
@@ -2082,6 +2088,7 @@ def run(
             rows,
             season=season,
             canonical_by_id=canonical_by_id,
+            state=state,
         )
 
         output_modified = publish_atomic(
@@ -2089,6 +2096,7 @@ def run(
             rows=rows,
             season=season,
             canonical_by_id=canonical_by_id,
+            state=state,
         )
 
         report.set_rows(
