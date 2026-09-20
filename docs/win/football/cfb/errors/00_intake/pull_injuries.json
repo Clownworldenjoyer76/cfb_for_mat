@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35448882205-attempt-1",
+  "run_id": "github-35510419460-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "pull_injuries.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_injuries.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_injuries.json",
-  "started_at_utc": "2026-09-19T14:34:06.085433+00:00",
-  "finished_at_utc": "2026-09-19T14:34:06.441685+00:00",
-  "duration_seconds": 0.356,
+  "started_at_utc": "2026-09-20T12:28:08.836661+00:00",
+  "finished_at_utc": "2026-09-20T12:28:08.961493+00:00",
+  "duration_seconds": 0.125,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2501,
+    "process_id": 2585,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35448882205",
+    "github_run_id": "35510419460",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "de71d5a7c2e604899f3589fecb72020fb4fe623a",
+    "github_sha": "649adb9a4c841bef70a209a2c41905c1a8362220",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -48,7 +48,7 @@
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-19T14:34:06.440325+00:00",
+      "timestamp_utc": "2026-09-20T12:28:08.960386+00:00",
       "message": "ESPN returned only stale injury records; all stale records were excluded and zero current injuries will be published: raw=3, stale=3, fresh=0, max_age_days=60.0",
       "details": null
     }
@@ -58,9 +58,9 @@
     "output_modified": false,
     "season_type": 2,
     "provider_status": "success",
-    "provider_timestamp": "2026-09-19T14:34:06Z",
+    "provider_timestamp": "2026-09-20T12:28:08Z",
     "freshness_reference": "espn_payload_timestamp",
-    "freshness_reference_utc": "2026-09-19T14:34:06+00:00",
+    "freshness_reference_utc": "2026-09-20T12:28:08+00:00",
     "max_report_age_days": 60.0,
     "provider_season": 2026,
     "provider_season_type": 2,

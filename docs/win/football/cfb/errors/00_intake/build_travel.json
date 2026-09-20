@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35448882205-attempt-1",
+  "run_id": "github-35510419460-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "build_travel.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/build_travel.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/build_travel.json",
-  "started_at_utc": "2026-09-19T14:34:15.451692+00:00",
-  "finished_at_utc": "2026-09-19T14:34:15.482161+00:00",
+  "started_at_utc": "2026-09-20T12:28:15.724663+00:00",
+  "finished_at_utc": "2026-09-20T12:28:15.754330+00:00",
   "duration_seconds": 0.03,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2511,
+    "process_id": 2594,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35448882205",
+    "github_run_id": "35510419460",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "de71d5a7c2e604899f3589fecb72020fb4fe623a",
+    "github_sha": "649adb9a4c841bef70a209a2c41905c1a8362220",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -48,7 +48,7 @@
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-19T14:34:15.482136+00:00",
+      "timestamp_utc": "2026-09-20T12:28:15.754309+00:00",
       "message": "One or more teams do not have home-stadium origin mappings; team-specific travel fields were left blank",
       "details": {
         "count": 12,
@@ -152,7 +152,7 @@
       "home_west_to_east",
       "international_flag"
     ],
-    "output_modified": false,
+    "output_modified": true,
     "target_schedule_rows": 75,
     "stadium_map_rows": 186,
     "team_mapping_count": 186,

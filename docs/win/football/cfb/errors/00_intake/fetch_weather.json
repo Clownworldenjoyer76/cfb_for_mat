@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35448882205-attempt-1",
-  "status": "SUCCESS",
+  "run_id": "github-35510419460-attempt-1",
+  "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
@@ -9,22 +9,22 @@
   "script": "fetch_weather.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/fetch_weather.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/fetch_weather.json",
-  "started_at_utc": "2026-09-19T14:34:15.613435+00:00",
-  "finished_at_utc": "2026-09-19T14:36:48.963296+00:00",
-  "duration_seconds": 153.35,
+  "started_at_utc": "2026-09-20T12:28:15.902507+00:00",
+  "finished_at_utc": "2026-09-20T12:28:15.929635+00:00",
+  "duration_seconds": 0.027,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2513,
+    "process_id": 2596,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35448882205",
+    "github_run_id": "35510419460",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "de71d5a7c2e604899f3589fecb72020fb4fe623a",
+    "github_sha": "649adb9a4c841bef70a209a2c41905c1a8362220",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -45,9 +45,23 @@
   ],
   "rows_in": 75,
   "rows_out": 75,
-  "warning_count": 0,
+  "warning_count": 1,
   "error_count": 0,
-  "warnings": [],
+  "warnings": [
+    {
+      "timestamp_utc": "2026-09-20T12:28:15.929616+00:00",
+      "message": "Weather refresh completed with degraded provider coverage",
+      "details": {
+        "provider_request_failures": 0,
+        "reused_prior_forecasts": 0,
+        "blank_weather_games": 1,
+        "forecast_status_counts": {
+          "completed_without_stored_weather": 1,
+          "reused_completed_forecast": 74
+        }
+      }
+    }
+  ],
   "errors": [],
   "details": {
     "season_type": 2,
@@ -66,41 +80,39 @@
     "stadium_map_rows": 186,
     "existing_weather_rows": 75,
     "output_rows": 75,
-    "staged_forecast_offset_hours_max": 0.5,
+    "staged_forecast_offset_hours_max": 2.25,
     "staged_forecast_offset_hours_median": 0.0,
-    "future_game_count": 71,
-    "completed_game_count": 4,
-    "provider_request_count": 71,
-    "provider_request_success_count": 71,
+    "future_game_count": 0,
+    "completed_game_count": 75,
+    "provider_request_count": 0,
+    "provider_request_success_count": 0,
     "provider_request_failure_count": 0,
-    "provider_request_status_counts": {
-      "request_success": 71
-    },
-    "provider_http_status_counts": {
-      "200": 71
-    },
+    "provider_request_status_counts": {},
+    "provider_http_status_counts": {},
     "forecast_result_status_counts": {
-      "forecast_available": 71,
-      "reused_completed_forecast": 4
+      "completed_without_stored_weather": 1,
+      "reused_completed_forecast": 74
     },
-    "newly_fetched_game_count": 71,
-    "reused_prior_forecast_count": 4,
-    "reused_completed_forecast_count": 4,
+    "newly_fetched_game_count": 0,
+    "reused_prior_forecast_count": 74,
+    "reused_completed_forecast_count": 74,
     "reused_after_refresh_failure_count": 0,
-    "blank_weather_game_count": 0,
-    "blank_weather_game_ids": [],
+    "blank_weather_game_count": 1,
+    "blank_weather_game_ids": [
+      "401864574"
+    ],
     "refresh_failure_game_ids": [],
-    "weather_available_game_count": 75,
-    "wind_speed_coverage": 75,
-    "temperature_coverage": 75,
+    "weather_available_game_count": 74,
+    "wind_speed_coverage": 74,
+    "temperature_coverage": 74,
     "wind_gust_coverage": 0,
     "precip_probability_coverage": 0,
-    "humidity_coverage": 75,
+    "humidity_coverage": 74,
     "roof_metadata_missing_count": 0,
     "weather_exposed_game_count": 75,
-    "new_forecast_offset_hours_max": 0.5,
-    "new_forecast_offset_hours_median": 0.0,
-    "output_forecast_offset_hours_max": 0.5,
+    "new_forecast_offset_hours_max": null,
+    "new_forecast_offset_hours_median": null,
+    "output_forecast_offset_hours_max": 2.25,
     "output_forecast_offset_hours_median": 0.0
   }
 }

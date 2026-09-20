@@ -1385,8 +1385,8 @@ game_id,odds_provider_game_id,market_type,bet_side,opening_line,opening_odds_ame
 401866423,401866423,spreads,home,-3.5,-110,,,DraftKings,-3.5,-6.5,-3,,,,,,,ok,,200
 401866423,401866423,totals,over,53.5,-108,,,DraftKings,,,,53.5,48.5,-5,,,,ok,,200
 401866423,401866423,totals,under,53.5,-112,,,DraftKings,,,,53.5,48.5,-5,,,,ok,,200
-401866424,401866424,h2h,away,,,,,DraftKings,,,,,,,,,,missing,opening_away_moneyline_missing,200
-401866424,401866424,h2h,home,,,,,DraftKings,,,,,,,,,,missing,opening_home_moneyline_missing,200
+401866424,401866424,h2h,away,,3500,,2026-09-20T12:25:09.229211+00:00,DraftKings,,,,,,,3500,,,ok,,200
+401866424,401866424,h2h,home,,-20000,,2026-09-20T12:25:09.229211+00:00,DraftKings,,,,,,,-20000,,,ok,,200
 401866424,401866424,spreads,away,33.5,-110,,2026-09-16T10:27:54.977933+00:00,DraftKings,33.5,30.5,-3,,,,,,,ok,,200
 401866424,401866424,spreads,home,-33.5,-110,,2026-09-16T10:27:54.977933+00:00,DraftKings,-33.5,-30.5,3,,,,,,,ok,,200
 401866424,401866424,totals,over,49.5,-115,,2026-09-16T10:27:54.977933+00:00,DraftKings,,,,49.5,50.5,1,,,,ok,,200
