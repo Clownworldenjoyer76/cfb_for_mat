@@ -1659,6 +1659,186 @@ def validate_team_output_block(
         )
 
 
+def _validate_travel_output_rows(
+    rows: list[dict[str, str]],
+    *,
+    schedule_lookup: dict[str, dict[str, str]],
+    team_lookup: dict[str, dict[str, str]],
+    seen: set[str],
+) -> None:
+    for line_number, row in enumerate(
+        rows,
+        start=2,
+    ):
+        if list(row.keys()) != OUTPUT_HEADERS:
+            raise TravelValidationError(
+                f"Travel schema mismatch at row {line_number}"
+            )
+
+        game_id = str(
+            positive_int(
+                row.get("game_id"),
+                label=f"travel game_id row {line_number}",
+            )
+        )
+
+        if game_id in seen:
+            raise TravelValidationError(
+                f"Duplicate travel game_id={game_id}"
+            )
+
+        game = schedule_lookup.get(
+            game_id
+        )
+
+        if game is None:
+            raise TravelValidationError(
+                f"Foreign travel game_id={game_id}"
+            )
+
+        seen.add(
+            game_id
+        )
+
+        for field in (
+            "away_team",
+            "home_team",
+            "stadium",
+        ):
+            if clean(
+                row.get(field)
+            ) != clean(
+                game.get(field)
+            ):
+                raise TravelValidationError(
+                    f"Travel {field} mismatch for game_id={game_id}"
+                )
+
+        expected_neutral = str(
+            parse_binary_flag(
+                game.get("neutral_site"),
+                label=(
+                    "schedule neutral_site "
+                    f"for game_id={game_id}"
+                ),
+            )
+        )
+
+        if clean(
+            row.get(
+                "neutral_site_flag"
+            )
+        ) != expected_neutral:
+            raise TravelValidationError(
+                f"Travel neutral flag mismatch for game_id={game_id}"
+            )
+
+        status = clean(
+            row.get(
+                "venue_resolution_status"
+            )
+        )
+
+        if status not in RESOLVED_VENUE_STATUSES:
+            raise TravelValidationError(
+                "Travel contains unresolved venue "
+                f"for game_id={game_id}: status={status!r}"
+            )
+
+        venue_latitude = finite_float(
+            row.get("venue_lat"),
+            label=(
+                f"venue_lat for game_id={game_id}"
+            ),
+        )
+
+        venue_longitude = finite_float(
+            row.get("venue_lon"),
+            label=(
+                f"venue_lon for game_id={game_id}"
+            ),
+        )
+
+        if not -90 <= venue_latitude <= 90:
+            raise TravelValidationError(
+                f"Invalid venue latitude for game_id={game_id}"
+            )
+
+        if not -180 <= venue_longitude <= 180:
+            raise TravelValidationError(
+                f"Invalid venue longitude for game_id={game_id}"
+            )
+
+        validate_timezone(
+            row.get("venue_timezone"),
+            label=(
+                f"venue timezone for game_id={game_id}"
+            ),
+        )
+
+        country = clean(
+            row.get("venue_country")
+        )
+
+        international = clean(
+            row.get(
+                "international_flag"
+            )
+        )
+
+        if country:
+            expected_international = (
+                "0"
+                if country.upper()
+                in {
+                    "USA",
+                    "US",
+                    "UNITED STATES",
+                    "UNITED STATES OF AMERICA",
+                }
+                else "1"
+            )
+
+            if international != expected_international:
+                raise TravelValidationError(
+                    "International flag mismatch "
+                    f"for game_id={game_id}"
+                )
+        elif international:
+            raise TravelValidationError(
+                "International flag populated without "
+                f"venue country for game_id={game_id}"
+            )
+
+        away_mapped = (
+            normalize_key(
+                game.get("away_team")
+            )
+            in team_lookup
+        )
+
+        home_mapped = (
+            normalize_key(
+                game.get("home_team")
+            )
+            in team_lookup
+        )
+
+        validate_team_output_block(
+            row,
+            side="away",
+            mapped=away_mapped,
+            game_id=game_id,
+        )
+
+        validate_team_output_block(
+            row,
+            side="home",
+            mapped=home_mapped,
+            game_id=game_id,
+        )
+
+
 def validate_output_rows(
     rows: list[dict[str, str]],
     *,
@@ -1671,179 +1851,6 @@ def validate_output_rows(
         dict[str, str],
     ],
 ) -> None:
-    def _stage2_validate_output_rows_block_01() -> None:
-        for line_number, row in enumerate(
-            rows,
-            start=2,
-        ):
-            if list(row.keys()) != OUTPUT_HEADERS:
-                raise TravelValidationError(
-                    f"Travel schema mismatch at row {line_number}"
-                )
-
-            game_id = str(
-                positive_int(
-                    row.get("game_id"),
-                    label=f"travel game_id row {line_number}",
-                )
-            )
-
-            if game_id in seen:
-                raise TravelValidationError(
-                    f"Duplicate travel game_id={game_id}"
-                )
-
-            game = schedule_lookup.get(
-                game_id
-            )
-
-            if game is None:
-                raise TravelValidationError(
-                    f"Foreign travel game_id={game_id}"
-                )
-
-            seen.add(
-                game_id
-            )
-
-            for field in (
-                "away_team",
-                "home_team",
-                "stadium",
-            ):
-                if clean(
-                    row.get(field)
-                ) != clean(
-                    game.get(field)
-                ):
-                    raise TravelValidationError(
-                        f"Travel {field} mismatch for game_id={game_id}"
-                    )
-
-            expected_neutral = str(
-                parse_binary_flag(
-                    game.get("neutral_site"),
-                    label=(
-                        "schedule neutral_site "
-                        f"for game_id={game_id}"
-                    ),
-                )
-            )
-
-            if clean(
-                row.get(
-                    "neutral_site_flag"
-                )
-            ) != expected_neutral:
-                raise TravelValidationError(
-                    f"Travel neutral flag mismatch for game_id={game_id}"
-                )
-
-            status = clean(
-                row.get(
-                    "venue_resolution_status"
-                )
-            )
-
-            if status not in RESOLVED_VENUE_STATUSES:
-                raise TravelValidationError(
-                    "Travel contains unresolved venue "
-                    f"for game_id={game_id}: status={status!r}"
-                )
-
-            venue_latitude = finite_float(
-                row.get("venue_lat"),
-                label=(
-                    f"venue_lat for game_id={game_id}"
-                ),
-            )
-
-            venue_longitude = finite_float(
-                row.get("venue_lon"),
-                label=(
-                    f"venue_lon for game_id={game_id}"
-                ),
-            )
-
-            if not -90 <= venue_latitude <= 90:
-                raise TravelValidationError(
-                    f"Invalid venue latitude for game_id={game_id}"
-                )
-
-            if not -180 <= venue_longitude <= 180:
-                raise TravelValidationError(
-                    f"Invalid venue longitude for game_id={game_id}"
-                )
-
-            validate_timezone(
-                row.get("venue_timezone"),
-                label=(
-                    f"venue timezone for game_id={game_id}"
-                ),
-            )
-
-            country = clean(
-                row.get("venue_country")
-            )
-
-            international = clean(
-                row.get(
-                    "international_flag"
-                )
-            )
-
-            if country:
-                expected_international = (
-                    "0"
-                    if country.upper()
-                    in {
-                        "USA",
-                        "US",
-                        "UNITED STATES",
-                        "UNITED STATES OF AMERICA",
-                    }
-                    else "1"
-                )
-
-                if international != expected_international:
-                    raise TravelValidationError(
-                        "International flag mismatch "
-                        f"for game_id={game_id}"
-                    )
-            elif international:
-                raise TravelValidationError(
-                    "International flag populated without "
-                    f"venue country for game_id={game_id}"
-                )
-
-            away_mapped = (
-                normalize_key(
-                    game.get("away_team")
-                )
-                in team_lookup
-            )
-
-            home_mapped = (
-                normalize_key(
-                    game.get("home_team")
-                )
-                in team_lookup
-            )
-
-            validate_team_output_block(
-                row,
-                side="away",
-                mapped=away_mapped,
-                game_id=game_id,
-            )
-
-            validate_team_output_block(
-                row,
-                side="home",
-                mapped=home_mapped,
-                game_id=game_id,
-            )
-
     if len(rows) != len(
         schedule_lookup
     ):
@@ -1855,7 +1862,12 @@ def validate_output_rows(
 
     seen: set[str] = set()
 
-    _stage2_validate_output_rows_block_01()
+    _validate_travel_output_rows(
+        rows,
+        schedule_lookup=schedule_lookup,
+        team_lookup=team_lookup,
+        seen=seen,
+    )
 
     if seen != set(
         schedule_lookup

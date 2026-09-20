@@ -882,103 +882,116 @@ def bool_value(
     )
 
 
+
+def _complete_spread_pair(
+    odds_item: dict,
+    *,
+    home_team_odds: dict,
+    away_team_odds: dict,
+    home_spread: str,
+    away_spread: str,
+) -> tuple[str, str]:
+    if (
+        home_spread == ""
+        and away_spread != ""
+    ):
+        away_num = to_float(
+            away_spread
+        )
+
+        if away_num is not None:
+            home_spread = clean_number(
+                -away_num
+            )
+
+    if (
+        away_spread == ""
+        and home_spread != ""
+    ):
+        home_num = to_float(
+            home_spread
+        )
+
+        if home_num is not None:
+            away_spread = clean_number(
+                -home_num
+            )
+
+    if (
+        home_spread == ""
+        and away_spread == ""
+    ):
+        detail_line = parse_details_line(
+            odds_item.get(
+                "details",
+                "",
+            )
+        )
+
+        generic_spread = to_float(
+            odds_item.get(
+                "spread"
+            )
+        )
+
+        line = (
+            detail_line
+            if detail_line is not None
+            else generic_spread
+        )
+
+        home_favorite = bool_value(
+            home_team_odds.get(
+                "favorite"
+            )
+        )
+
+        away_favorite = bool_value(
+            away_team_odds.get(
+                "favorite"
+            )
+        )
+
+        if line is not None:
+            if (
+                home_favorite
+                and not away_favorite
+            ):
+                home_spread = clean_number(
+                    line
+                )
+                away_spread = clean_number(
+                    -line
+                )
+
+            elif (
+                away_favorite
+                and not home_favorite
+            ):
+                away_spread = clean_number(
+                    line
+                )
+                home_spread = clean_number(
+                    -line
+                )
+
+            else:
+                home_spread = clean_number(
+                    line
+                )
+                away_spread = clean_number(
+                    -line
+                )
+
+    return (
+        home_spread,
+        away_spread,
+    )
+
+
 def extract_market_values(
     odds_item: dict,
 ) -> dict[str, str]:
-    def _stage3_extract_market_values_block_01() -> None:
-        nonlocal away_spread, home_spread
-        if (
-            home_spread == ""
-            and away_spread != ""
-        ):
-            away_num = to_float(
-                away_spread
-            )
-
-            if away_num is not None:
-                home_spread = clean_number(
-                    -away_num
-                )
-
-        if (
-            away_spread == ""
-            and home_spread != ""
-        ):
-            home_num = to_float(
-                home_spread
-            )
-
-            if home_num is not None:
-                away_spread = clean_number(
-                    -home_num
-                )
-
-        if (
-            home_spread == ""
-            and away_spread == ""
-        ):
-            detail_line = parse_details_line(
-                odds_item.get(
-                    "details",
-                    "",
-                )
-            )
-
-            generic_spread = to_float(
-                odds_item.get(
-                    "spread"
-                )
-            )
-
-            line = (
-                detail_line
-                if detail_line is not None
-                else generic_spread
-            )
-
-            home_favorite = bool_value(
-                home_team_odds.get(
-                    "favorite"
-                )
-            )
-
-            away_favorite = bool_value(
-                away_team_odds.get(
-                    "favorite"
-                )
-            )
-
-            if line is not None:
-                if (
-                    home_favorite
-                    and not away_favorite
-                ):
-                    home_spread = clean_number(
-                        line
-                    )
-                    away_spread = clean_number(
-                        -line
-                    )
-
-                elif (
-                    away_favorite
-                    and not home_favorite
-                ):
-                    away_spread = clean_number(
-                        line
-                    )
-                    home_spread = clean_number(
-                        -line
-                    )
-
-                else:
-                    home_spread = clean_number(
-                        line
-                    )
-                    away_spread = clean_number(
-                        -line
-                    )
-
     home_team_odds = (
         odds_item.get(
             "homeTeamOdds"
@@ -1127,7 +1140,16 @@ def extract_market_values(
         direct_away_spread
     )
 
-    _stage3_extract_market_values_block_01()
+    (
+        home_spread,
+        away_spread,
+    ) = _complete_spread_pair(
+        odds_item,
+        home_team_odds=home_team_odds,
+        away_team_odds=away_team_odds,
+        home_spread=home_spread,
+        away_spread=away_spread,
+    )
 
     last_update = str(
         first_value(

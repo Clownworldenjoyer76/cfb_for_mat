@@ -757,50 +757,67 @@ def group_identity(
     )
 
 
+
+def _require_team_master_path() -> None:
+    if not TEAM_MASTER_PATH.exists():
+        raise FileNotFoundError(
+            f"Missing team master: {TEAM_MASTER_PATH}"
+        )
+
+
+def _require_team_master_rows(
+    teams: dict[str, dict[str, str]],
+) -> None:
+    if not teams:
+        raise ValueError(
+            "team_master.csv contains no teams"
+        )
+
+
+def _validate_team_master_abbreviation(
+    *,
+    team_id: str,
+    team_abbr: str,
+    existing_abbr: str,
+) -> None:
+    if (
+        team_abbr
+        and existing_abbr
+        and team_abbr != existing_abbr
+    ):
+        raise ValueError(
+            "team_master.csv contains "
+            "conflicting abbreviations "
+            f"for team_id={team_id}: "
+            f"{existing_abbr!r} vs {team_abbr!r}"
+        )
+
+
+def _validate_team_master_name(
+    *,
+    team_id: str,
+    canonical_team: str,
+    existing_name: str,
+) -> None:
+    if (
+        canonical_team
+        and existing_name
+        and canonical_team != existing_name
+    ):
+        raise ValueError(
+            "team_master.csv contains "
+            "conflicting canonical_team values "
+            f"for team_id={team_id}: "
+            f"{existing_name!r} vs "
+            f"{canonical_team!r}"
+        )
+
+
 def read_team_master() -> dict[
     str,
     dict[str, str],
 ]:
-    def _stage3_read_team_master_block_04() -> None:
-        if (
-            canonical_team
-            and existing_name
-            and canonical_team != existing_name
-        ):
-            raise ValueError(
-                "team_master.csv contains "
-                "conflicting canonical_team values "
-                f"for team_id={team_id}: "
-                f"{existing_name!r} vs "
-                f"{canonical_team!r}"
-            )
-
-    def _stage3_read_team_master_block_03() -> None:
-        if (
-            team_abbr
-            and existing_abbr
-            and team_abbr != existing_abbr
-        ):
-            raise ValueError(
-                "team_master.csv contains "
-                "conflicting abbreviations "
-                f"for team_id={team_id}: "
-                f"{existing_abbr!r} vs {team_abbr!r}"
-            )
-
-    def _stage3_read_team_master_block_02() -> None:
-        if not teams:
-            raise ValueError(
-                "team_master.csv contains no teams"
-            )
-
-    def _stage3_read_team_master_block_01() -> None:
-        if not TEAM_MASTER_PATH.exists():
-            raise FileNotFoundError(
-                f"Missing team master: {TEAM_MASTER_PATH}"
-            )
-
-    _stage3_read_team_master_block_01()
+    _require_team_master_path()
 
     with TEAM_MASTER_PATH.open(
         "r",
@@ -886,7 +903,11 @@ def read_team_master() -> dict[
                 )
             ).strip()
 
-            _stage3_read_team_master_block_03()
+            _validate_team_master_abbreviation(
+                team_id=team_id,
+                team_abbr=team_abbr,
+                existing_abbr=existing_abbr,
+            )
 
             if team_abbr and not existing_abbr:
                 existing["team_abbr"] = team_abbr
@@ -898,14 +919,18 @@ def read_team_master() -> dict[
                 )
             ).strip()
 
-            _stage3_read_team_master_block_04()
+            _validate_team_master_name(
+                team_id=team_id,
+                canonical_team=canonical_team,
+                existing_name=existing_name,
+            )
 
             if canonical_team and not existing_name:
                 existing[
                     "canonical_team"
                 ] = canonical_team
 
-    _stage3_read_team_master_block_02()
+    _require_team_master_rows(teams)
 
     return teams
 
@@ -2467,6 +2492,16 @@ def validate_master_rows(
         )
 
 
+
+def _require_standings_rows(
+    rows: list[dict[str, object]],
+) -> None:
+    if not rows:
+        raise ValueError(
+            "League standings output is empty"
+        )
+
+
 def validate_standings_rows(
     rows: list[
         dict[str, object]
@@ -2477,13 +2512,7 @@ def validate_standings_rows(
     season: int,
     season_type: int,
 ) -> None:
-    def _stage2_validate_standings_rows_block_01() -> None:
-        if not rows:
-            raise ValueError(
-                "League standings output is empty"
-            )
-
-    _stage2_validate_standings_rows_block_01()
+    _require_standings_rows(rows)
 
     master_by_id = {
         str(
@@ -2694,6 +2723,31 @@ def backup_path(
     )
 
 
+
+def _restore_bundle_output(
+    *,
+    backup: Path,
+    final_path: Path,
+    existed: bool,
+) -> None:
+    if backup.exists():
+        try:
+            os.replace(
+                backup,
+                final_path,
+            )
+        except Exception:
+            pass
+
+    elif not existed:
+        try:
+            final_path.unlink(
+                missing_ok=True
+            )
+        except Exception:
+            pass
+
+
 def publish_bundle(
     master_rows: list[
         dict[str, object]
@@ -2702,42 +2756,6 @@ def publish_bundle(
         dict[str, object]
     ],
 ) -> None:
-    def _stage3_publish_bundle_block_02() -> None:
-        if standings_backup.exists():
-            try:
-                os.replace(
-                    standings_backup,
-                    LEAGUE_STANDINGS_PATH,
-                )
-            except Exception:
-                pass
-
-        elif not standings_existed:
-            try:
-                LEAGUE_STANDINGS_PATH.unlink(
-                    missing_ok=True
-                )
-            except Exception:
-                pass
-
-    def _stage3_publish_bundle_block_01() -> None:
-        if master_backup.exists():
-            try:
-                os.replace(
-                    master_backup,
-                    LEAGUE_MASTER_PATH,
-                )
-            except Exception:
-                pass
-
-        elif not master_existed:
-            try:
-                LEAGUE_MASTER_PATH.unlink(
-                    missing_ok=True
-                )
-            except Exception:
-                pass
-
     LEAGUE_MASTER_PATH.parent.mkdir(
         parents=True,
         exist_ok=True,
@@ -2833,9 +2851,17 @@ def publish_bundle(
             except Exception:
                 pass
 
-        _stage3_publish_bundle_block_01()
+        _restore_bundle_output(
+            backup=master_backup,
+            final_path=LEAGUE_MASTER_PATH,
+            existed=master_existed,
+        )
 
-        _stage3_publish_bundle_block_02()
+        _restore_bundle_output(
+            backup=standings_backup,
+            final_path=LEAGUE_STANDINGS_PATH,
+            existed=standings_existed,
+        )
 
         raise
 

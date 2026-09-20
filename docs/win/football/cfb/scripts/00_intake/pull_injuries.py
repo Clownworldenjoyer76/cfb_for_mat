@@ -1107,6 +1107,102 @@ def position_abbreviation(
     ).strip()
 
 
+
+def _require_injury_team_entry(
+    team_entry: object,
+    *,
+    team_index: int,
+) -> None:
+    if not isinstance(team_entry, dict):
+        raise InjuryValidationError(
+            "ESPN injuries collection contains "
+            "non-object team entry at "
+            f"team_index={team_index}"
+        )
+
+
+def _require_authoritative_injury_team(
+    team_id: str,
+    authoritative_set: set[str],
+    *,
+    state: RuntimeState,
+) -> None:
+    if team_id not in authoritative_set:
+        state.foreign_team_ids.add(
+            team_id
+        )
+
+        raise InjuryValidationError(
+            "ESPN injuries payload contains "
+            f"foreign team_id={team_id}"
+        )
+
+
+def _require_injury_list(
+    injuries: object,
+    *,
+    team_id: str,
+) -> None:
+    if not isinstance(injuries, list):
+        raise InjuryValidationError(
+            "ESPN injuries team entry injuries "
+            "field is not a list for "
+            f"team_id={team_id}"
+        )
+
+
+def _record_injury_group_presence(
+    injuries: list,
+    *,
+    state: RuntimeState,
+) -> None:
+    if injuries:
+        state.provider_team_groups_with_injuries += 1
+    else:
+        state.provider_team_groups_without_injuries += 1
+
+
+def _require_injury_object(
+    injury: object,
+    *,
+    team_id: str,
+    injury_index: int,
+) -> None:
+    if not isinstance(injury, dict):
+        raise InjuryValidationError(
+            "ESPN injuries team group contains "
+            "non-object injury for "
+            f"team_id={team_id}, "
+            f"injury_index={injury_index}"
+        )
+
+
+def _normalize_injury_id(
+    injury_id: str,
+    *,
+    context: str,
+) -> str:
+    if not injury_id:
+        return injury_id
+
+    return parse_positive_int_text(
+        injury_id,
+        label=f"injury.id for {context}",
+    )
+
+
+def _require_injury_athlete(
+    athlete: object,
+    *,
+    context: str,
+) -> None:
+    if not isinstance(athlete, dict):
+        raise InjuryValidationError(
+            "Injury athlete field is not "
+            f"an object for {context}"
+        )
+
+
 def build_rows(
     team_entries: list[dict],
     *,
@@ -1115,77 +1211,6 @@ def build_rows(
     canonical_by_id: dict[str, str],
     state: RuntimeState,
 ) -> list[dict[str, str]]:
-
-    def _stage3_build_rows_block_07() -> None:
-        if not isinstance(
-            athlete,
-            dict,
-        ):
-            raise InjuryValidationError(
-                "Injury athlete field is not "
-                f"an object for {context}"
-            )
-
-    def _stage3_build_rows_block_06() -> None:
-        nonlocal injury_id
-        if injury_id:
-            injury_id = (
-                parse_positive_int_text(
-                    injury_id,
-                    label=f"injury.id for {context}",
-                )
-            )
-
-    def _stage3_build_rows_block_05() -> None:
-        if not isinstance(
-            injury,
-            dict,
-        ):
-            raise InjuryValidationError(
-                "ESPN injuries team group contains "
-                "non-object injury for "
-                f"team_id={team_id}, "
-                f"injury_index={injury_index}"
-            )
-
-    def _stage3_build_rows_block_04() -> None:
-        if injuries:
-            state.provider_team_groups_with_injuries += 1
-        else:
-            state.provider_team_groups_without_injuries += 1
-
-    def _stage3_build_rows_block_03() -> None:
-        if not isinstance(
-            injuries,
-            list,
-        ):
-            raise InjuryValidationError(
-                "ESPN injuries team entry injuries "
-                "field is not a list for "
-                f"team_id={team_id}"
-            )
-
-    def _stage3_build_rows_block_02() -> None:
-        if team_id not in authoritative_set:
-            state.foreign_team_ids.add(
-                team_id
-            )
-
-            raise InjuryValidationError(
-                "ESPN injuries payload contains "
-                f"foreign team_id={team_id}"
-            )
-
-    def _stage3_build_rows_block_01() -> None:
-        if not isinstance(
-            team_entry,
-            dict,
-        ):
-            raise InjuryValidationError(
-                "ESPN injuries collection contains "
-                "non-object team entry at "
-                f"team_index={team_index}"
-            )
 
     authoritative_set = set(
         authoritative_team_ids
@@ -1210,7 +1235,10 @@ def build_rows(
     for team_index, team_entry in enumerate(
         team_entries
     ):
-        _stage3_build_rows_block_01()
+        _require_injury_team_entry(
+            team_entry,
+            team_index=team_index,
+        )
 
         team_id = parse_positive_int_text(
             team_entry.get("id"),
@@ -1224,19 +1252,29 @@ def build_rows(
             team_id
         )
 
-        _stage3_build_rows_block_02()
+        _require_authoritative_injury_team(
+            team_id,
+            authoritative_set,
+            state=state,
+        )
 
         injuries = team_entry.get(
             "injuries"
         )
 
-        _stage3_build_rows_block_03()
+        _require_injury_list(
+            injuries,
+            team_id=team_id,
+        )
 
         state.raw_injury_count += len(
             injuries
         )
 
-        _stage3_build_rows_block_04()
+        _record_injury_group_presence(
+            injuries,
+            state=state,
+        )
 
         canonical_team = (
             canonical_by_id[
@@ -1247,7 +1285,11 @@ def build_rows(
         for injury_index, injury in enumerate(
             injuries
         ):
-            _stage3_build_rows_block_05()
+            _require_injury_object(
+                injury,
+                team_id=team_id,
+                injury_index=injury_index,
+            )
 
             context = (
                 f"team_id={team_id}, "
@@ -1258,13 +1300,19 @@ def build_rows(
                 injury.get("id") or ""
             ).strip()
 
-            _stage3_build_rows_block_06()
+            injury_id = _normalize_injury_id(
+                injury_id,
+                context=context,
+            )
 
             athlete = injury.get(
                 "athlete"
             )
 
-            _stage3_build_rows_block_07()
+            _require_injury_athlete(
+                athlete,
+                context=context,
+            )
 
             validate_athlete_team(
                 athlete,
@@ -1706,6 +1754,61 @@ def report_date_range(
     )
 
 
+
+def _injury_status_counts(
+    rows: list[dict[str, str]],
+) -> Counter:
+    return Counter(
+        str(
+            row.get("game_status") or ""
+        ).strip()
+        for row in rows
+        if str(
+            row.get("game_status") or ""
+        ).strip()
+    )
+
+
+def _injury_freshness_outcome(
+    state: RuntimeState,
+) -> str:
+    if (
+        state.raw_injury_count > 0
+        and state.fresh_injury_count == 0
+    ):
+        return "all_stale_zero_current"
+
+    if (
+        state.fresh_injury_count > 0
+        and state.stale_injury_count > 0
+    ):
+        return "mixed_fresh_and_stale"
+
+    if state.fresh_injury_count > 0:
+        return "fresh_only"
+
+    return "provider_zero_injuries"
+
+
+def _add_injury_output_details(
+    details: dict[str, object],
+    *,
+    output_path: Path | None,
+    output_modified: bool | None,
+) -> None:
+    if output_path is not None:
+        details[
+            "output_path"
+        ] = str(
+            output_path
+        )
+
+    if output_modified is not None:
+        details[
+            "output_modified"
+        ] = output_modified
+
+
 def update_report_details(
     report: PipelineReporter,
     state: RuntimeState,
@@ -1716,30 +1819,7 @@ def update_report_details(
     output_path: Path | None,
     output_modified: bool | None,
 ) -> None:
-    def _stage3_update_report_details_expr_02() -> object:
-        return (
-            Counter((str(row.get('game_status') or '').strip() for row in rows if str(row.get('game_status') or '').strip()))
-        )
-
-    def _stage3_update_report_details_expr_01() -> object:
-        return (
-            'all_stale_zero_current' if state.raw_injury_count > 0 and state.fresh_injury_count == 0 else 'mixed_fresh_and_stale' if state.fresh_injury_count > 0 and state.stale_injury_count > 0 else 'fresh_only' if state.fresh_injury_count > 0 else 'provider_zero_injuries'
-        )
-
-    def _stage3_update_report_details_block_01() -> None:
-        if output_path is not None:
-            details[
-                "output_path"
-            ] = str(
-                output_path
-            )
-
-        if output_modified is not None:
-            details[
-                "output_modified"
-            ] = output_modified
-
-    status_counts = _stage3_update_report_details_expr_02()
+    status_counts = _injury_status_counts(rows)
 
     represented_names = {
         str(
@@ -1842,7 +1922,9 @@ def update_report_details(
             and state.fresh_injury_count == 0
         ),
         "freshness_outcome": (
-            _stage3_update_report_details_expr_01()
+            _injury_freshness_outcome(
+                state
+            )
         ),
         "published_injury_count": len(
             rows
@@ -1876,7 +1958,11 @@ def update_report_details(
         "output_columns": OUTPUT_HEADERS,
     }
 
-    _stage3_update_report_details_block_01()
+    _add_injury_output_details(
+        details,
+        output_path=output_path,
+        output_modified=output_modified,
+    )
 
     report.update_details(
         details
