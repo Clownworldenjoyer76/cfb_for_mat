@@ -882,223 +882,250 @@ def parse_completed(
         return 0
 
 
-def main() -> int:
-    def _stage3_main_block_01() -> None:
-        nonlocal completed_count, failed_count, not_final_count, output_path, preserved_count, row
-        for row in schedule_rows:
-            game_id = row[
-                "game_id"
-            ]
+def _accumulate_final_score_rows(
+    *,
+    schedule_rows: list[dict[str, str]],
+    score_results: dict[str, dict[str, Any]],
+    existing_by_path: dict[
+        Path,
+        dict[str, dict[str, str]],
+    ],
+    report: PipelineReporter,
+    checked_utc: str,
+    rows_by_week: dict[
+        tuple[str, str, str],
+        list[dict[str, Any]],
+    ],
+) -> tuple[int, int, int, int]:
+    completed_count = 0
+    not_final_count = 0
+    failed_count = 0
+    preserved_count = 0
 
-            score = score_results.get(
-                game_id,
-                {
-                    "away_score": "",
-                    "home_score": "",
-                    "completed": 0,
-                    "status": "",
-                    "fetch_error": (
-                        "missing worker result"
+    for row in schedule_rows:
+        game_id = row[
+            "game_id"
+        ]
+
+        score = score_results.get(
+            game_id,
+            {
+                "away_score": "",
+                "home_score": "",
+                "completed": 0,
+                "status": "",
+                "fetch_error": (
+                    "missing worker result"
+                ),
+            },
+        )
+
+        away_score = clean(
+            score.get(
+                "away_score",
+                "",
+            )
+        )
+
+        home_score = clean(
+            score.get(
+                "home_score",
+                "",
+            )
+        )
+
+        status = clean(
+            score.get(
+                "status",
+                "",
+            )
+        )
+
+        completed = parse_completed(
+            score.get(
+                "completed",
+                0,
+            )
+        )
+
+        fetch_error = clean(
+            score.get(
+                "fetch_error",
+                "",
+            )
+        )
+
+        if fetch_error:
+            failed_count += 1
+
+            output_path = (
+                result_path_for_row(
+                    row
+                )
+            )
+
+            prior_row = None
+
+            if output_path is not None:
+                prior_row = (
+                    existing_by_path
+                    .get(
+                        output_path,
+                        {},
+                    )
+                    .get(
+                        game_id
+                    )
+                )
+
+            if (
+                prior_row is not None
+                and has_preservable_result(
+                    prior_row
+                )
+            ):
+                away_score = clean(
+                    prior_row.get(
+                        "away_score",
+                        "",
+                    )
+                )
+
+                home_score = clean(
+                    prior_row.get(
+                        "home_score",
+                        "",
+                    )
+                )
+
+                status = clean(
+                    prior_row.get(
+                        "status",
+                        "",
+                    )
+                )
+
+                completed = (
+                    parse_completed(
+                        prior_row.get(
+                            "completed",
+                            0,
+                        )
+                    )
+                )
+
+                preserved_count += 1
+
+                report.warning(
+                    "ESPN score fetch "
+                    "failed; prior valid "
+                    "score/status preserved",
+                    game_id=game_id,
+                    fetch_error=(
+                        fetch_error
                     ),
-                },
-            )
-
-            away_score = clean(
-                score.get(
-                    "away_score",
-                    "",
                 )
-            )
-
-            home_score = clean(
-                score.get(
-                    "home_score",
-                    "",
-                )
-            )
-
-            status = clean(
-                score.get(
-                    "status",
-                    "",
-                )
-            )
-
-            completed = parse_completed(
-                score.get(
-                    "completed",
-                    0,
-                )
-            )
-
-            fetch_error = clean(
-                score.get(
-                    "fetch_error",
-                    "",
-                )
-            )
-
-            if fetch_error:
-                failed_count += 1
-
-                output_path = (
-                    result_path_for_row(
-                        row
-                    )
-                )
-
-                prior_row = None
-
-                if output_path is not None:
-                    prior_row = (
-                        existing_by_path
-                        .get(
-                            output_path,
-                            {},
-                        )
-                        .get(
-                            game_id
-                        )
-                    )
-
-                if (
-                    prior_row is not None
-                    and has_preservable_result(
-                        prior_row
-                    )
-                ):
-                    away_score = clean(
-                        prior_row.get(
-                            "away_score",
-                            "",
-                        )
-                    )
-
-                    home_score = clean(
-                        prior_row.get(
-                            "home_score",
-                            "",
-                        )
-                    )
-
-                    status = clean(
-                        prior_row.get(
-                            "status",
-                            "",
-                        )
-                    )
-
-                    completed = (
-                        parse_completed(
-                            prior_row.get(
-                                "completed",
-                                0,
-                            )
-                        )
-                    )
-
-                    preserved_count += 1
-
-                    report.warning(
-                        "ESPN score fetch "
-                        "failed; prior valid "
-                        "score/status preserved",
-                        game_id=game_id,
-                        fetch_error=(
-                            fetch_error
-                        ),
-                    )
-
-                else:
-                    report.warning(
-                        "ESPN score fetch "
-                        "failed; no prior "
-                        "valid score/status "
-                        "was available",
-                        game_id=game_id,
-                        fetch_error=(
-                            fetch_error
-                        ),
-                    )
-
-            elif completed:
-                completed_count += 1
 
             else:
-                not_final_count += 1
+                report.warning(
+                    "ESPN score fetch "
+                    "failed; no prior "
+                    "valid score/status "
+                    "was available",
+                    game_id=game_id,
+                    fetch_error=(
+                        fetch_error
+                    ),
+                )
 
-            out_row = {
-                "season": clean(
-                    row.get(
-                        "season",
-                        "",
-                    )
-                ),
-                "season_type": clean(
-                    row.get(
-                        "season_type",
-                        "",
-                    )
-                ),
-                "week": clean(
-                    row.get(
-                        "week",
-                        "",
-                    )
-                ),
-                "game_id": game_id,
-                "game_date": clean(
-                    row.get(
-                        "game_date",
-                        "",
-                    )
-                ),
-                "game_time": clean(
-                    row.get(
-                        "game_time",
-                        "",
-                    )
-                ),
-                "away_team": clean(
-                    row.get(
-                        "away_team",
-                        "",
-                    )
-                ),
-                "home_team": clean(
-                    row.get(
-                        "home_team",
-                        "",
-                    )
-                ),
-                "away_score": (
-                    away_score
-                ),
-                "home_score": (
-                    home_score
-                ),
-                "status": status,
-                "completed": completed,
-                "fetch_error": (
-                    fetch_error
-                ),
-                "last_checked_utc": (
-                    checked_utc
-                ),
-            }
+        elif completed:
+            completed_count += 1
 
-            key = (
-                out_row["season"],
-                out_row["season_type"],
-                out_row["week"],
-            )
+        else:
+            not_final_count += 1
 
-            rows_by_week[
-                key
-            ].append(
-                out_row
-            )
+        out_row = {
+            "season": clean(
+                row.get(
+                    "season",
+                    "",
+                )
+            ),
+            "season_type": clean(
+                row.get(
+                    "season_type",
+                    "",
+                )
+            ),
+            "week": clean(
+                row.get(
+                    "week",
+                    "",
+                )
+            ),
+            "game_id": game_id,
+            "game_date": clean(
+                row.get(
+                    "game_date",
+                    "",
+                )
+            ),
+            "game_time": clean(
+                row.get(
+                    "game_time",
+                    "",
+                )
+            ),
+            "away_team": clean(
+                row.get(
+                    "away_team",
+                    "",
+                )
+            ),
+            "home_team": clean(
+                row.get(
+                    "home_team",
+                    "",
+                )
+            ),
+            "away_score": (
+                away_score
+            ),
+            "home_score": (
+                home_score
+            ),
+            "status": status,
+            "completed": completed,
+            "fetch_error": (
+                fetch_error
+            ),
+            "last_checked_utc": (
+                checked_utc
+            ),
+        }
 
+        key = (
+            out_row["season"],
+            out_row["season_type"],
+            out_row["week"],
+        )
+
+        rows_by_week[
+            key
+        ].append(
+            out_row
+        )
+
+
+    return (
+        completed_count,
+        not_final_count,
+        failed_count,
+        preserved_count,
+    )
+
+
+def main() -> int:
     with PipelineReporter(
         script=__file__,
         stage="04_final_results",
@@ -1227,12 +1254,19 @@ def main() -> int:
             list
         )
 
-        completed_count = 0
-        not_final_count = 0
-        failed_count = 0
-        preserved_count = 0
-
-        _stage3_main_block_01()
+        (
+            completed_count,
+            not_final_count,
+            failed_count,
+            preserved_count,
+        ) = _accumulate_final_score_rows(
+            schedule_rows=schedule_rows,
+            score_results=score_results,
+            existing_by_path=existing_by_path,
+            report=report,
+            checked_utc=checked_utc,
+            rows_by_week=rows_by_week,
+        )
 
         files_written = 0
         rows_written = 0

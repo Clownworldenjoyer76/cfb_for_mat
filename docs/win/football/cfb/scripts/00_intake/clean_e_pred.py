@@ -925,6 +925,252 @@ def build_clean_rows(
     }
 
 
+def _validate_staged_output_row(
+    row: dict[str, str],
+    *,
+    line_number: int,
+    season: int,
+    season_type: int,
+    week: int,
+    schedule: dict[str, dict[str, str]],
+    seen: set[str],
+) -> None:
+    if None in row:
+        raise CleanPredictionValidationError(
+            "Malformed staged output row at "
+            f"CSV line {line_number}"
+        )
+
+    game_id = str(
+        positive_int(
+            row.get("game_id"),
+            label=(
+                "staged game_id at "
+                f"CSV line {line_number}"
+            ),
+        )
+    )
+
+    if game_id in seen:
+        raise CleanPredictionValidationError(
+            "Duplicate staged "
+            f"game_id={game_id}"
+        )
+
+    if game_id not in schedule:
+        raise CleanPredictionValidationError(
+            "Foreign staged "
+            f"game_id={game_id}"
+        )
+
+    seen.add(game_id)
+    target = schedule[game_id]
+
+    row_target = (
+        positive_int(
+            row.get("season"),
+            label=(
+                f"staged season {game_id}"
+            ),
+        ),
+        positive_int(
+            row.get("season_type"),
+            label=(
+                f"staged season_type {game_id}"
+            ),
+        ),
+        positive_int(
+            row.get("week"),
+            label=(
+                f"staged week {game_id}"
+            ),
+        ),
+    )
+
+    if row_target != (
+        season,
+        season_type,
+        week,
+    ):
+        raise CleanPredictionValidationError(
+            "Staged target mismatch for "
+            f"game_id={game_id}"
+        )
+
+    for field, expected in (
+        (
+            "home_team",
+            target["home_team"],
+        ),
+        (
+            "away_team",
+            target["away_team"],
+        ),
+        (
+            "game_name",
+            target["game_name"],
+        ),
+        (
+            "sport",
+            "football",
+        ),
+        (
+            "league",
+            "college-football",
+        ),
+    ):
+        if text(row.get(field)) != expected:
+            raise CleanPredictionValidationError(
+                "Staged "
+                f"{field} mismatch for "
+                f"game_id={game_id}"
+            )
+
+    home_prob = finite_decimal(
+        row.get("home_prob"),
+        label=(
+            "staged home_prob for "
+            f"game_id={game_id}"
+        ),
+    )
+
+    away_prob = finite_decimal(
+        row.get("away_prob"),
+        label=(
+            "staged away_prob for "
+            f"game_id={game_id}"
+        ),
+    )
+
+    if not (
+        Decimal("0")
+        <= home_prob
+        <= Decimal("1")
+    ):
+        raise CleanPredictionValidationError(
+            "Staged home_prob outside [0,1] "
+            f"for game_id={game_id}"
+        )
+
+    if not (
+        Decimal("0")
+        <= away_prob
+        <= Decimal("1")
+    ):
+        raise CleanPredictionValidationError(
+            "Staged away_prob outside [0,1] "
+            f"for game_id={game_id}"
+        )
+
+    if (
+        home_prob + away_prob
+        != Decimal("1.0000")
+    ):
+        raise CleanPredictionValidationError(
+            "Staged probabilities do not sum "
+            "to 1.0000 for "
+            f"game_id={game_id}"
+        )
+
+    tie_value = text(
+        row.get("tie_prob")
+    )
+
+    if tie_value:
+        tie_prob = finite_decimal(
+            tie_value,
+            label=(
+                "staged tie_prob for "
+                f"game_id={game_id}"
+            ),
+        )
+
+        if not (
+            Decimal("0")
+            <= tie_prob
+            <= Decimal("1")
+        ):
+            raise CleanPredictionValidationError(
+                "Staged tie_prob outside [0,1] "
+                f"for game_id={game_id}"
+            )
+
+    for field in (
+        "matchupQuality",
+        "home_PtDiff",
+        "away_PtDiff",
+        "home_rating",
+        "away_rating",
+    ):
+        finite_decimal(
+            row.get(field),
+            label=(
+                f"staged {field} for "
+                f"game_id={game_id}"
+            ),
+        )
+
+    for field in (
+        "game_date",
+        "game_time",
+        "away_projected_pts",
+        "home_projected_pts",
+        "total_projected_pts",
+    ):
+        if text(row.get(field)):
+            raise CleanPredictionValidationError(
+                f"Staged {field} must be blank "
+                f"for game_id={game_id}"
+            )
+
+
+
+def _validate_staged_output_rows(
+    rows: list[dict[str, str]],
+    *,
+    season: int,
+    season_type: int,
+    week: int,
+    schedule: dict[str, dict[str, str]],
+    seen: set[str],
+) -> None:
+    for line_number, row in enumerate(
+        rows,
+        start=2,
+    ):
+        _validate_staged_output_row(
+            row,
+            line_number=line_number,
+            season=season,
+            season_type=season_type,
+            week=week,
+            schedule=schedule,
+            seen=seen,
+        )
+
+
+def _validate_staged_output_row_count(
+    rows: list[dict[str, str]],
+    schedule: dict[str, dict[str, str]],
+) -> None:
+    if len(rows) != len(schedule):
+        raise CleanPredictionValidationError(
+            "Staged clean output row-count mismatch: "
+            f"expected={len(schedule)}, "
+            f"actual={len(rows)}"
+        )
+
+
+def _validate_staged_output_coverage(
+    seen: set[str],
+    schedule: dict[str, dict[str, str]],
+) -> None:
+    if seen != set(schedule):
+        raise CleanPredictionValidationError(
+            "Staged clean output game coverage mismatch"
+        )
+
+
 def validate_staged_output(
     path: Path,
     *,
@@ -933,213 +1179,6 @@ def validate_staged_output(
     week: int,
     schedule: dict[str, dict[str, str]],
 ) -> int:
-    def _stage2_validate_staged_output_block_04() -> None:
-        for line_number, row in enumerate(
-            rows,
-            start=2,
-        ):
-            if None in row:
-                raise CleanPredictionValidationError(
-                    "Malformed staged output row at "
-                    f"CSV line {line_number}"
-                )
-
-            game_id = str(
-                positive_int(
-                    row.get("game_id"),
-                    label=(
-                        "staged game_id at "
-                        f"CSV line {line_number}"
-                    ),
-                )
-            )
-
-            if game_id in seen:
-                raise CleanPredictionValidationError(
-                    "Duplicate staged "
-                    f"game_id={game_id}"
-                )
-
-            if game_id not in schedule:
-                raise CleanPredictionValidationError(
-                    "Foreign staged "
-                    f"game_id={game_id}"
-                )
-
-            seen.add(game_id)
-            target = schedule[game_id]
-
-            row_target = (
-                positive_int(
-                    row.get("season"),
-                    label=(
-                        f"staged season {game_id}"
-                    ),
-                ),
-                positive_int(
-                    row.get("season_type"),
-                    label=(
-                        f"staged season_type {game_id}"
-                    ),
-                ),
-                positive_int(
-                    row.get("week"),
-                    label=(
-                        f"staged week {game_id}"
-                    ),
-                ),
-            )
-
-            if row_target != (
-                season,
-                season_type,
-                week,
-            ):
-                raise CleanPredictionValidationError(
-                    "Staged target mismatch for "
-                    f"game_id={game_id}"
-                )
-
-            for field, expected in (
-                (
-                    "home_team",
-                    target["home_team"],
-                ),
-                (
-                    "away_team",
-                    target["away_team"],
-                ),
-                (
-                    "game_name",
-                    target["game_name"],
-                ),
-                (
-                    "sport",
-                    "football",
-                ),
-                (
-                    "league",
-                    "college-football",
-                ),
-            ):
-                if text(row.get(field)) != expected:
-                    raise CleanPredictionValidationError(
-                        "Staged "
-                        f"{field} mismatch for "
-                        f"game_id={game_id}"
-                    )
-
-            home_prob = finite_decimal(
-                row.get("home_prob"),
-                label=(
-                    "staged home_prob for "
-                    f"game_id={game_id}"
-                ),
-            )
-
-            away_prob = finite_decimal(
-                row.get("away_prob"),
-                label=(
-                    "staged away_prob for "
-                    f"game_id={game_id}"
-                ),
-            )
-
-            if not (
-                Decimal("0")
-                <= home_prob
-                <= Decimal("1")
-            ):
-                raise CleanPredictionValidationError(
-                    "Staged home_prob outside [0,1] "
-                    f"for game_id={game_id}"
-                )
-
-            if not (
-                Decimal("0")
-                <= away_prob
-                <= Decimal("1")
-            ):
-                raise CleanPredictionValidationError(
-                    "Staged away_prob outside [0,1] "
-                    f"for game_id={game_id}"
-                )
-
-            if (
-                home_prob + away_prob
-                != Decimal("1.0000")
-            ):
-                raise CleanPredictionValidationError(
-                    "Staged probabilities do not sum "
-                    "to 1.0000 for "
-                    f"game_id={game_id}"
-                )
-
-            tie_value = text(
-                row.get("tie_prob")
-            )
-
-            if tie_value:
-                tie_prob = finite_decimal(
-                    tie_value,
-                    label=(
-                        "staged tie_prob for "
-                        f"game_id={game_id}"
-                    ),
-                )
-
-                if not (
-                    Decimal("0")
-                    <= tie_prob
-                    <= Decimal("1")
-                ):
-                    raise CleanPredictionValidationError(
-                        "Staged tie_prob outside [0,1] "
-                        f"for game_id={game_id}"
-                    )
-
-            for field in (
-                "matchupQuality",
-                "home_PtDiff",
-                "away_PtDiff",
-                "home_rating",
-                "away_rating",
-            ):
-                finite_decimal(
-                    row.get(field),
-                    label=(
-                        f"staged {field} for "
-                        f"game_id={game_id}"
-                    ),
-                )
-
-            for field in (
-                "game_date",
-                "game_time",
-                "away_projected_pts",
-                "home_projected_pts",
-                "total_projected_pts",
-            ):
-                if text(row.get(field)):
-                    raise CleanPredictionValidationError(
-                        f"Staged {field} must be blank "
-                        f"for game_id={game_id}"
-                    )
-
-    def _stage2_validate_staged_output_block_02() -> None:
-        if seen != set(schedule):
-            raise CleanPredictionValidationError(
-                "Staged clean output game coverage mismatch"
-            )
-
-    def _stage2_validate_staged_output_block_01() -> None:
-        if len(rows) != len(schedule):
-            raise CleanPredictionValidationError(
-                "Staged clean output row-count mismatch: "
-                f"expected={len(schedule)}, "
-                f"actual={len(rows)}"
-            )
-
     with path.open(
         "r",
         newline="",
@@ -1157,13 +1196,26 @@ def validate_staged_output(
 
         rows = list(reader)
 
-    _stage2_validate_staged_output_block_01()
+    _validate_staged_output_row_count(
+        rows,
+        schedule,
+    )
 
     seen: set[str] = set()
 
-    _stage2_validate_staged_output_block_04()
+    _validate_staged_output_rows(
+        rows,
+        season=season,
+        season_type=season_type,
+        week=week,
+        schedule=schedule,
+        seen=seen,
+    )
 
-    _stage2_validate_staged_output_block_02()
+    _validate_staged_output_coverage(
+        seen,
+        schedule,
+    )
 
     return len(rows)
 
