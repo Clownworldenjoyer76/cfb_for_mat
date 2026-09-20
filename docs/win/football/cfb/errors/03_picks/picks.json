@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35510419460-attempt-1",
+  "run_id": "github-35511395449-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "picks.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/03_picks/picks.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/03_picks/picks.json",
-  "started_at_utc": "2026-09-20T12:28:21.931583+00:00",
-  "finished_at_utc": "2026-09-20T12:28:22.741849+00:00",
-  "duration_seconds": 0.81,
+  "started_at_utc": "2026-09-20T12:45:40.563076+00:00",
+  "finished_at_utc": "2026-09-20T12:45:41.366868+00:00",
+  "duration_seconds": 0.804,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2615,
+    "process_id": 2500,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35510419460",
+    "github_run_id": "35511395449",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "649adb9a4c841bef70a209a2c41905c1a8362220",
+    "github_sha": "efa6f6df8463d2989718b3324702fbbfd3d63930",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -95,13 +95,13 @@
         "candidate_unavailable": 18
       },
       "spread_home": {
-        "band:prob_bands": 68,
         "band:line_bands": 50,
+        "band:prob_bands": 68,
         "max_spread_abs": 15
       },
       "spread_away": {
-        "band:prob_bands": 49,
         "band:line_bands": 73,
+        "band:prob_bands": 49,
         "max_spread_abs": 15
       },
       "total_over": {
@@ -117,10 +117,10 @@
         "band:kelly_bands": 60
       }
     },
-    "modified_files": 1,
-    "output_modified": true,
+    "modified_files": 0,
+    "output_modified": false,
     "output_modified_by_file": {
-      "week_3_CFB_picks.csv": true
+      "week_3_CFB_picks.csv": false
     }
   }
 }

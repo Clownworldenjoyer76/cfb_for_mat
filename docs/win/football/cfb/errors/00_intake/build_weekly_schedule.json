@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35510419460-attempt-1",
+  "run_id": "github-35511395449-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "build_weekly_schedule.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/build_weekly_schedule.json",
-  "started_at_utc": "2026-09-20T12:25:09.075580+00:00",
-  "finished_at_utc": "2026-09-20T12:25:09.096071+00:00",
-  "duration_seconds": 0.02,
+  "started_at_utc": "2026-09-20T12:44:06.383103+00:00",
+  "finished_at_utc": "2026-09-20T12:44:06.403695+00:00",
+  "duration_seconds": 0.021,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2532,
+    "process_id": 2413,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35510419460",
+    "github_run_id": "35511395449",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "649adb9a4c841bef70a209a2c41905c1a8362220",
+    "github_sha": "efa6f6df8463d2989718b3324702fbbfd3d63930",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -47,7 +47,7 @@
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-20T12:25:09.087925+00:00",
+      "timestamp_utc": "2026-09-20T12:44:06.395631+00:00",
       "message": "All configured target-week games are locked; preserving previously published weekly market data and refreshing schedule metadata only.",
       "details": null
     }
