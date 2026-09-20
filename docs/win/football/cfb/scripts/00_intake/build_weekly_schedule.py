@@ -2158,6 +2158,448 @@ def write_csv_atomic(
             pass
 
 
+
+def read_all_locked_weekly(
+    path: Path,
+    target_rows: list[dict[str, str]],
+    *,
+    season: int,
+    season_type: int,
+    week: int,
+) -> dict[str, dict[str, str]]:
+    if not path.exists():
+        raise FileNotFoundError(
+            "All target-week games are locked, but the "
+            "previous weekly schedule does not exist: "
+            f"{path}"
+        )
+
+    rows = read_csv(
+        path,
+        OUTPUT_COLUMNS,
+        "existing locked weekly schedule",
+    )
+
+    target_by_id = {
+        str(
+            row["game_id"]
+        ).strip(): row
+        for row in target_rows
+    }
+
+    existing: dict[
+        str,
+        dict[str, str],
+    ] = {}
+
+    for index, row in enumerate(
+        rows
+    ):
+        game_id = str(
+            row.get(
+                "game_id",
+                "",
+            )
+        ).strip()
+
+        if not game_id:
+            raise ValueError(
+                "Existing locked weekly schedule "
+                "contains blank game_id at "
+                f"row {index}"
+            )
+
+        if game_id in existing:
+            raise ValueError(
+                "Existing locked weekly schedule "
+                "contains duplicate game_id="
+                f"{game_id}"
+            )
+
+        target = target_by_id.get(
+            game_id
+        )
+
+        if target is None:
+            raise ValueError(
+                "Existing locked weekly schedule "
+                "contains out-of-scope game_id="
+                f"{game_id}"
+            )
+
+        if str(
+            row.get(
+                "season",
+                "",
+            )
+        ).strip() != str(season):
+            raise ValueError(
+                "Existing locked weekly schedule "
+                "season mismatch for "
+                f"game_id={game_id}"
+            )
+
+        if str(
+            row.get(
+                "season_type",
+                "",
+            )
+        ).strip() != str(season_type):
+            raise ValueError(
+                "Existing locked weekly schedule "
+                "season_type mismatch for "
+                f"game_id={game_id}"
+            )
+
+        if str(
+            row.get(
+                "week",
+                "",
+            )
+        ).strip() != str(week):
+            raise ValueError(
+                "Existing locked weekly schedule "
+                "week mismatch for "
+                f"game_id={game_id}"
+            )
+
+        for field in (
+            "away_team",
+            "home_team",
+        ):
+            if str(
+                row.get(
+                    field,
+                    "",
+                )
+            ).strip() != str(
+                target.get(
+                    field,
+                    "",
+                )
+            ).strip():
+                raise ValueError(
+                    "Existing locked weekly schedule "
+                    f"{field} mismatch for "
+                    f"game_id={game_id}"
+                )
+
+        odds_available = str(
+            row.get(
+                "odds_available",
+                "",
+            )
+        ).strip()
+
+        if odds_available not in {
+            "0",
+            "1",
+        }:
+            raise ValueError(
+                "Existing locked weekly schedule "
+                "contains invalid odds_available "
+                f"for game_id={game_id}: "
+                f"{odds_available!r}"
+            )
+
+        existing[
+            game_id
+        ] = row
+
+    if set(existing) != set(target_by_id):
+        missing = sorted(
+            set(target_by_id)
+            - set(existing)
+        )
+
+        extra = sorted(
+            set(existing)
+            - set(target_by_id)
+        )
+
+        raise ValueError(
+            "All target-week games are locked, but "
+            "the previous weekly schedule does not "
+            "exactly cover the current target set. "
+            f"missing={missing[:20]}, "
+            f"extra={extra[:20]}"
+        )
+
+    return existing
+
+
+def validate_all_locked_output(
+    *,
+    output_rows: list[dict[str, str]],
+    target_rows: list[dict[str, str]],
+    season: int,
+    season_type: int,
+    week: int,
+    now_utc: datetime,
+) -> None:
+    validation_rows: list[
+        dict[str, str]
+    ] = []
+
+    for row in output_rows:
+        candidate = dict(
+            row
+        )
+
+        if candidate.get(
+            "odds_available"
+        ) == "1":
+            parse_aware_iso(
+                candidate.get(
+                    "commence_time",
+                    "",
+                ),
+                (
+                    "preserved locked odds "
+                    "commence_time for "
+                    f"game_id={candidate.get('game_id', '')}"
+                ),
+            )
+
+            candidate[
+                "commence_time"
+            ] = str(
+                candidate.get(
+                    "kickoff_utc",
+                    "",
+                )
+            ).strip()
+
+        validation_rows.append(
+            candidate
+        )
+
+    validate_output_rows(
+        output_rows=validation_rows,
+        target_rows=target_rows,
+        season=season,
+        season_type=season_type,
+        week=week,
+        now_utc=now_utc,
+    )
+
+
+def all_locked_metrics(
+    rows: list[dict[str, str]],
+) -> dict[str, int]:
+    return {
+        "rows_with_odds": sum(
+            row.get(
+                "odds_available"
+            ) == "1"
+            for row in rows
+        ),
+        "rows_no_odds_returned": sum(
+            row.get(
+                "odds_missing_reason"
+            ) == "no_odds_returned"
+            for row in rows
+        ),
+        "rows_no_supported_markets": sum(
+            row.get(
+                "odds_missing_reason"
+            ) == "no_supported_markets"
+            for row in rows
+        ),
+        "rows_locked_before_first_capture": sum(
+            row.get(
+                "odds_missing_reason"
+            ) == "locked_before_first_capture"
+            for row in rows
+        ),
+    }
+
+
+def maybe_publish_all_locked_week(
+    *,
+    report: PipelineReporter,
+    target_rows: list[dict[str, str]],
+    schedule_rows: list[dict[str, str]],
+    season: int,
+    season_type: int,
+    week: int,
+    now_utc: datetime,
+    output_path: Path,
+) -> int | None:
+    all_locked = bool(
+        target_rows
+    ) and all(
+        game_is_locked(
+            row,
+            now_utc,
+        )
+        for row in target_rows
+    )
+
+    if not all_locked:
+        return None
+
+    report.warning(
+        "All configured target-week games are locked; "
+        "preserving previously published weekly market "
+        "data and refreshing schedule metadata only."
+    )
+
+    report.add_input(
+        output_path
+    )
+
+    report.add_output(
+        output_path
+    )
+
+    existing_weekly = (
+        read_all_locked_weekly(
+            output_path,
+            target_rows,
+            season=season,
+            season_type=season_type,
+            week=week,
+        )
+    )
+
+    (
+        output_rows,
+        locked_preserved,
+    ) = build_output_rows(
+        target_rows=target_rows,
+        request_by_id={},
+        odds_summary={},
+        existing_weekly=existing_weekly,
+        now_utc=now_utc,
+    )
+
+    if locked_preserved != len(
+        target_rows
+    ):
+        raise RuntimeError(
+            "All-locked weekly preservation did not "
+            "preserve every target game. "
+            f"preserved={locked_preserved}, "
+            f"target={len(target_rows)}"
+        )
+
+    validate_all_locked_output(
+        output_rows=output_rows,
+        target_rows=target_rows,
+        season=season,
+        season_type=season_type,
+        week=week,
+        now_utc=now_utc,
+    )
+
+    metrics = all_locked_metrics(
+        output_rows
+    )
+
+    report.set_rows(
+        rows_in=len(
+            target_rows
+        ),
+    )
+
+    report.update_details(
+        {
+            "snapshot_id": "",
+            "snapshot_fetched_at": "",
+            "schedule_rows_loaded": len(
+                schedule_rows
+            ),
+            "target_schedule_rows": len(
+                target_rows
+            ),
+            "raw_odds_events_loaded": 0,
+            "raw_odds_objects_loaded": 0,
+            "odds_csv_rows_loaded": 0,
+            "existing_weekly_rows": len(
+                existing_weekly
+            ),
+            "request_result_counts": {},
+            "rows_with_odds": metrics[
+                "rows_with_odds"
+            ],
+            "rows_no_odds_returned": metrics[
+                "rows_no_odds_returned"
+            ],
+            "rows_no_supported_markets": metrics[
+                "rows_no_supported_markets"
+            ],
+            "rows_locked_before_first_capture": metrics[
+                "rows_locked_before_first_capture"
+            ],
+            "locked_games": len(
+                target_rows
+            ),
+            "locked_rows_preserved": (
+                locked_preserved
+            ),
+            "odds_snapshot_skipped": True,
+            "odds_snapshot_skip_reason": (
+                "all_target_games_locked"
+            ),
+            "output_rows": len(
+                output_rows
+            ),
+            "output_modified": False,
+        }
+    )
+
+    write_csv_atomic(
+        output_path,
+        output_rows,
+    )
+
+    report.set_rows(
+        rows_out=len(
+            output_rows
+        ),
+    )
+
+    report.update_details(
+        {
+            "output_modified": True,
+            "output_path": str(
+                output_path
+            ),
+        }
+    )
+
+    print(
+        "build_weekly_schedule.py completed "
+        "with all-locked preservation"
+    )
+
+    print(
+        f"season={season} "
+        f"season_type={season_type} "
+        f"week={week}"
+    )
+
+    print(
+        f"rows_written={len(output_rows)}"
+    )
+
+    print(
+        "locked_rows_preserved="
+        f"{locked_preserved}"
+    )
+
+    print(
+        "odds_snapshot_skipped=true"
+    )
+
+    print(
+        f"output={output_path}"
+    )
+
+    return 0
+
+
 def main() -> int:
     with PipelineReporter(
         script=__file__,
@@ -2207,6 +2649,34 @@ def main() -> int:
         report.add_input(
             schedule_path
         )
+
+        now_utc = datetime.now(
+            timezone.utc
+        )
+
+        output_path = (
+            WEEKLY_DIR
+            / (
+                f"week_{week}_"
+                "CFB_weekly_schedule.csv"
+            )
+        )
+
+        locked_result = (
+            maybe_publish_all_locked_week(
+                report=report,
+                target_rows=target_rows,
+                schedule_rows=schedule_rows,
+                season=season,
+                season_type=season_type,
+                week=week,
+                now_utc=now_utc,
+                output_path=output_path,
+            )
+        )
+
+        if locked_result is not None:
+            return locked_result
 
         (
             odds_csv_path,
