@@ -116,6 +116,7 @@ SCHEDULE_REQUIRED_COLUMNS = {
     "game_timezone",
     "kickoff_utc",
     "commence_time",
+    "game_locked",
     "stadium",
     "roof",
 }
@@ -498,6 +499,30 @@ def target_paths(
     )
 
 
+
+def schedule_game_locked(
+    game: dict[str, str],
+) -> bool:
+    game_id = clean(
+        game.get("game_id")
+    )
+
+    value = clean(
+        game.get("game_locked")
+    )
+
+    if value not in {
+        "0",
+        "1",
+    }:
+        raise WeatherValidationError(
+            "game_locked must be 0/1 for "
+            f"game_id={game_id}: {value!r}"
+        )
+
+    return value == "1"
+
+
 def resolve_kickoff_utc(
     game: dict[str, str],
 ) -> datetime:
@@ -520,15 +545,21 @@ def resolve_kickoff_utc(
             label=f"commence_time for game_id={game_id}",
         )
 
-        if abs(
-            (
-                authoritative
-                - commence
-            ).total_seconds()
-        ) > 1:
+        if (
+            abs(
+                (
+                    authoritative
+                    - commence
+                ).total_seconds()
+            ) > 1
+            and not schedule_game_locked(
+                game
+            )
+        ):
             raise WeatherValidationError(
                 "kickoff_utc and commence_time disagree "
-                f"for game_id={game_id}: "
+                "for unlocked game "
+                f"game_id={game_id}: "
                 f"kickoff_utc={authoritative.isoformat()} "
                 f"commence_time={commence.isoformat()}"
             )
@@ -2112,6 +2143,70 @@ def _validate_weather_output_row_count(
         )
 
 
+
+def validate_weather_schedule_time(
+    row: dict[str, str],
+    game: dict[str, str],
+    *,
+    game_id: str,
+    strict_blank_timestamp: bool,
+) -> datetime:
+    allow_locked_existing_drift = (
+        schedule_game_locked(
+            game
+        )
+        and not strict_blank_timestamp
+    )
+
+    if (
+        clean(
+            row.get("game_time")
+        )
+        != clean(
+            game.get("game_time")
+        )
+        and not allow_locked_existing_drift
+    ):
+        raise WeatherValidationError(
+            "Weather game_time mismatch "
+            f"for game_id={game_id}"
+        )
+
+    expected_kickoff = (
+        resolve_kickoff_utc(
+            game
+        )
+    )
+
+    actual_kickoff = (
+        require_iso_utc(
+            row.get(
+                "kickoff_utc"
+            ),
+            label=(
+                "weather kickoff_utc "
+                f"for game_id={game_id}"
+            ),
+        )
+    )
+
+    if (
+        abs(
+            (
+                actual_kickoff
+                - expected_kickoff
+            ).total_seconds()
+        ) > 1
+        and not allow_locked_existing_drift
+    ):
+        raise WeatherValidationError(
+            "Weather kickoff mismatch "
+            f"for game_id={game_id}"
+        )
+
+    return expected_kickoff
+
+
 def validate_output_rows(
     rows: list[dict[str, str]],
     *,
@@ -2252,42 +2347,16 @@ def validate_output_rows(
             ),
         )
 
-        if clean(
-            row.get("game_time")
-        ) != clean(
-            game.get("game_time")
-        ):
-            raise WeatherValidationError(
-                f"Weather game_time mismatch for game_id={game_id}"
-            )
-
         expected_kickoff = (
-            resolve_kickoff_utc(
-                game
-            )
-        )
-
-        actual_kickoff = (
-            require_iso_utc(
-                row.get(
-                    "kickoff_utc"
-                ),
-                label=(
-                    "weather kickoff_utc "
-                    f"for game_id={game_id}"
+            validate_weather_schedule_time(
+                row,
+                game,
+                game_id=game_id,
+                strict_blank_timestamp=(
+                    strict_blank_timestamp
                 ),
             )
         )
-
-        if abs(
-            (
-                actual_kickoff
-                - expected_kickoff
-            ).total_seconds()
-        ) > 1:
-            raise WeatherValidationError(
-                f"Weather kickoff mismatch for game_id={game_id}"
-            )
 
         if clean(
             row.get("roof")
