@@ -1,4 +1,4 @@
 league,season,market_type,Win,Loss,Push,Void,Pending,Invalid,Total,Selected,bets_excluding_pushes,bets_including_pushes,Win_Pct,Win_Pct_All_Bets,units,ROI_Excluding_Pushes,ROI_Including_Pushes,avg_ev,avg_odds,avg_model_prob,avg_kelly
-CFB,2026,moneyline,7,2,0,0,0,0,9,9,9,9,0.7778,0.7778,0.7338,0.0815,0.0815,0.0564,-244.7,0.7449,0.1227
-CFB,2026,spread,0,6,0,0,0,0,6,6,6,6,0.0,0.0,-6.0,-1.0,-1.0,0.1218,-75.3,0.5839,0.1318
-CFB,2026,total,13,6,0,0,0,0,19,19,19,19,0.6842,0.6842,5.6976,0.2999,0.2999,0.0198,-111.4,0.5372,0.022
+CFB,2026,moneyline,7,2,0,0,2,0,9,11,9,9,0.7778,0.7778,0.7338,0.0815,0.0815,0.0557,-240.5,0.7414,0.1217
+CFB,2026,spread,0,6,0,0,6,0,6,12,6,6,0.0,0.0,-6.0,-1.0,-1.0,0.1076,-93.1,0.5793,0.1178
+CFB,2026,total,13,6,0,0,6,0,19,25,19,19,0.6842,0.6842,5.6976,0.2999,0.2999,0.0217,-111.2,0.5378,0.024

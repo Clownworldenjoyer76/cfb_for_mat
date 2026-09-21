@@ -40,7 +40,6 @@ import os
 import re
 import sys
 import uuid
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -80,7 +79,7 @@ from pipeline_reporter import PipelineReporter
 
 
 SCRIPT_VERSION = (
-    "cfb-selections-v2-current-line-reprice-2026-09-16"
+    "cfb-selections-v3-rebuild-all-games-2026-09-21"
 )
 
 PROBABILITY_EPS = 1e-6
@@ -295,48 +294,6 @@ def normalize_bookmaker(
     )
 
 
-def parse_utc_timestamp(
-    value: Any,
-    label: str,
-) -> datetime:
-    text = clean(
-        value
-    )
-
-    if not text:
-        fail(
-            f"{label} is blank"
-        )
-
-    normalized = (
-        text[:-1]
-        + "+00:00"
-        if text.endswith(
-            "Z"
-        )
-        else text
-    )
-
-    try:
-        parsed = datetime.fromisoformat(
-            normalized
-        )
-
-    except ValueError as exc:
-        raise RuntimeError(
-            f"{label} is not a valid timestamp: {text!r}"
-        ) from exc
-
-    if parsed.tzinfo is None:
-        fail(
-            f"{label} must be timezone-aware: {text!r}"
-        )
-
-    return parsed.astimezone(
-        timezone.utc
-    )
-
-
 def normal_cdf(
     z: float,
 ) -> float:
@@ -534,83 +491,6 @@ def total_model_probabilities(
         1.0
         - over_probability,
     )
-
-
-def locked_game_ids(
-    working: pd.DataFrame,
-    now_utc: datetime | None = None,
-) -> set[str]:
-    require_columns(
-        working,
-        [
-            "game_id",
-            "sched_game_locked",
-            "sched_kickoff_utc",
-        ],
-        "candidate working frame",
-    )
-
-    current_time = (
-        now_utc
-        if now_utc is not None
-        else datetime.now(
-            timezone.utc
-        )
-    )
-
-    if current_time.tzinfo is None:
-        fail(
-            "now_utc must be timezone-aware"
-        )
-
-    current_time = current_time.astimezone(
-        timezone.utc
-    )
-
-    locked: set[str] = set()
-
-    for _, row in working.iterrows():
-        game_id = normalize_game_id(
-            row.get(
-                "game_id"
-            )
-        )
-
-        explicit_lock = parse_int(
-            row.get(
-                "sched_game_locked"
-            )
-        )
-
-        if explicit_lock not in {
-            0,
-            1,
-        }:
-            fail(
-                f"game_id={game_id}: "
-                "sched_game_locked must be 0 or 1; "
-                f"found {row.get('sched_game_locked')!r}"
-            )
-
-        kickoff = parse_utc_timestamp(
-            row.get(
-                "sched_kickoff_utc"
-            ),
-            (
-                "sched_kickoff_utc "
-                f"for game_id={game_id}"
-            ),
-        )
-
-        if (
-            explicit_lock == 1
-            or current_time >= kickoff
-        ):
-            locked.add(
-                game_id
-            )
-
-    return locked
 
 
 def count_line_movements(
@@ -1657,7 +1537,6 @@ def merge_schedule(
             "game_id",
             "away_team",
             "home_team",
-            "kickoff_utc",
             "neutral_site",
             "roof",
             "bookmaker",
@@ -1671,7 +1550,6 @@ def merge_schedule(
             "over_american",
             "under_american",
             "odds_available",
-            "game_locked",
         ],
         "weekly schedule",
     )
@@ -1886,7 +1764,6 @@ def merge_schedule(
 
     columns = [
         "game_id",
-        "kickoff_utc",
         "neutral_site",
         "roof",
         "bookmaker",
@@ -1900,7 +1777,6 @@ def merge_schedule(
         "over_american",
         "under_american",
         "odds_available",
-        "game_locked",
     ]
 
     source = schedule[
@@ -2081,116 +1957,6 @@ def build_output(
         ].to_numpy()
 
     return output
-
-
-
-def preserve_locked_selected_rows(
-    output: pd.DataFrame,
-    working: pd.DataFrame,
-    existing_output_path: Path,
-) -> tuple[
-    pd.DataFrame,
-    int,
-]:
-    locked_ids = locked_game_ids(
-        working
-    )
-
-    if not locked_ids:
-        return (
-            output,
-            0,
-        )
-
-    if not existing_output_path.is_file():
-        fail(
-            f"{len(locked_ids)} game(s) are locked "
-            "by schedule flag or kickoff time but no existing "
-            "selected output is available to preserve. "
-            "Refusing to rebuild locked selections. "
-            f"game_ids={sorted(locked_ids)[:10]}"
-        )
-
-    existing = read_csv(
-        existing_output_path,
-        "existing selected output",
-    )
-
-    require_columns(
-        existing,
-        output.columns.tolist(),
-        "existing selected output",
-    )
-
-    validate_unique_game_ids(
-        existing,
-        "existing selected output",
-    )
-
-    missing_locked = sorted(
-        locked_ids
-        - set(
-            existing[
-                "game_id"
-            ].map(
-                normalize_game_id
-            )
-        )
-    )
-
-    if missing_locked:
-        fail(
-            "Existing selected output is missing locked games. "
-            "Refusing to rebuild them after kickoff. "
-            f"game_ids={missing_locked[:10]}"
-        )
-
-    result = output.astype(
-        object
-    ).copy()
-
-    result[
-        "game_id"
-    ] = result[
-        "game_id"
-    ].map(
-        normalize_game_id
-    )
-
-    existing_lookup = existing.set_index(
-        "game_id",
-        drop=False,
-    )
-
-    for game_id in locked_ids:
-        mask = result[
-            "game_id"
-        ].eq(
-            game_id
-        )
-
-        if not mask.any():
-            fail(
-                f"Locked game_id={game_id} is missing "
-                "from the new selected output frame"
-            )
-
-        prior_row = existing_lookup.loc[
-            game_id,
-            result.columns,
-        ]
-
-        result.loc[
-            mask,
-            result.columns,
-        ] = prior_row.to_numpy()
-
-    return (
-        result,
-        len(
-            locked_ids
-        ),
-    )
 
 
 
@@ -3024,15 +2790,6 @@ def run(
         max_kelly,
     )
 
-    (
-        output,
-        locked_games_preserved,
-    ) = preserve_locked_selected_rows(
-        output,
-        working,
-        output_path,
-    )
-
     expected_columns = (
         list(
             combined.columns
@@ -3144,8 +2901,6 @@ def run(
                 len(
                     output
                 ),
-            "locked_games_preserved":
-                locked_games_preserved,
             "odds_available_games":
                 odds_available_games,
             "current_odds_unavailable_games":
@@ -3207,11 +2962,6 @@ def run(
         f"season={season} "
         f"week={week} "
         f"games={len(output)}"
-    )
-
-    print(
-        "locked_games_preserved="
-        f"{locked_games_preserved}"
     )
 
     print(

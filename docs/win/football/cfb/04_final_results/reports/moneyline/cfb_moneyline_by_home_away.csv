@@ -1,3 +1,3 @@
 league,season,market_type,variable,Win,Loss,Push,Void,Pending,Invalid,Total,Selected,bets_excluding_pushes,bets_including_pushes,Win_Pct,Win_Pct_All_Bets,units,ROI_Excluding_Pushes,ROI_Including_Pushes,avg_ev,avg_odds,avg_model_prob,avg_kelly
 CFB,2026,moneyline,HOME,7,1,0,0,0,0,8,8,8,8,0.875,0.875,1.7338,0.2167,0.2167,0.0467,-250.5,0.7439,0.105
-CFB,2026,moneyline,AWAY,0,1,0,0,0,0,1,1,1,1,0.0,0.0,-1.0,-1.0,-1.0,0.1335,-198.0,0.7531,0.2643
+CFB,2026,moneyline,AWAY,0,1,0,0,2,0,1,3,1,1,0.0,0.0,-1.0,-1.0,-1.0,0.0797,-213.7,0.7346,0.1662

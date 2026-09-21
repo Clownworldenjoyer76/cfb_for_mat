@@ -104,7 +104,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from pipeline_reporter import PipelineReporter
 
 
-SCRIPT_VERSION = "cfb-inseason-v6-history-coverage-2026-09-16"
+SCRIPT_VERSION = "cfb-inseason-v7-rebuild-all-games-2026-09-21"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -1834,16 +1834,6 @@ def run(
         args,
     )
 
-    (
-        projected,
-        locked_games_preserved,
-    ) = base.preserve_locked_rows(
-        projected,
-        schedule,
-        output_path,
-        "Week 2+ projection",
-    )
-
     validate_output(
         projected,
         schedule,
@@ -1973,9 +1963,6 @@ def run(
             "projection_game_count": len(
                 projected
             ),
-            "locked_games_preserved": (
-                locked_games_preserved
-            ),
             "team_stats_source_rows": len(
                 current_team_stats
             ),
@@ -2101,11 +2088,6 @@ def run(
 
     print(
         f"games={len(projected)}"
-    )
-
-    print(
-        "locked_games_preserved="
-        f"{locked_games_preserved}"
     )
 
     print(

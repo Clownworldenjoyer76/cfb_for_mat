@@ -1,117 +1,107 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35614655308-attempt-1",
+  "run_id": "github-35662449205-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "00_intake",
   "script": "build_travel.py",
-  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/build_travel.py",
-  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/build_travel.json",
-  "started_at_utc": "2026-09-21T14:51:38.738618+00:00",
-  "finished_at_utc": "2026-09-21T14:51:38.768375+00:00",
-  "duration_seconds": 0.03,
+  "script_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/scripts/00_intake/build_travel.py",
+  "report_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/00_intake/build_travel.json",
+  "started_at_utc": "2026-09-21T22:32:16.325806+00:00",
+  "finished_at_utc": "2026-09-21T22:32:16.353893+00:00",
+  "duration_seconds": 0.028,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2472,
-    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35614655308",
+    "process_id": 2569,
+    "working_directory": "/home/runner/work/bet_tracker/bet_tracker",
+    "github_run_id": "35662449205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "002f5a9d2df07cf6458dc8869279721cc7c8f7ed",
+    "github_sha": "5d7fb65534d74ec5d32e9a839ce6bdd3ca94bead",
     "github_actor": "Clownworldenjoyer76",
-    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+    "github_repository": "Clownworldenjoyer76/bet_tracker"
   },
   "context": {
     "season": 2026,
-    "week": 3,
+    "week": 4,
     "script_version": "cfb-build-travel-v2-2026-09-16",
     "source": "configured weekly schedule + stadium map"
   },
   "inputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/stadium_map.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/current_week.yaml",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/mapping/stadium_map.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/travel/2026_week_3_travel.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/data/travel/2026_week_4_travel.csv"
   ],
-  "rows_in": 75,
-  "rows_out": 75,
+  "rows_in": 71,
+  "rows_out": 71,
   "warning_count": 1,
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-21T14:51:38.768352+00:00",
+      "timestamp_utc": "2026-09-21T22:32:16.353875+00:00",
       "message": "One or more teams do not have home-stadium origin mappings; team-specific travel fields were left blank",
       "details": {
-        "count": 12,
+        "count": 10,
         "details": [
           {
-            "game_id": "401858228",
+            "game_id": "401858468",
             "side": "away",
-            "team": "Mercer Bears"
+            "team": "Howard Bison"
           },
           {
-            "game_id": "401858233",
+            "game_id": "401858236",
             "side": "away",
-            "team": "Wagner Seahawks"
+            "team": "Bucknell Bison"
           },
           {
-            "game_id": "401858448",
+            "game_id": "401866427",
             "side": "away",
-            "team": "Southern Illinois Salukis"
+            "team": "Lindenwood Lions"
           },
           {
-            "game_id": "401858471",
+            "game_id": "401858237",
             "side": "away",
-            "team": "Northern Iowa Panthers"
+            "team": "Central Arkansas Bears"
           },
           {
-            "game_id": "401866424",
+            "game_id": "401868188",
+            "side": "away",
+            "team": "Gardner-Webb Runnin' Bulldogs"
+          },
+          {
+            "game_id": "401866426",
+            "side": "away",
+            "team": "Robert Morris Colonials"
+          },
+          {
+            "game_id": "401866428",
             "side": "away",
             "team": "Stonehill Skyhawks"
           },
           {
-            "game_id": "401858459",
+            "game_id": "401858244",
             "side": "away",
-            "team": "Eastern Washington Eagles"
+            "team": "William & Mary Tribe"
           },
           {
-            "game_id": "401862772",
+            "game_id": "401862781",
             "side": "away",
-            "team": "UT Martin Skyhawks"
+            "team": "North Carolina Central Eagles"
           },
           {
-            "game_id": "401858452",
+            "game_id": "401860892",
             "side": "away",
-            "team": "North Dakota Fighting Hawks"
-          },
-          {
-            "game_id": "401862777",
-            "side": "away",
-            "team": "Delaware State Hornets"
-          },
-          {
-            "game_id": "401862775",
-            "side": "away",
-            "team": "East Texas A&M Lions"
-          },
-          {
-            "game_id": "401860886",
-            "side": "away",
-            "team": "Montana Grizzlies"
-          },
-          {
-            "game_id": "401860885",
-            "side": "away",
-            "team": "South Dakota Coyotes"
+            "team": "Incarnate Word Cardinals"
           }
         ]
       }
@@ -120,9 +110,9 @@
   "errors": [],
   "details": {
     "season_type": 2,
-    "target_schedule_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv",
-    "stadium_map_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/stadium_map.csv",
-    "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/travel/2026_week_3_travel.csv",
+    "target_schedule_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
+    "stadium_map_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/mapping/stadium_map.csv",
+    "output_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/data/travel/2026_week_4_travel.csv",
     "output_columns": [
       "game_id",
       "away_team",
@@ -153,91 +143,81 @@
       "international_flag"
     ],
     "output_modified": false,
-    "target_schedule_rows": 75,
+    "target_schedule_rows": 71,
     "stadium_map_rows": 186,
     "team_mapping_count": 186,
     "venue_lookup_key_count": 188,
-    "output_rows": 75,
-    "neutral_game_count": 2,
+    "output_rows": 71,
+    "neutral_game_count": 0,
     "international_game_count": 0,
     "venue_resolution_status_counts": {
-      "resolved_schedule_stadium": 67,
-      "resolved_schedule_stadium_home_match": 6,
-      "resolved_schedule_stadium_timezone": 2
+      "resolved_schedule_stadium": 69,
+      "resolved_schedule_stadium_home_match": 1,
+      "resolved_schedule_stadium_timezone": 1
     },
     "unresolved_venue_count": 0,
     "venue_timezone_fallback_count": 0,
     "venue_country_missing_count": 0,
-    "away_origin_mapped_count": 63,
-    "home_origin_mapped_count": 75,
-    "away_origin_missing_count": 12,
+    "away_origin_mapped_count": 61,
+    "home_origin_mapped_count": 71,
+    "away_origin_missing_count": 10,
     "home_origin_missing_count": 0,
-    "missing_origin_count": 12,
+    "missing_origin_count": 10,
     "missing_origin_details": [
       {
-        "game_id": "401858228",
+        "game_id": "401858468",
         "side": "away",
-        "team": "Mercer Bears"
+        "team": "Howard Bison"
       },
       {
-        "game_id": "401858233",
+        "game_id": "401858236",
         "side": "away",
-        "team": "Wagner Seahawks"
+        "team": "Bucknell Bison"
       },
       {
-        "game_id": "401858448",
+        "game_id": "401866427",
         "side": "away",
-        "team": "Southern Illinois Salukis"
+        "team": "Lindenwood Lions"
       },
       {
-        "game_id": "401858471",
+        "game_id": "401858237",
         "side": "away",
-        "team": "Northern Iowa Panthers"
+        "team": "Central Arkansas Bears"
       },
       {
-        "game_id": "401866424",
+        "game_id": "401868188",
+        "side": "away",
+        "team": "Gardner-Webb Runnin' Bulldogs"
+      },
+      {
+        "game_id": "401866426",
+        "side": "away",
+        "team": "Robert Morris Colonials"
+      },
+      {
+        "game_id": "401866428",
         "side": "away",
         "team": "Stonehill Skyhawks"
       },
       {
-        "game_id": "401858459",
+        "game_id": "401858244",
         "side": "away",
-        "team": "Eastern Washington Eagles"
+        "team": "William & Mary Tribe"
       },
       {
-        "game_id": "401862772",
+        "game_id": "401862781",
         "side": "away",
-        "team": "UT Martin Skyhawks"
+        "team": "North Carolina Central Eagles"
       },
       {
-        "game_id": "401858452",
+        "game_id": "401860892",
         "side": "away",
-        "team": "North Dakota Fighting Hawks"
-      },
-      {
-        "game_id": "401862777",
-        "side": "away",
-        "team": "Delaware State Hornets"
-      },
-      {
-        "game_id": "401862775",
-        "side": "away",
-        "team": "East Texas A&M Lions"
-      },
-      {
-        "game_id": "401860886",
-        "side": "away",
-        "team": "Montana Grizzlies"
-      },
-      {
-        "game_id": "401860885",
-        "side": "away",
-        "team": "South Dakota Coyotes"
+        "team": "Incarnate Word Cardinals"
       }
     ],
-    "games_with_complete_away_travel": 63,
-    "games_with_complete_home_travel": 75,
-    "away_timezone_change_coverage": 63,
-    "home_timezone_change_coverage": 75
+    "games_with_complete_away_travel": 61,
+    "games_with_complete_home_travel": 71,
+    "away_timezone_change_coverage": 61,
+    "home_timezone_change_coverage": 71
   }
 }

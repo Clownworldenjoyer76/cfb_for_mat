@@ -1,79 +1,76 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35614655308-attempt-1",
-  "status": "WARNING",
+  "run_id": "github-35662449205-attempt-1",
+  "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "00_intake",
   "script": "build_weekly_schedule.py",
-  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py",
-  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/build_weekly_schedule.json",
-  "started_at_utc": "2026-09-21T14:50:11.913907+00:00",
-  "finished_at_utc": "2026-09-21T14:50:11.934954+00:00",
-  "duration_seconds": 0.021,
+  "script_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py",
+  "report_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/00_intake/build_weekly_schedule.json",
+  "started_at_utc": "2026-09-21T22:26:45.503198+00:00",
+  "finished_at_utc": "2026-09-21T22:26:45.532439+00:00",
+  "duration_seconds": 0.029,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2433,
-    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35614655308",
+    "process_id": 2453,
+    "working_directory": "/home/runner/work/bet_tracker/bet_tracker",
+    "github_run_id": "35662449205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "002f5a9d2df07cf6458dc8869279721cc7c8f7ed",
+    "github_sha": "5d7fb65534d74ec5d32e9a839ce6bdd3ca94bead",
     "github_actor": "Clownworldenjoyer76",
-    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+    "github_repository": "Clownworldenjoyer76/bet_tracker"
   },
   "context": {
     "season": 2026,
-    "week": 3,
+    "week": 4,
     "script_version": "cfb-weekly-schedule-v2-2026-09-15"
   },
   "inputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/current_week.yaml",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/odds/2026_09_21_CFB_odds.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/odds/raw/2026_09_21_cfb_odds.json",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv"
   ],
-  "rows_in": 75,
-  "rows_out": 75,
-  "warning_count": 1,
+  "rows_in": 71,
+  "rows_out": 71,
+  "warning_count": 0,
   "error_count": 0,
-  "warnings": [
-    {
-      "timestamp_utc": "2026-09-21T14:50:11.926766+00:00",
-      "message": "All configured target-week games are locked; preserving previously published weekly market data and refreshing schedule metadata only.",
-      "details": null
-    }
-  ],
+  "warnings": [],
   "errors": [],
   "details": {
     "output_modified": true,
     "season_type": 2,
-    "snapshot_id": "",
-    "snapshot_fetched_at": "",
+    "snapshot_id": "2026_09_21_222631_878773",
+    "snapshot_fetched_at": "2026-09-21T22:26:31.878773+00:00",
     "schedule_rows_loaded": 892,
-    "target_schedule_rows": 75,
-    "raw_odds_events_loaded": 0,
-    "raw_odds_objects_loaded": 0,
-    "odds_csv_rows_loaded": 0,
-    "existing_weekly_rows": 75,
-    "request_result_counts": {},
-    "rows_with_odds": 75,
-    "rows_no_odds_returned": 0,
+    "target_schedule_rows": 71,
+    "raw_odds_events_loaded": 58,
+    "raw_odds_objects_loaded": 58,
+    "odds_csv_rows_loaded": 344,
+    "existing_weekly_rows": 71,
+    "request_result_counts": {
+      "AVAILABLE": 58,
+      "EMPTY": 13
+    },
+    "rows_with_odds": 58,
+    "rows_no_odds_returned": 13,
     "rows_no_supported_markets": 0,
     "rows_locked_before_first_capture": 0,
-    "locked_games": 75,
-    "locked_rows_preserved": 75,
-    "odds_snapshot_skipped": true,
-    "odds_snapshot_skip_reason": "all_target_games_locked",
-    "output_rows": 75,
-    "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv"
+    "locked_games": 0,
+    "locked_rows_preserved": 0,
+    "output_rows": 71,
+    "output_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv"
   }
 }

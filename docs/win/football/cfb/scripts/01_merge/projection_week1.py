@@ -66,7 +66,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from pipeline_reporter import PipelineReporter
 
 
-SCRIPT_VERSION = "cfb-week1-v11-denominator-pooled-priors-2026-09-17"
+SCRIPT_VERSION = "cfb-week1-v12-rebuild-all-games-2026-09-21"
 MIN_PRIOR_TEAM_WEEKS = 10
 ESPN_MARGIN_SYMMETRY_TOLERANCE = 0.25
 
@@ -602,185 +602,6 @@ def schedule_kickoff_utc(
         timezone.utc
     )
 
-
-
-def locked_game_ids(
-    schedule: pd.DataFrame,
-    now_utc: datetime | None = None,
-) -> set[str]:
-    now_utc = (
-        now_utc
-        or datetime.now(
-            timezone.utc
-        )
-    )
-
-    locked: set[str] = set()
-
-    for _, row in schedule.iterrows():
-        game_id = normalize_game_id(
-            row.get(
-                "game_id"
-            )
-        )
-
-        explicit_lock = as_bool(
-            row.get(
-                "game_locked"
-            )
-        )
-
-        kickoff = schedule_kickoff_utc(
-            row
-        )
-
-        time_lock = (
-            kickoff is not None
-            and now_utc >= kickoff
-        )
-
-        if (
-            game_id
-            and (
-                explicit_lock
-                or time_lock
-            )
-        ):
-            locked.add(
-                game_id
-            )
-
-    return locked
-
-
-def preserve_locked_rows(
-    projected: pd.DataFrame,
-    schedule: pd.DataFrame,
-    existing_output_path: Path,
-    label: str,
-) -> tuple[pd.DataFrame, int]:
-    locked_ids = locked_game_ids(
-        schedule
-    )
-
-    if not locked_ids:
-        return (
-            projected,
-            0,
-        )
-
-    if not existing_output_path.is_file():
-        raise RuntimeError(
-            f"{label}: {len(locked_ids)} game(s) have already "
-            "kicked off but no existing output is available to "
-            "preserve. Refusing to create post-kickoff projections. "
-            f"game_ids={sorted(locked_ids)[:10]}"
-        )
-
-    existing = pd.read_csv(
-        existing_output_path,
-        dtype=str,
-        keep_default_na=False,
-        na_filter=False,
-        encoding="utf-8-sig",
-        low_memory=False,
-    )
-
-    if "game_id" not in existing.columns:
-        raise RuntimeError(
-            f"{label}: existing output has no game_id column: "
-            f"{existing_output_path}"
-        )
-
-    existing[
-        "game_id"
-    ] = existing[
-        "game_id"
-    ].map(
-        normalize_game_id
-    )
-
-    if existing[
-        "game_id"
-    ].duplicated().any():
-        raise RuntimeError(
-            f"{label}: existing output contains duplicate game_id "
-            f"values: {existing_output_path}"
-        )
-
-    missing_rows = sorted(
-        locked_ids
-        - set(
-            existing[
-                "game_id"
-            ]
-        )
-    )
-
-    if missing_rows:
-        raise RuntimeError(
-            f"{label}: existing output is missing locked games. "
-            f"Refusing to rebuild them after kickoff. "
-            f"game_ids={missing_rows[:10]}"
-        )
-
-    missing_columns = [
-        column
-        for column in projected.columns
-        if column not in existing.columns
-    ]
-
-    if missing_columns:
-        raise RuntimeError(
-            f"{label}: existing output cannot safely preserve locked "
-            f"rows because columns are missing: {missing_columns}"
-        )
-
-    result = projected.astype(object).copy()
-    result[
-        "game_id"
-    ] = result[
-        "game_id"
-    ].map(
-        normalize_game_id
-    )
-
-    existing_lookup = existing.set_index(
-        "game_id",
-        drop=False,
-    )
-
-    for game_id in locked_ids:
-        mask = result[
-            "game_id"
-        ].eq(
-            game_id
-        )
-
-        if not mask.any():
-            raise RuntimeError(
-                f"{label}: locked game_id={game_id} is not present "
-                "in the newly built projection frame"
-            )
-
-        prior_row = existing_lookup.loc[
-            game_id,
-            result.columns,
-        ]
-
-        result.loc[
-            mask,
-            result.columns,
-        ] = prior_row.to_numpy()
-
-    validate_probability_output(
-        result
-    )
-
-    return (
-        result,
-        len(locked_ids),
-    )
 
 
 def load_game_feature_file(
@@ -3304,7 +3125,6 @@ def _main_impl() -> None:
             "game_date",
             "game_time",
             "game_timezone",
-            "game_locked",
             "away_team",
             "home_team",
             "neutral_site",
@@ -3454,16 +3274,6 @@ def _main_impl() -> None:
         args,
     )
 
-    (
-        predictions,
-        locked_games_preserved,
-    ) = preserve_locked_rows(
-        predictions,
-        schedule,
-        output_path,
-        "Week 1 projection",
-    )
-
     print(
         "projection_week1.py "
         f"version={SCRIPT_VERSION}"
@@ -3483,11 +3293,6 @@ def _main_impl() -> None:
 
     print(
         f"games={len(predictions)}"
-    )
-
-    print(
-        "locked_games_preserved="
-        f"{locked_games_preserved}"
     )
 
     print(

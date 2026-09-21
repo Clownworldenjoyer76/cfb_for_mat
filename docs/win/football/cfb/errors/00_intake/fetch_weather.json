@@ -1,118 +1,105 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35614655308-attempt-1",
-  "status": "WARNING",
+  "run_id": "github-35662449205-attempt-1",
+  "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "00_intake",
   "script": "fetch_weather.py",
-  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/fetch_weather.py",
-  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/fetch_weather.json",
-  "started_at_utc": "2026-09-21T14:51:38.898702+00:00",
-  "finished_at_utc": "2026-09-21T14:51:38.925472+00:00",
-  "duration_seconds": 0.027,
+  "script_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/scripts/00_intake/fetch_weather.py",
+  "report_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/00_intake/fetch_weather.json",
+  "started_at_utc": "2026-09-21T22:32:16.479613+00:00",
+  "finished_at_utc": "2026-09-21T22:34:38.304404+00:00",
+  "duration_seconds": 141.825,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2474,
-    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35614655308",
+    "process_id": 2571,
+    "working_directory": "/home/runner/work/bet_tracker/bet_tracker",
+    "github_run_id": "35662449205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "002f5a9d2df07cf6458dc8869279721cc7c8f7ed",
+    "github_sha": "5d7fb65534d74ec5d32e9a839ce6bdd3ca94bead",
     "github_actor": "Clownworldenjoyer76",
-    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+    "github_repository": "Clownworldenjoyer76/bet_tracker"
   },
   "context": {
     "season": 2026,
-    "week": 3,
+    "week": 4,
     "script_version": "cfb-fetch-weather-v2-2026-09-16",
     "provider": "api.met.no Locationforecast 2.0 complete"
   },
   "inputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/travel/2026_week_3_travel.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/stadium_map.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/current_week.yaml",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/data/travel/2026_week_4_travel.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/mapping/stadium_map.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/weather/week_3_CFB_weekly_weather.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/data/weather/week_4_CFB_weekly_weather.csv"
   ],
-  "rows_in": 75,
-  "rows_out": 75,
-  "warning_count": 1,
+  "rows_in": 71,
+  "rows_out": 71,
+  "warning_count": 0,
   "error_count": 0,
-  "warnings": [
-    {
-      "timestamp_utc": "2026-09-21T14:51:38.925448+00:00",
-      "message": "Weather refresh completed with degraded provider coverage",
-      "details": {
-        "provider_request_failures": 0,
-        "reused_prior_forecasts": 0,
-        "blank_weather_games": 1,
-        "forecast_status_counts": {
-          "completed_without_stored_weather": 1,
-          "reused_completed_forecast": 74
-        }
-      }
-    }
-  ],
+  "warnings": [],
   "errors": [],
   "details": {
     "season_type": 2,
-    "schedule_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv",
-    "travel_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/travel/2026_week_3_travel.csv",
-    "stadium_map_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/stadium_map.csv",
-    "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/weather/week_3_CFB_weekly_weather.csv",
+    "schedule_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
+    "travel_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/data/travel/2026_week_4_travel.csv",
+    "stadium_map_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/mapping/stadium_map.csv",
+    "output_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/data/weather/week_4_CFB_weekly_weather.csv",
     "provider_url": "https://api.met.no/weatherapi/locationforecast/2.0/complete",
     "request_timeout_seconds": 20,
     "request_sleep_seconds": 1.25,
     "coordinate_precision_decimals": 4,
     "max_forecast_offset_hours": 3.0,
-    "output_modified": false,
-    "target_schedule_rows": 75,
-    "target_travel_rows": 75,
+    "output_modified": true,
+    "target_schedule_rows": 71,
+    "target_travel_rows": 71,
     "stadium_map_rows": 186,
-    "existing_weather_rows": 75,
-    "output_rows": 75,
-    "staged_forecast_offset_hours_max": 2.25,
-    "staged_forecast_offset_hours_median": 0.0,
-    "future_game_count": 0,
-    "completed_game_count": 75,
-    "provider_request_count": 0,
-    "provider_request_success_count": 0,
+    "existing_weather_rows": 71,
+    "output_rows": 71,
+    "staged_forecast_offset_hours_max": 3.0,
+    "staged_forecast_offset_hours_median": 1.5,
+    "future_game_count": 71,
+    "completed_game_count": 0,
+    "provider_request_count": 71,
+    "provider_request_success_count": 71,
     "provider_request_failure_count": 0,
-    "provider_request_status_counts": {},
-    "provider_http_status_counts": {},
-    "forecast_result_status_counts": {
-      "completed_without_stored_weather": 1,
-      "reused_completed_forecast": 74
+    "provider_request_status_counts": {
+      "request_success": 71
     },
-    "newly_fetched_game_count": 0,
-    "reused_prior_forecast_count": 74,
-    "reused_completed_forecast_count": 74,
+    "provider_http_status_counts": {
+      "200": 71
+    },
+    "forecast_result_status_counts": {
+      "forecast_available": 71
+    },
+    "newly_fetched_game_count": 71,
+    "reused_prior_forecast_count": 0,
+    "reused_completed_forecast_count": 0,
     "reused_after_refresh_failure_count": 0,
-    "blank_weather_game_count": 1,
-    "blank_weather_game_ids": [
-      "401864574"
-    ],
+    "blank_weather_game_count": 0,
+    "blank_weather_game_ids": [],
     "refresh_failure_game_ids": [],
-    "weather_available_game_count": 74,
-    "wind_speed_coverage": 74,
-    "temperature_coverage": 74,
+    "weather_available_game_count": 71,
+    "wind_speed_coverage": 71,
+    "temperature_coverage": 71,
     "wind_gust_coverage": 0,
     "precip_probability_coverage": 0,
-    "humidity_coverage": 74,
+    "humidity_coverage": 71,
     "roof_metadata_missing_count": 0,
-    "weather_exposed_game_count": 75,
-    "new_forecast_offset_hours_max": null,
-    "new_forecast_offset_hours_median": null,
-    "output_forecast_offset_hours_max": 2.25,
-    "output_forecast_offset_hours_median": 0.0
+    "weather_exposed_game_count": 70,
+    "new_forecast_offset_hours_max": 3.0,
+    "new_forecast_offset_hours_median": 1.5,
+    "output_forecast_offset_hours_max": 3.0,
+    "output_forecast_offset_hours_median": 1.5
   }
 }

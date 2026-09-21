@@ -1,58 +1,81 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35614655308-attempt-1",
-  "status": "SUCCESS",
+  "run_id": "github-35662449205-attempt-1",
+  "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "00_intake",
   "script": "finalize_pred.py",
-  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/finalize_pred.py",
-  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/finalize_pred.json",
-  "started_at_utc": "2026-09-21T14:51:38.641754+00:00",
-  "finished_at_utc": "2026-09-21T14:51:38.656292+00:00",
-  "duration_seconds": 0.015,
+  "script_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/scripts/00_intake/finalize_pred.py",
+  "report_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/00_intake/finalize_pred.json",
+  "started_at_utc": "2026-09-21T22:32:16.231554+00:00",
+  "finished_at_utc": "2026-09-21T22:32:16.244837+00:00",
+  "duration_seconds": 0.013,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2470,
-    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35614655308",
+    "process_id": 2567,
+    "working_directory": "/home/runner/work/bet_tracker/bet_tracker",
+    "github_run_id": "35662449205",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "002f5a9d2df07cf6458dc8869279721cc7c8f7ed",
+    "github_sha": "5d7fb65534d74ec5d32e9a839ce6bdd3ca94bead",
     "github_actor": "Clownworldenjoyer76",
-    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+    "github_repository": "Clownworldenjoyer76/bet_tracker"
   },
   "context": {
     "season": 2026,
-    "week": 3,
+    "week": 4,
     "script_version": "cfb-finalize-pred-v2-2026-09-16",
     "source": "configured clean ESPN predictions + weekly schedule"
   },
   "inputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/predictions/clean/2026_2_3_predictions.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/current_week.yaml",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/predictions/clean/2026_2_4_predictions.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/predictions/final/2026_2_3_clean_predictions.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/predictions/final/2026_2_4_clean_predictions.csv"
   ],
-  "rows_in": 75,
-  "rows_out": 75,
-  "warning_count": 0,
+  "rows_in": 71,
+  "rows_out": 71,
+  "warning_count": 1,
   "error_count": 0,
-  "warnings": [],
+  "warnings": [
+    {
+      "timestamp_utc": "2026-09-21T22:32:16.244819+00:00",
+      "message": "Market total unavailable for one or more target games; projected score fields left blank",
+      "details": {
+        "count": 13,
+        "game_ids": [
+          "401858236",
+          "401858237",
+          "401858244",
+          "401858468",
+          "401860892",
+          "401862781",
+          "401862783",
+          "401866426",
+          "401866427",
+          "401866428",
+          "401867909",
+          "401868188",
+          "401870745"
+        ]
+      }
+    }
+  ],
   "errors": [],
   "details": {
     "season_type": 2,
-    "target_clean_prediction_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/predictions/clean/2026_2_3_predictions.csv",
-    "target_schedule_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_3_CFB_weekly_schedule.csv",
-    "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/predictions/final/2026_2_3_clean_predictions.csv",
+    "target_clean_prediction_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/predictions/clean/2026_2_4_predictions.csv",
+    "target_schedule_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
+    "output_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/predictions/final/2026_2_4_clean_predictions.csv",
     "output_columns": [
       "game_id",
       "game_date",
@@ -77,18 +100,98 @@
       "sport",
       "league"
     ],
-    "output_modified": false,
+    "output_modified": true,
     "margin_symmetry_tolerance": "0.25",
-    "target_schedule_rows": 75,
-    "clean_prediction_rows": 75,
-    "final_rows_expected": 75,
-    "final_rows_produced": 75,
-    "staged_rows_validated": 75,
-    "games_with_projected_scores": 75,
-    "missing_total_count": 0,
-    "missing_total_game_ids": [],
-    "missing_total_details": [],
+    "target_schedule_rows": 71,
+    "clean_prediction_rows": 71,
+    "final_rows_expected": 71,
+    "final_rows_produced": 71,
+    "staged_rows_validated": 71,
+    "games_with_projected_scores": 58,
+    "missing_total_count": 13,
+    "missing_total_game_ids": [
+      "401858236",
+      "401858237",
+      "401858244",
+      "401858468",
+      "401860892",
+      "401862781",
+      "401862783",
+      "401866426",
+      "401866427",
+      "401866428",
+      "401867909",
+      "401868188",
+      "401870745"
+    ],
+    "missing_total_details": [
+      {
+        "game_id": "401858236",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401858237",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401858244",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401858468",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401860892",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401862781",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401862783",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401866426",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401866427",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401866428",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401867909",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401868188",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      },
+      {
+        "game_id": "401870745",
+        "odds_available": "0",
+        "odds_missing_reason": "no_odds_returned"
+      }
+    ],
     "margin_consistency_failure_count": 0,
-    "maximum_margin_asymmetry": "0.00"
+    "maximum_margin_asymmetry": "0.000"
   }
 }
