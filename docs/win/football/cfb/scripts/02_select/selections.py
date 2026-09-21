@@ -388,6 +388,7 @@ def resolve_target(
 ) -> tuple[
     int,
     int,
+    str,
 ]:
     configured_season = parse_int(
         current_week.get(
@@ -398,6 +399,12 @@ def resolve_target(
     configured_week = parse_int(
         current_week.get(
             "week"
+        )
+    )
+
+    season_type = normalize_season_type(
+        current_week.get(
+            "season_type"
         )
     )
 
@@ -435,9 +442,21 @@ def resolve_target(
             f"current_week.yaml/CLI: {week!r}"
         )
 
+    if season_type not in {
+        "reg",
+        "pre",
+        "post",
+    }:
+        fail(
+            "Invalid target season_type from "
+            "current_week.yaml: "
+            f"{current_week.get('season_type')!r}"
+        )
+
     return (
         season,
         week,
+        season_type,
     )
 
 
@@ -1493,61 +1512,24 @@ def validate_probability_pairs(
 
 def validate_settings(
     settings: dict[str, Any],
-    season_override: int | None,
-    week_override: int | None,
-) -> tuple[
-    int,
-    int,
-    str,
-    str,
-]:
-    season = (
-        season_override
-        if season_override is not None
-        else parse_int(
-            settings.get(
-                "season"
-            )
-        )
-    )
-
-    week = (
-        week_override
-        if week_override is not None
-        else parse_int(
-            settings.get(
-                "week"
-            )
-        )
-    )
-
-    if season is None or season < 1900:
-        fail(
-            f"Invalid season: "
-            f"{settings.get('season')!r}"
-        )
-
-    if week is None or week <= 0:
-        fail(
-            f"Invalid week: "
-            f"{settings.get('week')!r}"
-        )
-
-    season_type = normalize_season_type(
-        settings.get(
+) -> str:
+    forbidden_keys = [
+        key
+        for key in (
+            "season",
+            "week",
             "season_type",
-            "reg",
         )
-    )
+        if key in settings
+    ]
 
-    if season_type not in {
-        "reg",
-        "pre",
-        "post",
-    }:
+    if forbidden_keys:
         fail(
-            "Unsupported season_type: "
-            f"{settings.get('season_type')!r}"
+            "settings.yaml must not define "
+            "season, week, or season_type. "
+            "Pipeline target configuration belongs "
+            "in current_week.yaml. "
+            f"Found: {forbidden_keys}"
         )
 
     sportsbook = clean(
@@ -1573,12 +1555,7 @@ def validate_settings(
             "selections.py requires odds_format: american"
         )
 
-    return (
-        season,
-        week,
-        season_type,
-        sportsbook,
-    )
+    return sportsbook
 
 
 def validate_combined(
@@ -2851,6 +2828,7 @@ def run(
     (
         season,
         week,
+        season_type,
     ) = resolve_target(
         current_week,
         args.season,
@@ -2885,15 +2863,8 @@ def run(
             "must be a non-negative number"
         )
 
-    (
-        season,
-        week,
-        season_type,
-        sportsbook,
-    ) = validate_settings(
+    sportsbook = validate_settings(
         settings,
-        season,
-        week,
     )
 
     report.season = season

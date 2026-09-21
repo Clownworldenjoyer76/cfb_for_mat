@@ -1,11 +1,8 @@
-# docs/win/football/nfl/config/settings.yaml
+# docs/win/football/cfb/config/settings.yaml
 #
 # Global live-pipeline settings.
+# Pipeline target season/week/season_type belong in current_week.yaml.
 # Market-specific selection overrides belong in markets.yaml.
-
-season: 2026
-week: 1
-season_type: reg
 
 sportsbook: draftkings
 odds_region: us
