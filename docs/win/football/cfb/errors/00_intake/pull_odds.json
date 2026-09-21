@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35511395449-attempt-1",
+  "run_id": "github-35614655308-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "pull_odds.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_odds.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_odds.json",
-  "started_at_utc": "2026-09-20T12:44:06.283240+00:00",
-  "finished_at_utc": "2026-09-20T12:44:06.295090+00:00",
+  "started_at_utc": "2026-09-21T14:50:11.808020+00:00",
+  "finished_at_utc": "2026-09-21T14:50:11.820076+00:00",
   "duration_seconds": 0.012,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2411,
+    "process_id": 2431,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35511395449",
+    "github_run_id": "35614655308",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "efa6f6df8463d2989718b3324702fbbfd3d63930",
+    "github_sha": "002f5a9d2df07cf6458dc8869279721cc7c8f7ed",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -41,10 +41,10 @@
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_19_cfb_odds.json"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_20_cfb_odds.json",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/2026_09_20_CFB_odds.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_09_20_124406_292717_cfb_odds.json",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/snapshots/2026_09_20_124406_292717_CFB_odds.csv"
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_21_cfb_odds.json",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/2026_09_21_CFB_odds.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/snapshots/2026_09_21_145011_817699_cfb_odds.json",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/snapshots/2026_09_21_145011_817699_CFB_odds.csv"
   ],
   "rows_in": 75,
   "rows_out": 0,
@@ -52,7 +52,7 @@
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-20T12:44:06.295066+00:00",
+      "timestamp_utc": "2026-09-21T14:50:11.820039+00:00",
       "message": "All configured target-week games are locked; preserving the latest existing odds pair.",
       "details": null
     }
@@ -61,8 +61,8 @@
   "details": {
     "output_modified": false,
     "season_type": 2,
-    "snapshot_id": "2026_09_20_124406_292717",
-    "snapshot_fetched_at": "2026-09-20T12:44:06.292717+00:00",
+    "snapshot_id": "2026_09_21_145011_817699",
+    "snapshot_fetched_at": "2026-09-21T14:50:11.817699+00:00",
     "target_games": 75,
     "locked_games": 75,
     "locked_game_ids": [
