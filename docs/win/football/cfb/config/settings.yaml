@@ -14,7 +14,7 @@ selection_defaults:
   min_ev: 0.00
   min_edge: 0.00
   min_kelly: 0.00
-  max_kelly: 0.05
+  max_kelly: 1.00
 
   min_odds_american: -10000
   max_odds_american: 10000
