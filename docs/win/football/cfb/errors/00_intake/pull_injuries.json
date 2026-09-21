@@ -1,32 +1,32 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35662449205-attempt-1",
+  "run_id": "github-35664401764-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "00_intake",
   "script": "pull_injuries.py",
-  "script_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/scripts/00_intake/pull_injuries.py",
-  "report_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/00_intake/pull_injuries.json",
-  "started_at_utc": "2026-09-21T22:32:02.904366+00:00",
-  "finished_at_utc": "2026-09-21T22:32:03.238625+00:00",
-  "duration_seconds": 0.334,
+  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_injuries.py",
+  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_injuries.json",
+  "started_at_utc": "2026-09-21T22:51:30.319839+00:00",
+  "finished_at_utc": "2026-09-21T22:51:30.506025+00:00",
+  "duration_seconds": 0.186,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2557,
-    "working_directory": "/home/runner/work/bet_tracker/bet_tracker",
-    "github_run_id": "35662449205",
+    "process_id": 2277,
+    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
+    "github_run_id": "35664401764",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "5d7fb65534d74ec5d32e9a839ce6bdd3ca94bead",
+    "github_sha": "029d9da7179b345c88a11a61bb2547065f7dde2d",
     "github_actor": "Clownworldenjoyer76",
-    "github_repository": "Clownworldenjoyer76/bet_tracker"
+    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
   "context": {
     "season": 2026,
@@ -35,12 +35,12 @@
     "source": "ESPN Site API"
   },
   "inputs": [
-    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/current_week.yaml",
-    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/data/master/league_master.csv",
-    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/mapping/team_map.csv"
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/data/master/league_master.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/team_map.csv"
   ],
   "outputs": [
-    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/injuries/2026_injuries.csv"
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/injuries/2026_injuries.csv"
   ],
   "rows_in": 3,
   "rows_out": 0,
@@ -48,7 +48,7 @@
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-21T22:32:03.237401+00:00",
+      "timestamp_utc": "2026-09-21T22:51:30.464877+00:00",
       "message": "ESPN returned only stale injury records; all stale records were excluded and zero current injuries will be published: raw=3, stale=3, fresh=0, max_age_days=60.0",
       "details": null
     }
@@ -58,9 +58,9 @@
     "output_modified": false,
     "season_type": 2,
     "provider_status": "success",
-    "provider_timestamp": "2026-09-21T21:41:38Z",
+    "provider_timestamp": "2026-09-21T21:24:54Z",
     "freshness_reference": "espn_payload_timestamp",
-    "freshness_reference_utc": "2026-09-21T21:41:38+00:00",
+    "freshness_reference_utc": "2026-09-21T21:24:54+00:00",
     "max_report_age_days": 60.0,
     "provider_season": 2026,
     "provider_season_type": 2,
@@ -101,6 +101,6 @@
       "game_status",
       "report_date"
     ],
-    "output_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/injuries/2026_injuries.csv"
+    "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/injuries/2026_injuries.csv"
   }
 }
