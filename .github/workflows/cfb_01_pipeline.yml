@@ -200,19 +200,48 @@ jobs:
       # FILTERED PICKS
       # ----------------------------------------------------------------------
 
-      - name: Apply markets filters
+      - name: Apply markets filters to all existing weeks
         run: |
           python docs/win/football/cfb/scripts/03_picks/picks.py \
-            --pattern "week_${CFB_WEEK}_CFB_selected.csv"
+            --pattern "week_*_CFB_selected.csv"
 
       # ----------------------------------------------------------------------
       # CLEAN HUMAN-READABLE WEEKLY PICKS
       # ----------------------------------------------------------------------
 
-      - name: Build clean weekly picks output
+      - name: Rebuild clean weekly picks outputs for all existing weeks
+        shell: bash
         run: |
-          python docs/win/football/cfb/scripts/03_picks/clean_weekly_picks.py \
-            --week "$CFB_WEEK"
+          set -euo pipefail
+          shopt -s nullglob
+
+          SELECTED_FILES=(docs/win/football/cfb/02_select/week_*_CFB_selected.csv)
+
+          if [ "${#SELECTED_FILES[@]}" -eq 0 ]; then
+            echo "ERROR: No CFB selected candidate files found."
+            exit 1
+          fi
+
+          for SELECTED_FILE in "${SELECTED_FILES[@]}"; do
+            FILE_NAME="$(basename "$SELECTED_FILE")"
+            WEEK="${FILE_NAME#week_}"
+            WEEK="${WEEK%_CFB_selected.csv}"
+
+            if ! [[ "$WEEK" =~ ^[0-9]+$ ]]; then
+              echo "ERROR: Could not parse week from $SELECTED_FILE"
+              exit 1
+            fi
+
+            PICKS_FILE="docs/win/football/cfb/03_picks/week_${WEEK}_CFB_picks.csv"
+
+            if [ ! -s "$PICKS_FILE" ]; then
+              echo "ERROR: Missing rebuilt picks file: $PICKS_FILE"
+              exit 1
+            fi
+
+            python docs/win/football/cfb/scripts/03_picks/clean_weekly_picks.py \
+              --week "$WEEK"
+          done
 
       # ----------------------------------------------------------------------
       # COMPACT ALL-GAMES OUTPUT
@@ -227,10 +256,39 @@ jobs:
       # FINAL SELECTED PICKS OUTPUT
       # ----------------------------------------------------------------------
 
-      - name: Build final selected picks output
+      - name: Rebuild final selected picks outputs for all existing weeks
+        shell: bash
         run: |
-          python docs/win/football/cfb/scripts/03_picks/final_picks.py \
-            --week "$CFB_WEEK"
+          set -euo pipefail
+          shopt -s nullglob
+
+          SELECTED_FILES=(docs/win/football/cfb/02_select/week_*_CFB_selected.csv)
+
+          if [ "${#SELECTED_FILES[@]}" -eq 0 ]; then
+            echo "ERROR: No CFB selected candidate files found."
+            exit 1
+          fi
+
+          for SELECTED_FILE in "${SELECTED_FILES[@]}"; do
+            FILE_NAME="$(basename "$SELECTED_FILE")"
+            WEEK="${FILE_NAME#week_}"
+            WEEK="${WEEK%_CFB_selected.csv}"
+
+            if ! [[ "$WEEK" =~ ^[0-9]+$ ]]; then
+              echo "ERROR: Could not parse week from $SELECTED_FILE"
+              exit 1
+            fi
+
+            PICKS_FILE="docs/win/football/cfb/03_picks/week_${WEEK}_CFB_picks.csv"
+
+            if [ ! -s "$PICKS_FILE" ]; then
+              echo "ERROR: Missing rebuilt picks file: $PICKS_FILE"
+              exit 1
+            fi
+
+            python docs/win/football/cfb/scripts/03_picks/final_picks.py \
+              --week "$WEEK"
+          done
 
       # ----------------------------------------------------------------------
       # VERIFY CURRENT-WEEK OUTPUTS
