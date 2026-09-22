@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35664401764-attempt-1",
+  "run_id": "github-35733524448-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "build_travel.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/build_travel.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/build_travel.json",
-  "started_at_utc": "2026-09-21T22:51:38.172961+00:00",
-  "finished_at_utc": "2026-09-21T22:51:38.194010+00:00",
-  "duration_seconds": 0.021,
+  "started_at_utc": "2026-09-22T13:31:56.000611+00:00",
+  "finished_at_utc": "2026-09-22T13:31:56.028412+00:00",
+  "duration_seconds": 0.028,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2286,
+    "process_id": 2511,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35664401764",
+    "github_run_id": "35733524448",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "029d9da7179b345c88a11a61bb2547065f7dde2d",
+    "github_sha": "2e9a4f1f9c40c56ac8c6837592c27595aa983cce",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -48,7 +48,7 @@
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-21T22:51:38.193985+00:00",
+      "timestamp_utc": "2026-09-22T13:31:56.028393+00:00",
       "message": "One or more teams do not have home-stadium origin mappings; team-specific travel fields were left blank",
       "details": {
         "count": 10,

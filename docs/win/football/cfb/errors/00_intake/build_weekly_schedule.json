@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35664401764-attempt-1",
+  "run_id": "github-35733524448-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "build_weekly_schedule.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/build_weekly_schedule.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/build_weekly_schedule.json",
-  "started_at_utc": "2026-09-21T22:48:20.473362+00:00",
-  "finished_at_utc": "2026-09-21T22:48:20.496400+00:00",
-  "duration_seconds": 0.023,
+  "started_at_utc": "2026-09-22T13:28:42.263079+00:00",
+  "finished_at_utc": "2026-09-22T13:28:42.294141+00:00",
+  "duration_seconds": 0.031,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2196,
+    "process_id": 2433,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35664401764",
+    "github_run_id": "35733524448",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "029d9da7179b345c88a11a61bb2547065f7dde2d",
+    "github_sha": "2e9a4f1f9c40c56ac8c6837592c27595aa983cce",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -36,8 +36,8 @@
   "inputs": [
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/2026_09_21_CFB_odds.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_21_cfb_odds.json",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/2026_09_22_CFB_odds.csv",
+    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/raw/2026_09_22_cfb_odds.json",
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv"
   ],
   "outputs": [
@@ -52,8 +52,8 @@
   "details": {
     "output_modified": true,
     "season_type": 2,
-    "snapshot_id": "2026_09_21_224811_403787",
-    "snapshot_fetched_at": "2026-09-21T22:48:11.403787+00:00",
+    "snapshot_id": "2026_09_22_132833_582809",
+    "snapshot_fetched_at": "2026-09-22T13:28:33.582809+00:00",
     "schedule_rows_loaded": 892,
     "target_schedule_rows": 71,
     "raw_odds_events_loaded": 58,
