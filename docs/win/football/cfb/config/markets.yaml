@@ -68,11 +68,17 @@ markets:
       min_ev: 0.00
       odds_bands:
         - [-300, 2000]
+      kelly_bands:
+        - [0.0, 0.20]
       min_model_prob: 0.70
 
     away:
       enabled: true
       min_ev: 0.00
+      odds_bands:
+        - [-300, 2000]
+      kelly_bands:
+        - [0.0, 0.20]
       min_model_prob: 0.70
 
 
@@ -89,13 +95,15 @@ markets:
       enabled: true
       line_bands:
         - [-99.0, 99.0]
-      min_model_prob: 0.50
+      prob_bands:
+        - [0.50, 0.65]
 
     away:
       enabled: true
       line_bands:
         - [-99.0, 99.0]
-      min_model_prob: 0.70
+      prob_bands:
+        - [0.70, 1.00]
 
 
   ###################################################
@@ -124,7 +132,7 @@ markets:
       enabled: true
       min_ev: 0.00
       odds_bands:
-        - [-500, 5000]
+        - [-500, -110]
       line_bands:
         - [0.0, 99.0]
       kelly_bands:
