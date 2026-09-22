@@ -1,76 +1,76 @@
 season,season_type,week,game_id,game_date,game_time,away_team,home_team,PICKS,ml_probability,spread_probability,total_probability,predicted_away_score,predicted_home_score,predicted_total,predicted_margin,away_moneyline,home_moneyline,home_spread,market_total
-2026,2,3,401858225,2026-09-17,19:30,Syracuse Orange,Pittsburgh Panthers,ML Syracuse Orange +330 | SPREAD Pittsburgh Panthers -10.5 (-105) | TOTAL UNDER 51.5 (-110),0.2392,0.5268,0.5385,19.22,30.82,50.03,11.6,+330,-425,-10.5,51.5
-2026,2,3,401856811,2026-09-18,19:00,Houston Cougars,Texas Tech Red Raiders,ML Houston Cougars +260 | SPREAD Houston Cougars +7.5 (-110) | TOTAL UNDER 52.5 (-112),0.3731,0.5535,0.5369,22.9,28.19,51.09,5.3,+260,-325,-7.5,52.5
-2026,2,3,401858226,2026-09-18,19:30,Miami Hurricanes,Wake Forest Demon Deacons,SPREAD Miami Hurricanes -20.5 (-112),,0.5137,,38.38,17.31,55.69,-21.06,-1600,+900,+20.5,55.5
-2026,2,3,401858455,2026-09-18,19:30,Portland State Vikings,Oregon Ducks,SPREAD Portland State Vikings +57.5 (-112) | TOTAL UNDER 67.5 (-108),,0.5648,0.6125,4.16,58.99,63.15,54.83,,,-57.5,67.5
-2026,2,3,401858451,2026-09-19,11:00,Akron Zips,Minnesota Golden Gophers,ML Akron Zips +1400 | SPREAD Akron Zips +22.5 (-108) | TOTAL UNDER 49.5 (-112),0.1491,0.6312,0.5421,15.43,32.45,47.89,17.02,+1400,-3200,-22.5,49.5
-2026,2,3,401856812,2026-09-19,11:00,Arizona State Sun Devils,Kansas Jayhawks,ML Kansas Jayhawks +180 | SPREAD Kansas Jayhawks +5.5 (-112) | TOTAL UNDER 50.5 (-110),0.4223,0.5557,0.5505,25.89,22.68,48.57,-3.21,-218,+180,+5.5,50.5
-2026,2,3,401856798,2026-09-19,11:00,Bowling Green Falcons,Iowa State Cyclones,SPREAD Iowa State Cyclones -23.5 (-110) | TOTAL UNDER 43.5 (-105),,0.5071,0.5134,9.6,33.39,42.99,23.79,+1200,-2400,-23.5,43.5
-2026,2,3,401856686,2026-09-19,11:00,Georgia Bulldogs,Arkansas Razorbacks,SPREAD Georgia Bulldogs -24.5 (-112) | TOTAL UNDER 54.5 (-102),,0.5083,0.5642,38.44,13.6,52.04,-24.84,-2800,+1300,+24.5,54.5
-2026,2,3,401860889,2026-09-19,11:00,North Texas Mean Green,Texas State Bobcats,ML North Texas Mean Green +120 | SPREAD North Texas Mean Green +3 (-115) | TOTAL UNDER 62.5 (-112),0.5760,0.6463,0.5730,31.42,28.28,59.7,-3.14,+120,-142,-3,62.5
-2026,2,3,401856792,2026-09-19,11:00,Tulane Green Wave,Kansas State Wildcats,ML Tulane Green Wave +850 | SPREAD Tulane Green Wave +20.5 (-112) | TOTAL UNDER 49.5 (-108),0.1128,0.5163,0.5652,13.58,33.41,47,19.83,+850,-1450,-20.5,49.5
-2026,2,3,401869940,2026-09-19,11:30,Coastal Carolina Chanticleers,Delaware Blue Hens,ML Coastal Carolina Chanticleers +170 | SPREAD Coastal Carolina Chanticleers +5.5 (-112) | TOTAL UNDER 56.5 (-108),0.3785,0.5107,0.5960,23.87,28.93,52.8,5.06,+170,-205,-5.5,56.5
-2026,2,3,401858460,2026-09-19,11:30,Eastern Michigan Eagles,Wisconsin Badgers,ML Eastern Michigan Eagles +1200 | SPREAD Eastern Michigan Eagles +23.5 (-108) | TOTAL UNDER 44.5 (-108),0.0948,0.5496,0.5585,10.4,31.86,42.26,21.46,+1200,-2400,-23.5,44.5
-2026,2,3,401856695,2026-09-19,11:45,NC State Wolfpack,Vanderbilt Commodores,SPREAD Vanderbilt Commodores -3 (-115) | TOTAL UNDER 50.5 (-108),,0.5365,0.5301,22.43,26.93,49.35,4.5,+136,-162,-3,50.5
-2026,2,3,401858456,2026-09-19,12:00,Buffalo Bulls,Penn State Nittany Lions,SPREAD Buffalo Bulls +39.5 (-112),,0.6773,,7.64,39.61,47.25,31.97,,,-39.5,48.5
-2026,2,3,401858454,2026-09-19,12:00,Kent State Golden Flashes,Ohio State Buckeyes,SPREAD Kent State Golden Flashes +51.5 (+100) | TOTAL UNDER 59.5 (-118),,0.5634,0.5937,3.5,52.39,55.89,48.89,,,-51.5,59.5
-2026,2,3,401858228,2026-09-19,12:00,Mercer Bears,Georgia Tech Yellow Jackets,SPREAD Mercer Bears +38.5 (-105) | TOTAL UNDER 57.5 (-102),,0.6445,0.5531,11.51,43.96,55.47,32.44,,,-38.5,57.5
-2026,2,3,401858229,2026-09-19,12:00,North Carolina Tar Heels,Clemson Tigers,ML North Carolina Tar Heels +130 | SPREAD North Carolina Tar Heels +3 (-110),0.5294,0.6015,,22.38,21.18,43.56,-1.21,+130,-155,-3,44.5
-2026,2,3,401860890,2026-09-19,12:30,Duquesne Dukes,Washington State Cougars,SPREAD Washington State Cougars -38.5 (-112) | TOTAL UNDER 51.5 (-105),,0.5049,0.5356,5.72,44.42,50.14,38.7,,,-38.5,51.5
-2026,2,3,401858233,2026-09-19,12:30,Wagner Seahawks,California Golden Bears,SPREAD Wagner Seahawks +58.5 (-110) | TOTAL UNDER 65.5 (-110),,0.6001,0.6528,2.59,56.93,59.52,54.35,,,-58.5,65.5
-2026,2,3,401858448,2026-09-19,13:00,Southern Illinois Salukis,Illinois Fighting Illini,SPREAD Southern Illinois Salukis +36.5 (-110) | TOTAL UNDER 55.5 (-105),,0.5744,0.5400,10.27,43.7,53.97,33.43,,,-36.5,55.5
+2026,2,3,401858225,2026-09-17,19:30,Syracuse Orange,Pittsburgh Panthers,SPREAD Pittsburgh Panthers -10.5 (-105),,0.5268,,19.22,30.82,50.03,11.6,+330,-425,-10.5,51.5
+2026,2,3,401856811,2026-09-18,19:00,Houston Cougars,Texas Tech Red Raiders,NO PICK,,,,22.9,28.19,51.09,5.3,+260,-325,-7.5,52.5
+2026,2,3,401858226,2026-09-18,19:30,Miami Hurricanes,Wake Forest Demon Deacons,NO PICK,,,,38.38,17.31,55.69,-21.06,-1600,+900,+20.5,55.5
+2026,2,3,401858455,2026-09-18,19:30,Portland State Vikings,Oregon Ducks,TOTAL UNDER 67.5 (-108),,,0.6125,4.16,58.99,63.15,54.83,,,-57.5,67.5
+2026,2,3,401858451,2026-09-19,11:00,Akron Zips,Minnesota Golden Gophers,NO PICK,,,,15.43,32.45,47.89,17.02,+1400,-3200,-22.5,49.5
+2026,2,3,401856812,2026-09-19,11:00,Arizona State Sun Devils,Kansas Jayhawks,SPREAD Kansas Jayhawks +5.5 (-112),,0.5557,,25.89,22.68,48.57,-3.21,-218,+180,+5.5,50.5
+2026,2,3,401856798,2026-09-19,11:00,Bowling Green Falcons,Iowa State Cyclones,SPREAD Iowa State Cyclones -23.5 (-110),,0.5071,,9.6,33.39,42.99,23.79,+1200,-2400,-23.5,43.5
+2026,2,3,401856686,2026-09-19,11:00,Georgia Bulldogs,Arkansas Razorbacks,NO PICK,,,,38.44,13.6,52.04,-24.84,-2800,+1300,+24.5,54.5
+2026,2,3,401860889,2026-09-19,11:00,North Texas Mean Green,Texas State Bobcats,NO PICK,,,,31.42,28.28,59.7,-3.14,+120,-142,-3,62.5
+2026,2,3,401856792,2026-09-19,11:00,Tulane Green Wave,Kansas State Wildcats,NO PICK,,,,13.58,33.41,47,19.83,+850,-1450,-20.5,49.5
+2026,2,3,401869940,2026-09-19,11:30,Coastal Carolina Chanticleers,Delaware Blue Hens,NO PICK,,,,23.87,28.93,52.8,5.06,+170,-205,-5.5,56.5
+2026,2,3,401858460,2026-09-19,11:30,Eastern Michigan Eagles,Wisconsin Badgers,NO PICK,,,,10.4,31.86,42.26,21.46,+1200,-2400,-23.5,44.5
+2026,2,3,401856695,2026-09-19,11:45,NC State Wolfpack,Vanderbilt Commodores,SPREAD Vanderbilt Commodores -3 (-115),,0.5365,,22.43,26.93,49.35,4.5,+136,-162,-3,50.5
+2026,2,3,401858456,2026-09-19,12:00,Buffalo Bulls,Penn State Nittany Lions,NO PICK,,,,7.64,39.61,47.25,31.97,,,-39.5,48.5
+2026,2,3,401858454,2026-09-19,12:00,Kent State Golden Flashes,Ohio State Buckeyes,NO PICK,,,,3.5,52.39,55.89,48.89,,,-51.5,59.5
+2026,2,3,401858228,2026-09-19,12:00,Mercer Bears,Georgia Tech Yellow Jackets,NO PICK,,,,11.51,43.96,55.47,32.44,,,-38.5,57.5
+2026,2,3,401858229,2026-09-19,12:00,North Carolina Tar Heels,Clemson Tigers,NO PICK,,,,22.38,21.18,43.56,-1.21,+130,-155,-3,44.5
+2026,2,3,401860890,2026-09-19,12:30,Duquesne Dukes,Washington State Cougars,SPREAD Washington State Cougars -38.5 (-112),,0.5049,,5.72,44.42,50.14,38.7,,,-38.5,51.5
+2026,2,3,401858233,2026-09-19,12:30,Wagner Seahawks,California Golden Bears,TOTAL UNDER 65.5 (-110),,,0.6528,2.59,56.93,59.52,54.35,,,-58.5,65.5
+2026,2,3,401858448,2026-09-19,13:00,Southern Illinois Salukis,Illinois Fighting Illini,NO PICK,,,,10.27,43.7,53.97,33.43,,,-36.5,55.5
 2026,2,3,401864508,2026-09-19,13:00,Wyoming Cowboys,Central Michigan Chippewas,SPREAD Central Michigan Chippewas +1.5 (-115),,0.5178,,19.87,19.1,38.96,-0.77,-112,-108,+1.5,38.5
-2026,2,3,401856801,2026-09-19,13:30,Utah State Aggies,Utah Utes,ML Utah State Aggies +1800 | SPREAD Utah State Aggies +27.5 (-112) | TOTAL UNDER 56.5 (-108),0.0628,0.5595,0.5784,14.22,39.27,53.49,25.05,+1800,-5000,-27.5,56.5
-2026,2,3,401858227,2026-09-19,14:00,Maine Black Bears,Boston College Eagles,SPREAD Maine Black Bears +38.5 (-118) | TOTAL UNDER 54.5 (-108),,0.5735,0.5512,8.54,44,52.54,35.47,,,-38.5,54.5
-2026,2,3,401856694,2026-09-19,14:30,Kentucky Wildcats,Texas A&M Aggies,SPREAD Texas A&M Aggies -16.5 (-118) | TOTAL UNDER 49.5 (-108),,0.5909,0.5236,14.17,34.43,48.6,20.26,+575,-850,-16.5,49.5
-2026,2,3,401856685,2026-09-19,14:30,Florida State Seminoles,Alabama Crimson Tide,ML Florida State Seminoles +800 | SPREAD Florida State Seminoles +19.5 (-108),0.1252,0.5168,,15.3,34.11,49.41,18.81,+800,-1350,-19.5,49.5
-2026,2,3,401867804,2026-09-19,15:00,Louisiana Tech Bulldogs,Baylor Bears,ML Louisiana Tech Bulldogs +800 | SPREAD Louisiana Tech Bulldogs +19.5 (-105) | TOTAL UNDER 50.5 (-110),0.1435,0.5506,0.5476,15.63,33.05,48.68,17.42,+800,-1350,-19.5,50.5
-2026,2,3,401858471,2026-09-19,15:00,Northern Iowa Panthers,Iowa Hawkeyes,SPREAD Northern Iowa Panthers +37.5 (+100) | TOTAL UNDER 49.5 (-112),,0.5530,0.5699,5.75,41.07,46.82,35.32,,,-37.5,49.5
-2026,2,3,401862774,2026-09-19,15:00,Temple Owls,Toledo Rockets,ML Toledo Rockets -218 | SPREAD Toledo Rockets -6 (-108) | TOTAL UNDER 48.5 (-105),0.7040,0.5672,0.5479,18.95,27.72,46.67,8.77,+180,-218,-6,48.5
+2026,2,3,401856801,2026-09-19,13:30,Utah State Aggies,Utah Utes,NO PICK,,,,14.22,39.27,53.49,25.05,+1800,-5000,-27.5,56.5
+2026,2,3,401858227,2026-09-19,14:00,Maine Black Bears,Boston College Eagles,NO PICK,,,,8.54,44,52.54,35.47,,,-38.5,54.5
+2026,2,3,401856694,2026-09-19,14:30,Kentucky Wildcats,Texas A&M Aggies,SPREAD Texas A&M Aggies -16.5 (-118),,0.5909,,14.17,34.43,48.6,20.26,+575,-850,-16.5,49.5
+2026,2,3,401856685,2026-09-19,14:30,Florida State Seminoles,Alabama Crimson Tide,NO PICK,,,,15.3,34.11,49.41,18.81,+800,-1350,-19.5,49.5
+2026,2,3,401867804,2026-09-19,15:00,Louisiana Tech Bulldogs,Baylor Bears,NO PICK,,,,15.63,33.05,48.68,17.42,+800,-1350,-19.5,50.5
+2026,2,3,401858471,2026-09-19,15:00,Northern Iowa Panthers,Iowa Hawkeyes,NO PICK,,,,5.75,41.07,46.82,35.32,,,-37.5,49.5
+2026,2,3,401862774,2026-09-19,15:00,Temple Owls,Toledo Rockets,ML Toledo Rockets -218 | SPREAD Toledo Rockets -6 (-108),0.7040,0.5672,,18.95,27.72,46.67,8.77,+180,-218,-6,48.5
 2026,2,3,401856797,2026-09-19,15:30,Miami (OH) RedHawks,Cincinnati Bearcats,SPREAD Cincinnati Bearcats -15.5 (-112) | TOTAL OVER 49.5 (-110),,0.5775,0.5374,16.12,34.81,50.93,18.7,+500,-700,-15.5,49.5
-2026,2,3,401868317,2026-09-19,15:30,SE Louisiana Lions,UL Monroe Warhawks,SPREAD SE Louisiana Lions +10.5 (-112) | TOTAL OVER 48.5 (-105),,0.5593,0.5162,20.53,28.59,49.12,8.06,,,-10.5,48.5
-2026,2,3,401858230,2026-09-19,15:30,SMU Mustangs,Louisville Cardinals,SPREAD SMU Mustangs +1.5 (-110) | TOTAL UNDER 58.5 (-108),,0.5258,0.5585,27.91,28.35,56.26,0.44,+102,-122,-1.5,58.5
-2026,2,3,401866424,2026-09-19,15:30,Stonehill Skyhawks,Massachusetts Minutemen,SPREAD Stonehill Skyhawks +30.5 (-105),,0.5219,,10.28,39.88,50.16,29.6,,,-30.5,50.5
-2026,2,3,401858457,2026-09-19,15:30,USC Trojans,Rutgers Scarlet Knights,ML Rutgers Scarlet Knights +1100 | SPREAD Rutgers Scarlet Knights +21.5 (-108) | TOTAL UNDER 58.5 (-118),0.1075,0.5295,0.5626,38.2,17.91,56.1,-20.29,-2100,+1100,+21.5,58.5
-2026,2,3,401858450,2026-09-19,15:30,UTEP Miners,Michigan Wolverines,SPREAD UTEP Miners +34.5 (-108) | TOTAL UNDER 48.5 (-110),,0.5954,0.5681,7.67,38.22,45.89,30.55,,,-34.5,48.5
-2026,2,3,401866422,2026-09-19,16:00,Ball State Cardinals,Liberty Flames,ML Ball State Cardinals +470 | SPREAD Ball State Cardinals +14 (-105) | TOTAL UNDER 49.5 (-115),0.2408,0.5605,0.5361,18.3,29.81,48.12,11.51,+470,-650,-14,49.5
-2026,2,3,401858231,2026-09-19,16:00,Stanford Cardinal,Duke Blue Devils,SPREAD Duke Blue Devils -10 (-105) | TOTAL UNDER 51.5 (-118),,0.5897,0.5528,17.88,31.6,49.48,13.71,+310,-395,-10,51.5
-2026,2,3,401858449,2026-09-19,16:00,Western Kentucky Hilltoppers,Indiana Hoosiers,SPREAD Western Kentucky Hilltoppers +44.5 (-108) | TOTAL UNDER 60.5 (-110),,0.5535,0.5603,7.94,50.25,58.19,42.3,,,-44.5,60.5
-2026,2,3,401858459,2026-09-19,16:15,Eastern Washington Eagles,Washington Huskies,SPREAD Eastern Washington Eagles +42.5 (-110) | TOTAL UNDER 58.5 (-110),,0.5802,0.5965,7.8,46.99,54.78,39.19,,,-42.5,58.5
-2026,2,3,401856691,2026-09-19,16:15,Mississippi State Bulldogs,South Carolina Gamecocks,ML Mississippi State Bulldogs +150 | SPREAD South Carolina Gamecocks -3.5 (-108) | TOTAL UNDER 58.5 (-105),0.4128,0.5027,0.5536,26.42,30.03,56.45,3.61,+150,-180,-3.5,58.5
-2026,2,3,401871047,2026-09-19,17:30,Marshall Thundering Herd,Missouri State Bears,ML Missouri State Bears +160 | SPREAD Missouri State Bears +4 (-110) | TOTAL UNDER 53.5 (-112),0.5604,0.6542,0.5838,23.89,26.38,50.28,2.49,-192,+160,+4,53.5
-2026,2,3,401856795,2026-09-19,17:30,BYU Cougars,Colorado State Rams,ML Colorado State Rams +650 | SPREAD Colorado State Rams +17.5 (-115),0.1473,0.5085,,34.59,17.44,52.03,-17.15,-1000,+650,+17.5,52.5
-2026,2,3,401862710,2026-09-19,18:00,East Carolina Pirates,Old Dominion Monarchs,ML East Carolina Pirates +120 | SPREAD East Carolina Pirates +2.5 (-102) | TOTAL UNDER 48.5 (-108),0.4802,0.5411,0.5481,22.92,23.73,46.66,0.81,+120,-142,-2.5,48.5
+2026,2,3,401868317,2026-09-19,15:30,SE Louisiana Lions,UL Monroe Warhawks,TOTAL OVER 48.5 (-105),,,0.5162,20.53,28.59,49.12,8.06,,,-10.5,48.5
+2026,2,3,401858230,2026-09-19,15:30,SMU Mustangs,Louisville Cardinals,NO PICK,,,,27.91,28.35,56.26,0.44,+102,-122,-1.5,58.5
+2026,2,3,401866424,2026-09-19,15:30,Stonehill Skyhawks,Massachusetts Minutemen,NO PICK,,,,10.28,39.88,50.16,29.6,,,-30.5,50.5
+2026,2,3,401858457,2026-09-19,15:30,USC Trojans,Rutgers Scarlet Knights,SPREAD Rutgers Scarlet Knights +21.5 (-108),,0.5295,,38.2,17.91,56.1,-20.29,-2100,+1100,+21.5,58.5
+2026,2,3,401858450,2026-09-19,15:30,UTEP Miners,Michigan Wolverines,NO PICK,,,,7.67,38.22,45.89,30.55,,,-34.5,48.5
+2026,2,3,401866422,2026-09-19,16:00,Ball State Cardinals,Liberty Flames,NO PICK,,,,18.3,29.81,48.12,11.51,+470,-650,-14,49.5
+2026,2,3,401858231,2026-09-19,16:00,Stanford Cardinal,Duke Blue Devils,SPREAD Duke Blue Devils -10 (-105),,0.5897,,17.88,31.6,49.48,13.71,+310,-395,-10,51.5
+2026,2,3,401858449,2026-09-19,16:00,Western Kentucky Hilltoppers,Indiana Hoosiers,NO PICK,,,,7.94,50.25,58.19,42.3,,,-44.5,60.5
+2026,2,3,401858459,2026-09-19,16:15,Eastern Washington Eagles,Washington Huskies,NO PICK,,,,7.8,46.99,54.78,39.19,,,-42.5,58.5
+2026,2,3,401856691,2026-09-19,16:15,Mississippi State Bulldogs,South Carolina Gamecocks,SPREAD South Carolina Gamecocks -3.5 (-108),,0.5027,,26.42,30.03,56.45,3.61,+150,-180,-3.5,58.5
+2026,2,3,401871047,2026-09-19,17:30,Marshall Thundering Herd,Missouri State Bears,SPREAD Missouri State Bears +4 (-110),,0.6542,,23.89,26.38,50.28,2.49,-192,+160,+4,53.5
+2026,2,3,401856795,2026-09-19,17:30,BYU Cougars,Colorado State Rams,SPREAD Colorado State Rams +17.5 (-115),,0.5085,,34.59,17.44,52.03,-17.15,-1000,+650,+17.5,52.5
+2026,2,3,401862710,2026-09-19,18:00,East Carolina Pirates,Old Dominion Monarchs,NO PICK,,,,22.92,23.73,46.66,0.81,+120,-142,-2.5,48.5
 2026,2,3,401856687,2026-09-19,18:00,Florida Gators,Auburn Tigers,SPREAD Auburn Tigers +2.5 (-115),,0.5144,,27.16,25.25,52.41,-1.91,-130,+110,+2.5,53.5
-2026,2,3,401862771,2026-09-19,18:00,Florida International Panthers,Florida Atlantic Owls,ML Florida International Panthers +200 | SPREAD Florida International Panthers +6.5 (-108) | TOTAL UNDER 62.5 (-112),0.5089,0.6625,0.5748,30,29.63,59.63,-0.36,+200,-245,-6.5,62.5
-2026,2,3,401869948,2026-09-19,18:00,Georgia Southern Eagles,Jacksonville State Gamecocks,ML Georgia Southern Eagles +140 | SPREAD Georgia Southern Eagles +3 (-105) | TOTAL UNDER 52.5 (-108),0.4667,0.5397,0.6248,23.15,24.52,47.66,1.37,+140,-166,-3,52.5
-2026,2,3,401856803,2026-09-19,18:00,Murray State Racers,Oklahoma State Cowboys,SPREAD Murray State Racers +56.5 (-115) | TOTAL UNDER 70.5 (-112),,0.5937,0.6917,5.13,57.75,62.88,52.62,,,-56.5,70.5
-2026,2,3,401864443,2026-09-19,18:00,Nevada Wolf Pack,Middle Tennessee Blue Raiders,SPREAD Nevada Wolf Pack -3.5 (-115) | TOTAL UNDER 50.5 (-112),,0.5241,0.5293,26.94,22.44,49.38,-4.49,-180,+150,+3.5,50.5
-2026,2,3,401870764,2026-09-19,18:00,Nicholls Colonels,Sam Houston Bearkats,SPREAD Nicholls Colonels +21 (-110) | TOTAL UNDER 50.5 (-110),,0.5501,0.5468,14.88,33.83,48.71,18.94,,,-21,50.5
-2026,2,3,401866423,2026-09-19,18:00,Ohio Bobcats,South Alabama Jaguars,ML Ohio Bobcats +205 | SPREAD Ohio Bobcats +6.5 (-105),0.3628,0.5185,,21.45,27.19,48.64,5.74,+205,-250,-6.5,48.5
-2026,2,3,401856689,2026-09-19,18:00,Troy Trojans,Missouri Tigers,ML Troy Trojans +1700 | SPREAD Troy Trojans +27.5 (-115),0.0688,0.5778,,12.95,37.24,50.19,24.29,+1700,-4500,-27.5,50.5
-2026,2,3,401861963,2026-09-19,18:00,UConn Huskies,Southern Miss Golden Eagles,ML Southern Miss Golden Eagles +136 | SPREAD Southern Miss Golden Eagles +3 (-105) | TOTAL UNDER 54.5 (-108),0.5745,0.6447,0.5327,25.09,28.16,53.25,3.07,-162,+136,+3,54.5
-2026,2,3,401862772,2026-09-19,18:00,UT Martin Skyhawks,Memphis Tigers,SPREAD UT Martin Skyhawks +34.5 (-110) | TOTAL UNDER 57.5 (-110),,0.5295,0.5712,10.74,44.03,54.77,33.29,+4000,-50000,-34.5,57.5
-2026,2,3,401862773,2026-09-19,18:00,Western Michigan Broncos,Rice Owls,ML Rice Owls +285 | SPREAD Rice Owls +8.5 (-108) | TOTAL UNDER 43.5 (-105),0.3069,0.5059,0.5165,25.57,17.31,42.87,-8.26,-360,+285,+8.5,43.5
-2026,2,3,401864574,2026-09-19,18:00,Charlotte 49ers,App State Mountaineers,ML Charlotte 49ers +700 | SPREAD Charlotte 49ers +17.5 (-115),0.1427,0.5005,,17.79,35.26,53.05,17.48,+700,-1100,-17.5,52.5
-2026,2,3,401858452,2026-09-19,18:15,North Dakota Fighting Hawks,Nebraska Cornhuskers,SPREAD Nebraska Cornhuskers -27.5 (-115) | TOTAL UNDER 55.5 (-112),,0.5078,0.5614,12.67,40.48,53.15,27.82,+1300,-2800,-27.5,55.5
-2026,2,3,401856796,2026-09-19,18:30,Colorado Buffaloes,Northwestern Wildcats,ML Colorado Buffaloes +145 | SPREAD Colorado Buffaloes +3.5 (-115),0.4573,0.5424,,22.52,24.28,46.8,1.76,+145,-175,-3.5,47.5
-2026,2,3,401856688,2026-09-19,18:30,LSU Tigers,Ole Miss Rebels,ML LSU Tigers -155 | SPREAD LSU Tigers -3 (-108) | TOTAL UNDER 58.5 (-112),0.6598,0.5904,0.5660,31.36,24.62,55.97,-6.74,-155,+130,+3,58.5
-2026,2,3,401856690,2026-09-19,18:30,New Mexico Lobos,Oklahoma Sooners,ML New Mexico Lobos +1100 | SPREAD New Mexico Lobos +21.5 (-118) | TOTAL UNDER 45.5 (-108),0.1848,0.6616,0.5466,14.52,29.2,43.72,14.68,+1100,-2100,-21.5,45.5
-2026,2,3,401856799,2026-09-19,19:00,Arkansas State Red Wolves,TCU Horned Frogs,ML Arkansas State Red Wolves +800 | SPREAD Arkansas State Red Wolves +18.5 (-105) | TOTAL UNDER 56.5 (-115),0.1504,0.5382,0.5804,18.24,35.17,53.41,16.93,+800,-1350,-18.5,56.5
-2026,2,3,401862777,2026-09-19,19:00,Delaware State Hornets,South Florida Bulls,SPREAD South Florida Bulls -36.5 (-112) | TOTAL UNDER 61.5 (-115),,0.5158,0.5750,10.74,47.89,58.62,37.15,,,-36.5,61.5
-2026,2,3,401862775,2026-09-19,19:00,East Texas A&M Lions,Tulsa Golden Hurricane,SPREAD East Texas A&M Lions +42.5 (-118) | TOTAL UNDER 56.5 (-112),,0.5892,0.6107,6.71,45.52,52.22,38.81,,,-42.5,56.5
-2026,2,3,401856800,2026-09-19,19:00,Georgia State Panthers,UCF Knights,ML Georgia State Panthers +675 | SPREAD Georgia State Panthers +17.5 (-118),0.2334,0.6337,,19.15,31.05,50.2,11.91,+675,-1050,-17.5,50.5
-2026,2,3,401860887,2026-09-19,19:00,James Madison Dukes,San Diego State Aztecs,SPREAD James Madison Dukes +1.5 (-105) | TOTAL OVER 46.5 (-110),,0.5115,0.5359,23.42,24.45,47.87,1.03,+110,-130,-1.5,46.5
+2026,2,3,401862771,2026-09-19,18:00,Florida International Panthers,Florida Atlantic Owls,NO PICK,,,,30,29.63,59.63,-0.36,+200,-245,-6.5,62.5
+2026,2,3,401869948,2026-09-19,18:00,Georgia Southern Eagles,Jacksonville State Gamecocks,TOTAL UNDER 52.5 (-108),,,0.6248,23.15,24.52,47.66,1.37,+140,-166,-3,52.5
+2026,2,3,401856803,2026-09-19,18:00,Murray State Racers,Oklahoma State Cowboys,TOTAL UNDER 70.5 (-112),,,0.6917,5.13,57.75,62.88,52.62,,,-56.5,70.5
+2026,2,3,401864443,2026-09-19,18:00,Nevada Wolf Pack,Middle Tennessee Blue Raiders,NO PICK,,,,26.94,22.44,49.38,-4.49,-180,+150,+3.5,50.5
+2026,2,3,401870764,2026-09-19,18:00,Nicholls Colonels,Sam Houston Bearkats,NO PICK,,,,14.88,33.83,48.71,18.94,,,-21,50.5
+2026,2,3,401866423,2026-09-19,18:00,Ohio Bobcats,South Alabama Jaguars,NO PICK,,,,21.45,27.19,48.64,5.74,+205,-250,-6.5,48.5
+2026,2,3,401856689,2026-09-19,18:00,Troy Trojans,Missouri Tigers,NO PICK,,,,12.95,37.24,50.19,24.29,+1700,-4500,-27.5,50.5
+2026,2,3,401861963,2026-09-19,18:00,UConn Huskies,Southern Miss Golden Eagles,SPREAD Southern Miss Golden Eagles +3 (-105),,0.6447,,25.09,28.16,53.25,3.07,-162,+136,+3,54.5
+2026,2,3,401862772,2026-09-19,18:00,UT Martin Skyhawks,Memphis Tigers,NO PICK,,,,10.74,44.03,54.77,33.29,+4000,-50000,-34.5,57.5
+2026,2,3,401862773,2026-09-19,18:00,Western Michigan Broncos,Rice Owls,SPREAD Rice Owls +8.5 (-108),,0.5059,,25.57,17.31,42.87,-8.26,-360,+285,+8.5,43.5
+2026,2,3,401864574,2026-09-19,18:00,Charlotte 49ers,App State Mountaineers,NO PICK,,,,17.79,35.26,53.05,17.48,+700,-1100,-17.5,52.5
+2026,2,3,401858452,2026-09-19,18:15,North Dakota Fighting Hawks,Nebraska Cornhuskers,SPREAD Nebraska Cornhuskers -27.5 (-115),,0.5078,,12.67,40.48,53.15,27.82,+1300,-2800,-27.5,55.5
+2026,2,3,401856796,2026-09-19,18:30,Colorado Buffaloes,Northwestern Wildcats,NO PICK,,,,22.52,24.28,46.8,1.76,+145,-175,-3.5,47.5
+2026,2,3,401856688,2026-09-19,18:30,LSU Tigers,Ole Miss Rebels,NO PICK,,,,31.36,24.62,55.97,-6.74,-155,+130,+3,58.5
+2026,2,3,401856690,2026-09-19,18:30,New Mexico Lobos,Oklahoma Sooners,NO PICK,,,,14.52,29.2,43.72,14.68,+1100,-2100,-21.5,45.5
+2026,2,3,401856799,2026-09-19,19:00,Arkansas State Red Wolves,TCU Horned Frogs,NO PICK,,,,18.24,35.17,53.41,16.93,+800,-1350,-18.5,56.5
+2026,2,3,401862777,2026-09-19,19:00,Delaware State Hornets,South Florida Bulls,SPREAD South Florida Bulls -36.5 (-112),,0.5158,,10.74,47.89,58.62,37.15,,,-36.5,61.5
+2026,2,3,401862775,2026-09-19,19:00,East Texas A&M Lions,Tulsa Golden Hurricane,TOTAL UNDER 56.5 (-112),,,0.6107,6.71,45.52,52.22,38.81,,,-42.5,56.5
+2026,2,3,401856800,2026-09-19,19:00,Georgia State Panthers,UCF Knights,NO PICK,,,,19.15,31.05,50.2,11.91,+675,-1050,-17.5,50.5
+2026,2,3,401860887,2026-09-19,19:00,James Madison Dukes,San Diego State Aztecs,TOTAL OVER 46.5 (-110),,,0.5359,23.42,24.45,47.87,1.03,+110,-130,-1.5,46.5
 2026,2,3,401862776,2026-09-19,19:00,UAB Blazers,Louisiana Ragin' Cajuns,SPREAD Louisiana Ragin' Cajuns -7.5 (-110),,0.5942,,21.45,32.86,54.31,11.4,+250,-310,-7.5,55.5
-2026,2,3,401856693,2026-09-19,19:00,UTSA Roadrunners,Texas Longhorns,SPREAD UTSA Roadrunners +29.5 (-108) | TOTAL UNDER 58.5 (-110),,0.5525,0.5993,13.67,41,54.67,27.34,+1800,-5000,-29.5,58.5
-2026,2,3,401858453,2026-09-19,19:30,Michigan State Spartans,Notre Dame Fighting Irish,ML Michigan State Spartans +1800 | SPREAD Michigan State Spartans +28.5 (-110),0.0579,0.5675,,12.53,38.26,50.79,25.72,+1800,-5000,-28.5,51.5
-2026,2,3,401864507,2026-09-19,19:30,North Dakota State Bison,Sacramento State Hornets,ML Sacramento State Hornets +2000 | SPREAD Sacramento State Hornets +27.5 (-105) | TOTAL UNDER 50.5 (-102),0.0971,0.6490,0.5611,34.7,13.46,48.16,-21.24,-6500,+2000,+27.5,50.5
-2026,2,3,401856793,2026-09-19,19:30,Northern Illinois Huskies,Arizona Wildcats,SPREAD Northern Illinois Huskies +33.5 (-102) | TOTAL UNDER 50.5 (-108),,0.5952,0.5665,9.19,38.75,47.95,29.56,+2000,-6500,-33.5,50.5
+2026,2,3,401856693,2026-09-19,19:00,UTSA Roadrunners,Texas Longhorns,NO PICK,,,,13.67,41,54.67,27.34,+1800,-5000,-29.5,58.5
+2026,2,3,401858453,2026-09-19,19:30,Michigan State Spartans,Notre Dame Fighting Irish,NO PICK,,,,12.53,38.26,50.79,25.72,+1800,-5000,-28.5,51.5
+2026,2,3,401864507,2026-09-19,19:30,North Dakota State Bison,Sacramento State Hornets,SPREAD Sacramento State Hornets +27.5 (-105),,0.6490,,34.7,13.46,48.16,-21.24,-6500,+2000,+27.5,50.5
+2026,2,3,401856793,2026-09-19,19:30,Northern Illinois Huskies,Arizona Wildcats,NO PICK,,,,9.19,38.75,47.95,29.56,+2000,-6500,-33.5,50.5
 2026,2,3,401858232,2026-09-19,19:30,Virginia Tech Hokies,Maryland Terrapins,SPREAD Maryland Terrapins +2.5 (-102),,0.5044,,27.49,25.17,52.65,-2.32,-142,+120,+2.5,53.5
-2026,2,3,401856802,2026-09-19,19:30,West Virginia Mountaineers,Virginia Cavaliers,ML West Virginia Mountaineers +320 | SPREAD Virginia Cavaliers -10.5 (-112) | TOTAL UNDER 53.5 (-110),0.2570,0.5044,0.5489,20.48,31.15,51.63,10.68,+320,-410,-10.5,53.5
-2026,2,3,401856692,2026-09-19,19:45,Kennesaw State Owls,Tennessee Volunteers,SPREAD Kennesaw State Owls +35.5 (-112) | TOTAL UNDER 60.5 (-105),,0.6623,0.5991,14.02,42.66,56.68,28.65,+2200,-8000,-35.5,60.5
-2026,2,3,401860888,2026-09-19,20:00,Fresno State Bulldogs,San José State Spartans,ML San José State Spartans +190 | SPREAD San José State Spartans +6.5 (-112) | TOTAL UNDER 49.5 (-108),0.3691,0.5251,0.5217,27.07,21.6,48.67,-5.47,-230,+190,+6.5,49.5
-2026,2,3,401860886,2026-09-19,20:00,Montana Grizzlies,Oregon State Beavers,ML Montana Grizzlies +575 | SPREAD Montana Grizzlies +17.5 (-115) | TOTAL UNDER 55.5 (-115),0.1750,0.5537,0.5647,18.87,34.16,53.02,15.29,+575,-850,-17.5,55.5
-2026,2,3,401858458,2026-09-19,20:00,Purdue Boilermakers,UCLA Bruins,ML Purdue Boilermakers +470 | SPREAD Purdue Boilermakers +14 (-108) | TOTAL OVER 52.5 (-112),0.1961,0.5000,0.5296,19.82,33.81,53.63,14,+470,-650,-14,52.5
-2026,2,3,401860885,2026-09-19,20:00,South Dakota Coyotes,Boise State Broncos,SPREAD South Dakota Coyotes +28.5 (-118) | TOTAL UNDER 59.5 (-120),,0.5404,0.5738,14.92,41.75,56.67,26.84,+1300,-2800,-28.5,59.5
+2026,2,3,401856802,2026-09-19,19:30,West Virginia Mountaineers,Virginia Cavaliers,SPREAD Virginia Cavaliers -10.5 (-112),,0.5044,,20.48,31.15,51.63,10.68,+320,-410,-10.5,53.5
+2026,2,3,401856692,2026-09-19,19:45,Kennesaw State Owls,Tennessee Volunteers,NO PICK,,,,14.02,42.66,56.68,28.65,+2200,-8000,-35.5,60.5
+2026,2,3,401860888,2026-09-19,20:00,Fresno State Bulldogs,San José State Spartans,SPREAD San José State Spartans +6.5 (-112),,0.5251,,27.07,21.6,48.67,-5.47,-230,+190,+6.5,49.5
+2026,2,3,401860886,2026-09-19,20:00,Montana Grizzlies,Oregon State Beavers,NO PICK,,,,18.87,34.16,53.02,15.29,+575,-850,-17.5,55.5
+2026,2,3,401858458,2026-09-19,20:00,Purdue Boilermakers,UCLA Bruins,SPREAD UCLA Bruins -14 (-112) | TOTAL OVER 52.5 (-112),,0.5000,0.5296,19.82,33.81,53.63,14,+470,-650,-14,52.5
+2026,2,3,401860885,2026-09-19,20:00,South Dakota Coyotes,Boise State Broncos,NO PICK,,,,14.92,41.75,56.67,26.84,+1300,-2800,-28.5,59.5
