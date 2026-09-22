@@ -1,6 +1,6 @@
 {
-  "snapshot_id": "2026_09_22_132833_582809",
-  "fetched_at": "2026-09-22T13:28:33.582809+00:00",
+  "snapshot_id": "2026_09_22_140109_881846",
+  "fetched_at": "2026-09-22T14:01:09.881846+00:00",
   "sport": "football",
   "league": "college-football",
   "source": "ESPN Core API",
@@ -798,7 +798,7 @@
       "game_id": "401869941",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -806,7 +806,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "LIB -2.5",
@@ -929,7 +929,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674727%3Foutcomes%3D0ML86319011_1",
             "text": "Home Bet",
@@ -943,7 +943,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674727%3Foutcomes%3D0ML86319011_3",
             "text": "Away Bet",
@@ -1069,7 +1069,7 @@
       "game_id": "401862779",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -1077,7 +1077,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "ARMY -3",
@@ -1200,7 +1200,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674728%3Foutcomes%3D0ML86319012_1",
             "text": "Home Bet",
@@ -1214,7 +1214,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674728%3Foutcomes%3D0ML86319012_3",
             "text": "Away Bet",
@@ -1340,7 +1340,7 @@
       "game_id": "401862778",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -1348,7 +1348,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "NAVY -7",
@@ -1471,7 +1471,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674730%3Foutcomes%3D0ML86319014_1",
             "text": "Home Bet",
@@ -1485,7 +1485,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674730%3Foutcomes%3D0ML86319014_3",
             "text": "Away Bet",
@@ -1611,7 +1611,7 @@
       "game_id": "401858461",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -1619,7 +1619,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "IU -21",
@@ -1742,7 +1742,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674731%3Foutcomes%3D0ML86319015_1",
             "text": "Home Bet",
@@ -1756,7 +1756,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674731%3Foutcomes%3D0ML86319015_3",
             "text": "Away Bet",
@@ -1882,7 +1882,7 @@
       "game_id": "401858234",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -1890,7 +1890,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "CAL -1.5",
@@ -2013,7 +2013,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674732%3Foutcomes%3D0ML86319016_1",
             "text": "Home Bet",
@@ -2027,7 +2027,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674732%3Foutcomes%3D0ML86319016_3",
             "text": "Away Bet",
@@ -2153,7 +2153,7 @@
       "game_id": "401856704",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -2161,7 +2161,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "TEX -5.5",
@@ -2284,7 +2284,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34226055%3Foutcomes%3D0ML84998390_1",
             "text": "Home Bet",
@@ -2298,7 +2298,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34226055%3Foutcomes%3D0ML84998390_3",
             "text": "Away Bet",
@@ -2424,7 +2424,7 @@
       "game_id": "401856805",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -2432,7 +2432,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "TTU -34.5",
@@ -2633,7 +2633,7 @@
       "game_id": "401856813",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -2641,7 +2641,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "BAY -10",
@@ -2764,7 +2764,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674748%3Foutcomes%3D0ML86319032_1",
             "text": "Home Bet",
@@ -2778,7 +2778,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674748%3Foutcomes%3D0ML86319032_3",
             "text": "Away Bet",
@@ -2904,7 +2904,7 @@
       "game_id": "401858242",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -2912,7 +2912,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "VT -14",
@@ -3035,7 +3035,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674751%3Foutcomes%3D0ML86319045_1",
             "text": "Home Bet",
@@ -3049,7 +3049,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674751%3Foutcomes%3D0ML86319045_3",
             "text": "Away Bet",
@@ -3175,7 +3175,7 @@
       "game_id": "401858243",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -3183,7 +3183,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "LOU -12.5",
@@ -3306,7 +3306,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674747%3Foutcomes%3D0ML86319031_1",
             "text": "Home Bet",
@@ -3320,7 +3320,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674747%3Foutcomes%3D0ML86319031_3",
             "text": "Away Bet",
@@ -3446,7 +3446,7 @@
       "game_id": "401858465",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -3454,14 +3454,14 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "OSU -27.5",
-        "overUnder": 54.5,
+        "overUnder": 53.5,
         "spread": -27.5,
-        "overOdds": -105.0,
-        "underOdds": -115.0,
+        "overOdds": -112.0,
+        "underOdds": -108.0,
         "awayTeamOdds": {
           "favorite": false,
           "underdog": true,
@@ -3577,7 +3577,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674734%3Foutcomes%3D0ML86319018_1",
             "text": "Home Bet",
@@ -3591,7 +3591,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674734%3Foutcomes%3D0ML86319018_3",
             "text": "Away Bet",
@@ -3632,7 +3632,7 @@
               "desktop",
               "bets"
             ],
-            "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674734%3Foutcomes%3D0OU86319018O5450_1",
+            "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674734%3Foutcomes%3D0OU86319018O5350_1",
             "text": "Over Odds",
             "shortText": "Over Odds",
             "isExternal": true,
@@ -3645,7 +3645,7 @@
               "desktop",
               "bets"
             ],
-            "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674734%3Foutcomes%3D0OU86319018U5450_3",
+            "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674734%3Foutcomes%3D0OU86319018U5350_3",
             "text": "Under Odds",
             "shortText": "Under Odds",
             "isExternal": true,
@@ -3691,24 +3691,24 @@
         },
         "current": {
           "over": {
-            "value": 1.95,
-            "displayValue": "20/21",
-            "alternateDisplayValue": "-105",
-            "decimal": 1.95,
-            "fraction": "20/21",
-            "american": "-105"
+            "value": 1.89,
+            "displayValue": "25/28",
+            "alternateDisplayValue": "-112",
+            "decimal": 1.89,
+            "fraction": "25/28",
+            "american": "-112"
           },
           "under": {
-            "value": 1.86,
-            "displayValue": "20/23",
-            "alternateDisplayValue": "-115",
-            "decimal": 1.86,
-            "fraction": "20/23",
-            "american": "-115"
+            "value": 1.92,
+            "displayValue": "25/27",
+            "alternateDisplayValue": "-108",
+            "decimal": 1.92,
+            "fraction": "25/27",
+            "american": "-108"
           },
           "total": {
-            "alternateDisplayValue": "54.5",
-            "american": "54.5"
+            "alternateDisplayValue": "53.5",
+            "american": "53.5"
           }
         }
       }
@@ -3717,7 +3717,7 @@
       "game_id": "401860893",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -3725,7 +3725,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "TOL -3",
@@ -3848,7 +3848,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674752%3Foutcomes%3D0ML86319046_1",
             "text": "Home Bet",
@@ -3862,7 +3862,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674752%3Foutcomes%3D0ML86319046_3",
             "text": "Away Bet",
@@ -3988,7 +3988,7 @@
       "game_id": "401860896",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -3996,7 +3996,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UTSA -13.5",
@@ -4119,7 +4119,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674753%3Foutcomes%3D0ML86319047_1",
             "text": "Home Bet",
@@ -4133,7 +4133,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674753%3Foutcomes%3D0ML86319047_3",
             "text": "Away Bet",
@@ -4259,7 +4259,7 @@
       "game_id": "401864512",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -4267,7 +4267,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UNLV -13.5",
@@ -4390,7 +4390,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674754%3Foutcomes%3D0ML86319048_1",
             "text": "Home Bet",
@@ -4404,7 +4404,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674754%3Foutcomes%3D0ML86319048_3",
             "text": "Away Bet",
@@ -4530,7 +4530,7 @@
       "game_id": "401866425",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -4538,7 +4538,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "KENT -3.5",
@@ -4661,7 +4661,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674755%3Foutcomes%3D0ML86319049_1",
             "text": "Home Bet",
@@ -4675,7 +4675,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674755%3Foutcomes%3D0ML86319049_3",
             "text": "Away Bet",
@@ -4801,7 +4801,7 @@
       "game_id": "401864576",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -4809,7 +4809,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UK -20.5",
@@ -4932,7 +4932,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674756%3Foutcomes%3D0ML86319050_1",
             "text": "Home Bet",
@@ -4946,7 +4946,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674756%3Foutcomes%3D0ML86319050_3",
             "text": "Away Bet",
@@ -5072,7 +5072,7 @@
       "game_id": "401858462",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -5080,7 +5080,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UCLA -1.5",
@@ -5203,7 +5203,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674741%3Foutcomes%3D0ML86319025_1",
             "text": "Home Bet",
@@ -5217,7 +5217,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674741%3Foutcomes%3D0ML86319025_3",
             "text": "Away Bet",
@@ -5343,7 +5343,7 @@
       "game_id": "401858467",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -5351,7 +5351,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "ND -27.5",
@@ -5474,7 +5474,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674733%3Foutcomes%3D0ML86319017_1",
             "text": "Home Bet",
@@ -5488,7 +5488,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674733%3Foutcomes%3D0ML86319017_3",
             "text": "Away Bet",
@@ -5614,7 +5614,7 @@
       "game_id": "401864511",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -5622,7 +5622,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "GAST -10",
@@ -5745,7 +5745,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674758%3Foutcomes%3D0ML86319052_1",
             "text": "Home Bet",
@@ -5759,7 +5759,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674758%3Foutcomes%3D0ML86319052_3",
             "text": "Away Bet",
@@ -5885,7 +5885,7 @@
       "game_id": "401864510",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -5893,7 +5893,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "HAW -3",
@@ -6016,7 +6016,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674760%3Foutcomes%3D0ML86319054_1",
             "text": "Home Bet",
@@ -6030,7 +6030,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674760%3Foutcomes%3D0ML86319054_3",
             "text": "Away Bet",
@@ -6156,7 +6156,7 @@
       "game_id": "401856699",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -6164,7 +6164,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "FLA -3.5",
@@ -6175,7 +6175,7 @@
         "awayTeamOdds": {
           "favorite": false,
           "underdog": true,
-          "moneyLine": 124,
+          "moneyLine": 130,
           "spreadOdds": -112.0,
           "open": {
             "favorite": false,
@@ -6214,12 +6214,12 @@
               "american": "-112"
             },
             "moneyLine": {
-              "value": 2.24,
-              "displayValue": "31/25",
-              "alternateDisplayValue": "+124",
-              "decimal": 2.24,
-              "fraction": "31/25",
-              "american": "+124"
+              "value": 2.3,
+              "displayValue": "13/10",
+              "alternateDisplayValue": "+130",
+              "decimal": 2.3,
+              "fraction": "13/10",
+              "american": "+130"
             }
           },
           "team": {
@@ -6229,7 +6229,7 @@
         "homeTeamOdds": {
           "favorite": true,
           "underdog": false,
-          "moneyLine": -148,
+          "moneyLine": -155,
           "spreadOdds": -108.0,
           "open": {
             "favorite": true,
@@ -6268,12 +6268,12 @@
               "american": "-108"
             },
             "moneyLine": {
-              "value": 1.67,
-              "displayValue": "25/37",
-              "alternateDisplayValue": "-148",
-              "decimal": 1.67,
-              "fraction": "25/37",
-              "american": "-148"
+              "value": 1.64,
+              "displayValue": "20/31",
+              "alternateDisplayValue": "-155",
+              "decimal": 1.64,
+              "fraction": "20/31",
+              "american": "-155"
             }
           },
           "team": {
@@ -6287,7 +6287,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674761%3Foutcomes%3D0ML86319055_1",
             "text": "Home Bet",
@@ -6301,7 +6301,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674761%3Foutcomes%3D0ML86319055_3",
             "text": "Away Bet",
@@ -6427,7 +6427,7 @@
       "game_id": "401856700",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -6435,7 +6435,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UGA -14",
@@ -6558,7 +6558,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34226053%3Foutcomes%3D0ML84998388_1",
             "text": "Home Bet",
@@ -6572,7 +6572,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34226053%3Foutcomes%3D0ML84998388_3",
             "text": "Away Bet",
@@ -6698,7 +6698,7 @@
       "game_id": "401856815",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -6706,7 +6706,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "TCU -3",
@@ -6829,7 +6829,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674739%3Foutcomes%3D0ML86319023_1",
             "text": "Home Bet",
@@ -6843,7 +6843,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674739%3Foutcomes%3D0ML86319023_3",
             "text": "Away Bet",
@@ -6969,7 +6969,7 @@
       "game_id": "401856816",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -6977,7 +6977,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UTAH -7.5",
@@ -7100,7 +7100,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674736%3Foutcomes%3D0ML86319020_1",
             "text": "Home Bet",
@@ -7114,7 +7114,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674736%3Foutcomes%3D0ML86319020_3",
             "text": "Away Bet",
@@ -7240,7 +7240,7 @@
       "game_id": "401858463",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -7248,7 +7248,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "MICH -5.5",
@@ -7371,7 +7371,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674737%3Foutcomes%3D0ML86319021_1",
             "text": "Home Bet",
@@ -7385,7 +7385,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674737%3Foutcomes%3D0ML86319021_3",
             "text": "Away Bet",
@@ -7511,7 +7511,7 @@
       "game_id": "401860897",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -7519,7 +7519,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "BOIS -7",
@@ -7642,7 +7642,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674744%3Foutcomes%3D0ML86319028_1",
             "text": "Home Bet",
@@ -7656,7 +7656,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674744%3Foutcomes%3D0ML86319028_3",
             "text": "Away Bet",
@@ -7782,7 +7782,7 @@
       "game_id": "401861970",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -7790,19 +7790,19 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "M-OH -3.5",
         "overUnder": 51.5,
         "spread": -3.5,
-        "overOdds": -108.0,
-        "underOdds": -112.0,
+        "overOdds": -110.0,
+        "underOdds": -110.0,
         "awayTeamOdds": {
           "favorite": false,
           "underdog": true,
           "moneyLine": 150,
-          "spreadOdds": -105.0,
+          "spreadOdds": -110.0,
           "open": {
             "favorite": false,
             "pointSpread": {
@@ -7832,12 +7832,12 @@
               "american": "+3.5"
             },
             "spread": {
-              "value": 1.95,
-              "displayValue": "20/21",
-              "alternateDisplayValue": "-105",
-              "decimal": 1.95,
-              "fraction": "20/21",
-              "american": "-105"
+              "value": 1.9,
+              "displayValue": "10/11",
+              "alternateDisplayValue": "-110",
+              "decimal": 1.9,
+              "fraction": "10/11",
+              "american": "-110"
             },
             "moneyLine": {
               "value": 2.5,
@@ -7856,7 +7856,7 @@
           "favorite": true,
           "underdog": false,
           "moneyLine": -180,
-          "spreadOdds": -115.0,
+          "spreadOdds": -110.0,
           "open": {
             "favorite": true,
             "pointSpread": {
@@ -7886,12 +7886,12 @@
               "american": "-3.5"
             },
             "spread": {
-              "value": 1.86,
-              "displayValue": "20/23",
-              "alternateDisplayValue": "-115",
-              "decimal": 1.86,
-              "fraction": "20/23",
-              "american": "-115"
+              "value": 1.9,
+              "displayValue": "10/11",
+              "alternateDisplayValue": "-110",
+              "decimal": 1.9,
+              "fraction": "10/11",
+              "american": "-110"
             },
             "moneyLine": {
               "value": 1.55,
@@ -7913,7 +7913,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674763%3Foutcomes%3D0ML86319057_1",
             "text": "Home Bet",
@@ -7927,7 +7927,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674763%3Foutcomes%3D0ML86319057_3",
             "text": "Away Bet",
@@ -8027,20 +8027,20 @@
         },
         "current": {
           "over": {
-            "value": 1.92,
-            "displayValue": "25/27",
-            "alternateDisplayValue": "-108",
-            "decimal": 1.92,
-            "fraction": "25/27",
-            "american": "-108"
+            "value": 1.9,
+            "displayValue": "10/11",
+            "alternateDisplayValue": "-110",
+            "decimal": 1.9,
+            "fraction": "10/11",
+            "american": "-110"
           },
           "under": {
-            "value": 1.89,
-            "displayValue": "25/28",
-            "alternateDisplayValue": "-112",
-            "decimal": 1.89,
-            "fraction": "25/28",
-            "american": "-112"
+            "value": 1.9,
+            "displayValue": "10/11",
+            "alternateDisplayValue": "-110",
+            "decimal": 1.9,
+            "fraction": "10/11",
+            "american": "-110"
           },
           "total": {
             "alternateDisplayValue": "51.5",
@@ -8053,7 +8053,7 @@
       "game_id": "401864579",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -8061,7 +8061,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UNM -11.5",
@@ -8184,7 +8184,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674764%3Foutcomes%3D0ML86319058_1",
             "text": "Home Bet",
@@ -8198,7 +8198,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674764%3Foutcomes%3D0ML86319058_3",
             "text": "Away Bet",
@@ -8324,7 +8324,7 @@
       "game_id": "401856806",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -8332,7 +8332,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "HOU -18.5",
@@ -8455,7 +8455,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674738%3Foutcomes%3D0ML86319022_1",
             "text": "Home Bet",
@@ -8469,7 +8469,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674738%3Foutcomes%3D0ML86319022_3",
             "text": "Away Bet",
@@ -8595,7 +8595,7 @@
       "game_id": "401856698",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -8603,7 +8603,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "AUB -9.5",
@@ -8726,7 +8726,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674769%3Foutcomes%3D0ML86319063_1",
             "text": "Home Bet",
@@ -8740,7 +8740,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674769%3Foutcomes%3D0ML86319063_3",
             "text": "Away Bet",
@@ -8866,7 +8866,7 @@
       "game_id": "401858464",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -8874,7 +8874,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "NEB -5.5",
@@ -8997,7 +8997,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674742%3Foutcomes%3D0ML86319026_1",
             "text": "Home Bet",
@@ -9011,7 +9011,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674742%3Foutcomes%3D0ML86319026_3",
             "text": "Away Bet",
@@ -9137,7 +9137,7 @@
       "game_id": "401858466",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -9145,7 +9145,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "PSU -9.5",
@@ -9268,7 +9268,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674735%3Foutcomes%3D0ML86319019_1",
             "text": "Home Bet",
@@ -9282,7 +9282,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674735%3Foutcomes%3D0ML86319019_3",
             "text": "Away Bet",
@@ -9408,7 +9408,7 @@
       "game_id": "401862785",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -9416,7 +9416,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "USF -17.5",
@@ -9539,7 +9539,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674772%3Foutcomes%3D0ML86319066_1",
             "text": "Home Bet",
@@ -9553,7 +9553,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674772%3Foutcomes%3D0ML86319066_3",
             "text": "Away Bet",
@@ -9679,7 +9679,7 @@
       "game_id": "401858239",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -9687,7 +9687,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UVA -19.5",
@@ -9810,7 +9810,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674773%3Foutcomes%3D0ML86319067_1",
             "text": "Home Bet",
@@ -9824,7 +9824,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674773%3Foutcomes%3D0ML86319067_3",
             "text": "Away Bet",
@@ -9950,7 +9950,7 @@
       "game_id": "401869961",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -9958,7 +9958,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "JMU -6",
@@ -10081,7 +10081,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674776%3Foutcomes%3D0ML86319070_1",
             "text": "Home Bet",
@@ -10095,7 +10095,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674776%3Foutcomes%3D0ML86319070_3",
             "text": "Away Bet",
@@ -10221,7 +10221,7 @@
       "game_id": "401858238",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -10229,7 +10229,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "MIA -41.5",
@@ -10430,7 +10430,7 @@
       "game_id": "401862780",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -10438,7 +10438,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "UL -10",
@@ -10561,7 +10561,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674778%3Foutcomes%3D0ML86319072_1",
             "text": "Home Bet",
@@ -10575,7 +10575,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674778%3Foutcomes%3D0ML86319072_3",
             "text": "Away Bet",
@@ -10701,7 +10701,7 @@
       "game_id": "401856696",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -10709,7 +10709,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "ALA -12.5",
@@ -10832,7 +10832,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674779%3Foutcomes%3D0ML86319073_1",
             "text": "Home Bet",
@@ -10846,7 +10846,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674779%3Foutcomes%3D0ML86319073_3",
             "text": "Away Bet",
@@ -10972,7 +10972,7 @@
       "game_id": "401856814",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -10980,7 +10980,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "KSU -6.5",
@@ -11103,7 +11103,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674781%3Foutcomes%3D0ML86319075_1",
             "text": "Home Bet",
@@ -11117,7 +11117,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674781%3Foutcomes%3D0ML86319075_3",
             "text": "Away Bet",
@@ -11243,7 +11243,7 @@
       "game_id": "401856881",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -11251,14 +11251,14 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "WVU -1.5",
-        "overUnder": 59.5,
+        "overUnder": 60.5,
         "spread": -1.5,
-        "overOdds": -105.0,
-        "underOdds": -115.0,
+        "overOdds": -110.0,
+        "underOdds": -110.0,
         "awayTeamOdds": {
           "favorite": false,
           "underdog": true,
@@ -11374,7 +11374,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674740%3Foutcomes%3D0ML86319024_1",
             "text": "Home Bet",
@@ -11388,7 +11388,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674740%3Foutcomes%3D0ML86319024_3",
             "text": "Away Bet",
@@ -11429,7 +11429,7 @@
               "desktop",
               "bets"
             ],
-            "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674740%3Foutcomes%3D0OU86319024O5950_1",
+            "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674740%3Foutcomes%3D0OU86319024O6050_1",
             "text": "Over Odds",
             "shortText": "Over Odds",
             "isExternal": true,
@@ -11442,7 +11442,7 @@
               "desktop",
               "bets"
             ],
-            "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674740%3Foutcomes%3D0OU86319024U5950_3",
+            "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674740%3Foutcomes%3D0OU86319024U6050_3",
             "text": "Under Odds",
             "shortText": "Under Odds",
             "isExternal": true,
@@ -11488,24 +11488,24 @@
         },
         "current": {
           "over": {
-            "value": 1.95,
-            "displayValue": "20/21",
-            "alternateDisplayValue": "-105",
-            "decimal": 1.95,
-            "fraction": "20/21",
-            "american": "-105"
+            "value": 1.9,
+            "displayValue": "10/11",
+            "alternateDisplayValue": "-110",
+            "decimal": 1.9,
+            "fraction": "10/11",
+            "american": "-110"
           },
           "under": {
-            "value": 1.86,
-            "displayValue": "20/23",
-            "alternateDisplayValue": "-115",
-            "decimal": 1.86,
-            "fraction": "20/23",
-            "american": "-115"
+            "value": 1.9,
+            "displayValue": "10/11",
+            "alternateDisplayValue": "-110",
+            "decimal": 1.9,
+            "fraction": "10/11",
+            "american": "-110"
           },
           "total": {
-            "alternateDisplayValue": "59.5",
-            "american": "59.5"
+            "alternateDisplayValue": "60.5",
+            "american": "60.5"
           }
         }
       }
@@ -11514,7 +11514,7 @@
       "game_id": "401862784",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -11522,7 +11522,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "TULN -18.5",
@@ -11645,7 +11645,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674782%3Foutcomes%3D0ML86319076_1",
             "text": "Home Bet",
@@ -11659,7 +11659,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674782%3Foutcomes%3D0ML86319076_3",
             "text": "Away Bet",
@@ -11785,7 +11785,7 @@
       "game_id": "401869931",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -11793,7 +11793,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "ARST -5.5",
@@ -11916,7 +11916,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674783%3Foutcomes%3D0ML86319077_1",
             "text": "Home Bet",
@@ -11930,7 +11930,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674783%3Foutcomes%3D0ML86319077_3",
             "text": "Away Bet",
@@ -12056,7 +12056,7 @@
       "game_id": "401871048",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -12064,7 +12064,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "JXST -7",
@@ -12187,7 +12187,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674785%3Foutcomes%3D0ML86319079_1",
             "text": "Home Bet",
@@ -12201,7 +12201,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674785%3Foutcomes%3D0ML86319079_3",
             "text": "Away Bet",
@@ -12327,7 +12327,7 @@
       "game_id": "401856702",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -12335,7 +12335,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "LSU -8.5",
@@ -12458,7 +12458,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34226054%3Foutcomes%3D0ML84998389_1",
             "text": "Home Bet",
@@ -12472,7 +12472,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34226054%3Foutcomes%3D0ML84998389_3",
             "text": "Away Bet",
@@ -12598,7 +12598,7 @@
       "game_id": "401856804",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -12606,7 +12606,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "ARIZ -10",
@@ -12729,7 +12729,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674786%3Foutcomes%3D0ML86319080_1",
             "text": "Home Bet",
@@ -12743,7 +12743,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674786%3Foutcomes%3D0ML86319080_3",
             "text": "Away Bet",
@@ -12869,7 +12869,7 @@
       "game_id": "401858469",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -12877,7 +12877,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "ORE -3",
@@ -13000,7 +13000,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34226058%3Foutcomes%3D0ML84998393_1",
             "text": "Home Bet",
@@ -13014,7 +13014,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34226058%3Foutcomes%3D0ML84998393_3",
             "text": "Away Bet",
@@ -13140,7 +13140,7 @@
       "game_id": "401860894",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -13148,7 +13148,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "USU -3",
@@ -13271,7 +13271,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674787%3Foutcomes%3D0ML86319081_1",
             "text": "Home Bet",
@@ -13285,7 +13285,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674787%3Foutcomes%3D0ML86319081_3",
             "text": "Away Bet",
@@ -13411,7 +13411,7 @@
       "game_id": "401864572",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -13419,7 +13419,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "NCSU -14",
@@ -13542,7 +13542,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674789%3Foutcomes%3D0ML86319083_1",
             "text": "Home Bet",
@@ -13556,7 +13556,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674789%3Foutcomes%3D0ML86319083_3",
             "text": "Away Bet",
@@ -13682,7 +13682,7 @@
       "game_id": "401856703",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -13690,7 +13690,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "MSST -6.5",
@@ -13813,7 +13813,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674790%3Foutcomes%3D0ML86319084_1",
             "text": "Home Bet",
@@ -13827,7 +13827,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674790%3Foutcomes%3D0ML86319084_3",
             "text": "Away Bet",
@@ -13953,7 +13953,7 @@
       "game_id": "401856697",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -13961,7 +13961,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "ARK -7",
@@ -14084,7 +14084,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674800%3Foutcomes%3D0ML86319121_1",
             "text": "Home Bet",
@@ -14098,7 +14098,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674800%3Foutcomes%3D0ML86319121_3",
             "text": "Away Bet",
@@ -14224,7 +14224,7 @@
       "game_id": "401862782",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -14232,7 +14232,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "FAU -13.5",
@@ -14355,7 +14355,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674802%3Foutcomes%3D0ML86319123_1",
             "text": "Home Bet",
@@ -14369,7 +14369,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674802%3Foutcomes%3D0ML86319123_3",
             "text": "Away Bet",
@@ -14495,7 +14495,7 @@
       "game_id": "401858241",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -14503,7 +14503,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "SMU -34.5",
@@ -14626,7 +14626,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674803%3Foutcomes%3D0ML86319124_1",
             "text": "Home Bet",
@@ -14640,7 +14640,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674803%3Foutcomes%3D0ML86319124_3",
             "text": "Away Bet",
@@ -14766,7 +14766,7 @@
       "game_id": "401860895",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -14774,7 +14774,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "ORST -10.5",
@@ -14897,7 +14897,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674804%3Foutcomes%3D0ML86319125_1",
             "text": "Home Bet",
@@ -14911,7 +14911,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674804%3Foutcomes%3D0ML86319125_3",
             "text": "Away Bet",
@@ -15037,7 +15037,7 @@
       "game_id": "401866429",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -15045,7 +15045,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "MASS -4.5",
@@ -15168,7 +15168,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674805%3Foutcomes%3D0ML86319126_1",
             "text": "Home Bet",
@@ -15182,7 +15182,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674805%3Foutcomes%3D0ML86319126_3",
             "text": "Away Bet",
@@ -15308,7 +15308,7 @@
       "game_id": "401860891",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -15316,7 +15316,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "FRES -13.5",
@@ -15439,7 +15439,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674806%3Foutcomes%3D0ML86319127_1",
             "text": "Home Bet",
@@ -15453,7 +15453,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674806%3Foutcomes%3D0ML86319127_3",
             "text": "Away Bet",
@@ -15579,7 +15579,7 @@
       "game_id": "401858240",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -15587,7 +15587,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "GT -3.5",
@@ -15710,7 +15710,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674807%3Foutcomes%3D0ML86319128_1",
             "text": "Home Bet",
@@ -15724,7 +15724,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674807%3Foutcomes%3D0ML86319128_3",
             "text": "Away Bet",
@@ -15850,7 +15850,7 @@
       "game_id": "401864509",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -15858,7 +15858,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "AF -5.5",
@@ -15981,7 +15981,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674745%3Foutcomes%3D0ML86319029_1",
             "text": "Home Bet",
@@ -15995,7 +15995,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674745%3Foutcomes%3D0ML86319029_3",
             "text": "Away Bet",
@@ -16121,7 +16121,7 @@
       "game_id": "401858470",
       "provider": {
         "id": "100",
-        "name": "Draft Kings",
+        "name": "DraftKings",
         "priority": 1.0
       },
       "odds": {
@@ -16129,7 +16129,7 @@
         "provider": {
           "$ref": "http://sports.core.api.espn.com/v2/sports/football/leagues/college-football/providers/100?lang=en&region=us",
           "id": "100",
-          "name": "Draft Kings",
+          "name": "DraftKings",
           "priority": 1
         },
         "details": "WASH -10",
@@ -16252,7 +16252,7 @@
               "home",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674743%3Foutcomes%3D0ML86319027_1",
             "text": "Home Bet",
@@ -16266,7 +16266,7 @@
               "away",
               "desktop",
               "bets",
-              "draft-kings"
+              "draftkings"
             ],
             "href": "https://sportsbook.draftkings.com/gateway?s=__s__&wpcid=__wpcid__&wpsrc=413&wpcn=ESPN&wpscn=Widget&wpcrn=BetSlipDeepLink&wpscid=__wpscid__&wpcrid=xx&preurl=https%3A%2F%2Fsportsbook.draftkings.com%2Fevent%2F34674743%3Foutcomes%3D0ML86319027_3",
             "text": "Away Bet",

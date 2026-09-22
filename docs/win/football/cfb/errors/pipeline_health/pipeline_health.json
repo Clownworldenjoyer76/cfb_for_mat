@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35733524448-attempt-1",
+  "run_id": "github-35736936882-attempt-1",
   "status": "WARNING",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "pipeline_health.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/pipeline_health.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/pipeline_health/pipeline_health.json",
-  "started_at_utc": "2026-09-22T13:34:42.565496+00:00",
-  "finished_at_utc": "2026-09-22T13:34:42.922592+00:00",
-  "duration_seconds": 0.357,
+  "started_at_utc": "2026-09-22T14:21:07.571952+00:00",
+  "finished_at_utc": "2026-09-22T14:21:07.929800+00:00",
+  "duration_seconds": 0.358,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2642,
+    "process_id": 2779,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35733524448",
+    "github_run_id": "35736936882",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "2e9a4f1f9c40c56ac8c6837592c27595aa983cce",
+    "github_sha": "4530b73b37a26f90853d7ecf53c36990b1890048",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -62,7 +62,7 @@
   "error_count": 0,
   "warnings": [
     {
-      "timestamp_utc": "2026-09-22T13:34:42.922569+00:00",
+      "timestamp_utc": "2026-09-22T14:21:07.929776+00:00",
       "message": "CFB Week 4: 13 scheduled game(s) do not have sportsbook odds",
       "details": null
     }
@@ -80,9 +80,9 @@
       "merged_games": 71,
       "all_games_games": 71,
       "selected_games": 58,
-      "selected_bets": 139,
+      "selected_bets": 140,
       "locked_games": 58,
-      "locked_bets": 139,
+      "locked_bets": 140,
       "completed_prior_games": 260,
       "pbp_prior_games": 260,
       "expected_team_week_rows": 508,

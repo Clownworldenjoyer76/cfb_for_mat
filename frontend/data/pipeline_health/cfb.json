@@ -1,7 +1,7 @@
 {
   "fatal_errors": [],
   "game_date_new_york": "2026_09_22",
-  "generated_at_utc": "2026-09-22T13:34:42.565432+00:00",
+  "generated_at_utc": "2026-09-22T14:21:07.571865+00:00",
   "leagues": {
     "cfb": {
       "completed_history_coverage": {
@@ -21,13 +21,13 @@
         "all_games_games": 71,
         "completed_prior_games": 260,
         "expected_team_week_rows": 508,
-        "locked_bets": 139,
+        "locked_bets": 140,
         "locked_games": 58,
         "merged_games": 71,
         "pbp_prior_games": 260,
         "prediction_games": 71,
         "scheduled_games": 71,
-        "selected_bets": 139,
+        "selected_bets": 140,
         "selected_games": 58,
         "sportsbook_games": 58,
         "team_stats_team_week_rows": 508
@@ -187,8 +187,8 @@
     "name": "CFB Pipeline",
     "ref_name": "main",
     "run_attempt": "1",
-    "run_id": "35733524448",
-    "sha": "2e9a4f1f9c40c56ac8c6837592c27595aa983cce",
+    "run_id": "35736936882",
+    "sha": "4530b73b37a26f90853d7ecf53c36990b1890048",
     "status": "success"
   }
 }

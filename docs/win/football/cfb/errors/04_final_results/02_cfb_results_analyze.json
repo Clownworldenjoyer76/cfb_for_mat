@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35733524448-attempt-1",
+  "run_id": "github-35736936882-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
@@ -9,22 +9,22 @@
   "script": "02_cfb_results_analyze.py",
   "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/04_final_results/02_cfb_results_analyze.py",
   "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/04_final_results/02_cfb_results_analyze.json",
-  "started_at_utc": "2026-09-22T13:34:40.361470+00:00",
-  "finished_at_utc": "2026-09-22T13:34:40.698448+00:00",
-  "duration_seconds": 0.337,
+  "started_at_utc": "2026-09-22T14:21:05.007520+00:00",
+  "finished_at_utc": "2026-09-22T14:21:05.462587+00:00",
+  "duration_seconds": 0.455,
   "environment": {
     "hostname": "runnervmlun5p",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2628,
+    "process_id": 2765,
     "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35733524448",
+    "github_run_id": "35736936882",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "2e9a4f1f9c40c56ac8c6837592c27595aa983cce",
+    "github_sha": "4530b73b37a26f90853d7ecf53c36990b1890048",
     "github_actor": "Clownworldenjoyer76",
     "github_repository": "Clownworldenjoyer76/cfb_for_mat"
   },
@@ -45,7 +45,7 @@
     "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/04_final_results/intermediate/work_cfb.csv"
   ],
   "rows_in": 331,
-  "rows_out": 174,
+  "rows_out": 710,
   "warning_count": 0,
   "error_count": 0,
   "warnings": [],
@@ -63,26 +63,27 @@
       3,
       4
     ],
-    "selected_bets": 174,
+    "selected_bets": 710,
     "market_counts": {
-      "spread": 64,
-      "moneyline": 56,
-      "total": 54
+      "spread": 318,
+      "total": 242,
+      "moneyline": 150
     },
     "result_counts": {
+      "Loss": 329,
+      "Win": 239,
       "Pending": 140,
-      "Win": 20,
-      "Loss": 14
+      "Push": 2
     },
     "grader_totals": {
-      "selected_bets": 174,
-      "graded_bets": 34,
-      "wins": 20,
-      "losses": 14,
-      "pushes": 0,
+      "selected_bets": 710,
+      "graded_bets": 570,
+      "wins": 239,
+      "losses": 329,
+      "pushes": 2,
       "voids": 0,
       "pending_bets": 140,
-      "net_units": 0.4314024535585794
+      "net_units": -103.86921790318263
     },
     "output_modified": true
   }
