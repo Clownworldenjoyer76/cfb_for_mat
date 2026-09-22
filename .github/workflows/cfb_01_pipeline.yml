@@ -58,23 +58,16 @@ jobs:
         run: python docs/win/football/cfb/scripts/00_intake/pull_schedule.py
 
       # ----------------------------------------------------------------------
-      # FINAL SCORES + GRADING FOR PREVIOUS PICKS
+      # FINAL SCORES
       #
-      # When this workflow is run for Week 2, Week 1 picks already exist.
-      # Final Week 1 scores are pulled and Week 1 bets are graded here.
-      #
-      # When run for Week 3, existing Week 1 + Week 2 picks are refreshed
-      # against ESPN finals, etc.
+      # Pull final scores early so completed-game data is available to the
+      # model and to grading later in this workflow. Grading itself must run
+      # only after markets.yaml has been replayed across every existing week.
       # ----------------------------------------------------------------------
 
       - name: Pull final CFB scores
         run: |
           python docs/win/football/cfb/scripts/04_final_results/pull_final_scores.py \
-            --season "$CFB_SEASON"
-
-      - name: Grade existing CFB picks
-        run: |
-          python docs/win/football/cfb/scripts/04_final_results/grade_picks.py \
             --season "$CFB_SEASON"
 
       # ----------------------------------------------------------------------
@@ -426,6 +419,354 @@ jobs:
           )
           PY
 
+      # ----------------------------------------------------------------------
+      # GRADE REBUILT PICKS
+      #
+      # markets.yaml has now been replayed across every existing week.
+      # Grade only after that replay so 04_final_results is built from the
+      # same current selections that exist in 03_picks.
+      # ----------------------------------------------------------------------
+
+      - name: Grade rebuilt CFB picks
+        run: |
+          python docs/win/football/cfb/scripts/04_final_results/grade_picks.py \
+            --season "$CFB_SEASON"
+
+      - name: Verify grading matches rebuilt picks
+        run: |
+          python - <<'PY'
+          import csv
+          import os
+          import re
+          from pathlib import Path
+
+          season = int(os.environ["CFB_SEASON"])
+
+          picks_dir = Path("docs/win/football/cfb/03_picks")
+          graded_dir = Path("docs/win/football/cfb/04_final_results/graded")
+          summary_path = graded_dir / f"season_{season}_summary.csv"
+
+          flag_columns = (
+              "ml_selected",
+              "spread_selected",
+              "total_selected",
+          )
+
+          pick_pattern = re.compile(r"^week_(\d+)_CFB_picks\.csv$")
+          graded_pattern = re.compile(r"^week_(\d+)_CFB_graded\.csv$")
+
+          def read_csv(path, required):
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise RuntimeError(f"{path}: missing or empty")
+
+              try:
+                  with path.open(
+                      newline="",
+                      encoding="utf-8-sig",
+                  ) as handle:
+                      reader = csv.DictReader(handle, strict=True)
+                      fields = set(reader.fieldnames or [])
+                      missing = set(required) - fields
+
+                      if missing:
+                          raise RuntimeError(
+                              f"{path}: missing required columns: {sorted(missing)}"
+                          )
+
+                      rows = list(reader)
+
+              except csv.Error as exc:
+                  raise RuntimeError(
+                      f"{path}: malformed CSV: {exc}"
+                  ) from exc
+
+              if not reader.fieldnames:
+                  raise RuntimeError(f"{path}: missing CSV header")
+
+              for line, row in enumerate(rows, start=2):
+                  if None in row or any(value is None for value in row.values()):
+                      raise RuntimeError(f"{path}: malformed row at line {line}")
+
+              return rows
+
+          def as_int(value, field, path, line):
+              try:
+                  number = float(str(value).strip())
+              except (TypeError, ValueError):
+                  raise RuntimeError(
+                      f"{path}: invalid {field} at line {line}: {value!r}"
+                  )
+
+              if not number.is_integer():
+                  raise RuntimeError(
+                      f"{path}: non-integer {field} at line {line}: {value!r}"
+                  )
+
+              return int(number)
+
+          def as_flag(value, field, path, line):
+              normalized = str(value).strip().casefold()
+
+              if normalized in {"1", "1.0", "true", "yes", "y"}:
+                  return 1
+
+              if normalized in {"0", "0.0", "false", "no", "n"}:
+                  return 0
+
+              raise RuntimeError(
+                  f"{path}: invalid {field} flag at line {line}: {value!r}"
+              )
+
+          pick_files = []
+
+          for path in sorted(picks_dir.glob("week_*_CFB_picks.csv")):
+              match = pick_pattern.fullmatch(path.name)
+
+              if match:
+                  pick_files.append((int(match.group(1)), path))
+
+          if not pick_files:
+              raise RuntimeError("No week_*_CFB_picks.csv files found.")
+
+          expected = {}
+
+          for filename_week, path in pick_files:
+              rows = read_csv(
+                  path,
+                  {
+                      "season",
+                      "week",
+                      "game_id",
+                      *flag_columns,
+                  },
+              )
+
+              counts = {name: 0 for name in flag_columns}
+
+              for line, row in enumerate(rows, start=2):
+                  if as_int(row["season"], "season", path, line) != season:
+                      raise RuntimeError(
+                          f"{path}: wrong season at line {line}"
+                      )
+
+                  row_week = as_int(row["week"], "week", path, line)
+
+                  if row_week != filename_week:
+                      raise RuntimeError(
+                          f"{path}: filename week={filename_week} "
+                          f"but row week={row_week} at line {line}"
+                      )
+
+                  if not str(row["game_id"]).strip():
+                      raise RuntimeError(
+                          f"{path}: blank game_id at line {line}"
+                      )
+
+                  for name in flag_columns:
+                      counts[name] += as_flag(
+                          row[name],
+                          name,
+                          path,
+                          line,
+                      )
+
+              expected[filename_week] = counts
+
+          expected_weeks = set(expected)
+
+          graded_files = {}
+
+          for path in sorted(graded_dir.glob("week_*_CFB_graded.csv")):
+              match = graded_pattern.fullmatch(path.name)
+
+              if match:
+                  graded_files[int(match.group(1))] = path
+
+          if set(graded_files) != expected_weeks:
+              raise RuntimeError(
+                  "Graded week coverage does not match rebuilt picks. "
+                  f"picks={sorted(expected_weeks)} "
+                  f"graded={sorted(graded_files)}"
+              )
+
+          actual = {}
+
+          for week in sorted(expected_weeks):
+              path = graded_files[week]
+
+              rows = read_csv(
+                  path,
+                  {
+                      "season",
+                      "week",
+                      "game_id",
+                      "selected_bets",
+                      *flag_columns,
+                  },
+              )
+
+              counts = {name: 0 for name in flag_columns}
+              selected_bets = 0
+
+              for line, row in enumerate(rows, start=2):
+                  if as_int(row["season"], "season", path, line) != season:
+                      raise RuntimeError(
+                          f"{path}: wrong season at line {line}"
+                      )
+
+                  row_week = as_int(row["week"], "week", path, line)
+
+                  if row_week != week:
+                      raise RuntimeError(
+                          f"{path}: filename week={week} "
+                          f"but row week={row_week} at line {line}"
+                      )
+
+                  row_flags = {
+                      name: as_flag(
+                          row[name],
+                          name,
+                          path,
+                          line,
+                      )
+                      for name in flag_columns
+                  }
+
+                  row_selected = as_int(
+                      row["selected_bets"],
+                      "selected_bets",
+                      path,
+                      line,
+                  )
+
+                  if row_selected != sum(row_flags.values()):
+                      raise RuntimeError(
+                          f"{path}: selected_bets does not equal market flags "
+                          f"at line {line}"
+                      )
+
+                  selected_bets += row_selected
+
+                  for name, value in row_flags.items():
+                      counts[name] += value
+
+              if counts != expected[week]:
+                  raise RuntimeError(
+                      f"Week {week}: graded market counts do not match rebuilt picks. "
+                      f"expected={expected[week]} actual={counts}"
+                  )
+
+              expected_selected = sum(expected[week].values())
+
+              if selected_bets != expected_selected:
+                  raise RuntimeError(
+                      f"Week {week}: graded selected_bets={selected_bets} "
+                      f"does not match rebuilt picks={expected_selected}"
+                  )
+
+              actual[week] = counts
+
+          summary_rows = read_csv(
+              summary_path,
+              {
+                  "season",
+                  "week",
+                  "selected_bets",
+              },
+          )
+
+          summary_by_week = {}
+          total_selected = None
+
+          for line, row in enumerate(summary_rows, start=2):
+              if as_int(row["season"], "season", summary_path, line) != season:
+                  raise RuntimeError(
+                      f"{summary_path}: wrong season at line {line}"
+                  )
+
+              week_value = str(row["week"]).strip()
+
+              if week_value == "TOTAL":
+                  if total_selected is not None:
+                      raise RuntimeError(
+                          f"{summary_path}: duplicate TOTAL row"
+                      )
+
+                  total_selected = as_int(
+                      row["selected_bets"],
+                      "selected_bets",
+                      summary_path,
+                      line,
+                  )
+                  continue
+
+              week = as_int(
+                  week_value,
+                  "week",
+                  summary_path,
+                  line,
+              )
+
+              if week in summary_by_week:
+                  raise RuntimeError(
+                      f"{summary_path}: duplicate Week {week} row"
+                  )
+
+              summary_by_week[week] = as_int(
+                  row["selected_bets"],
+                  "selected_bets",
+                  summary_path,
+                  line,
+              )
+
+          if set(summary_by_week) != expected_weeks:
+              raise RuntimeError(
+                  "Season summary week coverage does not match rebuilt picks. "
+                  f"picks={sorted(expected_weeks)} "
+                  f"summary={sorted(summary_by_week)}"
+              )
+
+          expected_total = 0
+
+          for week in sorted(expected_weeks):
+              week_total = sum(expected[week].values())
+              expected_total += week_total
+
+              if summary_by_week[week] != week_total:
+                  raise RuntimeError(
+                      f"Week {week}: summary selected_bets="
+                      f"{summary_by_week[week]} does not match rebuilt picks="
+                      f"{week_total}"
+                  )
+
+          if total_selected is None:
+              raise RuntimeError(
+                  f"{summary_path}: missing TOTAL row"
+              )
+
+          if total_selected != expected_total:
+              raise RuntimeError(
+                  f"{summary_path}: TOTAL selected_bets={total_selected} "
+                  f"does not match rebuilt picks={expected_total}"
+              )
+
+          market_totals = {
+              name: sum(
+                  expected[week][name]
+                  for week in expected_weeks
+              )
+              for name in flag_columns
+          }
+
+          print(
+              "Grading matches rebuilt picks: "
+              f"weeks={sorted(expected_weeks)} "
+              f"moneyline={market_totals['ml_selected']} "
+              f"spread={market_totals['spread_selected']} "
+              f"total={market_totals['total_selected']} "
+              f"selected_bets={expected_total}"
+          )
+          PY
       # ----------------------------------------------------------------------
       # GRADING ANALYSIS + REPORTS
       #
