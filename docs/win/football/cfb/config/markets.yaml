@@ -95,6 +95,8 @@ markets:
       enabled: true
       line_bands:
         - [-99.0, 99.0]
+      odds_bands:
+        - [-300, -110]
       prob_bands:
         - [0.50, 0.65]
 
@@ -102,6 +104,8 @@ markets:
       enabled: true
       line_bands:
         - [-99.0, 99.0]
+      odds_bands:
+        - [-300, 300]
       prob_bands:
         - [0.70, 1.00]
 
