@@ -57,7 +57,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -180,7 +180,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def get_season(
-    cli_season: int | None,
+    cli_season: Optional[int],
 ) -> int:
     if cli_season is not None:
         return int(
@@ -250,7 +250,7 @@ def normalize_game_id(
 
 def parse_float(
     value: Any,
-) -> float | None:
+) -> Optional[float]:
     text = clean(
         value
     )
@@ -336,8 +336,8 @@ def american_win_profit(
 
 def profit_for_grade(
     grade: str,
-    odds: float | None,
-) -> float | None:
+    odds: Optional[float],
+) -> Optional[float]:
     if grade == "WIN":
         if odds is None:
             return None
@@ -365,7 +365,7 @@ def selected_odds_or_raise(
     value: Any,
     game_id: str,
     market: str,
-) -> float | None:
+) -> Optional[float]:
     if not selected:
         return None
 
@@ -454,8 +454,8 @@ def result_completed(
 def grade_moneyline(
     selected: bool,
     selection: str,
-    home_score: float | None,
-    away_score: float | None,
+    home_score: Optional[float],
+    away_score: Optional[float],
     completed: bool,
     voided: bool,
 ) -> str:
@@ -500,9 +500,9 @@ def grade_moneyline(
 def grade_spread(
     selected: bool,
     selection: str,
-    line: float | None,
-    home_score: float | None,
-    away_score: float | None,
+    line: Optional[float],
+    home_score: Optional[float],
+    away_score: Optional[float],
     completed: bool,
     voided: bool,
 ) -> str:
@@ -555,9 +555,9 @@ def grade_spread(
 def grade_total(
     selected: bool,
     selection: str,
-    line: float | None,
-    home_score: float | None,
-    away_score: float | None,
+    line: Optional[float],
+    home_score: Optional[float],
+    away_score: Optional[float],
     completed: bool,
     voided: bool,
 ) -> str:
@@ -747,31 +747,31 @@ def grade_week(
     final_status: list[str] = []
     final_completed: list[int] = []
     final_away_scores: list[
-        float | None
+        Optional[float]
     ] = []
     final_home_scores: list[
-        float | None
+        Optional[float]
     ] = []
     final_totals: list[
-        float | None
+        Optional[float]
     ] = []
     final_home_margins: list[
-        float | None
+        Optional[float]
     ] = []
 
     ml_grades: list[str] = []
     ml_profits: list[
-        float | None
+        Optional[float]
     ] = []
 
     spread_grades: list[str] = []
     spread_profits: list[
-        float | None
+        Optional[float]
     ] = []
 
     total_grades: list[str] = []
     total_profits: list[
-        float | None
+        Optional[float]
     ] = []
 
     selected_bets_col: list[int] = []
@@ -788,7 +788,7 @@ def grade_week(
             "game_id"
         ]
 
-        result_row: pd.Series | None = None
+        result_row: Optional[pd.Series] = None
 
         if (
             result_lookup is not None
