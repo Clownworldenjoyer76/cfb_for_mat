@@ -29,6 +29,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Optional
 from urllib.error import HTTPError, URLError
 from urllib.request import Request
 
@@ -92,9 +93,9 @@ class RuntimeState:
     )
     provider_status: str = ""
     provider_timestamp: str = ""
-    provider_timestamp_utc: datetime | None = None
-    provider_season: int | None = None
-    provider_season_type: int | None = None
+    provider_timestamp_utc: Optional[datetime] = None
+    provider_season: Optional[int] = None
+    provider_season_type: Optional[int] = None
     provider_team_group_count: int = 0
     provider_team_groups_with_injuries: int = 0
     provider_team_groups_without_injuries: int = 0
@@ -1799,8 +1800,8 @@ def _injury_freshness_outcome(
 def _add_injury_output_details(
     details: dict[str, object],
     *,
-    output_path: Path | None,
-    output_modified: bool | None,
+    output_path: Optional[Path],
+    output_modified: Optional[bool],
 ) -> None:
     if output_path is not None:
         details[
@@ -1822,8 +1823,8 @@ def update_report_details(
     authoritative_team_ids: list[str],
     canonical_by_id: dict[str, str],
     rows: list[dict[str, str]],
-    output_path: Path | None,
-    output_modified: bool | None,
+    output_path: Optional[Path],
+    output_modified: Optional[bool],
 ) -> None:
     status_counts = _injury_status_counts(rows)
 
@@ -2017,7 +2018,7 @@ def run(
         dict[str, str]
     ] = []
 
-    output_modified: bool | None = None
+    output_modified: Optional[bool] = None
 
     try:
         authoritative_team_ids = (
