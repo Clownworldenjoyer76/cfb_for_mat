@@ -34,6 +34,7 @@ import urllib.parse
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Optional
 from urllib.error import HTTPError, URLError
 from urllib.request import Request
 
@@ -574,7 +575,7 @@ def request_failure(
     game_id: str,
     url: str,
     error: str,
-    http_status: int | None = None,
+    http_status: Optional[int] = None,
 ) -> PredictorRequestError:
     detail: dict[str, object] = {
         "game_id": game_id,
@@ -1542,11 +1543,11 @@ def update_report(
     report: PipelineReporter,
     state: RuntimeState,
     *,
-    schedule_path: Path | None,
-    final_path: Path | None,
+    schedule_path: Optional[Path],
+    final_path: Optional[Path],
     target_count: int,
     rows: list[dict[str, str]],
-    output_modified: bool | None,
+    output_modified: Optional[bool],
 ) -> None:
     expected_rows = (
         target_count * 2
@@ -1614,12 +1615,12 @@ def run(
 ) -> int:
     state = RuntimeState()
 
-    season: int | None = None
-    season_type: int | None = None
-    week: int | None = None
+    season: Optional[int] = None
+    season_type: Optional[int] = None
+    week: Optional[int] = None
 
-    schedule_path: Path | None = None
-    final_path: Path | None = None
+    schedule_path: Optional[Path] = None
+    final_path: Optional[Path] = None
 
     targets: dict[
         str,
@@ -1630,7 +1631,7 @@ def run(
         dict[str, str]
     ] = []
 
-    output_modified: bool | None = None
+    output_modified: Optional[bool] = None
 
     try:
         (
