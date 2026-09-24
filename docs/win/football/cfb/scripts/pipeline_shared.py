@@ -5,7 +5,9 @@ from __future__ import annotations
 import csv
 import importlib.util
 import math
+import os
 import sys
+import uuid
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Optional
@@ -295,3 +297,156 @@ def format_american(number: Optional[float]) -> str:
     if number is None or number == 0:
         return ""
     return str(int(round(number)))
+
+def add_projection_core_arguments(parser: Any) -> None:
+    parser.add_argument(
+        "--home-field",
+        type=float,
+        default=2.5,
+    )
+    parser.add_argument(
+        "--drives-per-team",
+        type=float,
+        default=11.5,
+    )
+    parser.add_argument(
+        "--market-margin-weight",
+        type=float,
+        default=0.36,
+    )
+    parser.add_argument(
+        "--fpi-margin-weight",
+        type=float,
+        default=0.28,
+    )
+    parser.add_argument(
+        "--espn-margin-weight",
+        type=float,
+        default=0.20,
+    )
+
+
+def print_projection_source_counts(frame: Any) -> None:
+    print(
+        "with_market_spread="
+        f"{int(pd.to_numeric(frame['market_home_margin'], errors='coerce').notna().sum())}"
+    )
+    print(
+        "with_fpi="
+        f"{int(pd.to_numeric(frame['fpi_home_margin'], errors='coerce').notna().sum())}"
+    )
+    print(
+        "with_espn="
+        f"{int(pd.to_numeric(frame['espn_home_margin'], errors='coerce').notna().sum())}"
+    )
+
+
+def print_projection_adjustment_counts(frame: Any) -> None:
+    print(
+        "with_market_total="
+        f"{int(pd.to_numeric(frame['market_total'], errors='coerce').notna().sum())}"
+    )
+    print(
+        "fresh_injury_adjustments="
+        f"{int(pd.to_numeric(frame['injury_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
+    )
+    print(
+        "travel_adjustments="
+        f"{int(pd.to_numeric(frame['travel_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
+    )
+    print(
+        "weather_adjustments="
+        f"{int(pd.to_numeric(frame['weather_total_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
+    )
+
+
+def normalized_frame_pair(
+    serialized: Any,
+    expected: Any,
+    columns: list[str],
+    cleaner: Any,
+) -> tuple[Any, Any]:
+    left = serialized.reset_index(
+        drop=True
+    ).copy()
+    right = expected.reset_index(
+        drop=True
+    ).copy()
+
+    for column in columns:
+        left[column] = left[column].map(cleaner)
+        right[column] = right[column].map(cleaner)
+
+    return left, right
+
+
+def write_csv_rows_durable(
+    path: Path,
+    rows: list[dict[str, Any]],
+    fieldnames: list[str],
+    *,
+    project_columns: bool = False,
+) -> None:
+    with path.open(
+        "w",
+        newline="",
+        encoding="utf-8",
+    ) as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=fieldnames,
+            extrasaction="raise",
+        )
+        writer.writeheader()
+
+        if project_columns:
+            writer.writerows(
+                {
+                    column: row.get(
+                        column,
+                        "",
+                    )
+                    for column in fieldnames
+                }
+                for row in rows
+            )
+        else:
+            writer.writerows(rows)
+
+        handle.flush()
+        os.fsync(
+            handle.fileno()
+        )
+
+
+def write_atomic_csv_rows(
+    path: Path,
+    rows: list[dict[str, Any]],
+    fieldnames: list[str],
+) -> None:
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+    temp_path = path.with_name(
+        f".{path.name}.{uuid.uuid4().hex}.tmp"
+    )
+
+    try:
+        write_csv_rows_durable(
+            temp_path,
+            rows,
+            fieldnames,
+            project_columns=True,
+        )
+        os.replace(
+            temp_path,
+            path,
+        )
+    finally:
+        try:
+            temp_path.unlink(
+                missing_ok=True
+            )
+        except OSError:
+            pass

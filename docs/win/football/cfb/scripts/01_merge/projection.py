@@ -103,6 +103,11 @@ if str(SCRIPTS_DIR) not in sys.path:
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import (
+    add_projection_core_arguments,
+    print_projection_adjustment_counts,
+    print_projection_source_counts,
+)
 
 
 SCRIPT_VERSION = "cfb-inseason-v7-rebuild-all-games-2026-09-21"
@@ -142,35 +147,7 @@ def parse_args() -> argparse.Namespace:
         ),
     )
 
-    parser.add_argument(
-        "--home-field",
-        type=float,
-        default=2.5,
-    )
-
-    parser.add_argument(
-        "--drives-per-team",
-        type=float,
-        default=11.5,
-    )
-
-    parser.add_argument(
-        "--market-margin-weight",
-        type=float,
-        default=0.36,
-    )
-
-    parser.add_argument(
-        "--fpi-margin-weight",
-        type=float,
-        default=0.28,
-    )
-
-    parser.add_argument(
-        "--espn-margin-weight",
-        type=float,
-        default=0.20,
-    )
+    add_projection_core_arguments(parser)
 
     parser.add_argument(
         "--prior-margin-weight",
@@ -2137,45 +2114,14 @@ def run(
         f"{int(pd.to_numeric(projected['prior_home_margin'], errors='coerce').isna().sum())}"
     )
 
-    print(
-        "with_market_spread="
-        f"{int(pd.to_numeric(projected['market_home_margin'], errors='coerce').notna().sum())}"
-    )
-
-    print(
-        "with_fpi="
-        f"{int(pd.to_numeric(projected['fpi_home_margin'], errors='coerce').notna().sum())}"
-    )
-
-    print(
-        "with_espn="
-        f"{int(pd.to_numeric(projected['espn_home_margin'], errors='coerce').notna().sum())}"
-    )
+    print_projection_source_counts(projected)
 
     print(
         "with_current_team_stats_margin="
         f"{int(pd.to_numeric(projected['prior_home_margin'], errors='coerce').notna().sum())}"
     )
 
-    print(
-        "with_market_total="
-        f"{int(pd.to_numeric(projected['market_total'], errors='coerce').notna().sum())}"
-    )
-
-    print(
-        "fresh_injury_adjustments="
-        f"{int(pd.to_numeric(projected['injury_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
-    )
-
-    print(
-        "travel_adjustments="
-        f"{int(pd.to_numeric(projected['travel_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
-    )
-
-    print(
-        "weather_adjustments="
-        f"{int(pd.to_numeric(projected['weather_total_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
-    )
+    print_projection_adjustment_counts(projected)
 
     print(
         "probability_margin_sd="
