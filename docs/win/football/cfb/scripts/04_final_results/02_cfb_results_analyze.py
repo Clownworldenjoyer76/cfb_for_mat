@@ -1439,85 +1439,55 @@ def bet_row(
             optional_float(
                 row.get("final_home_margin")
             ),
+        "week_label":
+            (
+                "Week "
+                + str(
+                    required_int(
+                        row.get("week"),
+                        f"game_id={game_id}: week",
+                    )
+                )
+            ),
+        "day_night":
+            build_day_night(
+                clean(
+                    row.get("game_time")
+                ),
+                (
+                    f"game_id={game_id}: "
+                    "game_time"
+                ),
+            ),
+        "ev_bucket":
+            ev_bucket(ev),
+        "odds_bucket":
+            odds_bucket(odds),
+        "kelly_bucket":
+            kelly_bucket(kelly),
+        "model_prob_bucket":
+            model_prob_bucket(model_prob),
+        "win_prob_bucket":
+            model_prob_bucket(model_prob),
+        "spread_line_bucket":
+            (
+                spread_line_bucket(line)
+                if market_type == "spread"
+                else "UNBUCKETED"
+            ),
+        "spread_role":
+            (
+                spread_role(line)
+                if market_type == "spread"
+                else "UNBUCKETED"
+            ),
+        "total_bucket":
+            (
+                total_bucket(line)
+                if market_type == "total"
+                else "UNBUCKETED"
+            ),
     }
-
-    output[
-        "week_label"
-    ] = (
-        f"Week {output['week']}"
-    )
-
-    output[
-        "day_night"
-    ] = build_day_night(
-        output[
-            "game_time"
-        ],
-        (
-            f"game_id={game_id}: "
-            "game_time"
-        ),
-    )
-
-    output[
-        "ev_bucket"
-    ] = ev_bucket(
-        ev
-    )
-
-    output[
-        "odds_bucket"
-    ] = odds_bucket(
-        odds
-    )
-
-    output[
-        "kelly_bucket"
-    ] = kelly_bucket(
-        kelly
-    )
-
-    output[
-        "model_prob_bucket"
-    ] = model_prob_bucket(
-        model_prob
-    )
-
-    output[
-        "win_prob_bucket"
-    ] = output[
-        "model_prob_bucket"
-    ]
-
-    output[
-        "spread_line_bucket"
-    ] = (
-        spread_line_bucket(
-            line
-        )
-        if market_type == "spread"
-        else "UNBUCKETED"
-    )
-
-    output[
-        "spread_role"
-    ] = (
-        spread_role(
-            line
-        )
-        if market_type == "spread"
-        else "UNBUCKETED"
-    )
-
-    output[
-        "total_bucket"
-    ] = (
-        total_bucket(
-            line
-        )
-        if market_type == "total"
-        else "UNBUCKETED"
-    )
 
     return output
 
