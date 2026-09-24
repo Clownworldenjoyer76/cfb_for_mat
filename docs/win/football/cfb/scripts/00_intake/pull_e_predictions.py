@@ -50,6 +50,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 
 CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -131,12 +132,12 @@ UNRESOLVED_TEAM_NAMES = {
 class RuntimeState:
     request_count: int = 0
     request_success_count: int = 0
-    request_failures: list[dict[str, object]] = field(
+    request_failures: list[dict[str, ScalarValue]] = field(
         default_factory=list
     )
     predictor_response_count: int = 0
     complete_game_count: int = 0
-    incomplete_details: list[dict[str, object]] = field(
+    incomplete_details: list[dict[str, ScalarValue]] = field(
         default_factory=list
     )
     duplicate_game_side_count: int = 0
@@ -152,7 +153,7 @@ class PredictorRequestError(RuntimeError):
 
 
 def parse_positive_int(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> int:
@@ -184,7 +185,7 @@ def parse_positive_int(
 
 
 def parse_positive_int_text(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> str:
@@ -197,7 +198,7 @@ def parse_positive_int_text(
 
 
 def scalar_text(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> str:
@@ -226,7 +227,7 @@ def scalar_text(
 
 
 def finite_number(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> float:
@@ -256,7 +257,7 @@ def finite_number(
 
 
 def validate_percent(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> float:
@@ -277,7 +278,7 @@ def validate_percent(
 
 
 def normalize_name(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     return " ".join(
         str(value or "").strip().split()
@@ -577,7 +578,7 @@ def request_failure(
     error: str,
     http_status: Optional[int] = None,
 ) -> PredictorRequestError:
-    detail: dict[str, object] = {
+    detail: dict[str, ScalarValue] = {
         "game_id": game_id,
         "url": url,
         "error": error,

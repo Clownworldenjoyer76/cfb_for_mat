@@ -42,6 +42,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 
 CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -104,7 +105,7 @@ class PowerIndexValidationError(RuntimeError):
 
 
 def parse_integer(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
     minimum: int | None = None,
@@ -505,7 +506,7 @@ def build_page_url(
 
 
 def optional_nonnegative_integer(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> int | None:
@@ -879,7 +880,7 @@ def extract_team_identity(
 
 
 def scalar_to_text(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> str:
@@ -906,7 +907,7 @@ def scalar_to_text(
 
 
 def parse_finite_number(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> float:
@@ -936,7 +937,7 @@ def parse_finite_number(
 
 
 def parse_provider_timestamp(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> tuple[str, datetime]:

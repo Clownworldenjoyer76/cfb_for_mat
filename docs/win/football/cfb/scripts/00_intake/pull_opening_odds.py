@@ -27,6 +27,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
 WEEKLY_DIR = CFB_ROOT / "00_intake" / "schedule" / "weekly"
@@ -221,7 +222,7 @@ def read_csv(
     raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 def parse_aware_iso(
-    value: object,
+    value: ScalarValue,
     label: str,
 ) -> datetime:
     text = str(
@@ -424,7 +425,7 @@ def validate_weekly_rows(
 
 def build_url(
     path: str,
-    params: dict[str, object] | None = None,
+    params: dict[str, ScalarValue] | None = None,
 ) -> str:
     url = f"{ESPN_BASE}{path}"
 
@@ -520,7 +521,7 @@ def http_get_json(
 
 
 def to_float(
-    value: object,
+    value: ScalarValue,
 ) -> float | None:
     if (
         value is None
@@ -558,7 +559,7 @@ def to_float(
 
 
 def clean_number(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     number = to_float(value)
 
@@ -574,7 +575,7 @@ def clean_number(
 
 
 def normalize_american(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     number = to_float(value)
 
@@ -592,8 +593,8 @@ def normalize_american(
 
 
 def numeric_movement(
-    current_value: object,
-    opening_value: object,
+    current_value: ScalarValue,
+    opening_value: ScalarValue,
 ) -> str:
     current = to_float(
         current_value
@@ -628,7 +629,7 @@ def numeric_movement(
 
 
 def normalize_provider_timestamp(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     text = str(
         value or ""
@@ -661,7 +662,7 @@ def normalize_provider_timestamp(
 
 
 def bookmaker_key(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     return re.sub(
         r"[^a-z0-9]+",
@@ -675,7 +676,7 @@ def bookmaker_key(
 
 
 def canonical_bookmaker(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     text = str(
         value or ""
@@ -739,7 +740,7 @@ def fetch_ref(
 
 def provider_info(
     odds_item: dict,
-) -> dict[str, object]:
+) -> dict[str, ScalarValue]:
     provider = odds_item.get(
         "provider"
     )
@@ -1530,9 +1531,9 @@ def row_has_required_opening(
 
 
 def status_fields(
-    value: object,
+    value: ScalarValue,
     missing_reason: str,
-    http_status: object,
+    http_status: ScalarValue,
 ) -> dict[str, str]:
     if str(
         value or ""
@@ -1604,7 +1605,7 @@ def build_game_rows(
     weekly_row: dict[str, str],
     opening: dict[str, str],
     bookmaker: str,
-    http_status: object,
+    http_status: ScalarValue,
     request_missing_reason: str,
     captured_at: str,
 ) -> list[dict[str, str]]:
@@ -3029,7 +3030,7 @@ def _count_blank_provider_timestamps(
 
 
 def _raise_if_opening_fetch_failed(
-    hard_failures: list[dict[str, object]],
+    hard_failures: list[dict[str, ScalarValue]],
 ) -> None:
     if hard_failures:
         raise RuntimeError(

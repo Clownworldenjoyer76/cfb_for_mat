@@ -26,6 +26,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
 WEEKLY_SCHEDULE_DIR = CFB_ROOT / "00_intake" / "schedule" / "weekly"
@@ -64,15 +65,15 @@ class CleanPredictionValidationError(RuntimeError):
     pass
 
 
-def text(value: object) -> str:
+def text(value: ScalarValue) -> str:
     return "" if value is None else str(value).strip()
 
 
-def normalize_name(value: object) -> str:
+def normalize_name(value: ScalarValue) -> str:
     return " ".join(text(value).split()).casefold()
 
 
-def positive_int(value: object, *, label: str) -> int:
+def positive_int(value: ScalarValue, *, label: str) -> int:
     value_text = text(value)
 
     if not re.fullmatch(r"\d+", value_text):
@@ -90,7 +91,7 @@ def positive_int(value: object, *, label: str) -> int:
     return parsed
 
 
-def finite_decimal(value: object, *, label: str) -> Decimal:
+def finite_decimal(value: ScalarValue, *, label: str) -> Decimal:
     value_text = text(value)
 
     if not value_text:
@@ -113,7 +114,7 @@ def finite_decimal(value: object, *, label: str) -> Decimal:
     return number
 
 
-def percent_decimal(value: object, *, label: str) -> Decimal:
+def percent_decimal(value: ScalarValue, *, label: str) -> Decimal:
     number = finite_decimal(
         value,
         label=label,
@@ -127,7 +128,7 @@ def percent_decimal(value: object, *, label: str) -> Decimal:
     return number
 
 
-def optional_percent(value: object, *, label: str) -> Decimal | None:
+def optional_percent(value: ScalarValue, *, label: str) -> Decimal | None:
     if not text(value):
         return None
 

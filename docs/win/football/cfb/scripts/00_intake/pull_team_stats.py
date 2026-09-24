@@ -6,6 +6,7 @@ import os
 import sys
 import uuid
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -343,7 +344,7 @@ def _coerce_boolean_series(
     series: pd.Series,
     label: str,
 ) -> pd.Series:
-    def convert(value: object) -> bool:
+    def convert(value: Any) -> bool:
         if value is None or pd.isna(value):
             return False
 

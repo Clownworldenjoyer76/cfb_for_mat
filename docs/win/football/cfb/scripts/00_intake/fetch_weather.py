@@ -38,6 +38,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
 SCHEDULE_DIR = CFB_ROOT / "00_intake" / "schedule" / "weekly"
@@ -183,12 +184,12 @@ class TimestepResult:
     cadence_seconds: float | None = None
 
 
-def clean(value: object) -> str:
+def clean(value: ScalarValue) -> str:
     return "" if value is None else str(value).strip()
 
 
 def positive_int(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> int:
@@ -210,7 +211,7 @@ def positive_int(
 
 
 def finite_float(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> float:
@@ -237,8 +238,8 @@ def finite_float(
 
 
 def validate_coordinate_pair(
-    latitude_value: object,
-    longitude_value: object,
+    latitude_value: ScalarValue,
+    longitude_value: ScalarValue,
     *,
     label: str,
 ) -> tuple[float, float]:
@@ -266,7 +267,7 @@ def validate_coordinate_pair(
 
 
 def validate_timezone(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> str:
@@ -288,7 +289,7 @@ def validate_timezone(
 
 
 def parse_iso_utc(
-    value: object,
+    value: ScalarValue,
 ) -> datetime | None:
     value_text = clean(value)
 
@@ -318,7 +319,7 @@ def parse_iso_utc(
 
 
 def require_iso_utc(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> datetime:
@@ -878,8 +879,8 @@ def load_travel(
 
 
 def coordinate_key(
-    latitude_value: object,
-    longitude_value: object,
+    latitude_value: ScalarValue,
+    longitude_value: ScalarValue,
 ) -> tuple[float, float] | None:
     latitude_text = clean(
         latitude_value
@@ -1148,8 +1149,8 @@ def truncate_coordinate(
 
 
 def canonical_request_coordinates(
-    latitude_value: object,
-    longitude_value: object,
+    latitude_value: ScalarValue,
+    longitude_value: ScalarValue,
 ) -> tuple[str, str]:
     latitude, longitude = (
         validate_coordinate_pair(
@@ -1493,12 +1494,12 @@ def select_kickoff_timestep(
 
 
 def optional_numeric(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
     minimum: float | None = None,
     maximum: float | None = None,
-) -> object:
+) -> ScalarValue:
     if value is None:
         return ""
 
@@ -1535,7 +1536,7 @@ def optional_numeric(
 
 def extract_precip_probability(
     entry: dict[str, Any],
-) -> object:
+) -> ScalarValue:
     data = entry.get(
         "data",
         {}
@@ -1640,8 +1641,8 @@ def extract_symbol_code(
 def derive_rain_snow_flags(
     symbol_code: str,
 ) -> tuple[
-    object,
-    object,
+    ScalarValue,
+    ScalarValue,
 ]:
     code = clean(
         symbol_code
@@ -2736,7 +2737,7 @@ def _stage1_weather_metrics(
     output_rows: list[dict[str, object]],
     schedule_rows: list[dict[str, str]],
     state: dict[str, object],
-) -> dict[str, object]:
+) -> dict[str, Any]:
     weather_available_count = sum(has_usable_weather(row) for row in output_rows)
     wind_speed_count = sum(
         bool(clean(row.get("wind_speed"))) for row in output_rows
@@ -2808,7 +2809,7 @@ def build_weather_rows(
     now_utc: datetime,
     fetcher: Callable[[str, str], ProviderResult] = fetch_weather_json,
     sleep_fn: Callable[[float], None] = time.sleep,
-) -> tuple[list[dict[str, object]], dict[str, object]]:
+) -> tuple[list[dict[str, object]], dict[str, Any]]:
     state = _stage1_weather_state()
     output_rows = [
         _stage1_build_weather_game(

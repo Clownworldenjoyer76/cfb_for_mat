@@ -46,7 +46,7 @@ import sys
 import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -343,7 +343,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def clean(
-    value: object,
+    value: Any,
 ) -> str:
     if value is None:
         return ""
@@ -372,7 +372,7 @@ def clean(
 
 
 def normalize_key(
-    value: object,
+    value: Any,
 ) -> str:
     text = unicodedata.normalize(
         "NFKD",
@@ -407,7 +407,7 @@ def normalize_key(
 
 
 def as_bool(
-    value: object,
+    value: Any,
 ) -> bool:
     return clean(
         value
@@ -421,7 +421,7 @@ def as_bool(
 
 
 def as_float(
-    value: object,
+    value: Any,
 ) -> Optional[float]:
     text = (
         clean(value)
@@ -523,7 +523,7 @@ def read_csv(
 
 
 def normalize_game_id(
-    value: object,
+    value: Any,
 ) -> str:
     text = clean(
         value
@@ -1211,7 +1211,7 @@ class TeamResolver:
 
     def resolve(
         self,
-        value: object,
+        value: Any,
     ) -> str:
         raw = clean(
             value
@@ -1229,7 +1229,7 @@ class TeamResolver:
 
     def team_id(
         self,
-        value: object,
+        value: Any,
     ) -> str:
         return self.team_to_id.get(
             self.resolve(
@@ -2540,13 +2540,13 @@ def validate_probability_output(
             )
 
 
-def _stage1_optional_round(value: object, digits: int) -> object:
+def _stage1_optional_round(value: Optional[float], digits: int) -> Optional[float]:
     if value is None:
         return None
     return round(value, digits)
 
 
-def _stage1_lookup_row(lookup: Optional[pd.DataFrame], key: str) -> object:
+def _stage1_lookup_row(lookup: Optional[pd.DataFrame], key: str) -> Optional[pd.Series]:
     if lookup is None or key not in lookup.index:
         return None
     return lookup.loc[key]
@@ -2630,7 +2630,7 @@ def _stage1_espn_info(
     )
 
 
-def _stage1_row_float(row: object, key: str) -> Optional[float]:
+def _stage1_row_float(row: Optional[pd.Series], key: str) -> Optional[float]:
     if row is None:
         return None
     return as_float(row.get(key))

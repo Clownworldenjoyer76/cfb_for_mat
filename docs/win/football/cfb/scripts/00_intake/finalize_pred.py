@@ -22,6 +22,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
 CLEAN_DIR = CFB_ROOT / "00_intake" / "predictions" / "clean"
@@ -51,11 +52,11 @@ class FinalizePredictionValidationError(RuntimeError):
     pass
 
 
-def text(value: object) -> str:
+def text(value: ScalarValue) -> str:
     return "" if value is None else str(value).strip()
 
 
-def positive_int(value: object, *, label: str) -> int:
+def positive_int(value: ScalarValue, *, label: str) -> int:
     value_text = text(value)
 
     if not re.fullmatch(r"\d+", value_text):
@@ -73,7 +74,7 @@ def positive_int(value: object, *, label: str) -> int:
     return parsed
 
 
-def finite_decimal(value: object, *, label: str) -> Decimal:
+def finite_decimal(value: ScalarValue, *, label: str) -> Decimal:
     value_text = text(value)
 
     if not value_text:
@@ -94,7 +95,7 @@ def finite_decimal(value: object, *, label: str) -> Decimal:
     return number
 
 
-def probability(value: object, *, label: str) -> Decimal:
+def probability(value: ScalarValue, *, label: str) -> Decimal:
     number = finite_decimal(value, label=label)
 
     if not Decimal("0") <= number <= Decimal("1"):
@@ -105,7 +106,7 @@ def probability(value: object, *, label: str) -> Decimal:
     return number
 
 
-def percentage(value: object, *, label: str) -> Decimal:
+def percentage(value: ScalarValue, *, label: str) -> Decimal:
     number = finite_decimal(value, label=label)
 
     if not Decimal("0") <= number <= Decimal("100"):
@@ -120,7 +121,7 @@ def fmt2(number: Decimal) -> str:
     return format(number.quantize(TWO_PLACES), ".2f")
 
 
-def validate_date(value: object, *, label: str) -> str:
+def validate_date(value: ScalarValue, *, label: str) -> str:
     value_text = text(value)
 
     if not value_text:
@@ -136,7 +137,7 @@ def validate_date(value: object, *, label: str) -> str:
     return value_text
 
 
-def validate_time(value: object, *, label: str) -> str:
+def validate_time(value: ScalarValue, *, label: str) -> str:
     value_text = text(value)
 
     if not value_text:
@@ -152,7 +153,7 @@ def validate_time(value: object, *, label: str) -> str:
     return value_text
 
 
-def binary_int(value: object, *, label: str) -> int:
+def binary_int(value: ScalarValue, *, label: str) -> int:
     value_text = text(value)
 
     if value_text not in {"0", "1"}:

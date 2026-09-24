@@ -83,6 +83,7 @@ import os
 import sys
 import uuid
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
 import yaml
@@ -1148,7 +1149,7 @@ def _history_integer_column(
 
 
 def _history_completed_flag(
-    value: object,
+    value: Any,
     label: str,
 ) -> bool:
     text = base.clean(

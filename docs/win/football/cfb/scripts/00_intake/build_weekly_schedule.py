@@ -24,6 +24,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 
 SCHEDULE_DIR = CFB_ROOT / "00_intake" / "schedule"
@@ -388,7 +389,7 @@ def kickoff_iso(
 
 
 def parse_aware_iso(
-    value: object,
+    value: ScalarValue,
     label: str,
 ) -> datetime:
     text = str(
@@ -809,8 +810,8 @@ def _stage1_request_records(
     raw_payload: dict,
     *,
     target_ids: set[str],
-) -> dict[str, dict[str, object]]:
-    request_by_id: dict[str, dict[str, object]] = {}
+) -> dict[str, dict[str, ScalarValue]]:
+    request_by_id: dict[str, dict[str, ScalarValue]] = {}
     for index, request in enumerate(raw_payload["request_urls"]):
         if not isinstance(request, dict):
             raise ValueError(
@@ -884,7 +885,7 @@ def _stage1_validate_available_snapshot_coverage(
     normalized_ids: set[str],
     raw_event_ids: list[str],
     raw_odds_ids: list[str],
-    request_by_id: dict[str, dict[str, object]],
+    request_by_id: dict[str, dict[str, ScalarValue]],
 ) -> None:
     available_ids = {
         game_id
@@ -916,7 +917,7 @@ def validate_snapshot_provenance(
     season: int,
     season_type: int,
     week: int,
-) -> tuple[str, str, dict[str, dict[str, object]]]:
+) -> tuple[str, str, dict[str, dict[str, ScalarValue]]]:
     if not odds_rows:
         raise ValueError("Normalized current odds CSV is empty")
 
@@ -1750,7 +1751,7 @@ def build_output_rows(
     target_rows: list[dict[str, str]],
     request_by_id: dict[
         str,
-        dict[str, object],
+        dict[str, ScalarValue],
     ],
     odds_summary: dict[
         str,

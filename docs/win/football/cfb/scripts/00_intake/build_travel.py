@@ -20,6 +20,7 @@ import uuid
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import yaml
@@ -32,6 +33,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
 SCHEDULE_DIR = CFB_ROOT / "00_intake" / "schedule" / "weekly"
@@ -128,11 +130,11 @@ class TravelValidationError(RuntimeError):
     pass
 
 
-def clean(value: object) -> str:
+def clean(value: ScalarValue) -> str:
     return "" if value is None else str(value).strip()
 
 
-def normalize_key(value: object) -> str:
+def normalize_key(value: ScalarValue) -> str:
     value_text = clean(value)
 
     if not value_text:
@@ -158,7 +160,7 @@ def normalize_key(value: object) -> str:
     )
 
 
-def strip_parenthetical(value: object) -> str:
+def strip_parenthetical(value: ScalarValue) -> str:
     value_text = clean(value)
 
     if not value_text:
@@ -171,7 +173,7 @@ def strip_parenthetical(value: object) -> str:
     ).strip()
 
 
-def positive_int(value: object, *, label: str) -> int:
+def positive_int(value: ScalarValue, *, label: str) -> int:
     value_text = clean(value)
 
     if not re.fullmatch(r"\d+", value_text):
@@ -189,7 +191,7 @@ def positive_int(value: object, *, label: str) -> int:
     return parsed
 
 
-def parse_binary_flag(value: object, *, label: str) -> int:
+def parse_binary_flag(value: ScalarValue, *, label: str) -> int:
     value_text = clean(value).casefold()
 
     if value_text in {"1", "true", "yes", "y"}:
@@ -203,7 +205,7 @@ def parse_binary_flag(value: object, *, label: str) -> int:
     )
 
 
-def finite_float(value: object, *, label: str) -> float:
+def finite_float(value: ScalarValue, *, label: str) -> float:
     value_text = clean(value)
 
     if not value_text:
@@ -255,7 +257,7 @@ def coordinate_pair(
 
 
 def validate_timezone(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> str:
@@ -277,7 +279,7 @@ def validate_timezone(
 
 
 def validate_date(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> str:
@@ -1018,7 +1020,7 @@ def travel_direction(
     return 0, 0
 
 
-def blank_team_travel() -> dict[str, object]:
+def blank_team_travel() -> dict[str, ScalarValue]:
     return {
         "home_lat": "",
         "home_lon": "",
@@ -1040,7 +1042,7 @@ def team_travel_values(
     game_date: str,
     game_id: str,
     team_label: str,
-) -> dict[str, object]:
+) -> dict[str, ScalarValue]:
     if team_row is None:
         return blank_team_travel()
 
@@ -1126,11 +1128,11 @@ def build_output_rows(
         list[dict[str, str]],
     ],
 ) -> tuple[
-    list[dict[str, object]],
-    dict[str, object],
+    list[dict[str, ScalarValue]],
+    dict[str, Any],
 ]:
     output_rows: list[
-        dict[str, object]
+        dict[str, ScalarValue]
     ] = []
 
     venue_status_counts: Counter[str] = Counter()
@@ -1435,7 +1437,7 @@ def build_output_rows(
         for row in output_rows
     )
 
-    metrics = {
+    metrics: dict[str, Any] = {
         "neutral_game_count": (
             neutral_game_count
         ),
@@ -1926,7 +1928,7 @@ def read_staged_rows(
 
 
 def publish_atomic(
-    rows: list[dict[str, object]],
+    rows: list[dict[str, ScalarValue]],
     path: Path,
     *,
     schedule_lookup: dict[

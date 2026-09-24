@@ -33,7 +33,7 @@ def _host_allowlist(
 
 
 def validate_https_url(
-    url: object,
+    url: str,
     *,
     allowed_hosts: Iterable[str],
     label: str = "URL",

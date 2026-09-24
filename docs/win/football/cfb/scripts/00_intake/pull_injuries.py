@@ -45,6 +45,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 
 CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -122,7 +123,7 @@ class InjuryValidationError(RuntimeError):
 
 
 def parse_positive_int_text(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> str:
@@ -149,7 +150,7 @@ def parse_positive_int_text(
 
 
 def parse_positive_int(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> int:
@@ -666,7 +667,7 @@ def fetch_json(
 
 
 def parse_timestamp(
-    value: object,
+    value: ScalarValue,
     *,
     label: str,
 ) -> tuple[str, datetime]:

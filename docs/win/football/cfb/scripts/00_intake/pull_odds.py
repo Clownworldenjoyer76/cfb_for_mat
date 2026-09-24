@@ -30,6 +30,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
 SCHEDULE_DIR = CFB_ROOT / "00_intake" / "schedule"
@@ -383,7 +384,7 @@ def load_target_schedule(
 
 def build_url(
     path: str,
-    params: Optional[dict[str, object]] = None,
+    params: Optional[dict[str, ScalarValue]] = None,
 ) -> str:
     url = f"{ESPN_BASE}{path}"
 
@@ -518,7 +519,7 @@ def fetch_ref(
 
 
 def to_float(
-    value: object,
+    value: ScalarValue,
 ) -> Optional[float]:
     if (
         value is None
@@ -552,7 +553,7 @@ def to_float(
 
 
 def clean_number(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     number = to_float(
         value
@@ -570,7 +571,7 @@ def clean_number(
 
 
 def normalize_american(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     number = to_float(
         value
@@ -590,7 +591,7 @@ def normalize_american(
 
 
 def american_to_decimal(
-    value: object,
+    value: ScalarValue,
 ) -> str:
     american = to_float(
         value
@@ -623,7 +624,7 @@ def american_to_decimal(
 
 def provider_info(
     odds_item: dict,
-) -> dict[str, object]:
+) -> dict[str, ScalarValue]:
     provider = odds_item.get(
         "provider"
     )
@@ -802,26 +803,30 @@ def nested_value(
 def first_value(
     data: dict,
     paths: list[tuple[str, ...]],
-) -> Optional[object]:
+) -> ScalarValue:
     for path in paths:
         value = nested_value(
             data,
             path,
         )
 
-        if (
-            value is not None
-            and str(
-                value
-            ).strip() != ""
+        if value is None:
+            continue
+
+        if not isinstance(
+            value,
+            (str, int, float, bool),
         ):
+            continue
+
+        if str(value).strip() != "":
             return value
 
     return None
 
 
 def parse_details_line(
-    details: object,
+    details: ScalarValue,
 ) -> Optional[float]:
     match = re.search(
         r"([+-]?\d+(?:\.\d+)?)\s*$",
@@ -839,7 +844,7 @@ def parse_details_line(
 
 
 def bool_value(
-    value: object,
+    value: ScalarValue,
 ) -> bool:
     if value is None:
         return False
@@ -1187,8 +1192,8 @@ def add_market_row(
     bookmaker: str,
     market_type: str,
     bet_side: str,
-    line: object,
-    odds_american: object,
+    line: ScalarValue,
+    odds_american: ScalarValue,
     current_fields: dict[str, str],
     snapshot_id: str,
     snapshot_fetched_at: str,
@@ -1245,7 +1250,7 @@ def normalize_event_odds(
     snapshot_fetched_at: str,
 ) -> tuple[
     list[dict[str, str]],
-    dict[str, object],
+    dict[str, ScalarValue],
 ]:
     info = provider_info(
         odds_item
@@ -2245,7 +2250,7 @@ def main() -> int:
         ] = []
 
         request_urls: list[
-            dict[str, object]
+            dict[str, ScalarValue]
         ] = []
 
         attempted_count = 0

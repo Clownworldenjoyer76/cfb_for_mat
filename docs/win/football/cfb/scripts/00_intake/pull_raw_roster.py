@@ -39,6 +39,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from type_support import ScalarValue
 
 
 CURRENT_WEEK_CONFIG_PATH = (
@@ -463,7 +464,7 @@ def flatten(
     obj: object,
     parent_key: str = "",
     sep: str = ".",
-) -> dict[str, object]:
+) -> dict[str, ScalarValue]:
     items: dict[
         str,
         object,
@@ -510,6 +511,18 @@ def flatten(
             )
 
     else:
+        if not (
+            obj is None
+            or isinstance(
+                obj,
+                (str, int, float, bool),
+            )
+        ):
+            raise TypeError(
+                "Unexpected non-scalar roster value "
+                f"at {parent_key!r}: {type(obj).__name__}"
+            )
+
         if parent_key:
             items[
                 parent_key
@@ -698,7 +711,7 @@ def extract_athletes(
 
 
 def validate_athlete_season_refs(
-    row: dict[str, object],
+    row: dict[str, ScalarValue],
     *,
     team_id: str,
     athlete_id: str,
@@ -754,7 +767,7 @@ def build_raw_rows(
     season_type: int,
     state: RuntimeState,
 ) -> tuple[
-    list[dict[str, object]],
+    list[dict[str, ScalarValue]],
     set[str],
     dict[str, int],
     list[dict[str, str]],
@@ -763,7 +776,7 @@ def build_raw_rows(
     int,
 ]:
     rows: list[
-        dict[str, object]
+        dict[str, ScalarValue]
     ] = []
 
     columns: set[str] = set(
@@ -1021,7 +1034,7 @@ def build_raw_rows(
 
 
 def _require_raw_roster_rows(
-    rows: list[dict[str, object]],
+    rows: list[dict[str, ScalarValue]],
 ) -> None:
     if not rows:
         raise ValueError(
@@ -1068,7 +1081,7 @@ def _validate_raw_roster_team_coverage(
 
 def validate_final_rows(
     rows: list[
-        dict[str, object]
+        dict[str, ScalarValue]
     ],
     columns: set[str],
     target_team_ids: list[str],
@@ -1270,7 +1283,7 @@ def temporary_path(
 def write_staged_csv(
     path: Path,
     rows: list[
-        dict[str, object]
+        dict[str, ScalarValue]
     ],
     fieldnames: list[str],
 ) -> None:
@@ -1477,7 +1490,7 @@ def validate_staged_csv(
 
 def publish_atomic(
     rows: list[
-        dict[str, object]
+        dict[str, ScalarValue]
     ],
     fieldnames: list[str],
     target_team_ids: list[str],
