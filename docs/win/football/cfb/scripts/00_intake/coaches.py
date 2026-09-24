@@ -480,7 +480,7 @@ def collect_role_markers(obj: object) -> list[str]:
             if text:
                 markers.append(text)
         elif isinstance(value, dict):
-            for key in (
+            for marker_key in (
                 "name",
                 "displayName",
                 "shortName",
@@ -490,8 +490,8 @@ def collect_role_markers(obj: object) -> list[str]:
                 "text",
                 "value",
             ):
-                if key in value:
-                    collect(value.get(key))
+                if marker_key in value:
+                    collect(value.get(marker_key))
         elif isinstance(value, list):
             for nested in value:
                 collect(nested)

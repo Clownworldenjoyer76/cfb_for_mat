@@ -1305,16 +1305,16 @@ def main() -> int:
             )
 
             rows.sort(
-                key=lambda row: (
-                    row.get(
+                key=lambda sort_row: (
+                    sort_row.get(
                         "game_date",
                         "",
                     ),
-                    row.get(
+                    sort_row.get(
                         "game_time",
                         "",
                     ),
-                    row.get(
+                    sort_row.get(
                         "game_id",
                         "",
                     ),

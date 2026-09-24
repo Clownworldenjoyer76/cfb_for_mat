@@ -1947,21 +1947,21 @@ def discover_groups(
                 f"index={index}"
             )
 
-        ref_url = normalize_ref_url(
+        top_ref_url = normalize_ref_url(
             item.get(
                 "$ref",
                 "",
             )
         )
 
-        if not ref_url:
+        if not top_ref_url:
             raise RuntimeError(
                 "Top-level ESPN groups "
                 "contains item without $ref "
                 f"at index={index}"
             )
 
-        visit(ref_url)
+        visit(top_ref_url)
 
     if not discovered:
         raise RuntimeError(
@@ -2452,45 +2452,45 @@ def build_standings(
     )
 
     rows.sort(
-        key=lambda row: (
+        key=lambda sort_row: (
             str(
-                row.get(
+                sort_row.get(
                     "conference",
                     "",
                 )
             ),
             str(
-                row.get(
+                sort_row.get(
                     "division",
                     "",
                 )
             ),
             str(
-                row.get(
+                sort_row.get(
                     "team_abbr",
                     "",
                 )
             ),
             str(
-                row.get(
+                sort_row.get(
                     "standings_type",
                     "",
                 )
             ),
             str(
-                row.get(
+                sort_row.get(
                     "record_type",
                     "",
                 )
             ),
             str(
-                row.get(
+                sort_row.get(
                     "record_name",
                     "",
                 )
             ),
             str(
-                row.get(
+                sort_row.get(
                     "stat_name",
                     "",
                 )

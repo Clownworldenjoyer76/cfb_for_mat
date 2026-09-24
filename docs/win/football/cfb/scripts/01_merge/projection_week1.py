@@ -3653,9 +3653,9 @@ if __name__ == "__main__":
     try:
         main()
 
-    except Exception as exc:
+    except Exception as main_exc:
         print(
-            f"ERROR: {exc}",
+            f"ERROR: {main_exc}",
             file=sys.stderr,
         )
 

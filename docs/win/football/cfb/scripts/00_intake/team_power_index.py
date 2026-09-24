@@ -1292,8 +1292,8 @@ def build_rows(
     )
 
     rows.sort(
-        key=lambda row: int(
-            row["team_id"]
+        key=lambda sort_row: int(
+            sort_row["team_id"]
         )
     )
 

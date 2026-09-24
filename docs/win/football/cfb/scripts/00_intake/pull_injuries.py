@@ -1464,12 +1464,12 @@ def build_rows(
             )
 
     rows.sort(
-        key=lambda row: (
-            row["team"].casefold(),
-            row["player_name"].casefold(),
-            int(row["player_id"]),
-            row["report_date"],
-            row["game_status"].casefold(),
+        key=lambda sort_row: (
+            sort_row["team"].casefold(),
+            sort_row["player_name"].casefold(),
+            int(sort_row["player_id"]),
+            sort_row["report_date"],
+            sort_row["game_status"].casefold(),
         )
     )
 

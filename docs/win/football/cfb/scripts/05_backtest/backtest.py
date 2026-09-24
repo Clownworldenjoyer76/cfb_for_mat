@@ -404,8 +404,8 @@ def make_ledger(
 
 
 def summarize(frame: pd.DataFrame, groups: list[str]) -> pd.DataFrame:
-    def one(group: pd.DataFrame) -> dict[str, Any]:
-        grades = group["grade"].astype(str)
+    def one(group_frame: pd.DataFrame) -> dict[str, Any]:
+        grades = group_frame["grade"].astype(str)
         wins = int(grades.eq("WIN").sum())
         losses = int(grades.eq("LOSS").sum())
         pushes = int(grades.eq("PUSH").sum())
@@ -413,12 +413,12 @@ def summarize(frame: pd.DataFrame, groups: list[str]) -> pd.DataFrame:
         decisions = wins + losses
 
         profit = pd.to_numeric(
-            group.loc[grades.isin(["WIN", "LOSS", "PUSH"]), "profit_units"],
+            group_frame.loc[grades.isin(["WIN", "LOSS", "PUSH"]), "profit_units"],
             errors="coerce",
         ).sum()
 
         avg_model = pd.to_numeric(
-            group.loc[grades.isin(["WIN", "LOSS"]), "model_probability"],
+            group_frame.loc[grades.isin(["WIN", "LOSS"]), "model_probability"],
             errors="coerce",
         ).mean()
 
@@ -430,16 +430,16 @@ def summarize(frame: pd.DataFrame, groups: list[str]) -> pd.DataFrame:
             "losses": losses,
             "pushes": pushes,
             "win_rate": actual,
-            "avg_odds": pd.to_numeric(group["odds_american"], errors="coerce").mean(),
+            "avg_odds": pd.to_numeric(group_frame["odds_american"], errors="coerce").mean(),
             "avg_model_probability": avg_model,
             "calibration_gap": (
                 actual - avg_model
                 if decisions and not pd.isna(avg_model)
                 else np.nan
             ),
-            "avg_edge": pd.to_numeric(group["edge"], errors="coerce").mean(),
-            "avg_ev": pd.to_numeric(group["ev"], errors="coerce").mean(),
-            "avg_kelly": pd.to_numeric(group["kelly"], errors="coerce").mean(),
+            "avg_edge": pd.to_numeric(group_frame["edge"], errors="coerce").mean(),
+            "avg_ev": pd.to_numeric(group_frame["ev"], errors="coerce").mean(),
+            "avg_kelly": pd.to_numeric(group_frame["kelly"], errors="coerce").mean(),
             "net_units": float(profit),
             "roi": float(profit) / graded if graded else np.nan,
         }

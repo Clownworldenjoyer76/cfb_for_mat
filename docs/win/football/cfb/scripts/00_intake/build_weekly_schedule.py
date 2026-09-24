@@ -1893,20 +1893,20 @@ def build_output_rows(
         )
 
     output_rows.sort(
-        key=lambda row: (
-            row.get(
+        key=lambda sort_row: (
+            sort_row.get(
                 "game_date",
                 "",
             ),
-            row.get(
+            sort_row.get(
                 "game_time",
                 "",
             ),
-            row.get(
+            sort_row.get(
                 "away_team",
                 "",
             ),
-            row.get(
+            sort_row.get(
                 "home_team",
                 "",
             ),
