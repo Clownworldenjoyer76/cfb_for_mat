@@ -184,6 +184,7 @@ def read_csv(
 
         return list(reader)
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 def schedule_kickoff_utc(
     row: dict[str, str],

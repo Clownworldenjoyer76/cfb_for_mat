@@ -2170,6 +2170,7 @@ def main() -> int:
             report
         )
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 if __name__ == "__main__":
     raise SystemExit(

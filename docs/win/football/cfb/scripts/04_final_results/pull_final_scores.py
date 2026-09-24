@@ -204,6 +204,7 @@ def fetch_json(
             )
         )
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 def extract_score(
     competitor: dict[str, Any],
@@ -1384,6 +1385,7 @@ def main() -> int:
 
         return 0
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 if __name__ == "__main__":
     raise SystemExit(

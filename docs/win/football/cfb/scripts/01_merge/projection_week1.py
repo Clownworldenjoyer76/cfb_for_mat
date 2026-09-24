@@ -3646,6 +3646,7 @@ def main() -> int:
 
         return 0
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 if __name__ == "__main__":
     try:

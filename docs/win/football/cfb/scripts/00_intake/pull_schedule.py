@@ -271,6 +271,7 @@ def read_csv(
 
         return rows
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 def write_csv_atomic(
     path: Path,
@@ -1043,6 +1044,7 @@ def read_existing_schedule(
             for row in reader
         ]
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 def sort_rows(
     rows: list[dict[str, str]],

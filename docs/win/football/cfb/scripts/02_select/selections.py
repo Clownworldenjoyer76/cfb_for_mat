@@ -41,7 +41,7 @@ import re
 import sys
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, Never
 
 import numpy as np
 import pandas as pd
@@ -205,7 +205,7 @@ SEASON_TYPE_ALIASES = {
 }
 
 
-def fail(message: str) -> None:
+def fail(message: str) -> Never:
     raise RuntimeError(message)
 
 
@@ -3040,7 +3040,7 @@ def main() -> int:
             args,
         )
 
-
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 if __name__ == "__main__":
     raise SystemExit(

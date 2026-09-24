@@ -218,6 +218,7 @@ def read_csv(
 
         return list(reader)
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 def parse_aware_iso(
     value: object,

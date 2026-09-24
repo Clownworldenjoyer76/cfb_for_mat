@@ -30,7 +30,7 @@ import re
 import sys
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, Never
 
 import pandas as pd
 import yaml
@@ -139,7 +139,7 @@ OUTPUT_COLUMNS = [
 
 def fail(
     message: str,
-) -> None:
+) -> Never:
     raise RuntimeError(
         message
     )
@@ -2087,6 +2087,7 @@ def main() -> int:
             args,
         )
 
+    raise RuntimeError("context manager unexpectedly suppressed an exception")
 
 if __name__ == "__main__":
     raise SystemExit(
