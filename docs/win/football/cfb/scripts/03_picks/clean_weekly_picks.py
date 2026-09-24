@@ -33,7 +33,6 @@ from pathlib import Path
 from typing import Any, Never
 
 import pandas as pd
-import yaml
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -66,6 +65,12 @@ if str(SCRIPTS_DIR) not in sys.path:
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import (
+    clean_text,
+    read_yaml,
+    require_columns,
+    resolve_target,
+)
 
 
 REQUIRED_COLUMNS = [
@@ -143,29 +148,6 @@ def fail(
     raise RuntimeError(
         message
     )
-
-
-def clean_text(
-    value: Any,
-) -> str:
-    if value is None:
-        return ""
-
-    text = str(
-        value
-    ).strip()
-
-    if text.casefold() in {
-        "",
-        "nan",
-        "none",
-        "null",
-        "<na>",
-        "nat",
-    }:
-        return ""
-
-    return text
 
 
 def normalize_game_id(
@@ -291,35 +273,6 @@ def selection_flag(
     )
 
 
-def read_yaml(
-    path: Path,
-    label: str,
-) -> dict[str, Any]:
-    if not path.is_file():
-        fail(
-            f"Missing {label}: {path}"
-        )
-
-    with path.open(
-        "r",
-        encoding="utf-8",
-    ) as handle:
-        data = yaml.safe_load(
-            handle
-        )
-
-    if not isinstance(
-        data,
-        dict,
-    ):
-        fail(
-            f"{label} must contain a YAML mapping: "
-            f"{path}"
-        )
-
-    return data
-
-
 def read_csv(
     path: Path,
     label: str,
@@ -344,78 +297,6 @@ def read_csv(
         )
 
     return df
-
-
-def require_columns(
-    df: pd.DataFrame,
-    columns: list[str],
-    label: str,
-) -> None:
-    missing = [
-        column
-        for column in columns
-        if column not in df.columns
-    ]
-
-    if missing:
-        fail(
-            f"{label} missing required columns: "
-            f"{missing}"
-        )
-
-
-def resolve_target(
-    current_week: dict[str, Any],
-    season_override: int | None,
-    week_override: int | None,
-) -> tuple[
-    int,
-    int,
-]:
-    configured_season = integer_value(
-        current_week.get(
-            "season"
-        ),
-        "current_week.season",
-    )
-
-    configured_week = integer_value(
-        current_week.get(
-            "week"
-        ),
-        "current_week.week",
-    )
-
-    season = (
-        int(
-            season_override
-        )
-        if season_override is not None
-        else configured_season
-    )
-
-    week = (
-        int(
-            week_override
-        )
-        if week_override is not None
-        else configured_week
-    )
-
-    if season < 1900:
-        fail(
-            f"Invalid target season: {season}"
-        )
-
-    if week <= 0:
-        fail(
-            f"Invalid target week: {week}"
-        )
-
-    return (
-        season,
-        week,
-    )
 
 
 def week_from_filename(

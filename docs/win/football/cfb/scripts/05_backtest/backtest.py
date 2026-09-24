@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 import argparse
-import importlib.util
-import math
 import os
 import re
 import sys
@@ -28,6 +26,11 @@ if str(SCRIPTS_DIR) not in sys.path:
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import (
+    clean_text as clean,
+    finite_float as number,
+    load_module,
+)
 
 
 SCRIPT_VERSION = "cfb-backtest-v1-reporter-2026-09-16"
@@ -38,41 +41,6 @@ SCORES_PATH = CFB_ROOT / "scripts" / "04_final_results" / "pull_final_scores.py"
 MARKETS_PATH = CFB_ROOT / "config" / "markets.yaml"
 
 FILE_RE = re.compile(r"^week_(\d+)_CFB_selected\.csv$")
-
-
-def load_module(name: str, path: Path) -> ModuleType:
-    spec = importlib.util.spec_from_file_location(name, path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"Unable to import {path}")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-def clean(value: Any) -> str:
-    if value is None:
-        return ""
-    try:
-        if pd.isna(value):
-            return ""
-    except (TypeError, ValueError):
-        pass
-    text = str(value).strip()
-    if text.casefold() in {"", "nan", "none", "null", "<na>", "nat"}:
-        return ""
-    return text
-
-
-def number(value: Any) -> float | None:
-    text = clean(value)
-    if not text:
-        return None
-    try:
-        value = float(text)
-    except (TypeError, ValueError):
-        return None
-    return value if math.isfinite(value) else None
 
 
 def flag(value: Any) -> bool:

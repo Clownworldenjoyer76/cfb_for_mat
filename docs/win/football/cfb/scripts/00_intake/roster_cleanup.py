@@ -22,7 +22,6 @@ import sys
 import uuid
 from pathlib import Path
 
-import yaml
 
 
 SCRIPT_PATH = Path(__file__).resolve()
@@ -33,6 +32,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import load_current_week_config
 
 
 CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -111,62 +111,6 @@ REQUIRED_INPUT_COLUMNS = [
     "displayName",
     "team_id",
 ]
-
-
-def load_current_week() -> tuple[int, int, int]:
-    if not CURRENT_WEEK_CONFIG_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing current-week config: {CURRENT_WEEK_CONFIG_PATH}"
-        )
-
-    with CURRENT_WEEK_CONFIG_PATH.open("r", encoding="utf-8") as handle:
-        payload = yaml.safe_load(handle)
-
-    if not isinstance(payload, dict):
-        raise ValueError("Current-week config must contain a YAML mapping")
-
-    values: dict[str, int] = {}
-
-    for key in ("season", "season_type", "week"):
-        if key not in payload:
-            raise ValueError(
-                f"Current-week config missing required key: {key}"
-            )
-
-        raw = payload.get(key)
-
-        if isinstance(raw, bool):
-            raise ValueError(
-                f"Current-week config {key} must be an integer"
-            )
-
-        try:
-            values[key] = int(str(raw).strip())
-        except (TypeError, ValueError) as exc:
-            raise ValueError(
-                f"Current-week config {key} must be an integer"
-            ) from exc
-
-    if values["season"] < 2000:
-        raise ValueError(
-            f"Invalid configured season: {values['season']}"
-        )
-
-    if values["season_type"] < 1:
-        raise ValueError(
-            f"Invalid configured season_type: {values['season_type']}"
-        )
-
-    if values["week"] < 1:
-        raise ValueError(
-            f"Invalid configured week: {values['week']}"
-        )
-
-    return (
-        values["season"],
-        values["season_type"],
-        values["week"],
-    )
 
 
 def duplicate_values(values: list[str]) -> list[str]:
@@ -661,7 +605,7 @@ def publish_atomic(
 
 
 def run(report: PipelineReporter) -> int:
-    season, season_type, week = load_current_week()
+    season, season_type, week = load_current_week_config(CURRENT_WEEK_CONFIG_PATH)
 
     report.season = season
     report.week = week

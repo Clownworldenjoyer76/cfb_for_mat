@@ -13,7 +13,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-import yaml
 
 
 SCRIPT_PATH = Path(__file__).resolve()
@@ -24,6 +23,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import load_current_week_config
 from type_support import ScalarValue
 
 
@@ -151,94 +151,6 @@ VALID_MISSING_REASONS = {
     "no_supported_markets",
     "locked_before_first_capture",
 }
-
-
-def load_current_week_config(
-    path: Path,
-) -> tuple[int, int, int]:
-    if not path.exists():
-        raise FileNotFoundError(
-            f"Missing current-week config: {path}"
-        )
-
-    with path.open(
-        "r",
-        encoding="utf-8",
-    ) as handle:
-        payload = yaml.safe_load(
-            handle
-        )
-
-    if not isinstance(
-        payload,
-        dict,
-    ):
-        raise ValueError(
-            "Current-week config must be a YAML mapping"
-        )
-
-    values: dict[str, int] = {}
-
-    for key in (
-        "season",
-        "season_type",
-        "week",
-    ):
-        if key not in payload:
-            raise ValueError(
-                "Current-week config missing "
-                f"required key: {key}"
-            )
-
-        raw = payload.get(
-            key
-        )
-
-        if isinstance(
-            raw,
-            bool,
-        ):
-            raise ValueError(
-                f"Current-week config {key} "
-                "must be an integer"
-            )
-
-        try:
-            values[key] = int(
-                str(raw).strip()
-            )
-        except (
-            TypeError,
-            ValueError,
-        ) as exc:
-            raise ValueError(
-                f"Current-week config {key} "
-                "must be an integer"
-            ) from exc
-
-    if values["season"] < 2000:
-        raise ValueError(
-            "Invalid season in current-week config: "
-            f"{values['season']}"
-        )
-
-    if values["season_type"] < 1:
-        raise ValueError(
-            "Invalid season_type in current-week config: "
-            f"{values['season_type']}"
-        )
-
-    if values["week"] < 1:
-        raise ValueError(
-            "Invalid week in current-week config: "
-            f"{values['week']}"
-        )
-
-    return (
-        values["season"],
-        values["season_type"],
-        values["week"],
-    )
 
 
 def read_csv(

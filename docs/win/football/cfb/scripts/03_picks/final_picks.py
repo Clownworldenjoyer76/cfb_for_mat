@@ -66,6 +66,11 @@ if str(SCRIPTS_DIR) not in sys.path:
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import (
+    clean_text as clean,
+    validate_game_ids as validate_ids,
+    weekly_schedule_path,
+)
 
 
 OUTPUT_COLUMNS = [
@@ -113,29 +118,6 @@ def fail(
     raise RuntimeError(
         message
     )
-
-
-def clean(
-    value: Any,
-) -> str:
-    if value is None:
-        return ""
-
-    text = str(
-        value
-    ).strip()
-
-    if text.casefold() in {
-        "",
-        "nan",
-        "none",
-        "null",
-        "<na>",
-        "nat",
-    }:
-        return ""
-
-    return text
 
 
 def normalize_game_id(
@@ -374,56 +356,6 @@ def resolve_target(
         season_type,
         week,
     )
-
-
-def weekly_schedule_path(
-    week: int,
-) -> Path:
-    return (
-        CFB_ROOT
-        / "00_intake"
-        / "schedule"
-        / "weekly"
-        / f"week_{week}_CFB_weekly_schedule.csv"
-    )
-
-
-def validate_ids(
-    df: pd.DataFrame,
-    label: str,
-) -> None:
-    ids = df[
-        "game_id"
-    ].map(
-        normalize_game_id
-    )
-
-    if ids.eq(
-        ""
-    ).any():
-        fail(
-            f"{label}: blank game_id found"
-        )
-
-    duplicates = (
-        ids[
-            ids.duplicated(
-                keep=False
-            )
-        ]
-        .drop_duplicates()
-        .tolist()
-    )
-
-    if duplicates:
-        fail(
-            f"{label}: duplicate game_id values: "
-            f"{duplicates[:10]}"
-        )
-
-    df[
-        "game_id"
-    ] = ids
 
 
 def validate_target_values(

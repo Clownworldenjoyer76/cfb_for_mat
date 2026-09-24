@@ -28,7 +28,6 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse, urlunparse
 from urllib.request import Request
 
-import yaml
 
 
 SCRIPT_PATH = Path(__file__).resolve()
@@ -40,6 +39,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import load_current_week_config
 
 
 CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -92,47 +92,6 @@ def reset_runtime_state() -> None:
     for key in _REQUEST_COUNTS:
         _REQUEST_COUNTS[key] = 0
     _REQUEST_FAILURES.clear()
-
-
-def load_current_week() -> tuple[int, int, int]:
-    if not CURRENT_WEEK_CONFIG_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing current-week config: {CURRENT_WEEK_CONFIG_PATH}"
-        )
-
-    with CURRENT_WEEK_CONFIG_PATH.open("r", encoding="utf-8") as handle:
-        payload = yaml.safe_load(handle)
-
-    if not isinstance(payload, dict):
-        raise ValueError("Current-week config must contain a YAML mapping")
-
-    values: dict[str, int] = {}
-    for key in ("season", "season_type", "week"):
-        if key not in payload:
-            raise ValueError(f"Current-week config missing required key: {key}")
-
-        raw = payload.get(key)
-        if isinstance(raw, bool):
-            raise ValueError(f"Current-week config {key} must be an integer")
-
-        try:
-            values[key] = int(str(raw).strip())
-        except (TypeError, ValueError) as exc:
-            raise ValueError(
-                f"Current-week config {key} must be an integer"
-            ) from exc
-
-    if values["season"] < 2000:
-        raise ValueError(f"Invalid configured season: {values['season']}")
-    if values["season_type"] < 1:
-        raise ValueError(
-            f"Invalid configured season_type: {values['season_type']}"
-        )
-    if values["week"] < 1:
-        raise ValueError(f"Invalid configured week: {values['week']}")
-
-    return values["season"], values["season_type"], values["week"]
-
 
 
 def _require_league_master_path() -> None:
@@ -1131,7 +1090,7 @@ def update_report_diagnostics(
 def run(report: PipelineReporter) -> int:
     reset_runtime_state()
 
-    season, season_type, week = load_current_week()
+    season, season_type, week = load_current_week_config(CURRENT_WEEK_CONFIG_PATH)
     report.season = season
     report.week = week
     report.set_detail("season_type", season_type)

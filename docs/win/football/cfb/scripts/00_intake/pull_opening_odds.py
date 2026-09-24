@@ -29,6 +29,11 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import (
+    format_american,
+    format_number,
+    read_required_csv as read_csv,
+)
 from type_support import ScalarValue
 
 CURRENT_WEEK_CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -189,41 +194,6 @@ def load_current_week() -> tuple[int, int, int]:
         values["week"],
     )
 
-
-def read_csv(
-    path: Path,
-    required_columns: list[str],
-    label: str,
-) -> list[dict[str, str]]:
-    if not path.exists():
-        raise FileNotFoundError(
-            f"Missing {label}: {path}"
-        )
-
-    rows: list[dict[str, str]] = []
-
-    with path.open(
-        "r",
-        newline="",
-        encoding="utf-8-sig",
-    ) as handle:
-        reader = csv.DictReader(handle)
-        fieldnames = reader.fieldnames or []
-
-        missing = [
-            column
-            for column in required_columns
-            if column not in fieldnames
-        ]
-
-        if missing:
-            raise ValueError(
-                f"{label} missing columns: {missing}"
-            )
-
-        rows = list(reader)
-
-    return rows
 
 def parse_aware_iso(
     value: ScalarValue,
@@ -565,36 +535,16 @@ def to_float(
 def clean_number(
     value: ScalarValue,
 ) -> str:
-    number = to_float(value)
-
-    if number is None:
-        return ""
-
-    if number.is_integer():
-        return str(
-            int(number)
-        )
-
-    return str(number)
-
+    return format_number(
+        to_float(value)
+    )
 
 def normalize_american(
     value: ScalarValue,
 ) -> str:
-    number = to_float(value)
-
-    if (
-        number is None
-        or number == 0
-    ):
-        return ""
-
-    return str(
-        int(
-            round(number)
-        )
+    return format_american(
+        to_float(value)
     )
-
 
 def numeric_movement(
     current_value: ScalarValue,

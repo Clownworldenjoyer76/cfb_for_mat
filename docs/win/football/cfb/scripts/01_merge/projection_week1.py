@@ -65,6 +65,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import clean_text as clean
 
 
 SCRIPT_VERSION = "cfb-week1-v12-rebuild-all-games-2026-09-21"
@@ -340,35 +341,6 @@ def parse_args() -> argparse.Namespace:
     )
 
     return parser.parse_args()
-
-
-def clean(
-    value: Any,
-) -> str:
-    if value is None:
-        return ""
-
-    try:
-        if pd.isna(value):
-            return ""
-    except (TypeError, ValueError):
-        pass
-
-    text = str(
-        value
-    ).strip()
-
-    if text.casefold() in {
-        "",
-        "nan",
-        "none",
-        "null",
-        "<na>",
-        "nat",
-    }:
-        return ""
-
-    return text
 
 
 def normalize_key(

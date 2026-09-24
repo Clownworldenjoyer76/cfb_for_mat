@@ -49,7 +49,6 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-import yaml
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -94,6 +93,13 @@ if str(
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import (
+    read_yaml,
+    require_columns,
+    resolve_target,
+    validate_game_ids,
+    weekly_schedule_path,
+)
 
 
 OUTPUT_COLUMNS = [
@@ -230,35 +236,6 @@ def integer_value(
     )
 
 
-def read_yaml(
-    path: Path,
-    label: str,
-) -> dict[str, Any]:
-    if not path.is_file():
-        fail(
-            f"Missing {label}: {path}"
-        )
-
-    with path.open(
-        "r",
-        encoding="utf-8",
-    ) as handle:
-        data = yaml.safe_load(
-            handle
-        )
-
-    if not isinstance(
-        data,
-        dict,
-    ):
-        fail(
-            f"{label} must contain a YAML mapping: "
-            f"{path}"
-        )
-
-    return data
-
-
 def read_csv(
     path: Path,
     label: str,
@@ -286,78 +263,6 @@ def read_csv(
     return df
 
 
-def require_columns(
-    df: pd.DataFrame,
-    required: list[str],
-    label: str,
-) -> None:
-    missing = [
-        column
-        for column in required
-        if column not in df.columns
-    ]
-
-    if missing:
-        fail(
-            f"{label}: missing required columns: "
-            f"{missing}"
-        )
-
-
-def resolve_target(
-    current_week: dict[str, Any],
-    season_override: int | None,
-    week_override: int | None,
-) -> tuple[
-    int,
-    int,
-]:
-    configured_season = integer_value(
-        current_week.get(
-            "season"
-        ),
-        "current_week.season",
-    )
-
-    configured_week = integer_value(
-        current_week.get(
-            "week"
-        ),
-        "current_week.week",
-    )
-
-    season = (
-        int(
-            season_override
-        )
-        if season_override is not None
-        else configured_season
-    )
-
-    week = (
-        int(
-            week_override
-        )
-        if week_override is not None
-        else configured_week
-    )
-
-    if season < 1900:
-        fail(
-            f"Invalid target season: {season}"
-        )
-
-    if week <= 0:
-        fail(
-            f"Invalid target week: {week}"
-        )
-
-    return (
-        season,
-        week,
-    )
-
-
 def selected_file_week(
     path: Path,
 ) -> int:
@@ -376,56 +281,6 @@ def selected_file_week(
             1
         )
     )
-
-
-def weekly_schedule_path(
-    week: int,
-) -> Path:
-    return (
-        CFB_ROOT
-        / "00_intake"
-        / "schedule"
-        / "weekly"
-        / f"week_{week}_CFB_weekly_schedule.csv"
-    )
-
-
-def validate_game_ids(
-    df: pd.DataFrame,
-    label: str,
-) -> None:
-    game_ids = df[
-        "game_id"
-    ].map(
-        normalize_game_id
-    )
-
-    if game_ids.eq(
-        ""
-    ).any():
-        fail(
-            f"{label}: blank game_id found"
-        )
-
-    duplicates = (
-        game_ids[
-            game_ids.duplicated(
-                keep=False
-            )
-        ]
-        .drop_duplicates()
-        .tolist()
-    )
-
-    if duplicates:
-        fail(
-            f"{label}: duplicate game_id values: "
-            f"{duplicates[:10]}"
-        )
-
-    df[
-        "game_id"
-    ] = game_ids
 
 
 def validate_source_target(

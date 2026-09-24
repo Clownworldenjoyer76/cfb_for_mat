@@ -76,6 +76,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import clean_text as clean
 
 
 DEFAULT_PICKS_DIR = (
@@ -198,38 +199,6 @@ def get_season(
         )
 
     return 2026
-
-
-def clean(
-    value: Any,
-) -> str:
-    if value is None:
-        return ""
-
-    try:
-        if pd.isna(
-            value
-        ):
-            return ""
-
-    except (TypeError, ValueError):
-        pass
-
-    text = str(
-        value
-    ).strip()
-
-    if text.casefold() in {
-        "",
-        "nan",
-        "none",
-        "null",
-        "<na>",
-        "nat",
-    }:
-        return ""
-
-    return text
 
 
 def normalize_game_id(

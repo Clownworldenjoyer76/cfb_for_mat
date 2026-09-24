@@ -29,7 +29,6 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request
 
-import yaml
 
 
 SCRIPT_PATH = Path(__file__).resolve()
@@ -41,6 +40,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import load_current_week_config
 from type_support import ScalarValue
 
 
@@ -105,98 +105,6 @@ class RosterValidationError(
     RuntimeError
 ):
     pass
-
-
-def load_current_week() -> tuple[
-    int,
-    int,
-    int,
-]:
-    if not CURRENT_WEEK_CONFIG_PATH.exists():
-        raise FileNotFoundError(
-            "Missing current-week config: "
-            f"{CURRENT_WEEK_CONFIG_PATH}"
-        )
-
-    with CURRENT_WEEK_CONFIG_PATH.open(
-        "r",
-        encoding="utf-8",
-    ) as handle:
-        payload = yaml.safe_load(
-            handle
-        )
-
-    if not isinstance(
-        payload,
-        dict,
-    ):
-        raise ValueError(
-            "Current-week config must "
-            "contain a YAML mapping"
-        )
-
-    values: dict[str, int] = {}
-
-    for key in (
-        "season",
-        "season_type",
-        "week",
-    ):
-        if key not in payload:
-            raise ValueError(
-                "Current-week config missing "
-                f"required key: {key}"
-            )
-
-        raw = payload.get(
-            key
-        )
-
-        if isinstance(
-            raw,
-            bool,
-        ):
-            raise ValueError(
-                f"Current-week config {key} "
-                "must be an integer"
-            )
-
-        try:
-            values[key] = int(
-                str(raw).strip()
-            )
-        except (
-            TypeError,
-            ValueError,
-        ) as exc:
-            raise ValueError(
-                f"Current-week config {key} "
-                "must be an integer"
-            ) from exc
-
-    if values["season"] < 2000:
-        raise ValueError(
-            "Invalid configured season: "
-            f"{values['season']}"
-        )
-
-    if values["season_type"] < 1:
-        raise ValueError(
-            "Invalid configured season_type: "
-            f"{values['season_type']}"
-        )
-
-    if values["week"] < 1:
-        raise ValueError(
-            "Invalid configured week: "
-            f"{values['week']}"
-        )
-
-    return (
-        values["season"],
-        values["season_type"],
-        values["week"],
-    )
 
 
 def load_target_team_ids() -> list[str]:
@@ -1559,7 +1467,7 @@ def run(
         season,
         season_type,
         week,
-    ) = load_current_week()
+    ) = load_current_week_config(CURRENT_WEEK_CONFIG_PATH)
 
     report.season = season
     report.week = week
