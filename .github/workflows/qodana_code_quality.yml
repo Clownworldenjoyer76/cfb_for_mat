@@ -1,28 +1,48 @@
 name: Qodana
+
 on:
   workflow_dispatch:
   pull_request:
+    branches:
+      - main
   push:
-    branches: # Specify your branches here
-      - main # The 'main' branch
-      - 'releases/*' # The release branches
+    branches:
+      - main
+
+permissions:
+  contents: read
 
 jobs:
   qodana:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      checks: write
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
-          fetch-depth: 0  # a full history is required for pull request analysis
-      - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2026.1
+          fetch-depth: 0
+
+      - name: Set up Python
+        id: python
+        uses: actions/setup-python@v7
         with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: docs/win/football/cfb/requirements.txt
+
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@v2026.2
+        with:
+          args: |
+            --linter qodana-python
+            --within-docker false
+            --only-directory docs/win/football/cfb
           pr-mode: false
+          use-annotations: false
+          post-pr-comment: false
+          push-fixes: none
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN_8361585 }}
-          QODANA_ENDPOINT: 'https://qodana.cloud'
+          QODANA_ENDPOINT: https://qodana.cloud
+          QODANA_PYTHON_PATH: ${{ steps.python.outputs.python-path }}
+          PYTHONPATH: ${{ github.workspace }}/docs/win/football/cfb/scripts
