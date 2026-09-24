@@ -10,6 +10,7 @@ bootstrap: |
   python -m pip install -r docs/win/football/cfb/requirements.txt
 
 exclude:
+  - name: PyClassHasNoInitInspection
   - name: All
     paths:
       - docs/win/football/cfb/05_backtest/output
