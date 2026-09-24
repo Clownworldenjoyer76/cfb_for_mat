@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+from http.client import HTTPException
+
 import csv
 import json
 import os
@@ -314,7 +316,7 @@ def _read_fetch_http_error_body(
                 errors="replace",
             )
         )
-    except Exception:
+    except (HTTPException, OSError, UnicodeError, ValueError):
         return ""
 
 
@@ -2870,7 +2872,7 @@ def _restore_bundle_output(
                 backup,
                 final_path,
             )
-        except Exception:
+        except OSError:
             pass
 
     elif not existed:
@@ -2878,7 +2880,7 @@ def _restore_bundle_output(
             final_path.unlink(
                 missing_ok=True
             )
-        except Exception:
+        except OSError:
             pass
 
 
@@ -2974,7 +2976,7 @@ def publish_bundle(
                 LEAGUE_MASTER_PATH.unlink(
                     missing_ok=True
                 )
-            except Exception:
+            except OSError:
                 pass
 
         if standings_published:
@@ -2982,7 +2984,7 @@ def publish_bundle(
                 LEAGUE_STANDINGS_PATH.unlink(
                     missing_ok=True
                 )
-            except Exception:
+            except OSError:
                 pass
 
         _restore_bundle_output(
@@ -3008,7 +3010,7 @@ def publish_bundle(
                 path.unlink(
                     missing_ok=True
                 )
-            except Exception:
+            except OSError:
                 pass
 
         if success:
@@ -3020,7 +3022,7 @@ def publish_bundle(
                     path.unlink(
                         missing_ok=True
                     )
-                except Exception:
+                except OSError:
                     pass
 
 

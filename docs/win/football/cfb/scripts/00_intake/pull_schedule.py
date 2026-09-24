@@ -328,7 +328,7 @@ def write_csv_atomic(
             temp_path.unlink(
                 missing_ok=True
             )
-        except Exception:
+        except OSError:
             pass
 
         raise

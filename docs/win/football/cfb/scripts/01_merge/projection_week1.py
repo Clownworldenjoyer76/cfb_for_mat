@@ -47,7 +47,7 @@ import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
-from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import numpy as np
 import pandas as pd
@@ -351,7 +351,7 @@ def clean(
     try:
         if pd.isna(value):
             return ""
-    except Exception:
+    except (TypeError, ValueError):
         pass
 
     text = str(
@@ -596,7 +596,7 @@ def schedule_kickoff_utc(
             )
         )
 
-    except Exception:
+    except (ValueError, ZoneInfoNotFoundError):
         return None
 
     return local_dt.astimezone(

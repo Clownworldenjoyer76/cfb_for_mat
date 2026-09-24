@@ -98,7 +98,7 @@ def clean(value: Any) -> str:
     try:
         if pd.isna(value):
             return ""
-    except Exception:
+    except (TypeError, ValueError):
         pass
     text = str(value).strip()
     return "" if text.casefold() in {"", "nan", "none", "null", "<na>", "nat"} else text

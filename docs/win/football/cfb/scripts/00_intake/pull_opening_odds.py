@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from http.client import HTTPException
+
 import csv
 import json
 import math
@@ -473,7 +475,7 @@ def http_get_json(
                 exc.read()
                 .decode("utf-8")
             )
-        except Exception:
+        except (HTTPException, OSError, UnicodeError, ValueError):
             pass
 
         return (
@@ -3006,7 +3008,7 @@ def write_csv_atomic(
             temp_path.unlink(
                 missing_ok=True
             )
-        except Exception:
+        except OSError:
             pass
 
 

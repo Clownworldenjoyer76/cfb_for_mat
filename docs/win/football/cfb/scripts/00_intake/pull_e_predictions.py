@@ -24,6 +24,8 @@ validation failure is fatal and prevents publication of a partial output.
 
 from __future__ import annotations
 
+from http.client import HTTPException
+
 import csv
 import json
 import math
@@ -657,7 +659,7 @@ def fetch_predictor(
                     errors="replace",
                 )
             )
-        except Exception:
+        except (HTTPException, OSError, UnicodeError, ValueError):
             pass
 
         raise request_failure(
@@ -1536,7 +1538,7 @@ def publish_atomic(
             temp_path.unlink(
                 missing_ok=True
             )
-        except Exception:
+        except OSError:
             pass
 
 

@@ -656,7 +656,7 @@ def publish_atomic(
     finally:
         try:
             temp_path.unlink(missing_ok=True)
-        except Exception:
+        except OSError:
             pass
 
 

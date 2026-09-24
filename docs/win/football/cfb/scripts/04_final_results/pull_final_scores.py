@@ -388,7 +388,7 @@ def discover_pick_weeks(
                     None,
                 )
 
-        except Exception:
+        except (OSError, UnicodeError, csv.Error):
             continue
 
         if first is None:
@@ -406,7 +406,7 @@ def discover_pick_weeks(
                 )
             )
 
-        except Exception:
+        except (ValueError, OverflowError):
             continue
 
         if file_season == season:
@@ -526,7 +526,7 @@ def read_schedule(
                 )
             )
 
-        except Exception:
+        except (ValueError, OverflowError):
             continue
 
         if row_season != season:

@@ -212,7 +212,7 @@ def clean(
         ):
             return ""
 
-    except Exception:
+    except (TypeError, ValueError):
         pass
 
     text = str(

@@ -175,7 +175,7 @@ def clean(value: Any) -> str:
     try:
         if pd.isna(value):
             return ""
-    except Exception:
+    except (TypeError, ValueError):
         pass
 
     text = str(value).strip()

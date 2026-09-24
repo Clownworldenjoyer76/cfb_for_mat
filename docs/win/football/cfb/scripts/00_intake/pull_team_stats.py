@@ -171,7 +171,7 @@ def write_team_stats_atomic(
             temp_path.unlink(
                 missing_ok=True
             )
-        except Exception:
+        except OSError:
             pass
 
 def read_pbp(pbp_path: Path) -> pd.DataFrame:

@@ -352,7 +352,7 @@ def sportsdataverse_version() -> str:
         return package_version("sportsdataverse")
     except PackageNotFoundError:
         return "not-installed"
-    except Exception:
+    except (TypeError, ValueError):
         return "unknown"
 
 

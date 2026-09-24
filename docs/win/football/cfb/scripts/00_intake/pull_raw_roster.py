@@ -15,6 +15,8 @@ Output:
 
 from __future__ import annotations
 
+from http.client import HTTPException
+
 import csv
 import json
 import os
@@ -329,7 +331,7 @@ def fetch_json(
                 exc.read()
                 .decode("utf-8")
             )
-        except Exception:
+        except (HTTPException, OSError, UnicodeError, ValueError):
             pass
 
         failure = {
@@ -1545,7 +1547,7 @@ def publish_atomic(
             temp_path.unlink(
                 missing_ok=True
             )
-        except Exception:
+        except OSError:
             pass
 
 

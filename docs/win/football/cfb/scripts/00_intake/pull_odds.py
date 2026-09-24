@@ -4,6 +4,8 @@
 
 from __future__ import annotations
 
+from http.client import HTTPException
+
 import csv
 import json
 import math
@@ -425,7 +427,7 @@ def http_get_json(
             body = exc.read().decode(
                 "utf-8"
             )
-        except Exception:
+        except (HTTPException, OSError, UnicodeError, ValueError):
             pass
 
         return (
@@ -1888,7 +1890,7 @@ def _restore_current_output(
                 backup,
                 final_path,
             )
-        except Exception:
+        except OSError:
             pass
 
     elif not had_existing:
@@ -1896,7 +1898,7 @@ def _restore_current_output(
             final_path.unlink(
                 missing_ok=True
             )
-        except Exception:
+        except OSError:
             pass
 
 
@@ -2049,7 +2051,7 @@ def publish_output_bundle(
                 path.unlink(
                     missing_ok=True
                 )
-            except Exception:
+            except OSError:
                 pass
 
         _restore_current_output(
@@ -2069,7 +2071,7 @@ def publish_output_bundle(
                 path.unlink(
                     missing_ok=True
                 )
-            except Exception:
+            except OSError:
                 pass
 
         raise
@@ -2080,7 +2082,7 @@ def publish_output_bundle(
                 path.unlink(
                     missing_ok=True
                 )
-            except Exception:
+            except OSError:
                 pass
 
         if published_successfully:
@@ -2092,7 +2094,7 @@ def publish_output_bundle(
                     path.unlink(
                         missing_ok=True
                     )
-                except Exception:
+                except OSError:
                     pass
 
 
