@@ -460,8 +460,6 @@ def fetch_json(
             )
 
         except HTTPError as exc:
-            error_body = ""
-
             error_body = (
                 _read_fetch_http_error_body(
                     exc

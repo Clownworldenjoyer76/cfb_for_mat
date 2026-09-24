@@ -1618,9 +1618,7 @@ def run(
 ) -> int:
     state = RuntimeState()
 
-    season: Optional[int] = None
-    season_type: Optional[int] = None
-    week: Optional[int] = None
+
 
     schedule_path: Optional[Path] = None
     final_path: Optional[Path] = None

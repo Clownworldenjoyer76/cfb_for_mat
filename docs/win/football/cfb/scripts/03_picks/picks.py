@@ -2719,9 +2719,7 @@ def analyze_source(
             ]
 
             for _, row in df.iterrows():
-                reasons: list[
-                    str
-                ] = []
+
 
                 if not market_cfg[
                     "enabled"
