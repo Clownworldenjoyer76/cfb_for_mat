@@ -46,6 +46,7 @@ import sys
 import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Optional
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -421,7 +422,7 @@ def as_bool(
 
 def as_float(
     value: object,
-) -> float | None:
+) -> Optional[float]:
     text = (
         clean(value)
         .replace(
@@ -541,7 +542,7 @@ def normalize_game_id(
 
 def schedule_kickoff_utc(
     row: pd.Series,
-) -> datetime | None:
+) -> Optional[datetime]:
     authoritative_text = clean(
         row.get(
             "kickoff_utc"
@@ -763,9 +764,9 @@ def load_travel_weather_coefficients(
 
 
 def _series_value(
-    row: pd.Series | None,
+    row: Optional[pd.Series],
     column: str,
-) -> float | None:
+) -> Optional[float]:
     if row is None:
         return None
 
@@ -777,10 +778,10 @@ def _series_value(
 
 
 def build_travel_features(
-    row: pd.Series | None,
+    row: Optional[pd.Series],
 ) -> dict[
     str,
-    float | None,
+    Optional[float],
 ]:
     if row is None:
         return {
@@ -889,7 +890,7 @@ def build_travel_features(
 
 
 def weather_is_exposed(
-    row: pd.Series | None,
+    row: Optional[pd.Series],
 ) -> bool:
     if row is None:
         return False
@@ -938,10 +939,10 @@ def weather_is_exposed(
 
 
 def build_weather_features(
-    row: pd.Series | None,
+    row: Optional[pd.Series],
 ) -> dict[
     str,
-    float | None,
+    Optional[float],
 ]:
     if row is None:
         return {
@@ -987,7 +988,7 @@ def build_weather_features(
 def calculate_feature_adjustment(
     features: dict[
         str,
-        float | None,
+        Optional[float],
     ],
     coefficients: dict[
         str,
@@ -1048,7 +1049,7 @@ def calculate_feature_adjustment(
 
 
 def calculate_travel_adjustment(
-    row: pd.Series | None,
+    row: Optional[pd.Series],
     coefficients: dict[
         str,
         dict[
@@ -1059,7 +1060,7 @@ def calculate_travel_adjustment(
 ) -> tuple[
     dict[
         str,
-        float | None,
+        Optional[float],
     ],
     float,
     int,
@@ -1083,7 +1084,7 @@ def calculate_travel_adjustment(
 
 
 def calculate_weather_adjustment(
-    row: pd.Series | None,
+    row: Optional[pd.Series],
     coefficients: dict[
         str,
         dict[
@@ -1094,7 +1095,7 @@ def calculate_weather_adjustment(
 ) -> tuple[
     dict[
         str,
-        float | None,
+        Optional[float],
     ],
     bool,
     float,
@@ -2186,12 +2187,12 @@ def injury_summary_for_game(
 def weighted_blend(
     components: list[
         tuple[
-            float | None,
+            Optional[float],
             float,
         ]
     ],
 ) -> tuple[
-    float | None,
+    Optional[float],
     list[float],
 ]:
     valid = [
@@ -2282,7 +2283,7 @@ def prior_total_estimate(
     home: pd.Series,
     away: pd.Series,
     drives_per_team: float,
-) -> float | None:
+) -> Optional[float]:
     values = [
         as_float(
             home.get(
@@ -2370,8 +2371,8 @@ def normal_cdf(
 def build_betting_probabilities(
     predicted_margin: float,
     predicted_total: float,
-    home_spread: float | None,
-    market_total: float | None,
+    home_spread: Optional[float],
+    market_total: Optional[float],
     margin_sd: float,
     total_sd: float,
 ) -> dict[
@@ -2545,7 +2546,7 @@ def _stage1_optional_round(value: object, digits: int) -> object:
     return round(value, digits)
 
 
-def _stage1_lookup_row(lookup: pd.DataFrame | None, key: str) -> object:
+def _stage1_lookup_row(lookup: Optional[pd.DataFrame], key: str) -> object:
     if lookup is None or key not in lookup.index:
         return None
     return lookup.loc[key]
@@ -2565,9 +2566,9 @@ def _stage1_prior_info(
 def _stage1_fpi_info(
     home_team: str,
     away_team: str,
-    fpi_lookup: pd.DataFrame | None,
+    fpi_lookup: Optional[pd.DataFrame],
     home_field: float,
-) -> tuple[float | None, float | None, float | None]:
+) -> tuple[Optional[float], Optional[float], Optional[float]]:
     home_row = _stage1_lookup_row(fpi_lookup, home_team)
     away_row = _stage1_lookup_row(fpi_lookup, away_team)
     home_fpi = None if home_row is None else as_float(home_row.get("fpi"))
@@ -2581,18 +2582,18 @@ def _stage1_espn_info(
     game_id: str,
     home_team: str,
     away_team: str,
-    espn_lookup: pd.DataFrame | None,
+    espn_lookup: Optional[pd.DataFrame],
     resolver: TeamResolver,
 ) -> tuple[
     bool,
     bool,
-    float | None,
-    float | None,
-    float | None,
-    float | None,
-    float | None,
-    float | None,
-    float | None,
+    Optional[float],
+    Optional[float],
+    Optional[float],
+    Optional[float],
+    Optional[float],
+    Optional[float],
+    Optional[float],
 ]:
     espn_row = _stage1_lookup_row(espn_lookup, game_id)
     if espn_row is None:
@@ -2629,7 +2630,7 @@ def _stage1_espn_info(
     )
 
 
-def _stage1_row_float(row: object, key: str) -> float | None:
+def _stage1_row_float(row: object, key: str) -> Optional[float]:
     if row is None:
         return None
     return as_float(row.get(key))
@@ -2640,10 +2641,10 @@ def _stage1_project_game(
     *,
     prior_lookup: pd.DataFrame,
     fallback_prior: pd.Series,
-    fpi_lookup: pd.DataFrame | None,
-    espn_lookup: pd.DataFrame | None,
-    travel_lookup: pd.DataFrame | None,
-    weather_lookup: pd.DataFrame | None,
+    fpi_lookup: Optional[pd.DataFrame],
+    espn_lookup: Optional[pd.DataFrame],
+    travel_lookup: Optional[pd.DataFrame],
+    weather_lookup: Optional[pd.DataFrame],
     resolver: TeamResolver,
     home_stadium_lookup: dict[str, set[str]],
     injury_lookup: dict[str, pd.DataFrame],
