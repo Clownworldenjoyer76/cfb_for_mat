@@ -23,7 +23,7 @@ import sys
 import uuid
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 from urllib.request import Request
 
 import yaml
@@ -287,11 +287,9 @@ def validate_espn_ref(url: str, *, label: str) -> str:
         )
 
     if parsed.scheme == "http":
-        parsed = parsed._replace(
-            scheme="https"
+        return urlunparse(
+            ("https", parsed.netloc, parsed.path, parsed.params, parsed.query, parsed.fragment)
         )
-
-        return parsed.geturl()
 
     return text
 

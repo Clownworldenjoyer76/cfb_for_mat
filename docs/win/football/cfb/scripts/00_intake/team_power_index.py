@@ -338,10 +338,9 @@ def validate_espn_core_url(
         )
 
     if parsed.scheme == "http":
-        parsed = parsed._replace(
-            scheme="https"
+        return urllib.parse.urlunparse(
+            ("https", parsed.netloc, parsed.path, parsed.params, parsed.query, parsed.fragment)
         )
-        return parsed.geturl()
 
     return text
 
@@ -494,11 +493,13 @@ def build_page_url(
     query["page"] = [str(page)]
 
     return urllib.parse.urlunparse(
-        parsed._replace(
-            query=urllib.parse.urlencode(
-                query,
-                doseq=True,
-            )
+        (
+            parsed.scheme,
+            parsed.netloc,
+            parsed.path,
+            parsed.params,
+            urllib.parse.urlencode(query, doseq=True),
+            parsed.fragment,
         )
     )
 

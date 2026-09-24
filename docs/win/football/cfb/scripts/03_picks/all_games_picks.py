@@ -712,11 +712,12 @@ def validate_projection_consistency(
 ) -> None:
     for position, row in enumerate(
         source.itertuples(
-            index=False
+            index=False,
+            name=None,
         ),
         start=2,
     ):
-        values = row._asdict()
+        values = dict(zip(source.columns, row, strict=True))
 
         game_id = normalize_game_id(
             values.get(
@@ -836,11 +837,12 @@ def build_output(
 
     for position, row in enumerate(
         source.itertuples(
-            index=False
+            index=False,
+            name=None,
         ),
         start=2,
     ):
-        values = row._asdict()
+        values = dict(zip(source.columns, row, strict=True))
 
         game_id = normalize_game_id(
             values.get(
