@@ -193,18 +193,20 @@ def fetch_json(
         },
     )
 
+    body = b""
+
     with open_https(
         request,
         allowed_hosts={ESPN_SITE_HOST},
         timeout=timeout,
     ) as response:
-        return json.loads(
-            response.read().decode(
-                "utf-8"
-            )
-        )
+        body = response.read()
 
-    raise RuntimeError("context manager unexpectedly suppressed an exception")
+    return json.loads(
+        body.decode(
+            "utf-8"
+        )
+    )
 
 def extract_score(
     competitor: dict[str, Any],

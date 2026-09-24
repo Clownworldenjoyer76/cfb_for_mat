@@ -211,6 +211,10 @@ def read_csv(
             f"Missing required file: {path}"
         )
 
+    rows: list[
+        dict[str, str]
+    ] = []
+
     with path.open(
         "r",
         encoding="utf-8-sig",
@@ -244,10 +248,6 @@ def read_csv(
                 f"columns: {sorted(missing)}"
             )
 
-        rows: list[
-            dict[str, str]
-        ] = []
-
         for (
             line_number,
             row,
@@ -269,9 +269,7 @@ def read_csv(
                 }
             )
 
-        return rows
-
-    raise RuntimeError("context manager unexpectedly suppressed an exception")
+    return rows
 
 def write_csv_atomic(
     path: Path,
@@ -1021,6 +1019,10 @@ def read_existing_schedule(
     if not output_file.exists():
         return []
 
+    rows: list[
+        dict[str, str]
+    ] = []
+
     with output_file.open(
         "r",
         encoding="utf-8-sig",
@@ -1030,21 +1032,19 @@ def read_existing_schedule(
             handle
         )
 
-        if reader.fieldnames is None:
-            return []
+        if reader.fieldnames is not None:
+            rows = [
+                {
+                    column: clean(
+                        row.get(column)
+                    )
+                    for column
+                    in OUTPUT_COLUMNS
+                }
+                for row in reader
+            ]
 
-        return [
-            {
-                column: clean(
-                    row.get(column)
-                )
-                for column
-                in OUTPUT_COLUMNS
-            }
-            for row in reader
-        ]
-
-    raise RuntimeError("context manager unexpectedly suppressed an exception")
+    return rows
 
 def sort_rows(
     rows: list[dict[str, str]],

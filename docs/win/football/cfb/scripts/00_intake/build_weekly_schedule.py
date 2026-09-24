@@ -251,6 +251,8 @@ def read_csv(
             f"Missing {label}: {path}"
         )
 
+    rows: list[dict[str, str]] = []
+
     with path.open(
         "r",
         newline="",
@@ -277,11 +279,11 @@ def read_csv(
                 f"{label} missing columns: {missing}"
             )
 
-        return list(
+        rows = list(
             reader
         )
 
-    raise RuntimeError("context manager unexpectedly suppressed an exception")
+    return rows
 
 def schedule_kickoff_utc(
     row: dict[str, str],

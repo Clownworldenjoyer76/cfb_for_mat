@@ -200,6 +200,8 @@ def read_csv(
             f"Missing {label}: {path}"
         )
 
+    rows: list[dict[str, str]] = []
+
     with path.open(
         "r",
         newline="",
@@ -219,9 +221,9 @@ def read_csv(
                 f"{label} missing columns: {missing}"
             )
 
-        return list(reader)
+        rows = list(reader)
 
-    raise RuntimeError("context manager unexpectedly suppressed an exception")
+    return rows
 
 def parse_aware_iso(
     value: ScalarValue,
