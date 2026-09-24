@@ -518,6 +518,7 @@ def write_workbook(
     from openpyxl import load_workbook
     from openpyxl.styles import Font
     from openpyxl.utils import get_column_letter
+    from openpyxl.worksheet.formula import ArrayFormula, DataTableFormula
 
     wb = load_workbook(tmp)
 
@@ -532,8 +533,15 @@ def write_workbook(
             max_len = 10
             for row in range(1, min(ws.max_row, 3000) + 1):
                 value = ws.cell(row=row, column=col).value
-                if value is not None:
-                    max_len = max(max_len, len(str(value)) + 2)
+                if isinstance(value, ArrayFormula):
+                    display_value = value.text or ""
+                elif isinstance(value, DataTableFormula):
+                    display_value = value.ref or ""
+                elif value is not None:
+                    display_value = str(value)
+                else:
+                    continue
+                max_len = max(max_len, len(display_value) + 2)
             ws.column_dimensions[get_column_letter(col)].width = min(max_len, 34)
 
     wb.save(tmp)
