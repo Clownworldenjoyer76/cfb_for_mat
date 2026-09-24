@@ -43,7 +43,7 @@ import traceback
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Optional, Union
 
 
 SCHEMA_VERSION = "2.0"
@@ -54,15 +54,15 @@ class PipelineReporter:
     def __init__(
         self,
         *,
-        script: str | os.PathLike[str],
+        script: Union[str, os.PathLike[str]],
         stage: str,
-        report_root: str | os.PathLike[str],
-        pipeline: str | None = None,
-        league: str | None = None,
-        season: int | str | None = None,
-        week: int | str | None = None,
-        run_id: str | None = None,
-        extra_context: Mapping[str, Any] | None = None,
+        report_root: Union[str, os.PathLike[str]],
+        pipeline: Optional[str] = None,
+        league: Optional[str] = None,
+        season: Optional[Union[int, str]] = None,
+        week: Optional[Union[int, str]] = None,
+        run_id: Optional[str] = None,
+        extra_context: Optional[Mapping[str, Any]] = None,
     ) -> None:
         stage_text = str(stage).strip()
         if not stage_text:
@@ -118,8 +118,8 @@ class PipelineReporter:
         self._details: dict[str, Any] = {}
         self._extra_context = dict(extra_context or {})
 
-        self._rows_in: int | None = None
-        self._rows_out: int | None = None
+        self._rows_in: Optional[int] = None
+        self._rows_out: Optional[int] = None
 
         self._written = False
 
@@ -179,7 +179,7 @@ class PipelineReporter:
 
     def add_input(
         self,
-        path: str | os.PathLike[str],
+        path: Union[str, os.PathLike[str]],
     ) -> None:
         value = str(path)
 
@@ -188,7 +188,7 @@ class PipelineReporter:
 
     def add_output(
         self,
-        path: str | os.PathLike[str],
+        path: Union[str, os.PathLike[str]],
     ) -> None:
         value = str(path)
 
@@ -198,8 +198,8 @@ class PipelineReporter:
     def set_rows(
         self,
         *,
-        rows_in: int | None = None,
-        rows_out: int | None = None,
+        rows_in: Optional[int] = None,
+        rows_out: Optional[int] = None,
     ) -> None:
         if rows_in is not None:
             self._rows_in = _validate_nonnegative_int(
@@ -257,8 +257,8 @@ class PipelineReporter:
         self,
         message: str,
         *,
-        error_type: str | None = None,
-        traceback_text: str | None = None,
+        error_type: Optional[str] = None,
+        traceback_text: Optional[str] = None,
         **details: Any,
     ) -> None:
         message_text = (
@@ -303,8 +303,8 @@ class PipelineReporter:
     def write_report(
         self,
         *,
-        status: str | None = None,
-        exit_code: int | None = None,
+        status: Optional[str] = None,
+        exit_code: Optional[int] = None,
     ) -> Path:
         final_status = (
             status or self._status
@@ -487,8 +487,8 @@ class PipelineReporter:
 
 def _build_run_id(
     *,
-    github_run_id: str | None,
-    github_run_attempt: str | None,
+    github_run_id: Optional[str],
+    github_run_attempt: Optional[str],
 ) -> str:
     if github_run_id:
         if github_run_attempt:
@@ -564,7 +564,7 @@ def _json_default(
 
 def _clean_optional(
     value: Any,
-) -> str | None:
+) -> Optional[str]:
     if value is None:
         return None
 
