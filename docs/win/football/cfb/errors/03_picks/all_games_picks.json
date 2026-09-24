@@ -1,32 +1,32 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35736936882-attempt-1",
+  "run_id": "github-35986964305-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "03_picks",
   "script": "all_games_picks.py",
-  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/03_picks/all_games_picks.py",
-  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/03_picks/all_games_picks.json",
-  "started_at_utc": "2026-09-22T14:21:01.112145+00:00",
-  "finished_at_utc": "2026-09-22T14:21:01.384049+00:00",
-  "duration_seconds": 0.272,
+  "script_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/scripts/03_picks/all_games_picks.py",
+  "report_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/03_picks/all_games_picks.json",
+  "started_at_utc": "2026-09-24T10:32:13.740473+00:00",
+  "finished_at_utc": "2026-09-24T10:32:14.005626+00:00",
+  "duration_seconds": 0.265,
   "environment": {
-    "hostname": "runnervmlun5p",
+    "hostname": "runnervmtr4k5",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2724,
-    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35736936882",
+    "process_id": 2631,
+    "working_directory": "/home/runner/work/bet_tracker/bet_tracker",
+    "github_run_id": "35986964305",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "4530b73b37a26f90853d7ecf53c36990b1890048",
+    "github_sha": "a904bde16b68eeaef45e0665cf106ef81867961a",
     "github_actor": "Clownworldenjoyer76",
-    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+    "github_repository": "Clownworldenjoyer76/bet_tracker"
   },
   "context": {
     "season": 2026,
@@ -35,12 +35,12 @@
     "output_scope": "compact_all_games_projection"
   },
   "inputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/02_select/week_4_CFB_selected.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/current_week.yaml",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/02_select/week_4_CFB_selected.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/all_games/all_week_4_CFB_picks.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/03_picks/all_games/all_week_4_CFB_picks.csv"
   ],
   "rows_in": 71,
   "rows_out": 71,
@@ -50,17 +50,17 @@
   "errors": [],
   "details": {
     "script_version": "cfb-all-games-picks-v2-hardened-2026-09-16",
-    "input_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/02_select/week_4_CFB_selected.csv",
-    "schedule_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
-    "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/03_picks/all_games/all_week_4_CFB_picks.csv",
+    "input_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/02_select/week_4_CFB_selected.csv",
+    "schedule_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
+    "output_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/03_picks/all_games/all_week_4_CFB_picks.csv",
     "projection_consistency_tolerance": 0.021,
     "display_decimal_places": 1,
     "output_modified": true,
     "games": 71,
     "finite_prediction_count": 71,
-    "min_predicted_total": 39.3,
+    "min_predicted_total": 39.1,
     "max_predicted_total": 60.4,
     "min_abs_displayed_spread": 0.1,
-    "max_abs_displayed_spread": 49.7
+    "max_abs_displayed_spread": 51.5
   }
 }

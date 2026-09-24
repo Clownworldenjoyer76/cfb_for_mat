@@ -1,32 +1,32 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35736936882-attempt-1",
+  "run_id": "github-35986964305-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "00_intake",
   "script": "pull_opening_odds.py",
-  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_opening_odds.py",
-  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_opening_odds.json",
-  "started_at_utc": "2026-09-22T14:01:50.254053+00:00",
-  "finished_at_utc": "2026-09-22T14:02:28.508457+00:00",
-  "duration_seconds": 38.254,
+  "script_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/scripts/00_intake/pull_opening_odds.py",
+  "report_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/00_intake/pull_opening_odds.json",
+  "started_at_utc": "2026-09-24T10:26:34.611590+00:00",
+  "finished_at_utc": "2026-09-24T10:26:40.201392+00:00",
+  "duration_seconds": 5.59,
   "environment": {
-    "hostname": "runnervmlun5p",
+    "hostname": "runnervmtr4k5",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2382,
-    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35736936882",
+    "process_id": 2468,
+    "working_directory": "/home/runner/work/bet_tracker/bet_tracker",
+    "github_run_id": "35986964305",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "4530b73b37a26f90853d7ecf53c36990b1890048",
+    "github_sha": "a904bde16b68eeaef45e0665cf106ef81867961a",
     "github_actor": "Clownworldenjoyer76",
-    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+    "github_repository": "Clownworldenjoyer76/bet_tracker"
   },
   "context": {
     "season": 2026,
@@ -35,12 +35,12 @@
     "source": "ESPN Core API"
   },
   "inputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/openers/2026_CFB_openers.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/current_week.yaml",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/weekly/week_4_CFB_weekly_schedule.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/odds/openers/2026_CFB_openers.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/openers/2026_CFB_openers.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/odds/openers/2026_CFB_openers.csv"
   ],
   "rows_in": 71,
   "rows_out": 1986,
@@ -56,21 +56,21 @@
     "hard_fetch_failures": 0,
     "hard_fetch_failure_details": [],
     "provider_game_counts": {
-      "DraftKings": 58
+      "DraftKings": 71
     },
     "existing_rows": 1986,
     "legacy_schema_migrated": false,
     "new_rows_built": 426,
     "opening_rows_preserved": 344,
-    "opening_rows_newly_captured": 0,
-    "rows_inserted": 0,
+    "opening_rows_newly_captured": 66,
+    "rows_inserted": 78,
     "final_rows": 1986,
-    "final_ok_rows": 1788,
-    "final_missing_rows": 198,
+    "final_ok_rows": 1854,
+    "final_missing_rows": 132,
     "final_error_rows": 0,
-    "current_week_missing_rows": 82,
-    "blank_provider_timestamps_on_valid_openers": 1788,
+    "current_week_missing_rows": 16,
+    "blank_provider_timestamps_on_valid_openers": 1854,
     "blank_capture_provenance_on_valid_openers": 1356,
-    "output_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/odds/openers/2026_CFB_openers.csv"
+    "output_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/odds/openers/2026_CFB_openers.csv"
   }
 }

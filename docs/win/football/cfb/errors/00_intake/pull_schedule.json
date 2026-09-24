@@ -1,45 +1,45 @@
 {
   "schema_version": "2.0",
-  "run_id": "github-35736936882-attempt-1",
+  "run_id": "github-35986964305-attempt-1",
   "status": "SUCCESS",
   "exit_code": 0,
   "pipeline": "cfb",
   "league": "CFB",
   "stage": "00_intake",
   "script": "pull_schedule.py",
-  "script_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/scripts/00_intake/pull_schedule.py",
-  "report_path": "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/errors/00_intake/pull_schedule.json",
-  "started_at_utc": "2026-09-22T13:58:39.651651+00:00",
-  "finished_at_utc": "2026-09-22T14:00:20.892581+00:00",
-  "duration_seconds": 101.241,
+  "script_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/scripts/00_intake/pull_schedule.py",
+  "report_path": "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/errors/00_intake/pull_schedule.json",
+  "started_at_utc": "2026-09-24T10:25:35.689031+00:00",
+  "finished_at_utc": "2026-09-24T10:26:07.458587+00:00",
+  "duration_seconds": 31.77,
   "environment": {
-    "hostname": "runnervmlun5p",
+    "hostname": "runnervmtr4k5",
     "python_version": "3.12.14",
     "python_executable": "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
     "platform": "linux",
-    "process_id": 2287,
-    "working_directory": "/home/runner/work/cfb_for_mat/cfb_for_mat",
-    "github_run_id": "35736936882",
+    "process_id": 2397,
+    "working_directory": "/home/runner/work/bet_tracker/bet_tracker",
+    "github_run_id": "35986964305",
     "github_run_attempt": "1",
     "github_workflow": "CFB 01 Pipeline",
     "github_job": "run-cfb-pipeline",
     "github_ref_name": "main",
-    "github_sha": "4530b73b37a26f90853d7ecf53c36990b1890048",
+    "github_sha": "a904bde16b68eeaef45e0665cf106ef81867961a",
     "github_actor": "Clownworldenjoyer76",
-    "github_repository": "Clownworldenjoyer76/cfb_for_mat"
+    "github_repository": "Clownworldenjoyer76/bet_tracker"
   },
   "context": {
     "season": 2026,
     "week": 4
   },
   "inputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/current_week.yaml",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/team_map.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/config/mapping/stadium_map.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/current_week.yaml",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/mapping/team_map.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/config/mapping/stadium_map.csv"
   ],
   "outputs": [
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/updates/2026_schedule_20260922_140020.csv",
-    "/home/runner/work/cfb_for_mat/cfb_for_mat/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv"
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/updates/2026_schedule_20260924_102607.csv",
+    "/home/runner/work/bet_tracker/bet_tracker/docs/win/football/cfb/00_intake/schedule/2026_schedule.csv"
   ],
   "rows_in": 1653,
   "rows_out": 892,
