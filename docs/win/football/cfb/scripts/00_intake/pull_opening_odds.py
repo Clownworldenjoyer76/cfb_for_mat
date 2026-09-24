@@ -18,7 +18,6 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request
 
-import yaml
 
 SCRIPT_PATH = Path(__file__).resolve()
 SCRIPTS_DIR = SCRIPT_PATH.parents[1]
@@ -32,7 +31,9 @@ from pipeline_reporter import PipelineReporter
 from pipeline_shared import (
     format_american,
     format_number,
+    load_current_week_config,
     read_required_csv as read_csv,
+    write_atomic_csv_rows,
 )
 from type_support import ScalarValue
 
@@ -128,71 +129,6 @@ class HardFetchError(RuntimeError):
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
-
-
-def load_current_week() -> tuple[int, int, int]:
-    if not CURRENT_WEEK_CONFIG_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing current-week config: {CURRENT_WEEK_CONFIG_PATH}"
-        )
-
-    with CURRENT_WEEK_CONFIG_PATH.open(
-        "r",
-        encoding="utf-8",
-    ) as handle:
-        payload = yaml.safe_load(handle)
-
-    if not isinstance(payload, dict):
-        raise ValueError(
-            "Current-week config must contain a YAML mapping"
-        )
-
-    values: dict[str, int] = {}
-
-    for key in (
-        "season",
-        "season_type",
-        "week",
-    ):
-        raw = payload.get(key)
-
-        if isinstance(raw, bool):
-            raise ValueError(
-                f"Current-week config {key} must be an integer"
-            )
-
-        try:
-            values[key] = int(
-                str(raw).strip()
-            )
-        except (
-            TypeError,
-            ValueError,
-        ) as exc:
-            raise ValueError(
-                f"Current-week config {key} must be an integer"
-            ) from exc
-
-    if values["season"] < 2000:
-        raise ValueError(
-            f"Invalid season: {values['season']}"
-        )
-
-    if values["season_type"] < 1:
-        raise ValueError(
-            f"Invalid season_type: {values['season_type']}"
-        )
-
-    if values["week"] < 1:
-        raise ValueError(
-            f"Invalid week: {values['week']}"
-        )
-
-    return (
-        values["season"],
-        values["season_type"],
-        values["week"],
-    )
 
 
 def parse_aware_iso(
@@ -2903,67 +2839,13 @@ def validate_final_rows(
 
 def write_csv_atomic(
     path: Path,
-    rows: list[
-        dict[str, str]
-    ],
+    rows: list[dict[str, str]],
 ) -> None:
-    path.parent.mkdir(
-        parents=True,
-        exist_ok=True,
+    write_atomic_csv_rows(
+        path,
+        rows,
+        OUTPUT_COLUMNS,
     )
-
-    temp_path = (
-        path.with_name(
-            f".{path.name}."
-            f"{uuid.uuid4().hex}.tmp"
-        )
-    )
-
-    try:
-        with temp_path.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=OUTPUT_COLUMNS,
-            )
-
-            writer.writeheader()
-
-            for row in rows:
-                writer.writerow(
-                    {
-                        column: row.get(
-                            column,
-                            "",
-                        )
-                        for column
-                        in OUTPUT_COLUMNS
-                    }
-                )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        os.replace(
-            temp_path,
-            path,
-        )
-
-    finally:
-        try:
-            temp_path.unlink(
-                missing_ok=True
-            )
-        except OSError:
-            pass
-
-
 
 def _count_blank_provider_timestamps(
     final_rows: list[dict[str, str]],
@@ -3034,7 +2916,7 @@ def main() -> int:
             season,
             season_type,
             week,
-        ) = load_current_week()
+        ) = load_current_week_config(CURRENT_WEEK_CONFIG_PATH)
 
         report.season = season
         report.week = week

@@ -1209,109 +1209,16 @@ def grade_week(
         output_path,
     )
 
-    selected_bets = int(
-        pd.to_numeric(
-            output[
-                "selected_bets"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0
-        )
-        .sum()
-    )
-
-    graded_bets = int(
-        pd.to_numeric(
-            output[
-                "graded_bets"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0
-        )
-        .sum()
-    )
-
-    wins = int(
-        pd.to_numeric(
-            output[
-                "wins"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0
-        )
-        .sum()
-    )
-
-    losses = int(
-        pd.to_numeric(
-            output[
-                "losses"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0
-        )
-        .sum()
-    )
-
-    pushes = int(
-        pd.to_numeric(
-            output[
-                "pushes"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0
-        )
-        .sum()
-    )
-
-    voids = int(
-        pd.to_numeric(
-            output[
-                "voids"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0
-        )
-        .sum()
-    )
-
-    pending = int(
-        pd.to_numeric(
-            output[
-                "pending_bets"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0
-        )
-        .sum()
-    )
-
-    units = float(
-        pd.to_numeric(
-            output[
-                "net_units"
-            ],
-            errors="coerce",
-        )
-        .fillna(
-            0.0
-        )
-        .sum()
-    )
+    (
+        selected_bets,
+        graded_bets,
+        wins,
+        losses,
+        pushes,
+        voids,
+        pending,
+        units,
+    ) = bet_summary_totals(output)
 
     print(
         f"WROTE {output_path} "
@@ -1454,6 +1361,29 @@ def _append_season_summary_total(
         )
 
 
+def bet_summary_totals(
+    frame: pd.DataFrame,
+) -> tuple[
+    int,
+    int,
+    int,
+    int,
+    int,
+    int,
+    int,
+    float,
+]:
+    return (
+        int(numeric_column_sum(frame, "selected_bets")),
+        int(numeric_column_sum(frame, "graded_bets")),
+        int(numeric_column_sum(frame, "wins")),
+        int(numeric_column_sum(frame, "losses")),
+        int(numeric_column_sum(frame, "pushes")),
+        int(numeric_column_sum(frame, "voids")),
+        int(numeric_column_sum(frame, "pending_bets")),
+        numeric_column_sum(frame, "net_units"),
+    )
+
 def build_season_summary(
     output_dir: Path,
     season: int,
@@ -1500,109 +1430,16 @@ def build_season_summary(
         ).any():
             continue
 
-        selected = int(
-            pd.to_numeric(
-                df[
-                    "selected_bets"
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0
-            )
-            .sum()
-        )
-
-        graded = int(
-            pd.to_numeric(
-                df[
-                    "graded_bets"
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0
-            )
-            .sum()
-        )
-
-        wins = int(
-            pd.to_numeric(
-                df[
-                    "wins"
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0
-            )
-            .sum()
-        )
-
-        losses = int(
-            pd.to_numeric(
-                df[
-                    "losses"
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0
-            )
-            .sum()
-        )
-
-        pushes = int(
-            pd.to_numeric(
-                df[
-                    "pushes"
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0
-            )
-            .sum()
-        )
-
-        voids = int(
-            pd.to_numeric(
-                df[
-                    "voids"
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0
-            )
-            .sum()
-        )
-
-        pending = int(
-            pd.to_numeric(
-                df[
-                    "pending_bets"
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0
-            )
-            .sum()
-        )
-
-        net_units = float(
-            pd.to_numeric(
-                df[
-                    "net_units"
-                ],
-                errors="coerce",
-            )
-            .fillna(
-                0.0
-            )
-            .sum()
-        )
+        (
+            selected,
+            graded,
+            wins,
+            losses,
+            pushes,
+            voids,
+            pending,
+            net_units,
+        ) = bet_summary_totals(df)
 
         roi = (
             net_units

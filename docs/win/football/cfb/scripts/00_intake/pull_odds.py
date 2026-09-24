@@ -21,7 +21,6 @@ from urllib.parse import urlencode
 from urllib.request import Request
 from zoneinfo import ZoneInfo
 
-import yaml
 
 SCRIPT_PATH = Path(__file__).resolve()
 SCRIPTS_DIR = SCRIPT_PATH.parents[1]
@@ -35,6 +34,7 @@ from pipeline_reporter import PipelineReporter
 from pipeline_shared import (
     format_american,
     format_number,
+    load_current_week_config,
     read_required_csv as read_csv,
 )
 from type_support import ScalarValue
@@ -101,65 +101,6 @@ VALID_MARKET_SIDES = {
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
-
-
-def load_current_week() -> tuple[int, int, int]:
-    if not CURRENT_WEEK_CONFIG_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing current-week config: {CURRENT_WEEK_CONFIG_PATH}"
-        )
-
-    with CURRENT_WEEK_CONFIG_PATH.open(
-        "r",
-        encoding="utf-8",
-    ) as handle:
-        payload = yaml.safe_load(handle)
-
-    if not isinstance(payload, dict):
-        raise ValueError(
-            "Current-week config must contain a YAML mapping"
-        )
-
-    values: dict[str, int] = {}
-
-    for key in ("season", "season_type", "week"):
-        raw = payload.get(key)
-
-        if isinstance(raw, bool):
-            raise ValueError(
-                f"Current-week config {key} must be an integer"
-            )
-
-        try:
-            values[key] = int(
-                str(raw).strip()
-            )
-        except (TypeError, ValueError) as exc:
-            raise ValueError(
-                f"Current-week config {key} must be an integer"
-            ) from exc
-
-    if values["season"] < 2000:
-        raise ValueError(
-            f"Invalid season in current-week config: {values['season']}"
-        )
-
-    if values["season_type"] < 1:
-        raise ValueError(
-            "Invalid season_type in current-week config: "
-            f"{values['season_type']}"
-        )
-
-    if values["week"] < 1:
-        raise ValueError(
-            f"Invalid week in current-week config: {values['week']}"
-        )
-
-    return (
-        values["season"],
-        values["season_type"],
-        values["week"],
-    )
 
 
 def schedule_kickoff_utc(
@@ -1515,37 +1456,20 @@ def _stage1_validate_market_line(
     home_spread: Optional[float],
     away_spread: Optional[float],
 ) -> None:
-    if market_type == "h2h":
-        if line_text:
-            raise ValueError(f"H2H row has nonblank line for game_id={game_id}")
-        return
-    if to_float(line_text) is None:
-        raise ValueError(
-            f"{market_type} row has invalid line for game_id={game_id}"
-        )
-    if market_type == "spreads":
-        expected_line = home_spread if bet_side == "home" else away_spread
-        actual_line = to_float(line_text)
-        if (
-            expected_line is None
-            or actual_line is None
-            or abs(expected_line - actual_line) > 0.000001
-        ):
-            raise ValueError(
-                f"Spread row line mismatch for game_id={game_id}, side={bet_side}"
-            )
-    if market_type == "totals":
-        total = to_float(row["total"])
-        actual_line = to_float(line_text)
-        if (
-            total is None
-            or actual_line is None
-            or abs(total - actual_line) > 0.000001
-        ):
-            raise ValueError(
-                f"Total row line mismatch for game_id={game_id}, side={bet_side}"
-            )
-
+    _stage1_validate_basic_market_line(
+        line_text=line_text,
+        game_id=game_id,
+        market_type=market_type,
+    )
+    _stage1_validate_specific_market_line(
+        row=row,
+        line_text=line_text,
+        game_id=game_id,
+        market_type=market_type,
+        bet_side=bet_side,
+        home_spread=home_spread,
+        away_spread=away_spread,
+    )
 
 def _stage1_validate_basic_market_line(
     *,
@@ -2108,7 +2032,7 @@ def main() -> int:
         )
 
         season, season_type, week = (
-            load_current_week()
+            load_current_week_config(CURRENT_WEEK_CONFIG_PATH)
         )
 
         report.season = season

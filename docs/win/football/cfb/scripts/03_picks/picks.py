@@ -63,6 +63,10 @@ if str(
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import (
+    clean_text as clean,
+    normalize_game_id,
+)
 
 
 SCRIPT_VERSION = (
@@ -158,47 +162,6 @@ MARKETS = {
 
 def fail(message: str) -> Never:
     raise RuntimeError(message)
-
-
-def clean(
-    value: Any,
-) -> str:
-    if value is None:
-        return ""
-
-    text = str(
-        value
-    ).strip()
-
-    if text.casefold() in {
-        "",
-        "nan",
-        "none",
-        "null",
-        "<na>",
-        "nat",
-    }:
-        return ""
-
-    return text
-
-
-def normalize_game_id(
-    value: Any,
-) -> str:
-    text = clean(
-        value
-    )
-
-    if re.fullmatch(
-        r"\d+\.0",
-        text,
-    ):
-        return text[
-            :-2
-        ]
-
-    return text
 
 
 def integer_value(

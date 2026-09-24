@@ -23,7 +23,10 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
-from pipeline_shared import load_current_week_config
+from pipeline_shared import (
+    load_current_week_config,
+    write_atomic_csv_rows,
+)
 from type_support import ScalarValue
 
 
@@ -2019,61 +2022,11 @@ def write_csv_atomic(
     path: Path,
     rows: list[dict[str, str]],
 ) -> None:
-    path.parent.mkdir(
-        parents=True,
-        exist_ok=True,
+    write_atomic_csv_rows(
+        path,
+        rows,
+        OUTPUT_COLUMNS,
     )
-
-    temp_path = path.with_name(
-        f".{path.name}."
-        f"{uuid.uuid4().hex}.tmp"
-    )
-
-    try:
-        with temp_path.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=OUTPUT_COLUMNS,
-            )
-
-            writer.writeheader()
-
-            for row in rows:
-                writer.writerow(
-                    {
-                        column: row.get(
-                            column,
-                            "",
-                        )
-                        for column
-                        in OUTPUT_COLUMNS
-                    }
-                )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        os.replace(
-            temp_path,
-            path,
-        )
-
-    finally:
-        try:
-            temp_path.unlink(
-                missing_ok=True
-            )
-        except OSError:
-            pass
-
-
 
 def read_all_locked_weekly(
     path: Path,

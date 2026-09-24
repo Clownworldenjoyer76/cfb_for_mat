@@ -215,23 +215,12 @@ def bucket_prob(x: Any) -> str:
 
 
 def bucket_edge(x: Any) -> str:
-    x = number(x)
-    if x is None:
+    value = number(x)
+    if value is None:
         return "NA"
-    if x < 0:
-        return "<0"
-    if x < .02:
-        return "0-.0199"
-    if x < .04:
-        return ".02-.0399"
-    if x < .06:
-        return ".04-.0599"
-    if x < .10:
-        return ".06-.0999"
-    if x < .15:
-        return ".10-.1499"
-    return ".15+"
-
+    if value >= .15:
+        return ".15+"
+    return bucket_ev(value)
 
 def bucket_odds(x: Any) -> str:
     x = number(x)

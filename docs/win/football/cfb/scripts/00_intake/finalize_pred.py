@@ -22,6 +22,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import write_csv_rows_durable
 from type_support import ScalarValue
 
 CONFIG_PATH = CFB_ROOT / "config" / "current_week.yaml"
@@ -1102,24 +1103,11 @@ def publish_atomic(
     )
 
     try:
-        with temp_path.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=OUT_HEADERS,
-                extrasaction="raise",
-            )
-
-            writer.writeheader()
-            writer.writerows(rows)
-
-            handle.flush()
-            os.fsync(
-                handle.fileno()
-            )
+        write_csv_rows_durable(
+            temp_path,
+            rows,
+            OUT_HEADERS,
+        )
 
         staged_rows = read_staged_rows(
             temp_path

@@ -65,7 +65,12 @@ if str(SCRIPTS_DIR) not in sys.path:
     )
 
 from pipeline_reporter import PipelineReporter
-from pipeline_shared import clean_text as clean
+from pipeline_shared import (
+    add_projection_core_arguments,
+    clean_text as clean,
+    print_projection_adjustment_counts,
+    print_projection_source_counts,
+)
 
 
 SCRIPT_VERSION = "cfb-week1-v12-rebuild-all-games-2026-09-21"
@@ -266,35 +271,7 @@ def parse_args() -> argparse.Namespace:
         default=1,
     )
 
-    parser.add_argument(
-        "--home-field",
-        type=float,
-        default=2.5,
-    )
-
-    parser.add_argument(
-        "--drives-per-team",
-        type=float,
-        default=11.5,
-    )
-
-    parser.add_argument(
-        "--market-margin-weight",
-        type=float,
-        default=0.36,
-    )
-
-    parser.add_argument(
-        "--fpi-margin-weight",
-        type=float,
-        default=0.28,
-    )
-
-    parser.add_argument(
-        "--espn-margin-weight",
-        type=float,
-        default=0.20,
-    )
+    add_projection_core_arguments(parser)
 
     parser.add_argument(
         "--prior-margin-weight",
@@ -2985,6 +2962,45 @@ def validate_args(
         )
 
 
+def _projection_reference_paths(
+    root: Path,
+    season: int,
+    prior_season: int,
+) -> tuple[
+    Path,
+    Path,
+    Path,
+    Path,
+    Path,
+    Path,
+]:
+    return (
+        root
+        / "00_intake"
+        / "team_stats"
+        / f"{prior_season}_team_stats.csv",
+        root
+        / "data"
+        / "team_power_index"
+        / f"team_power_index_{season}.csv",
+        root
+        / "00_intake"
+        / "predictions"
+        / "final",
+        root
+        / "00_intake"
+        / "injuries"
+        / f"{season}_injuries.csv",
+        root
+        / "config"
+        / "mapping"
+        / "team_map.csv",
+        root
+        / "config"
+        / "mapping"
+        / "stadium_map.csv",
+    )
+
 def _main_impl() -> None:
     args = parse_args()
 
@@ -3020,46 +3036,17 @@ def _main_impl() -> None:
         / f"week_{args.week}_CFB_weekly_schedule.csv"
     )
 
-    prior_path = (
-        root
-        / "00_intake"
-        / "team_stats"
-        / f"{prior_season}_team_stats.csv"
-    )
-
-    fpi_path = (
-        root
-        / "data"
-        / "team_power_index"
-        / f"team_power_index_{season}.csv"
-    )
-
-    predictions_dir = (
-        root
-        / "00_intake"
-        / "predictions"
-        / "final"
-    )
-
-    injuries_path = (
-        root
-        / "00_intake"
-        / "injuries"
-        / f"{season}_injuries.csv"
-    )
-
-    team_map_path = (
-        root
-        / "config"
-        / "mapping"
-        / "team_map.csv"
-    )
-
-    stadium_map_path = (
-        root
-        / "config"
-        / "mapping"
-        / "stadium_map.csv"
+    (
+        prior_path,
+        fpi_path,
+        predictions_dir,
+        injuries_path,
+        team_map_path,
+        stadium_map_path,
+    ) = _projection_reference_paths(
+        root,
+        season,
+        prior_season,
     )
 
     travel_path = (
@@ -3303,45 +3290,14 @@ def _main_impl() -> None:
         f"{int(pd.to_numeric(predictions['neutral_site_corrected'], errors='coerce').fillna(0).sum())}"
     )
 
-    print(
-        "with_market_spread="
-        f"{int(pd.to_numeric(predictions['market_home_margin'], errors='coerce').notna().sum())}"
-    )
-
-    print(
-        "with_fpi="
-        f"{int(pd.to_numeric(predictions['fpi_home_margin'], errors='coerce').notna().sum())}"
-    )
-
-    print(
-        "with_espn="
-        f"{int(pd.to_numeric(predictions['espn_home_margin'], errors='coerce').notna().sum())}"
-    )
+    print_projection_source_counts(predictions)
 
     print(
         "with_prior_margin="
         f"{int(pd.to_numeric(predictions['prior_home_margin'], errors='coerce').notna().sum())}"
     )
 
-    print(
-        "with_market_total="
-        f"{int(pd.to_numeric(predictions['market_total'], errors='coerce').notna().sum())}"
-    )
-
-    print(
-        "fresh_injury_adjustments="
-        f"{int(pd.to_numeric(predictions['injury_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
-    )
-
-    print(
-        "travel_adjustments="
-        f"{int(pd.to_numeric(predictions['travel_margin_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
-    )
-
-    print(
-        "weather_adjustments="
-        f"{int(pd.to_numeric(predictions['weather_total_adjustment'], errors='coerce').fillna(0).abs().gt(0).sum())}"
-    )
+    print_projection_adjustment_counts(predictions)
 
     if args.dry_run:
         print(
@@ -3485,46 +3441,17 @@ def main() -> int:
             / f"week_{week}_CFB_weekly_schedule.csv"
         )
 
-        prior_path = (
-            root
-            / "00_intake"
-            / "team_stats"
-            / f"{prior_season}_team_stats.csv"
-        )
-
-        fpi_path = (
-            root
-            / "data"
-            / "team_power_index"
-            / f"team_power_index_{season}.csv"
-        )
-
-        predictions_dir = (
-            root
-            / "00_intake"
-            / "predictions"
-            / "final"
-        )
-
-        injuries_path = (
-            root
-            / "00_intake"
-            / "injuries"
-            / f"{season}_injuries.csv"
-        )
-
-        team_map_path = (
-            root
-            / "config"
-            / "mapping"
-            / "team_map.csv"
-        )
-
-        stadium_map_path = (
-            root
-            / "config"
-            / "mapping"
-            / "stadium_map.csv"
+        (
+            prior_path,
+            fpi_path,
+            predictions_dir,
+            injuries_path,
+            team_map_path,
+            stadium_map_path,
+        ) = _projection_reference_paths(
+            root,
+            season,
+            prior_season,
         )
 
         travel_path = (

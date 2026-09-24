@@ -67,6 +67,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from pipeline_reporter import PipelineReporter
 from pipeline_shared import (
     clean_text,
+    normalized_frame_pair,
     read_yaml,
     require_columns,
     resolve_target,
@@ -1478,30 +1479,12 @@ def validate_serialized_output(
             "Serialized clean output row count changed"
         )
 
-    left = serialized.reset_index(
-        drop=True
-    ).copy()
-
-    right = expected.reset_index(
-        drop=True
-    ).copy()
-
-    for column in OUTPUT_COLUMNS:
-        left[
-            column
-        ] = left[
-            column
-        ].map(
-            clean_text
-        )
-
-        right[
-            column
-        ] = right[
-            column
-        ].map(
-            clean_text
-        )
+    left, right = normalized_frame_pair(
+        serialized,
+        expected,
+        OUTPUT_COLUMNS,
+        clean_text,
+    )
 
     if not left.equals(
         right

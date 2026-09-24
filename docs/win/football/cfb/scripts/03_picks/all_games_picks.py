@@ -94,6 +94,9 @@ if str(
 
 from pipeline_reporter import PipelineReporter
 from pipeline_shared import (
+    clean_text as clean,
+    normalize_game_id,
+    normalized_frame_pair,
     read_yaml,
     require_columns,
     resolve_target,
@@ -135,47 +138,6 @@ def fail(
     raise RuntimeError(
         message
     )
-
-
-def clean(
-    value: Any,
-) -> str:
-    if value is None:
-        return ""
-
-    text = str(
-        value
-    ).strip()
-
-    if text.casefold() in {
-        "",
-        "nan",
-        "none",
-        "null",
-        "<na>",
-        "nat",
-    }:
-        return ""
-
-    return text
-
-
-def normalize_game_id(
-    value: Any,
-) -> str:
-    text = clean(
-        value
-    )
-
-    if re.fullmatch(
-        r"\d+\.0",
-        text,
-    ):
-        return text[
-            :-2
-        ]
-
-    return text
 
 
 def parse_float(
@@ -1158,30 +1120,12 @@ def validate_serialized_output(
             "Serialized output columns changed"
         )
 
-    left = serialized.reset_index(
-        drop=True
-    ).copy()
-
-    right = expected.reset_index(
-        drop=True
-    ).copy()
-
-    for column in OUTPUT_COLUMNS:
-        left[
-            column
-        ] = left[
-            column
-        ].map(
-            clean
-        )
-
-        right[
-            column
-        ] = right[
-            column
-        ].map(
-            clean
-        )
+    left, right = normalized_frame_pair(
+        serialized,
+        expected,
+        OUTPUT_COLUMNS,
+        clean,
+    )
 
     if not left.equals(
         right
