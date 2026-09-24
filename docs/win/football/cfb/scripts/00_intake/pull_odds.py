@@ -13,6 +13,7 @@ import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Optional
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request
@@ -382,7 +383,7 @@ def load_target_schedule(
 
 def build_url(
     path: str,
-    params: dict[str, object] | None = None,
+    params: Optional[dict[str, object]] = None,
 ) -> str:
     url = f"{ESPN_BASE}{path}"
 
@@ -396,7 +397,7 @@ def build_url(
 
 def http_get_json(
     url: str,
-) -> tuple[int | None, object | None, str]:
+) -> tuple[Optional[int], Optional[object], str]:
     request = Request(
         url,
         headers={
@@ -518,7 +519,7 @@ def fetch_ref(
 
 def to_float(
     value: object,
-) -> float | None:
+) -> Optional[float]:
     if (
         value is None
         or isinstance(value, bool)
@@ -737,7 +738,7 @@ def resolve_odds_items(
 
 def select_primary_odds_item(
     items: list[dict],
-) -> dict | None:
+) -> Optional[dict]:
     if not items:
         return None
 
@@ -781,7 +782,7 @@ def select_primary_odds_item(
 def nested_value(
     data: dict,
     path: tuple[str, ...],
-) -> object | None:
+) -> Optional[object]:
     current: object = data
 
     for key in path:
@@ -801,7 +802,7 @@ def nested_value(
 def first_value(
     data: dict,
     paths: list[tuple[str, ...]],
-) -> object | None:
+) -> Optional[object]:
     for path in paths:
         value = nested_value(
             data,
@@ -821,7 +822,7 @@ def first_value(
 
 def parse_details_line(
     details: object,
-) -> float | None:
+) -> Optional[float]:
     match = re.search(
         r"([+-]?\d+(?:\.\d+)?)\s*$",
         str(
@@ -1386,7 +1387,7 @@ def normalize_event_odds(
 def fetch_game_odds(
     game_id: str,
 ) -> tuple[
-    dict | None,
+    Optional[dict],
     str,
     int,
     str,
@@ -1556,8 +1557,8 @@ def _stage1_validate_market_line(
     game_id: str,
     market_type: str,
     bet_side: str,
-    home_spread: float | None,
-    away_spread: float | None,
+    home_spread: Optional[float],
+    away_spread: Optional[float],
 ) -> None:
     if market_type == "h2h":
         if line_text:
@@ -1640,7 +1641,7 @@ def _stage1_validate_spread_pair(
     row: dict[str, str],
     *,
     game_id: str,
-) -> tuple[float | None, float | None]:
+) -> tuple[Optional[float], Optional[float]]:
     home_spread = to_float(row["home_spread"])
     away_spread = to_float(row["away_spread"])
     if (
@@ -1662,8 +1663,8 @@ def _stage1_validate_specific_market_line(
     game_id: str,
     market_type: str,
     bet_side: str,
-    home_spread: float | None,
-    away_spread: float | None,
+    home_spread: Optional[float],
+    away_spread: Optional[float],
 ) -> None:
     if market_type == "spreads":
         expected_line = home_spread if bet_side == "home" else away_spread
