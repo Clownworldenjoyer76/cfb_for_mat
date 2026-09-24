@@ -12,7 +12,7 @@ from urllib.request import (
 
 
 class UrlSecurityError(ValueError):
-    'Raised when a provider URL violates the outbound request policy.'
+    """Raised when a provider URL violates the outbound request policy."""
 
 
 def _host_allowlist(
