@@ -36,6 +36,7 @@ jobs:
           args: |
             --linter qodana-python
             --within-docker false
+            --baseline .qodana/baseline.sarif.json
             --only-directory docs/win/football/cfb
           pr-mode: false
           use-annotations: false
