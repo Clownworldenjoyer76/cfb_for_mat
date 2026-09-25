@@ -67,6 +67,7 @@ from pipeline_shared import (
     clean_text as clean,
     normalize_game_id,
     prepare_schedule_coverage,
+    require_schedule_coverage,
     stage_dataframe_csv,
     team_identity_values,
     validate_target_columns,
@@ -1421,11 +1422,7 @@ def validate_schedule_alignment(
             f"values: {examples}"
         )
 
-    (
-        schedule,
-        missing,
-        unexpected,
-    ) = prepare_schedule_coverage(
+    schedule, _, _ = prepare_schedule_coverage(
         schedule,
         schedule_ids,
         selected,
@@ -1435,22 +1432,11 @@ def validate_schedule_alignment(
         integer_value,
     )
 
-    if (
-        missing
-        or unexpected
-    ):
-        fail(
-            "Selected input game coverage does not "
-            "match the target weekly schedule; "
-            f"missing_count={len(missing)} "
-            f"unexpected_count={len(unexpected)} "
-            f"missing_examples={missing[:10]} "
-            f"unexpected_examples={unexpected[:10]}"
-        )
-
-    schedule_lookup = schedule.set_index(
-        "game_id",
-        drop=False,
+    schedule_lookup = require_schedule_coverage(
+        selected,
+        schedule,
+        "Selected input game coverage does not "
+        "match the target weekly schedule",
     )
 
     mismatches: list[

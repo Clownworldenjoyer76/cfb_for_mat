@@ -588,3 +588,28 @@ def prepare_schedule_coverage(
         sorted(target_ids - candidate_ids),
         sorted(candidate_ids - target_ids),
     )
+
+def require_schedule_coverage(
+    candidate: Any,
+    schedule: Any,
+    message: str,
+) -> Any:
+    candidate_ids = set(candidate["game_id"])
+    target_ids = set(schedule["game_id"])
+
+    missing = sorted(target_ids - candidate_ids)
+    unexpected = sorted(candidate_ids - target_ids)
+
+    if missing or unexpected:
+        raise RuntimeError(
+            f"{message}; "
+            f"missing_count={len(missing)} "
+            f"unexpected_count={len(unexpected)} "
+            f"missing_examples={missing[:10]} "
+            f"unexpected_examples={unexpected[:10]}"
+        )
+
+    return schedule.set_index(
+        "game_id",
+        drop=False,
+    )

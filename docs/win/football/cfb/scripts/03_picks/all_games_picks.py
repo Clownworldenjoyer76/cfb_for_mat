@@ -99,6 +99,7 @@ from pipeline_shared import (
     normalized_frame_pair,
     register_report_paths,
     require_columns,
+    require_schedule_coverage,
     resolve_weekly_report_target,
     stage_dataframe_csv,
     team_identity_values,
@@ -356,44 +357,11 @@ def validate_schedule_alignment(
         week,
         integer_value,
     )
-    source_ids = set(
-        source[
-            "game_id"
-        ]
-    )
-
-    schedule_ids = set(
-        schedule[
-            "game_id"
-        ]
-    )
-
-    missing = sorted(
-        schedule_ids
-        - source_ids
-    )
-
-    unexpected = sorted(
-        source_ids
-        - schedule_ids
-    )
-
-    if (
-        missing
-        or unexpected
-    ):
-        fail(
-            "Selected input game coverage does not "
-            "match the target weekly schedule; "
-            f"missing_count={len(missing)} "
-            f"unexpected_count={len(unexpected)} "
-            f"missing_examples={missing[:10]} "
-            f"unexpected_examples={unexpected[:10]}"
-        )
-
-    lookup = schedule.set_index(
-        "game_id",
-        drop=False,
+    lookup = require_schedule_coverage(
+        source,
+        schedule,
+        "Selected input game coverage does not "
+        "match the target weekly schedule",
     )
 
     mismatches: list[
