@@ -71,6 +71,8 @@ from pipeline_shared import (
     read_yaml,
     require_columns,
     resolve_target,
+    stage_dataframe_csv,
+    validate_target_columns,
 )
 
 
@@ -387,42 +389,13 @@ def validate_input_target(
         "game_id"
     ] = ids
 
-    seasons = {
-        integer_value(
-            value,
-            f"{path}: season",
-        )
-        for value in df[
-            "season"
-        ]
-    }
-
-    weeks = {
-        integer_value(
-            value,
-            f"{path}: week",
-        )
-        for value in df[
-            "week"
-        ]
-    }
-
-    if seasons != {
-        season
-    }:
-        fail(
-            f"{path}: expected only season={season}; "
-            f"found {sorted(seasons)}"
-        )
-
-    if weeks != {
-        week
-    }:
-        fail(
-            f"{path}: expected only week={week}; "
-            f"found {sorted(weeks)}"
-        )
-
+    validate_target_columns(
+        df,
+        str(path),
+        season,
+        week,
+        integer_value,
+    )
 
 def validate_schedule_alignment(
     picks: pd.DataFrame,
@@ -479,44 +452,13 @@ def validate_schedule_alignment(
         "game_id"
     ] = ids
 
-    seasons = {
-        integer_value(
-            value,
-            f"{schedule_path}: season",
-        )
-        for value in schedule[
-            "season"
-        ]
-    }
-
-    weeks = {
-        integer_value(
-            value,
-            f"{schedule_path}: week",
-        )
-        for value in schedule[
-            "week"
-        ]
-    }
-
-    if seasons != {
-        season
-    }:
-        fail(
-            f"{schedule_path}: expected only "
-            f"season={season}; "
-            f"found {sorted(seasons)}"
-        )
-
-    if weeks != {
-        week
-    }:
-        fail(
-            f"{schedule_path}: expected only "
-            f"week={week}; "
-            f"found {sorted(weeks)}"
-        )
-
+    validate_target_columns(
+        schedule,
+        str(schedule_path),
+        season,
+        week,
+        integer_value,
+    )
     pick_ids = set(
         picks[
             "game_id"
@@ -623,7 +565,6 @@ def validate_schedule_alignment(
             f"count={len(mismatches)} "
             f"examples={mismatches[:10]}"
         )
-
 
 def validate_selected_wagers(
     df: pd.DataFrame,
@@ -1511,31 +1452,7 @@ def publish_atomic_csv(
     )
 
     try:
-        with temporary.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            output.to_csv(
-                handle,
-                index=False,
-                lineterminator="\n",
-            )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        serialized = pd.read_csv(
-            temporary,
-            dtype=str,
-            keep_default_na=False,
-            na_filter=False,
-            encoding="utf-8-sig",
-            low_memory=False,
-        )
+        serialized = stage_dataframe_csv(temporary, output)
 
         validate_serialized_output(
             serialized,

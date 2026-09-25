@@ -382,6 +382,51 @@ def load_clean_rows(
     return rows
 
 
+def _validate_prediction_target(
+    row: dict[str, str],
+    *,
+    season: int,
+    season_type: int,
+    week: int,
+    prefix: str,
+    context: str,
+    mismatch_message: str,
+) -> None:
+    row_target = (
+        positive_int(row.get("season"), label=f"{prefix} season {context}"),
+        positive_int(row.get("season_type"), label=f"{prefix} season_type {context}"),
+        positive_int(row.get("week"), label=f"{prefix} week {context}"),
+    )
+    if row_target != (season, season_type, week):
+        raise FinalizePredictionValidationError(mismatch_message)
+
+
+def _claim_prediction_game(
+    row: dict[str, str],
+    *,
+    row_number: int,
+    schedule: dict[str, dict[str, str]],
+    seen: set[str],
+    kind: str,
+) -> tuple[str, dict[str, str]]:
+    game_id = str(
+        positive_int(
+            row.get("game_id"),
+            label=f"{kind} game_id row {row_number}",
+        )
+    )
+    if game_id in seen:
+        raise FinalizePredictionValidationError(
+            f"Duplicate {kind} prediction game_id={game_id}"
+        )
+    target = schedule.get(game_id)
+    if target is None:
+        raise FinalizePredictionValidationError(
+            f"{kind.capitalize()} prediction contains foreign game_id={game_id}"
+        )
+    seen.add(game_id)
+    return game_id, target
+
 def _validate_clean_prediction_rows(
     rows: list[dict[str, str]],
     *,
@@ -401,51 +446,22 @@ def _validate_clean_prediction_rows(
                 f"Clean prediction schema mismatch at row {row_number}"
             )
 
-        row_target = (
-            positive_int(
-                row.get("season"),
-                label=f"clean season row {row_number}",
-            ),
-            positive_int(
-                row.get("season_type"),
-                label=f"clean season_type row {row_number}",
-            ),
-            positive_int(
-                row.get("week"),
-                label=f"clean week row {row_number}",
-            ),
+        _validate_prediction_target(
+            row,
+            season=season,
+            season_type=season_type,
+            week=week,
+            prefix="clean",
+            context=f"row {row_number}",
+            mismatch_message=f"Clean prediction target mismatch at row {row_number}",
         )
-
-        if row_target != (
-            season,
-            season_type,
-            week,
-        ):
-            raise FinalizePredictionValidationError(
-                f"Clean prediction target mismatch at row {row_number}"
-            )
-
-        game_id = str(
-            positive_int(
-                row.get("game_id"),
-                label=f"clean game_id row {row_number}",
-            )
+        game_id, target = _claim_prediction_game(
+            row,
+            row_number=row_number,
+            schedule=schedule,
+            seen=seen,
+            kind="clean",
         )
-
-        if game_id in seen:
-            raise FinalizePredictionValidationError(
-                f"Duplicate clean prediction game_id={game_id}"
-            )
-
-        target = schedule.get(game_id)
-
-        if target is None:
-            raise FinalizePredictionValidationError(
-                f"Clean prediction contains foreign game_id={game_id}"
-            )
-
-        seen.add(game_id)
-
         for field in (
             "home_team",
             "away_team",
@@ -557,7 +573,6 @@ def _validate_clean_prediction_rows(
         )
 
         margins[game_id] = mismatch
-
 
 def validate_clean_rows(
     rows: list[dict[str, str]],
@@ -819,55 +834,22 @@ def validate_final_rows(
             row_number=row_number,
         )
 
-        game_id = str(
-            positive_int(
-                row.get("game_id"),
-                label=f"final game_id row {row_number}",
-            )
+        game_id, target = _claim_prediction_game(
+            row,
+            row_number=row_number,
+            schedule=schedule,
+            seen=seen,
+            kind="final",
         )
-
-        if game_id in seen:
-            raise FinalizePredictionValidationError(
-                f"Duplicate final prediction game_id={game_id}"
-            )
-
-        target = schedule.get(
-            game_id
+        _validate_prediction_target(
+            row,
+            season=season,
+            season_type=season_type,
+            week=week,
+            prefix="final",
+            context=game_id,
+            mismatch_message=f"Final prediction target mismatch for game_id={game_id}",
         )
-
-        if target is None:
-            raise FinalizePredictionValidationError(
-                f"Final prediction contains foreign game_id={game_id}"
-            )
-
-        seen.add(
-            game_id
-        )
-
-        row_target = (
-            positive_int(
-                row.get("season"),
-                label=f"final season {game_id}",
-            ),
-            positive_int(
-                row.get("season_type"),
-                label=f"final season_type {game_id}",
-            ),
-            positive_int(
-                row.get("week"),
-                label=f"final week {game_id}",
-            ),
-        )
-
-        if row_target != (
-            season,
-            season_type,
-            week,
-        ):
-            raise FinalizePredictionValidationError(
-                f"Final prediction target mismatch for game_id={game_id}"
-            )
-
         for field in (
             "home_team",
             "away_team",
@@ -1044,7 +1026,6 @@ def validate_final_rows(
         seen,
         schedule,
     )
-
 
 def read_staged_rows(
     path: Path,

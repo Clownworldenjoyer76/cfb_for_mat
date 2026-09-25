@@ -66,6 +66,9 @@ from pipeline_reporter import PipelineReporter
 from pipeline_shared import (
     clean_text as clean,
     normalize_game_id,
+    stage_dataframe_csv,
+    team_identity_values,
+    validate_target_columns,
 )
 
 
@@ -1361,42 +1364,13 @@ def validate_input(
         "game_id"
     ] = normalized_ids
 
-    observed_seasons = {
-        integer_value(
-            value,
-            f"{path}: season",
-        )
-        for value in df[
-            "season"
-        ]
-    }
-
-    observed_weeks = {
-        integer_value(
-            value,
-            f"{path}: week",
-        )
-        for value in df[
-            "week"
-        ]
-    }
-
-    if observed_seasons != {
-        season
-    }:
-        fail(
-            f"{path}: expected only season={season}; "
-            f"found {sorted(observed_seasons)}"
-        )
-
-    if observed_weeks != {
-        week
-    }:
-        fail(
-            f"{path}: expected only week={week}; "
-            f"found {sorted(observed_weeks)}"
-        )
-
+    validate_target_columns(
+        df,
+        str(path),
+        season,
+        week,
+        integer_value,
+    )
 
 def validate_schedule_alignment(
     selected: pd.DataFrame,
@@ -1452,44 +1426,13 @@ def validate_schedule_alignment(
         "game_id"
     ] = schedule_ids
 
-    schedule_seasons = {
-        integer_value(
-            value,
-            f"{schedule_path}: season",
-        )
-        for value in schedule[
-            "season"
-        ]
-    }
-
-    schedule_weeks = {
-        integer_value(
-            value,
-            f"{schedule_path}: week",
-        )
-        for value in schedule[
-            "week"
-        ]
-    }
-
-    if schedule_seasons != {
-        season
-    }:
-        fail(
-            f"{schedule_path}: expected only "
-            f"season={season}; "
-            f"found {sorted(schedule_seasons)}"
-        )
-
-    if schedule_weeks != {
-        week
-    }:
-        fail(
-            f"{schedule_path}: expected only "
-            f"week={week}; "
-            f"found {sorted(schedule_weeks)}"
-        )
-
+    validate_target_columns(
+        schedule,
+        str(schedule_path),
+        season,
+        week,
+        integer_value,
+    )
     selected_ids = set(
         selected[
             "game_id"
@@ -1546,30 +1489,16 @@ def validate_schedule_alignment(
             game_id
         ]
 
-        selected_away = clean(
-            row.get(
-                "away_team"
-            )
+        (
+            selected_away,
+            selected_home,
+            schedule_away,
+            schedule_home,
+        ) = team_identity_values(
+            row,
+            schedule_row,
+            clean,
         )
-
-        selected_home = clean(
-            row.get(
-                "home_team"
-            )
-        )
-
-        schedule_away = clean(
-            schedule_row.get(
-                "away_team"
-            )
-        )
-
-        schedule_home = clean(
-            schedule_row.get(
-                "home_team"
-            )
-        )
-
         if (
             selected_away
             != schedule_away
@@ -1598,7 +1527,6 @@ def validate_schedule_alignment(
             f"count={len(mismatches)} "
             f"examples={mismatches[:10]}"
         )
-
 
 def candidate_numeric(
     row: pd.Series,
@@ -2972,31 +2900,7 @@ def publish_atomic_csv(
     )
 
     try:
-        with temporary.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            output.to_csv(
-                handle,
-                index=False,
-                lineterminator="\n",
-            )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        serialized = pd.read_csv(
-            temporary,
-            dtype=str,
-            keep_default_na=False,
-            na_filter=False,
-            encoding="utf-8-sig",
-            low_memory=False,
-        )
+        serialized = stage_dataframe_csv(temporary, output)
 
         validate_output_frame(
             serialized,

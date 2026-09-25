@@ -36,6 +36,7 @@ from pipeline_shared import (
     format_number,
     load_current_week_config,
     read_required_csv as read_csv,
+    write_csv_rows_durable,
 )
 from type_support import ScalarValue
 
@@ -1648,35 +1649,12 @@ def write_csv_file(
     path: Path,
     rows: list[dict[str, str]],
 ) -> None:
-    with path.open(
-        "w",
-        newline="",
-        encoding="utf-8",
-    ) as handle:
-        writer = csv.DictWriter(
-            handle,
-            fieldnames=OUTPUT_COLUMNS,
-        )
-
-        writer.writeheader()
-
-        for row in rows:
-            writer.writerow(
-                {
-                    column: row.get(
-                        column,
-                        "",
-                    )
-                    for column
-                    in OUTPUT_COLUMNS
-                }
-            )
-
-        handle.flush()
-        os.fsync(
-            handle.fileno()
-        )
-
+    write_csv_rows_durable(
+        path,
+        rows,
+        OUTPUT_COLUMNS,
+        project_columns=True,
+    )
 
 def write_json_file(
     path: Path,

@@ -107,6 +107,7 @@ from pipeline_shared import (
     add_projection_core_arguments,
     print_projection_adjustment_counts,
     print_projection_source_counts,
+    stage_dataframe_csv,
 )
 
 
@@ -790,31 +791,7 @@ def publish_output_atomic(
     )
 
     try:
-        with temporary_path.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            projected.to_csv(
-                handle,
-                index=False,
-                lineterminator="\n",
-            )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        serialized = pd.read_csv(
-            temporary_path,
-            dtype=str,
-            keep_default_na=False,
-            na_filter=False,
-            encoding="utf-8-sig",
-            low_memory=False,
-        )
+        serialized = stage_dataframe_csv(temporary_path, projected)
 
         validate_serialized_output(
             serialized,

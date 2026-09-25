@@ -8,10 +8,8 @@ from http.client import HTTPException
 import csv
 import json
 import math
-import os
 import re
 import sys
-import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError

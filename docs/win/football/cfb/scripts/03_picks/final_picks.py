@@ -68,6 +68,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from pipeline_reporter import PipelineReporter
 from pipeline_shared import (
     clean_text as clean,
+    stage_dataframe_csv,
     validate_game_ids as validate_ids,
     weekly_schedule_path,
 )
@@ -961,31 +962,7 @@ def stage_csv(
     )
 
     try:
-        with temporary.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            output.to_csv(
-                handle,
-                index=False,
-                lineterminator="\n",
-            )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        serialized = pd.read_csv(
-            temporary,
-            dtype=str,
-            keep_default_na=False,
-            na_filter=False,
-            encoding="utf-8-sig",
-            low_memory=False,
-        )
+        serialized = stage_dataframe_csv(temporary, output)
 
         validate_output(
             serialized,

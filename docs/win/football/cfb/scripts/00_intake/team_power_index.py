@@ -43,7 +43,10 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
-from pipeline_shared import load_current_week_config
+from pipeline_shared import (
+    load_current_week_config,
+    require_csv_fieldnames,
+)
 from type_support import ScalarValue
 
 
@@ -163,22 +166,15 @@ def load_authoritative_team_ids(
         reader = csv.DictReader(handle)
         fieldnames = reader.fieldnames or []
 
-        required = {
-            "team_id",
-            "season",
-            "season_type",
-        }
-
-        missing = sorted(
-            required - set(fieldnames)
+        require_csv_fieldnames(
+            fieldnames,
+            {
+                "team_id",
+                "season",
+                "season_type",
+            },
+            "league_master.csv",
         )
-
-        if missing:
-            raise ValueError(
-                "league_master.csv missing required columns: "
-                f"{missing}"
-            )
-
         team_ids: set[str] = set()
 
         for row_number, row in enumerate(
@@ -262,7 +258,6 @@ def load_authoritative_team_ids(
         team_ids,
         key=int,
     )
-
 
 def output_path_for_season(
     season: int,

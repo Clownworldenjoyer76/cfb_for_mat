@@ -40,7 +40,10 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from http_security import open_https
 from pipeline_reporter import PipelineReporter
-from pipeline_shared import load_current_week_config
+from pipeline_shared import (
+    load_current_week_config,
+    write_csv_rows_durable,
+)
 from type_support import ScalarValue
 
 
@@ -1197,36 +1200,12 @@ def write_staged_csv(
     ],
     fieldnames: list[str],
 ) -> None:
-    with path.open(
-        "w",
-        newline="",
-        encoding="utf-8",
-    ) as handle:
-        writer = csv.DictWriter(
-            handle,
-            fieldnames=fieldnames,
-        )
-
-        writer.writeheader()
-
-        for row in rows:
-            writer.writerow(
-                {
-                    column: row.get(
-                        column,
-                        "",
-                    )
-                    for column
-                    in fieldnames
-                }
-            )
-
-        handle.flush()
-
-        os.fsync(
-            handle.fileno()
-        )
-
+    write_csv_rows_durable(
+        path,
+        rows,
+        fieldnames,
+        project_columns=True,
+    )
 
 def validate_staged_csv(
     path: Path,

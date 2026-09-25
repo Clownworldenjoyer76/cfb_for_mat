@@ -42,6 +42,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import stage_dataframe_csv
 
 
 DEFAULT_GRADED_DIR = CFB_ROOT / "04_final_results" / "graded"
@@ -1752,31 +1753,7 @@ def publish_csv(
     )
 
     try:
-        with temporary.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            work.to_csv(
-                handle,
-                index=False,
-                lineterminator="\n",
-            )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        serialized = pd.read_csv(
-            temporary,
-            dtype=str,
-            keep_default_na=False,
-            na_filter=False,
-            encoding="utf-8-sig",
-            low_memory=False,
-        )
+        serialized = stage_dataframe_csv(temporary, work)
 
         require_columns(
             serialized,

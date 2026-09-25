@@ -450,3 +450,81 @@ def write_atomic_csv_rows(
             )
         except OSError:
             pass
+
+def validate_target_columns(
+    frame: Any,
+    label: str,
+    season: int,
+    week: int,
+    integer_parser: Any,
+) -> None:
+    seasons = {
+        integer_parser(value, f"{label}: season")
+        for value in frame["season"]
+    }
+    weeks = {
+        integer_parser(value, f"{label}: week")
+        for value in frame["week"]
+    }
+    if seasons != {season}:
+        raise RuntimeError(
+            f"{label}: expected only season={season}; "
+            f"found {sorted(seasons)}"
+        )
+    if weeks != {week}:
+        raise RuntimeError(
+            f"{label}: expected only week={week}; "
+            f"found {sorted(weeks)}"
+        )
+
+
+def team_identity_values(
+    row: Any,
+    schedule_row: Any,
+    cleaner: Any,
+) -> tuple[str, str, str, str]:
+    return (
+        cleaner(row.get("away_team")),
+        cleaner(row.get("home_team")),
+        cleaner(schedule_row.get("away_team")),
+        cleaner(schedule_row.get("home_team")),
+    )
+
+
+def require_csv_fieldnames(
+    fieldnames: list[str],
+    required: set[str],
+    label: str,
+) -> None:
+    missing = sorted(required - set(fieldnames))
+    if missing:
+        raise ValueError(
+            f"{label} missing required columns: {missing}"
+        )
+
+
+def stage_dataframe_csv(
+    path: Path,
+    frame: Any,
+) -> Any:
+    with path.open(
+        "w",
+        newline="",
+        encoding="utf-8",
+    ) as handle:
+        frame.to_csv(
+            handle,
+            index=False,
+            lineterminator="\n",
+        )
+        handle.flush()
+        os.fsync(handle.fileno())
+
+    return pd.read_csv(
+        path,
+        dtype=str,
+        keep_default_na=False,
+        na_filter=False,
+        encoding="utf-8-sig",
+        low_memory=False,
+    )

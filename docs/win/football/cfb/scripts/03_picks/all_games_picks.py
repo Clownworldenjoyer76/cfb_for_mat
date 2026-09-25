@@ -97,10 +97,13 @@ from pipeline_shared import (
     clean_text as clean,
     normalize_game_id,
     normalized_frame_pair,
+    team_identity_values,
     read_yaml,
     require_columns,
     resolve_target,
+    stage_dataframe_csv,
     validate_game_ids,
+    validate_target_columns,
     weekly_schedule_path,
 )
 
@@ -277,44 +280,13 @@ def validate_source_target(
         ),
     )
 
-    seasons = {
-        integer_value(
-            value,
-            f"{input_path}: season",
-        )
-        for value in source[
-            "season"
-        ]
-    }
-
-    weeks = {
-        integer_value(
-            value,
-            f"{input_path}: week",
-        )
-        for value in source[
-            "week"
-        ]
-    }
-
-    if seasons != {
-        season
-    }:
-        fail(
-            f"{input_path}: expected only "
-            f"season={season}; "
-            f"found {sorted(seasons)}"
-        )
-
-    if weeks != {
-        week
-    }:
-        fail(
-            f"{input_path}: expected only "
-            f"week={week}; "
-            f"found {sorted(weeks)}"
-        )
-
+    validate_target_columns(
+        source,
+        str(input_path),
+        season,
+        week,
+        integer_value,
+    )
     for column in [
         "away_team",
         "home_team",
@@ -349,7 +321,6 @@ def validate_source_target(
                 f"values; examples={examples}"
             )
 
-
 def validate_schedule_alignment(
     source: pd.DataFrame,
     schedule: pd.DataFrame,
@@ -378,44 +349,13 @@ def validate_schedule_alignment(
         ),
     )
 
-    schedule_seasons = {
-        integer_value(
-            value,
-            f"{schedule_path}: season",
-        )
-        for value in schedule[
-            "season"
-        ]
-    }
-
-    schedule_weeks = {
-        integer_value(
-            value,
-            f"{schedule_path}: week",
-        )
-        for value in schedule[
-            "week"
-        ]
-    }
-
-    if schedule_seasons != {
-        season
-    }:
-        fail(
-            f"{schedule_path}: expected only "
-            f"season={season}; "
-            f"found {sorted(schedule_seasons)}"
-        )
-
-    if schedule_weeks != {
-        week
-    }:
-        fail(
-            f"{schedule_path}: expected only "
-            f"week={week}; "
-            f"found {sorted(schedule_weeks)}"
-        )
-
+    validate_target_columns(
+        schedule,
+        str(schedule_path),
+        season,
+        week,
+        integer_value,
+    )
     source_ids = set(
         source[
             "game_id"
@@ -472,30 +412,16 @@ def validate_schedule_alignment(
             game_id
         ]
 
-        source_away = clean(
-            row.get(
-                "away_team"
-            )
+        (
+            source_away,
+            source_home,
+            schedule_away,
+            schedule_home,
+        ) = team_identity_values(
+            row,
+            schedule_row,
+            clean,
         )
-
-        source_home = clean(
-            row.get(
-                "home_team"
-            )
-        )
-
-        schedule_away = clean(
-            schedule_row.get(
-                "away_team"
-            )
-        )
-
-        schedule_home = clean(
-            schedule_row.get(
-                "home_team"
-            )
-        )
-
         if (
             source_away != schedule_away
             or source_home != schedule_home
@@ -522,7 +448,6 @@ def validate_schedule_alignment(
             f"count={len(mismatches)} "
             f"examples={mismatches[:10]}"
         )
-
 
 def validate_projection_consistency(
     source: pd.DataFrame,
@@ -1154,31 +1079,7 @@ def publish_atomic_csv(
     )
 
     try:
-        with temporary.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            output.to_csv(
-                handle,
-                index=False,
-                lineterminator="\n",
-            )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        serialized = pd.read_csv(
-            temporary,
-            dtype=str,
-            keep_default_na=False,
-            na_filter=False,
-            encoding="utf-8-sig",
-            low_memory=False,
-        )
+        serialized = stage_dataframe_csv(temporary, output)
 
         validate_serialized_output(
             serialized,

@@ -76,6 +76,7 @@ if str(
     )
 
 from pipeline_reporter import PipelineReporter
+from pipeline_shared import stage_dataframe_csv
 
 
 SCRIPT_VERSION = (
@@ -2471,31 +2472,7 @@ def write_atomic_csv(
     )
 
     try:
-        with temporary.open(
-            "w",
-            newline="",
-            encoding="utf-8",
-        ) as handle:
-            df.to_csv(
-                handle,
-                index=False,
-                lineterminator="\n",
-            )
-
-            handle.flush()
-
-            os.fsync(
-                handle.fileno()
-            )
-
-        serialized = pd.read_csv(
-            temporary,
-            dtype=str,
-            keep_default_na=False,
-            na_filter=False,
-            encoding="utf-8-sig",
-            low_memory=False,
-        )
+        serialized = stage_dataframe_csv(temporary, df)
 
         validate_output_frame(
             serialized,
