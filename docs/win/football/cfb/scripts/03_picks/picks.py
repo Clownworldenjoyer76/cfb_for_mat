@@ -66,6 +66,7 @@ from pipeline_reporter import PipelineReporter
 from pipeline_shared import (
     clean_text as clean,
     normalize_game_id,
+    prepare_schedule_coverage,
     stage_dataframe_csv,
     team_identity_values,
     validate_target_columns,
@@ -1420,39 +1421,18 @@ def validate_schedule_alignment(
             f"values: {examples}"
         )
 
-    schedule = schedule.copy()
-
-    schedule[
-        "game_id"
-    ] = schedule_ids
-
-    validate_target_columns(
+    (
         schedule,
+        missing,
+        unexpected,
+    ) = prepare_schedule_coverage(
+        schedule,
+        schedule_ids,
+        selected,
         str(schedule_path),
         season,
         week,
         integer_value,
-    )
-    selected_ids = set(
-        selected[
-            "game_id"
-        ]
-    )
-
-    target_ids = set(
-        schedule[
-            "game_id"
-        ]
-    )
-
-    missing = sorted(
-        target_ids
-        - selected_ids
-    )
-
-    unexpected = sorted(
-        selected_ids
-        - target_ids
     )
 
     if (

@@ -68,9 +68,10 @@ from pipeline_reporter import PipelineReporter
 from pipeline_shared import (
     clean_text,
     normalized_frame_pair,
-    read_yaml,
+    prepare_schedule_coverage,
+    register_report_paths,
     require_columns,
-    resolve_target,
+    resolve_weekly_report_target,
     stage_dataframe_csv,
     validate_target_columns,
 )
@@ -446,39 +447,18 @@ def validate_schedule_alignment(
             f"game_id values: {examples}"
         )
 
-    schedule = schedule.copy()
-
-    schedule[
-        "game_id"
-    ] = ids
-
-    validate_target_columns(
+    (
         schedule,
+        missing,
+        unexpected,
+    ) = prepare_schedule_coverage(
+        schedule,
+        ids,
+        picks,
         str(schedule_path),
         season,
         week,
         integer_value,
-    )
-    pick_ids = set(
-        picks[
-            "game_id"
-        ]
-    )
-
-    schedule_ids = set(
-        schedule[
-            "game_id"
-        ]
-    )
-
-    missing = sorted(
-        schedule_ids
-        - pick_ids
-    )
-
-    unexpected = sorted(
-        pick_ids
-        - schedule_ids
     )
 
     if (
@@ -1704,22 +1684,12 @@ def run(
     report: PipelineReporter,
     args: argparse.Namespace,
 ) -> int:
-    current_week = read_yaml(
+    season, week = resolve_weekly_report_target(
+        report,
         CURRENT_WEEK_CONFIG_PATH,
-        "current-week config",
-    )
-
-    (
-        season,
-        week,
-    ) = resolve_target(
-        current_week,
         args.season,
         args.week,
     )
-
-    report.season = season
-    report.week = week
 
     input_path = (
         INPUT_DIR
@@ -1735,20 +1705,14 @@ def run(
         / f"week_{week}_CFB_clean_picks.csv"
     )
 
-    report.add_input(
-        CURRENT_WEEK_CONFIG_PATH
-    )
-
-    report.add_input(
-        input_path
-    )
-
-    report.add_input(
-        expected_schedule_path
-    )
-
-    report.add_output(
-        expected_output_path
+    register_report_paths(
+        report,
+        inputs=(
+            CURRENT_WEEK_CONFIG_PATH,
+            input_path,
+            expected_schedule_path,
+        ),
+        output=expected_output_path,
     )
 
     report.update_details(

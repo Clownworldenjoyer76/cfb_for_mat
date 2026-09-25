@@ -97,11 +97,11 @@ from pipeline_shared import (
     clean_text as clean,
     normalize_game_id,
     normalized_frame_pair,
-    team_identity_values,
-    read_yaml,
+    register_report_paths,
     require_columns,
-    resolve_target,
+    resolve_weekly_report_target,
     stage_dataframe_csv,
+    team_identity_values,
     validate_game_ids,
     validate_target_columns,
     weekly_schedule_path,
@@ -1281,22 +1281,12 @@ def run(
     report: PipelineReporter,
     args: argparse.Namespace,
 ) -> int:
-    current_week = read_yaml(
+    season, week = resolve_weekly_report_target(
+        report,
         CURRENT_WEEK_CONFIG_PATH,
-        "current-week config",
-    )
-
-    (
-        season,
-        week,
-    ) = resolve_target(
-        current_week,
         args.season,
         args.week,
     )
-
-    report.season = season
-    report.week = week
 
     input_path = (
         DEFAULT_INPUT_DIR
@@ -1312,20 +1302,14 @@ def run(
         / f"all_week_{week}_CFB_picks.csv"
     )
 
-    report.add_input(
-        CURRENT_WEEK_CONFIG_PATH
-    )
-
-    report.add_input(
-        input_path
-    )
-
-    report.add_input(
-        schedule_path
-    )
-
-    report.add_output(
-        output_path
+    register_report_paths(
+        report,
+        inputs=(
+            CURRENT_WEEK_CONFIG_PATH,
+            input_path,
+            schedule_path,
+        ),
+        output=output_path,
     )
 
     report.update_details(

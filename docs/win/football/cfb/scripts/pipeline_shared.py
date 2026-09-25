@@ -528,3 +528,63 @@ def stage_dataframe_csv(
         encoding="utf-8-sig",
         low_memory=False,
     )
+
+def resolve_weekly_report_target(
+    report: Any,
+    config_path: Path,
+    season_override: Optional[int],
+    week_override: Optional[int],
+) -> tuple[int, int]:
+    current_week = read_yaml(
+        config_path,
+        "current-week config",
+    )
+    season, week = resolve_target(
+        current_week,
+        season_override,
+        week_override,
+    )
+    report.season = season
+    report.week = week
+    return season, week
+
+
+def register_report_paths(
+    report: Any,
+    *,
+    inputs: tuple[Path, ...],
+    output: Path,
+) -> None:
+    for path in inputs:
+        report.add_input(path)
+    report.add_output(output)
+
+
+def prepare_schedule_coverage(
+    schedule: Any,
+    normalized_schedule_ids: Any,
+    candidate: Any,
+    label: str,
+    season: int,
+    week: int,
+    integer_parser: Any,
+) -> tuple[Any, list[str], list[str]]:
+    prepared = schedule.copy()
+    prepared["game_id"] = normalized_schedule_ids
+
+    validate_target_columns(
+        prepared,
+        label,
+        season,
+        week,
+        integer_parser,
+    )
+
+    candidate_ids = set(candidate["game_id"])
+    target_ids = set(prepared["game_id"])
+
+    return (
+        prepared,
+        sorted(target_ids - candidate_ids),
+        sorted(candidate_ids - target_ids),
+    )
