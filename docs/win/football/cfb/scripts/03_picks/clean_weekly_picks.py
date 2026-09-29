@@ -30,7 +30,7 @@ import re
 import sys
 import uuid
 from pathlib import Path
-from typing import Any, Never
+from typing import Any, NoReturn
 
 import pandas as pd
 
@@ -148,7 +148,7 @@ OUTPUT_COLUMNS = [
 
 def fail(
     message: str,
-) -> Never:
+) -> NoReturn:
     raise RuntimeError(
         message
     )

@@ -29,7 +29,7 @@ import shutil
 import sys
 import uuid
 from pathlib import Path
-from typing import Any, Never
+from typing import Any, NoReturn
 
 import pandas as pd
 import yaml
@@ -115,7 +115,7 @@ SCHEDULE_COLUMNS = [
 
 def fail(
     message: str,
-) -> Never:
+) -> NoReturn:
     raise RuntimeError(
         message
     )

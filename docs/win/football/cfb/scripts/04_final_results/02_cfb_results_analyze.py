@@ -24,7 +24,7 @@ import sys
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Never
+from typing import Any, NoReturn
 
 import pandas as pd
 import yaml
@@ -165,7 +165,7 @@ WORK_COLUMNS = [
 ]
 
 
-def fail(message: str) -> Never:
+def fail(message: str) -> NoReturn:
     raise RuntimeError(message)
 
 

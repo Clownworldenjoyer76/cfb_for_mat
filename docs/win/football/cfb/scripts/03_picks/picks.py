@@ -31,7 +31,7 @@ import re
 import sys
 import uuid
 from pathlib import Path
-from typing import Any, Never
+from typing import Any, NoReturn
 
 import numpy as np
 import pandas as pd
@@ -165,7 +165,7 @@ MARKETS = {
 }
 
 
-def fail(message: str) -> Never:
+def fail(message: str) -> NoReturn:
     raise RuntimeError(message)
 
 
